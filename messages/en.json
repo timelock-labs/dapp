@@ -1,0 +1,58 @@
+{
+  "common": {
+    "connect_wallet": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "copy_address": "Copy Address",
+    "view_on_explorer": "View on Explorer",
+    "switch_chain": "Switch Chain",
+    "no_network": "No Network",
+    "connected": "Connected",
+    "connecting": "Connecting..."
+  },
+  "nav": {
+    "timelock_management": "Timelock Management",
+    "dashboard": "Dashboard",
+    "create_timelock": "Create Timelock",
+    "active_timelocks": "Active Timelocks",
+    "history": "History",
+    "token_management": "Token Management",
+    "token_lists": "Token Lists",
+    "approvals": "Approvals",
+    "transfers": "Transfers",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "statistics": "Statistics",
+    "settings": "Settings",
+    "general": "General",
+    "security": "Security",
+    "notifications": "Notifications",
+    "account": "Account",
+    "billing": "Billing",
+    "logout": "Log out",
+    "upgrade_to_pro": "Upgrade to Pro"
+  },
+  "dashboard": {
+    "welcome": "Welcome to Timelock UI",
+    "connect_to_start": "Connect your wallet to start managing timelock contracts across multiple chains.",
+    "active_timelocks": "Active Timelocks",
+    "total_value_locked": "Total Value Locked",
+    "chains_supported": "Chains Supported",
+    "supported_networks": "Supported Networks:"
+  },
+  "projects": {
+    "multi_sig_wallet": "Multi-Sig Wallet",
+    "token_vesting": "Token Vesting",
+    "governance": "Governance"
+  },
+  "teams": {
+    "timelock_ui": "Timelock UI",
+    "multi_chain": "Multi-Chain",
+    "defi_tools": "DeFi Tools"
+  },
+  "chains": {
+    "ethereum": "Ethereum",
+    "bsc": "BSC",
+    "arbitrum": "Arbitrum",
+    "hashkey_chain": "HashKey Chain"
+  }
+} 
