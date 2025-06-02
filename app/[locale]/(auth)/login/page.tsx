@@ -1,14 +1,16 @@
 import { GalleryVerticalEnd } from "lucide-react"
-
+import {useTranslations} from 'next-intl';
 import { LoginForm } from "@/components/login-form"
 
 export default function LoginPage() {
+    const t = useTranslations('auth.loginPage'); // 'auth' 是文件名/命名空间,
+     
   return (
     
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="bg-muted relative hidden lg:block">
         <div>
-          ff
+          <h1>{t('title')}</h1>
         </div>
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
