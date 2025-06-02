@@ -1,4 +1,19 @@
 {
+  "loginPage": {
+    "title": "登录",
+    "usernameLabel": "用户名",
+    "passwordLabel": "密码",
+    "submitButton": "登录",
+    "registerLink": "没有账户？注册"
+  },
+  "registerPage": {
+    "title": "注册",
+    "emailLabel": "邮箱",
+    "passwordLabel": "密码",
+    "confirmPasswordLabel": "确认密码",
+    "submitButton": "注册",
+    "loginLink": "已有账户？登录"
+  },
   "common": {
     "connect_wallet": "连接钱包",
     "disconnect": "断开连接",

@@ -1,4 +1,22 @@
 {
+  "loginPage": {
+    "title": "Login",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "submitButton": "Sign In",
+    "registerLink": "Don't have an account? Register"
+  },
+  "registerPage": {
+    "title": "Register",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "submitButton": "Sign Up",
+    "loginLink": "Already have an account? Login"
+  },
+   "HomePage": {
+    "title": "Hello world!"
+  },
   "common": {
     "connect_wallet": "Connect Wallet",
     "disconnect": "Disconnect",
