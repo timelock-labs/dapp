@@ -1,4 +1,14 @@
 {
+  "Welcome":{
+    "title":"欢迎"
+  },
+  "Login": {
+    "title": "登陆",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Login",
+    "error": "{error, select, CredentialsSignin {Invalid username or password} other {Unknown error}}"
+  },
   "loginPage": {
     "title": "登录",
     "usernameLabel": "用户名",
@@ -70,4 +80,4 @@
     "arbitrum": "Arbitrum",
     "hashkey_chain": "HashKey 链"
   }
-} 
+}
