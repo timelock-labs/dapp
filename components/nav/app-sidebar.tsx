@@ -2,16 +2,17 @@
 
 import * as React from "react"
 import {
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  PieChart,
-  Settings2,
   Clock,
+  Frame,
+  ListTodo,
+  BellDot,
+  Settings2,
+  FileCode,
   Shield,
-  Zap,
+  Box,
+  House
 } from "lucide-react"
-
+import Logo from "@/public/logo.png"
 import { NavMain } from '@/components/nav/nav-main'
 import { NavUser } from '@/components/nav/nav-user'
 import { TeamSwitcher } from '@/components/nav/team-switcher'
@@ -26,62 +27,63 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "support",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
       name: "Timelock UI",
-      logo: Clock,
-      plan: "Enterprise",
-    },
-    {
-      name: "Multi-Chain",
-      logo: GalleryVerticalEnd,
-      plan: "Pro",
-    },
-    {
-      name: "DeFi Tools",
-      logo: Command,
-      plan: "Free",
+      logo: House,
+      plan: "",
     },
   ],
   navMain: [
     {
-      title: "Timelock Management",
+      title: "Home",
+      url: "#",
+      icon: House,
+      // isActive: true,
+    },
+    {
+      title: "Transactions",
+      url: "#",
+      icon: ListTodo,
+    },
+    {
+      title: "Timelocks",
       url: "#",
       icon: Clock,
-      isActive: true,
+     
     },
     {
-      title: "Token Management",
+      title: "ABI-Lib",
       url: "#",
-      icon: Zap,
+      icon: FileCode,
     },
-    {
-      title: "Analytics",
+      {
+      title: "Notify",
       url: "#",
-      icon: PieChart,
+      icon: BellDot,
       items: [
         {
-          title: "Dashboard",
+          title: "General",
           url: "#",
         },
         {
-          title: "Reports",
+          title: "Security",
           url: "#",
         },
         {
-          title: "Statistics",
+          title: "Notifications",
           url: "#",
         },
       ],
     },
-    {
-      title: "Settings",
+     {
+      title: "Ecosystem",
       url: "#",
-      icon: Settings2,
+      icon: Box,
       items: [
         {
           title: "General",
@@ -121,7 +123,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <img src={Logo.src} alt="Timelock Logo" />
+        {/* <TeamSwitcher teams={data.teams} /> */}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
@@ -131,5 +134,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
+
   )
 }

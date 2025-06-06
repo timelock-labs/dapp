@@ -60,7 +60,6 @@ const TimeLockerSplitPage = () => {
           </p>
           <Web3Provider >
             <ConnectWallet icon={false}/>
-
           </Web3Provider>
         </div>
       </div>
