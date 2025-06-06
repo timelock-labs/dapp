@@ -3,7 +3,7 @@ import {Locale, NextIntlClientProvider, hasLocale} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {ReactNode} from 'react';
 import {routing} from '@/i18n/routing';
-
+import "@/app/globals.css"
 type Props = {
   children: ReactNode;
   params: Promise<{locale: Locale}>;

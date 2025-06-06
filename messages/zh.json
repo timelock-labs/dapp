@@ -1,6 +1,10 @@
 {
-  "Welcome":{
-    "title":"欢迎"
+  "Welcome": {
+    "title": "欢迎"
+  },
+  "LocaleSwitcher": {
+    "en": "英",
+    "zh": "中"
   },
   "Login": {
     "title": "登陆",
