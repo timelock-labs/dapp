@@ -1,12 +1,12 @@
 'use client'
 
 import { ConnectKitButton } from 'connectkit'
-// import { useAccount } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { Button } from '@/components/ui/button'
 import { Wallet } from 'lucide-react'
 
-export function ConnectWallet() {
-  // const { isConnected } = useAccount()
+export  function ConnectWallet() {
+  const { isConnected } = useAccount()
 
   return (
     <ConnectKitButton.Custom>

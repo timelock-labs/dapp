@@ -17,7 +17,6 @@ export default function LoginLayout({children, title}: Props) {
         }}
       >
         <div style={{maxWidth: 510}}>
-          <h1>{title}</h1>
           {children}
         
         </div>

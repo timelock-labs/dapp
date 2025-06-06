@@ -23,9 +23,9 @@ export default async function LocaleLayout({children, params}: Props) {
         <title>next-intl & next-auth</title>
       </head>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+          </NextIntlClientProvider>
       </body>
     </html>
   );
