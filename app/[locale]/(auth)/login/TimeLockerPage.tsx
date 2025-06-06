@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Logo from '@/public/logo.png';
-import { useConnect } from 'wagmi'; // 导入 useConnect hook
+import { ConnectWallet } from '@/components/wallet/connect-wallet';
+import { Web3Provider } from "@/components/providers/web3-provider";
 
 const TimeLockerSplitPage = () => {
   return (
@@ -50,17 +51,17 @@ const TimeLockerSplitPage = () => {
         <div className="bg-white p-8 rounded-lg  max-w-sm w-full">
           {/* Right Panel Header */}
           <div className="">
-          <img src={Logo.src} alt="Logo" className=" " />
+            <img src={Logo.src} alt="Logo" className=" " />
           </div>
 
           <h2 className="text-black text-2xl font-semibold mb-4">Get started</h2>
           <p className="text-gray-600 text-sm mb-8">
             Connect your wallet to create a new Timelock Account or import an existing one.
           </p>
+          <Web3Provider >
+            <ConnectWallet icon={false}/>
 
-          <button className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition-colors">
-            Connect Wallet
-          </button>
+          </Web3Provider>
         </div>
       </div>
     </div>

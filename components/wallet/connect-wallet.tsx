@@ -1,12 +1,12 @@
 'use client'
 
 import { ConnectKitButton } from 'connectkit'
-import { useAccount } from 'wagmi'
+// import { useAccount } from 'wagmi'
 import { Button } from '@/components/ui/button'
 import { Wallet } from 'lucide-react'
 
-export  function ConnectWallet() {
-  const { isConnected } = useAccount()
+export function ConnectWallet( props: { icon?: boolean }) {
+  // const { isConnected } = useAccount()
 
   return (
     <ConnectKitButton.Custom>
@@ -16,9 +16,11 @@ export  function ConnectWallet() {
             onClick={show}
             disabled={isConnecting}
             variant={isConnected ? "outline" : "default"}
-            size="sm"
+            size={props.icon ? "sm" : "lg"}
           >
-            <Wallet className="mr-2 h-4 w-4" />
+            {
+              props.icon ? <Wallet className="mr-2 h-4 w-4" /> : null
+            }
             {isConnecting && "Connecting..."}
             {isConnected && (ensName ?? `${address?.slice(0, 6)}...${address?.slice(-4)}`)}
             {!isConnected && !isConnecting && "Connect Wallet"}

@@ -83,7 +83,7 @@ export default function PageLayout({ // Make the function async
                     {/* 右上角的钱包和链切换 */}
                     <div className="flex items-center gap-3 ml-auto pr-4">
                       <ChainSwitcher />
-                      <ConnectWallet />
+                      <ConnectWallet icon={true} />
                     </div>
                   </header>
                   <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
