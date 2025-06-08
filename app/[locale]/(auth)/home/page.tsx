@@ -1,16 +1,21 @@
+'use client';
 
-import {useLocale, useTranslations} from 'next-intl';
-import PageLayout from '@/components/layout/PageLayout';
+import LoggedHome from './components/LoggedHome'
+import NotLogIn from './components/NotLogIn';
+import { useAccount } from 'wagmi'; 
 
 
-export default function Welcome() {
-  const t = useTranslations('Welcome');
+export default function Home() {
+const { isConnected } = useAccount(); // 获取真实的钱包连接状态
+
   
   
 
-  return (
-    <PageLayout title={t('title')}>
-      <h1> welcome</h1>
-    </PageLayout>
+  return (<>
+  {
+    !isConnected ?<LoggedHome /> :<NotLogIn/>
+  }
+  </>
+   
   );
 }
