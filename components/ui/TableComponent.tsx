@@ -46,7 +46,7 @@ function TableComponent<T extends { id: string | number }>(
   const currentRangeEnd = Math.min(endIndex, totalItems);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col h-full">
+    <div className="bg-white p-2 rounded-lg shadow-sm  border-gray-200 flex flex-col h-full">
       {/* Title and Header Actions */}
       {(title || headerActions) && (
         <div className="flex justify-between items-center mb-4">
@@ -58,8 +58,8 @@ function TableComponent<T extends { id: string | number }>(
       {/* Table Container - handles overflow for scrolling */}
       <div className="flex-grow overflow-x-auto overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          {/* Table Header */}
-          <thead className="bg-gray-50 sticky top-0 z-10"> {/* Sticky header for vertical scrolling */}
+    
+          <thead className="bg-gray-50 sticky top-0 z-10"> 
             <tr>
               {columns.map((column) => (
                 <th
@@ -71,7 +71,7 @@ function TableComponent<T extends { id: string | number }>(
                 </th>
               ))}
             </tr>
-          </thead>
+          </thead> 
           {/* Table Body */}
           <tbody className="bg-white divide-y divide-gray-100">
             {currentItems.map((row, rowIndex) => (
