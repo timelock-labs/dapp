@@ -43,8 +43,8 @@ export default function PageLayout({
   // params: { locale }
 }: Readonly<{
   title: string,
-  children: React.ReactNode;
-  params: { locale: string };
+  children?: React.ReactNode;
+  params?: { locale: string };
 }>) {
   // Removed: const messages = getMessages();
   // If this component needs translations for its own text, use useTranslations()
