@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming path
 import TextInput from '@/components/ui/TextInput';       // Assuming path
 import SelectInput from '@/components/ui/SelectInput';   // Assuming path
+import CheckParametersModal from './CheckParametersModal'
 import QuestionIcon from '@/public/QuestionIcon.svg'
 const ImportTimelockForm: React.FC = () => {
     // State for form fields
@@ -10,7 +11,8 @@ const ImportTimelockForm: React.FC = () => {
     const [contractAddress, setContractAddress] = useState('');
     const [contractStandard, setContractStandard] = useState('');
     const [remarks, setRemarks] = useState('');
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [confirmedAbi, setConfirmedAbi] = useState<string | null>(null);
     // Dummy options for select inputs
     const chainOptions = [
         { value: 'timelock_chain', label: 'Timelock' }, // As in the image
@@ -23,6 +25,15 @@ const ImportTimelockForm: React.FC = () => {
         { value: 'erc721', label: 'ERC-721' },
     ];
 
+    // Dummy data to pass to the modal
+    const dummyParameters = {
+        chainName: 'Arbitrum',
+        chainIcon: <img src="https://assets.arbitrum.io/logo.png" alt="Arbitrum Logo" className="w-4 h-4 mr-1" />, // Placeholder image
+        remarks: 'Uniswap 金库合约',
+        timelockAddress: '0x73823131a6778210D075140A57cfFAb1421B1a40',
+        abiPlaceholder: 'Placeholder for ABI content...',
+    };
+
     const handleNextStep = () => {
         console.log('Next Step button clicked!');
         console.log({
@@ -32,6 +43,17 @@ const ImportTimelockForm: React.FC = () => {
             remarks,
         });
         // Implement logic for proceeding to the next step, e.g., validation, API call, navigation
+        setIsModalOpen(true); // Open the SecurityFeatureCard
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirmParams = (abiContent: string) => {
+        setConfirmedAbi(abiContent);
+        alert(`Parameters confirmed!\nABI Content:\n${abiContent}`);
+        handleCloseModal(); // Close modal after confirmation
     };
 
     return (
@@ -90,7 +112,14 @@ const ImportTimelockForm: React.FC = () => {
                 </div>
             </div>
 
+        
 
+            <CheckParametersModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirmParams}
+                parameters={dummyParameters}
+            />
         </div>
     );
 };
