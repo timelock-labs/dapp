@@ -7,8 +7,8 @@
     "encodingSectionTitle": "编码交易",
     "encodingSectionDescription": "查看并更新您的个人详细信息和账户信息。",
     "sendTransactionButton": "发起交易",
-    "previewSectionTitle": "编码预览", 
-    "previewSectionDescription": "查看已编码交易的详细信息。", 
+    "previewSectionTitle": "编码预览",
+    "previewSectionDescription": "查看已编码交易的详细信息。",
     "AddABIForm": {
       "title": "添加 ABI",
       "description": "请输入 ABI 的名称和 JSON 内容。",
@@ -17,6 +17,9 @@
       "addButton": "添加",
       "cancelButton": "取消"
     }
+  },
+  "Timelocks": {
+    "title": "Timelocks"
   },
   "LocaleSwitcher": {
     "en": "英",

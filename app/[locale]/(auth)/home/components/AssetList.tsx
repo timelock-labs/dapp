@@ -127,8 +127,8 @@ const AssetList: React.FC = () => {
           disabled={currentPage === 1} // Disable if on first page
           className={`
             flex items-center space-x-1
-            bg-gray-200 text-gray-800 text-sm font-medium
-            px-4 py-2 rounded-full
+            bg-white border border-grey-800  text-gray-800 text-sm font-medium
+            px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
             ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}
@@ -146,8 +146,8 @@ const AssetList: React.FC = () => {
           disabled={currentPage === totalPages} // Disable if on last page
           className={`
             flex items-center space-x-1
-            bg-gray-200 text-gray-800 text-sm font-medium
-            px-4 py-2 rounded-full
+            bg-white border border-grey-800  text-gray-800 text-sm font-medium
+            px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
             ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}

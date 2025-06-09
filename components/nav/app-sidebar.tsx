@@ -41,29 +41,29 @@ const data = {
   navMain: [
     {
       title: "Home",
-      url: "#",
+      url: "home",
       icon: House,
       // isActive: true,
     },
     {
       title: "Transactions",
-      url: "#",
+      url: "transactions",
       icon: ListTodo,
     },
     {
       title: "Timelocks",
-      url: "#",
+      url: "timelocks",
       icon: Clock,
      
     },
     {
       title: "ABI-Lib",
-      url: "#",
+      url: "ABI-Lib",
       icon: FileCode,
     },
       {
       title: "Notify",
-      url: "#",
+      url: "notify",
       icon: BellDot,
       items: [
         {
@@ -82,7 +82,7 @@ const data = {
     },
      {
       title: "Ecosystem",
-      url: "#",
+      url: "ecosystem",
       icon: Box,
       items: [
         {
