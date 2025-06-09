@@ -3,7 +3,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
 import TargetABISection from './TargetABISection';
-
+import QuestionIcon from '@/public/QuestionIcon.svg'
 interface EncodingTransactionFormProps {
   timelockType: string;
   onTimelockTypeChange: (value: string) => void;
@@ -49,6 +49,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <SectionHeader
           title="编码交易" // This title is currently hardcoded.
           description="View and update your personal details and account information." // This description is currently hardcoded.
+          icon={<img src={QuestionIcon.src} alt="Question Icon" width="15" height="15" />}
         />
       </div>
 
