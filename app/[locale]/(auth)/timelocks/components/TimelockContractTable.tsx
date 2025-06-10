@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'; // Import useState
+import React, { useState ,useEffect,useRef} from 'react'; // Import useState
 import TableComponent from '@/components/ui/TableComponent'; // Import the generic table component
 import SectionHeader from '@/components/ui/SectionHeader'; // Reusing SectionHeader
 
@@ -33,7 +33,8 @@ const getBadgeStyle = (name: TimelockContract['name']) => {
 };
 
 const TimelockContractTable: React.FC = () => {
-  const [activeActionMenu, setActiveActionMenu] = useState<string | null>(null); // To track which row's menu is open
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const handleImportContract = () => {
     console.log('Import existing Timelock Contract button clicked');
@@ -41,14 +42,35 @@ const TimelockContractTable: React.FC = () => {
   const handleCreateContract = () => {
     console.log('Create Timelock Contract button clicked');
   };
-  const handleToggleActionMenu = (rowId: string) => {
-    setActiveActionMenu(prev => (prev === rowId ? null : rowId));
+  const handleEllipsisMenu = (rowId: string) => {
+    if (openDropdownId === rowId) {
+      setOpenDropdownId(null); // Close if already open
+    } else {
+      setOpenDropdownId(rowId); // Open for this row
+    }
   };
   const handleDeleteClick = (row: TimelockContract) => {
     console.log('Delete clicked for row:', row.id);
     // Implement delete confirmation or action
+    setOpenDropdownId(null); // Close dropdown after action
   };
 
+  // Effect to handle clicks outside the dropdown
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setOpenDropdownId(null);
+        }
+      };
+  
+      if (openDropdownId) {
+        document.addEventListener('mousedown', handleClickOutside);
+      } else {
+        document.removeEventListener('mousedown', handleClickOutside);
+      }
+  
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [openDropdownId]);
   const columns = [
     {
       key: 'chain',
@@ -78,15 +100,14 @@ const TimelockContractTable: React.FC = () => {
       header: 'operations', // Operations column
       render: (row: TimelockContract) => (
         <div className="relative"> {/* Make this div the positioning context for the dropdown */}
-          <button onClick={() => handleToggleActionMenu(row.id)} className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors">
+          <button onClick={() => handleEllipsisMenu(row.id)} className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
           </button>
-          {activeActionMenu === row.id && (
-            <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200"> {/* Dropdown container */}
+          {openDropdownId === row.id && (
+            <div ref={dropdownRef}  className="absolute right-[30px] mt-2 w-32 bg-white rounded-md shadow-lg z-999 border border-gray-200"> {/* Dropdown container */}
               <button
                 onClick={() => {
                   handleDeleteClick(row);
-                  setActiveActionMenu(null); // Close menu after click
                 }}
                 className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2"
               >

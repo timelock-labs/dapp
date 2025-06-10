@@ -1,4 +1,4 @@
-// components/ecosystem/EcosystemPartnersPage.tsx
+
 import React from 'react';
 import EcosystemSearchHeader from './components/EcosystemSearchHeader';
 import PartnersGrid from './components/PartnersGrid';

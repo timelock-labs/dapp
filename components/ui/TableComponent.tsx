@@ -46,7 +46,7 @@ function TableComponent<T extends { id: string | number }>(
   const currentRangeEnd = Math.min(endIndex, totalItems);
 
   return (
-    <div className="bg-white p-2 rounded-lg shadow-sm  flex flex-col h-full">
+    <div className="bg-white flex flex-col h-full">
       {/* Title and Header Actions */}
       {(title || headerActions) && (
         <div className="flex justify-between items-center mb-4 custom-title-bg rounded-lg  ">

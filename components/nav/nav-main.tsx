@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link"
+import { useLocale } from 'next-intl'; // Changed from usePathname and 'next-intl/client'
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -31,6 +32,7 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const locale = useLocale(); // Get the current locale
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -43,7 +45,8 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <Link href={`/${item.url}`} passHref legacyBehavior className="w-full">
+                {/* 使用 next/link 实现跳转，并保持 SidebarMenuButton 样式 */}
+                <Link href={`/${locale}/${item.url}`} className="w-full">
                   <SidebarMenuButton tooltip={item.title} asChild>
                     <div className="flex items-center w-full">
                       {item.icon && <item.icon />}
@@ -57,10 +60,11 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
+                      {/* 使用 next/link 实现子菜单跳转 */}
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                            <span>{subItem.title}</span>
-                        </a>
+                        <Link href={`/${locale}/${subItem.url}`}>
+                          <span>{subItem.title}</span>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
