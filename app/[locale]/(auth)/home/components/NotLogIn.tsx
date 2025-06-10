@@ -3,7 +3,7 @@ import {useLocale, useTranslations} from 'next-intl';
 import PageLayout from '@/components/layout/PageLayout';
 import WalletSection from './WalletSection';
 import HowTimelockWorks from './HowTimelockWorks';
-import FeatureCard from './FeatureCard';
+import FeatureCard from '@/components/ui/FeatureCard';
 
 const NotLogIn
 : React.FC = () => {

@@ -1,6 +1,9 @@
 {
-  "Notify":{
-"title":"Notify"
+  "Ecosystem": {
+    "title": "Ecosystem"
+  },
+  "Notify": {
+    "title": "Notify"
   },
   "HomePage": {
     "title": "Home"
