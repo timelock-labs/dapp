@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import EmailRulesHeader from './components/email-notifications/EmailRulesHeader';
 import MailboxCard from './components/email-notifications/MailboxCard';
 import AddMailboxCard from './components/email-notifications/AddMailboxCard';
-import AddMailboxModal from "./components/email-notifications/AddMailboxModal"
+import AddMailboxModal from "./components/email-address/AddMailboxModal"
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 

@@ -8,12 +8,12 @@ interface SectionHeaderProps {
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, icon }) => {
   return (
     <div className="mb-4">
-      <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+      <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2 ">
         <span>{title}</span>
         {icon && <span >{icon}</span>}
 
       </h2>
-      <p className="text-sm text-gray-500">{description}</p>
+      <p className="text-sm text-gray-500 pt-2">{description}</p>
     </div>
   );
 };
