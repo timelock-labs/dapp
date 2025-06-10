@@ -65,39 +65,39 @@ const data = {
       title: "Notify",
       url: "notify",
       icon: BellDot,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Security",
-          url: "#",
-        },
-        {
-          title: "Notifications",
-          url: "#",
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "General",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Security",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Notifications",
+      //     url: "#",
+      //   },
+      // ],
     },
      {
       title: "Ecosystem",
       url: "ecosystem",
       icon: Box,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Security",
-          url: "#",
-        },
-        {
-          title: "Notifications",
-          url: "#",
-        },
-      ],
+      // items: [
+      //   {
+      //     title: "General",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Security",
+      //     url: "#",
+      //   },
+      //   {
+      //     title: "Notifications",
+      //     url: "#",
+      //   },
+      // ],
     },
   ],
   projects: [
