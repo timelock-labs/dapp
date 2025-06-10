@@ -11,7 +11,7 @@ const NotLogIn
 
   return (
     <PageLayout title={t('title')} >
-       <div className="min-h-screen bg-gray-50 pb-20">
+       <div className=" bg-gray-50 pb-20">
       {/* Main Content Area */}
       <main className="container mx-auto px-6 py-12">
         {/* First Row Component */}

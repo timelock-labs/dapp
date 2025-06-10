@@ -3,28 +3,28 @@ import React, { useState } from 'react'; // Import useState
 import TableComponent from '@/components/ui/TableComponent'; // Import the generic table component
 import SectionHeader from '@/components/ui/SectionHeader'; // Reusing SectionHeader
 
-// Define type for Timelock Contract data from Frame 2 (1).jpg
+// Define name for Timelock Contract data from Frame 2 (1).jpg
 interface TimelockContract {
   id: string;
   chain: string;
   timelock: string;
   owner: string; // New column
   addedAt: string; // New column
-  type: 'Pendding' | 'Witting' | 'Badge';
+  name: 'Pendding' | 'Witting' | 'Badge';
   endTime: string;
   chainIcon: React.ReactNode;
 }
 
 const dummyTimelockContracts: TimelockContract[] = [
-  { id: 'tc1', chain: 'Ethereum', timelock: '0x17fg...a8n9', owner: '0x17fg...a8n9', addedAt: 'May 24,2025 12:26', type: 'Pendding', endTime: '3h', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
-  { id: 'tc2', chain: 'Arbitrum', timelock: '0x17fg...a8n9', owner: '0x17fg...a8n9', addedAt: 'May 24,2025 12:26', type: 'Witting', endTime: 'Table Cell Text', chainIcon: <span className="text-blue-500 text-base">🔷</span> },
-  { id: 'tc3', chain: 'BSC', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', type: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-yellow-500 text-base">🟡</span> },
-  { id: 'tc4', chain: 'Ethereum', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', type: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
-  { id: 'tc5', chain: 'Ethereum', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', type: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
+  { id: 'tc1', chain: 'Ethereum', timelock: '0x17fg...a8n9', owner: '0x17fg...a8n9', addedAt: 'May 24,2025 12:26', name: 'Pendding', endTime: '3h', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
+  { id: 'tc2', chain: 'Arbitrum', timelock: '0x17fg...a8n9', owner: '0x17fg...a8n9', addedAt: 'May 24,2025 12:26', name: 'Witting', endTime: 'Table Cell Text', chainIcon: <span className="text-blue-500 text-base">🔷</span> },
+  { id: 'tc3', chain: 'BSC', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', name: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-yellow-500 text-base">🟡</span> },
+  { id: 'tc4', chain: 'Ethereum', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', name: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
+  { id: 'tc5', chain: 'Ethereum', timelock: 'x17fg...a8n9', owner: 'x17fg...a8n9', addedAt: 'May 24,2025 12:26', name: 'Badge', endTime: 'Table Cell Text', chainIcon: <span className="text-gray-700 text-base">♦️</span> },
 ];
 
-const getBadgeStyle = (type: TimelockContract['type']) => {
-  switch (type) {
+const getBadgeStyle = (name: TimelockContract['name']) => {
+  switch (name) {
     case 'Pendding': return 'bg-white text-gray-800 border border-gray-300';
     case 'Witting': return 'bg-black text-white border border-black';
     case 'Badge': return 'bg-black text-white border border-black';
@@ -60,22 +60,22 @@ const TimelockContractTable: React.FC = () => {
         </div>
       ),
     },
-    { key: 'timelock', header: 'Timelock' },
-    { key: 'owner', header: 'Owner' }, // New column
-    { key: 'addedAt', header: 'AddedAt' }, // New column
-    {
-      key: 'type',
-      header: 'Type',
+      {
+      key: 'name',
+      header: 'Name',
       render: (row: TimelockContract) => (
-        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeStyle(row.type)}`}>
-          {row.type}
+        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeStyle(row.name)}`}>
+          {row.name}
         </span>
       ),
     },
-    { key: 'endTime', header: 'EndTime' },
+    { key: 'timelock', header: 'Timelock' },
+    { key: 'owner', header: 'Owner' }, // New column
+    { key: 'addedAt', header: 'AddedAt' }, // New column
+  
     {
       key: 'operations',
-      header: '操作', // Operations column
+      header: 'operations', // Operations column
       render: (row: TimelockContract) => (
         <div className="relative"> {/* Make this div the positioning context for the dropdown */}
           <button onClick={() => handleToggleActionMenu(row.id)} className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors">
@@ -103,7 +103,7 @@ const TimelockContractTable: React.FC = () => {
   ];
 
   return (
-    <div className="p-8 bg-white min-h-screen"> {/* Wrapper with a light gray background */}
+    <div className="p-8 bg-white "> {/* Wrapper with a light gray background */}
       <div className="max-w-6xl mx-auto"> {/* Max width container to center content */}
         {/* Header and Buttons Section - All in one row */}
         <div className="flex items-center mb-6"> {/*  items-center for vertical alignment */}

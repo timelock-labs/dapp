@@ -13,9 +13,9 @@ const t=useTranslations('Timelocks')
 
     return (<PageLayout title={t('title')} >
         {/* <AddTimelockContractSection /> */}
-        {/* <TimelockContractTable /> */}
+        <TimelockContractTable />
         {/* <ImportTimelockForm /> */}
-        <CreateTimelockPage/>
+        {/* <CreateTimelockPage/> */}
     </PageLayout>
 
     )

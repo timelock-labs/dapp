@@ -10,7 +10,7 @@ const LoggedHome: React.FC = () => {
 
   return (
     <PageLayout title={t('title')}> {/* 使用 PageLayout 包裹 */}
-      <div className="flex flex-col space-y-6"> {/* 移除 min-h-screen, bg-gray-100, p-8，这些应由 PageLayout 或其子级处理 */}
+      <div className="flex flex-col space-y-6"> 
 
         {/* Top Section: Total Asset Value */}
         <div className="w-full">

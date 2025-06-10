@@ -16,7 +16,7 @@ const AddTimelockContractSection: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen"> {/* Wrapper with a light gray background */}
+    <div className="p-8 bg-white "> {/* Wrapper with a light gray background */}
       <div className="max-w-6xl mx-auto"> {/* Max width container to center content */}
         {/* Section Header */}
         <SectionHeader

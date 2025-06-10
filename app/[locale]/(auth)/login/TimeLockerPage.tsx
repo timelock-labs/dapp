@@ -7,7 +7,7 @@ import { Web3Provider } from "@/components/providers/web3-provider";
 
 const TimeLockerSplitPage = () => {
   return (
-    <div className="flex min-h-screen bg-withe text-white p-6">
+    <div className="flex  bg-withe text-white p-6">
       {/* Left Panel */}
       <div className="flex flex-col w-1/2 p-10 bg-black rounded-lg border border-gray-800 mr-4">
         {/* Header */}

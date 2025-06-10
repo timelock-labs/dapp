@@ -45,7 +45,7 @@ const CreateTimelockPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-8">
+    <div className=" bg-white p-8">
       <div className="max-w-6xl mx-auto flex flex-col space-y-8">
         {/* Top Info Section */}
         <FirstTimeTimelockIntro />

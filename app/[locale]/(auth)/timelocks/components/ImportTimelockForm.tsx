@@ -57,7 +57,7 @@ const ImportTimelockForm: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white p-8 flex flex-col "> {/* Outer container, flex-col to push button */}
+        <div className=" bg-white p-8 flex flex-col "> {/* Outer container, flex-col to push button */}
             <div className="max-w-6xl mx-auto flex-grow bg-white p-8   "> {/* Inner card-like container */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200"> {/* 1:1 Left-Right Layout */}
 

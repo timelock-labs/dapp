@@ -46,10 +46,10 @@ function TableComponent<T extends { id: string | number }>(
   const currentRangeEnd = Math.min(endIndex, totalItems);
 
   return (
-    <div className="bg-white p-2 rounded-lg shadow-sm  border-gray-200 flex flex-col h-full">
+    <div className="bg-white p-2 rounded-lg shadow-sm  flex flex-col h-full">
       {/* Title and Header Actions */}
       {(title || headerActions) && (
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 custom-title-bg rounded-lg  ">
           {title && <h2 className="text-lg font-semibold text-gray-800">{title}</h2>}
           {headerActions && <div>{headerActions}</div>}
         </div>
@@ -59,13 +59,13 @@ function TableComponent<T extends { id: string | number }>(
       <div className="flex-grow overflow-x-auto overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
     
-          <thead className="bg-gray-50 sticky top-0 z-10"> 
+          <thead className="bg-gray-50 sticky top-0 z-10 border-0"> 
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
                   scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-0"
                 >
                   {column.header}
                 </th>
