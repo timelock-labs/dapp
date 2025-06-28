@@ -1,5 +1,6 @@
 "use client"
-
+import Link from "next/link"
+import { useLocale } from 'next-intl'; // Changed from usePathname and 'next-intl/client'
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -31,6 +32,7 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const locale = useLocale(); // Get the current locale
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -43,20 +45,26 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
+                {/* 使用 next/link 实现跳转，并保持 SidebarMenuButton 样式 */}
+                <Link href={`/${locale}/${item.url}`} className="w-full">
+                  <SidebarMenuButton tooltip={item.title} asChild>
+                    <div className="flex items-center w-full">
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                      {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
+                    </div>
+                  </SidebarMenuButton>
+                </Link>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
+                      {/* 使用 next/link 实现子菜单跳转 */}
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        <Link href={`/${locale}/${subItem.url}`}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
