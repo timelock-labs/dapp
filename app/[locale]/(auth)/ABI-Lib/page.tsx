@@ -12,7 +12,7 @@ interface ABIRow {
   addedTime: string; // Added Time (e.g., "May 25, 2025 19:35")
 }
 
-const SavedABIsPage: React.FC = () => {
+const ABILibPage: React.FC = () => {
   const t = useTranslations("ABI-Lib")
   // State to manage which row's dropdown is open
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -148,4 +148,4 @@ const SavedABIsPage: React.FC = () => {
   );
 };
 
-export default SavedABIsPage;
+export default ABILibPage;
