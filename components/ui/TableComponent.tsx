@@ -75,7 +75,7 @@ function TableComponent<T extends { id: string | number }>(
           {/* Table Body */}
           <tbody className="bg-white divide-y divide-gray-100">
             {currentItems.map((row, rowIndex) => (
-              <tr key={row.id}> {/* Each row must have a unique 'id' */}
+              <tr key={row.id}>{/* Each row must have a unique 'id' */}
                 {columns.map((column) => (
                   <td key={column.key} className="px-2 py-4 whitespace-nowrap text-sm text-gray-500">
                     {/* Render cell content using custom render function or direct key access */}

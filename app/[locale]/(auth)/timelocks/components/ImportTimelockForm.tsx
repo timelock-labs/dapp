@@ -58,7 +58,7 @@ const ImportTimelockForm: React.FC = () => {
 
     return (
         <div className=" bg-white p-8 flex flex-col "> {/* Outer container, flex-col to push button */}
-            <div className="max-w-6xl mx-auto flex-grow bg-white p-8   "> {/* Inner card-like container */}
+            <div className="mx-auto flex-grow bg-white p-8   "> {/* Inner card-like container */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200"> {/* 1:1 Left-Right Layout */}
 
                     {/* Left Column: Header with Question Mark Icon */}
@@ -102,7 +102,7 @@ const ImportTimelockForm: React.FC = () => {
                     </div>
                 </div>
                 {/* Button at Bottom Right */}
-                <div className="max-w-6xl mx-auto flex justify-end mt-8"> {/* mx-auto and justify-end to align with main content */}
+                <div className="mx-auto flex justify-end mt-8"> {/* mx-auto and justify-end to align with main content */}
                     <button
                         onClick={handleNextStep}
                         className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"

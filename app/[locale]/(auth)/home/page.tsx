@@ -1,21 +1,79 @@
 'use client';
 
-import LoggedHome from './components/LoggedHome'
-import NotLogIn from './components/NotLogIn';
-import { useAccount } from 'wagmi'; 
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Assert from './components/Assert';
+import CreateProtocol from './components/CreateProtocol';
+import { useAccount } from 'wagmi';
+import { useAuthStore } from '@/store/userStore';
+import { useApi } from '@/hooks/useApi'; // Import useApi
 
+interface HomePageProps {
+  params: {
+    locale: string;
+  };
+}
 
-export default function Home() {
-const { isConnected } = useAccount(); // 获取真实的钱包连接状态
+export default function Home({ params }: HomePageProps) {
+  const { locale } = React.use(params);
+  const { isConnected } = useAccount();
+  const router = useRouter();
+  const accessToken = useAuthStore((state) => state.accessToken);
 
-  
-  
+  const { data: assetsResponse, request: fetchAssets, isLoading, error } = useApi();
+  const [hasAssets, setHasAssets] = useState<boolean | null>(null);
 
-  return (<>
-  {
-    !isConnected ?<LoggedHome /> :<NotLogIn/>
+  useEffect(() => {
+    if (!isConnected) {
+      setHasAssets(false); // If not connected, assume no assets to display
+      return;
+    }
+    console.log(accessToken, 'accessToken');
+    // if (!accessToken) {
+    //   console.warn('No access token found. Redirecting to login.');
+    //   router.push(`/${locale}/login`);
+    //   return;
+    // }
+
+    // Fetch assets using useApi
+    fetchAssets('/api/v1/assets', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  }, [isConnected, accessToken, locale, router, fetchAssets]);
+
+  useEffect(() => {
+    if (assetsResponse) {
+      if (assetsResponse.success && assetsResponse.data && assetsResponse.data.assets && assetsResponse.data.assets.length > 0) {
+        setHasAssets(true);
+      } else {
+        setHasAssets(false);
+      }
+    }
+  }, [assetsResponse]);
+
+  useEffect(() => {
+    if (error) {
+      console.error('Failed to fetch assets:', error);
+      // Decide what to do on error: show CreateProtocol, redirect, or show error message
+      setHasAssets(false); // Assume no assets on error
+    }
+  }, [error]);
+
+  if (!isConnected) {
+    return <CreateProtocol />;
   }
-  </>
-   
-  );
+
+  if (isLoading || hasAssets === null) {
+    return <div>Loading assets...</div>;
+  }
+
+  if (hasAssets) {
+    return <Assert />;
+  } else {
+    return <CreateProtocol />;
+  }
 }

@@ -23,7 +23,7 @@ const EcosystemPage: React.FC = () => {
     return (
         <PageLayout title={t('title')}>
             <div className="min-h-screen  ">
-                <div className="max-w-6xl mx-auto flex flex-col space-y-8 pt-4">
+                <div className="mx-auto flex flex-col space-y-8 pt-4">
                     {/* Top Header Section */}
                     <EcosystemSearchHeader />
 

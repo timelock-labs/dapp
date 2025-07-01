@@ -115,7 +115,7 @@ const ABILibPage: React.FC = () => {
   return (
     <PageLayout title={t('title')}>
       <div className="min-h-screen  "> {/* Page background */}
-        <div className="max-w-6xl mx-auto border border-gray-200 rounded-lg p-6 "> {/* Centered content area */}
+        <div className="mx-auto border border-gray-200 rounded-lg p-6 "> {/* Centered content area */}
           {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
             <SectionHeader

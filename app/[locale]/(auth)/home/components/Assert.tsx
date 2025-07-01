@@ -5,11 +5,9 @@ import TotalAssetValue from './TotalAssetValue';
 import AssetList from './AssetList';
 import PendingTransactions from './PendingTransactions';
 
-const LoggedHome: React.FC = () => {
-  const t = useTranslations('HomePage'); // 或者您想使用的其他命名空间
-
+const Assert: React.FC = () => {
   return (
-    <PageLayout title={t('title')}> {/* 使用 PageLayout 包裹 */}
+    <PageLayout title="Home"> {/* 使用 PageLayout 包裹 */}
       <div className="flex flex-col space-y-6"> 
 
         {/* Top Section: Total Asset Value */}
@@ -34,4 +32,4 @@ const LoggedHome: React.FC = () => {
   );
 };
 
-export default LoggedHome;
+export default Assert;

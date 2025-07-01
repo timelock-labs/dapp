@@ -56,7 +56,7 @@ arg2: ${arg2Value || 'N/A'}`;
     return (
         <PageLayout title={t('title')}>
             <div className="min-h-screen bg-withe p-8">
-                <div className="max-w-6xl mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
+                <div className="mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
 
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
                     <EncodingTransactionForm

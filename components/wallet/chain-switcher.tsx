@@ -9,20 +9,49 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown, Network } from 'lucide-react'
-
-const supportedChains = [
-  { id: 1, name: 'Ethereum', icon: '⟠', color: 'text-blue-500' },
-  { id: 56, name: 'BSC', icon: '🟨', color: 'text-yellow-500' },
-  { id: 42161, name: 'Arbitrum', icon: '🔵', color: 'text-blue-600' },
-  { id: 177, name: 'HashKey Chain', icon: '🔑', color: 'text-purple-500' },
-]
+import { useAuthStore } from '@/store/userStore';
+import { useEffect } from 'react'
+import { useApi } from '@/hooks/useApi';
 
 export function ChainSwitcher() {
   const { switchChain } = useSwitchChain()
   const chainId = useChainId()
   const { isConnected } = useAccount()
-  
-  const currentChain = supportedChains.find(chain => chain.id === chainId)
+  const { chains, fetchChains, _hasHydrated, login } = useAuthStore()
+  const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
+
+  useEffect(() => {
+    if (_hasHydrated) {
+      fetchChains()
+    }
+  }, [fetchChains, _hasHydrated])
+
+  useEffect(() => {
+    if (switchChainError) {
+      console.error('Error switching chain via API:', switchChainError);
+      // Optionally show a toast or alert to the user
+    }
+  }, [switchChainError]);
+
+  useEffect(() => {
+    if (switchChainResponse && switchChainResponse.success) {
+      login({
+        user: switchChainResponse.data.user,
+        accessToken: switchChainResponse.data.access_token,
+        refreshToken: switchChainResponse.data.refresh_token,
+        expiresAt: switchChainResponse.data.expires_at,
+      });
+      console.log('Chain switched and auth tokens updated successfully!');
+    } else if (switchChainResponse && switchChainResponse.error) {
+      console.error('Backend chain switch failed:', switchChainResponse.error.message);
+    }
+  }, [switchChainResponse, login]);
+
+  if (!_hasHydrated) {
+    return <div>Loading chains...</div>; // Or a loading spinner
+  }
+
+  const currentChain = Array.isArray(chains) ? chains.find(chain => chain.id === chainId) : undefined
 
   if (!isConnected) {
     return (
@@ -33,27 +62,47 @@ export function ChainSwitcher() {
     )
   }
 
+  const handleChainSwitch = async (newChainId: number) => {
+    try {
+      // 1. Switch chain in wallet
+      await switchChain({ chainId: newChainId });
+
+      // 3. Call backend API using the request function from useApi
+      switchChainRequest('/api/v1/auth/switch-chain', {
+        method: 'POST',
+        body: {
+          chain_id: newChainId,
+        },
+      });
+
+    } catch (error) {
+      console.error('Failed to switch chain or sign message:', error);
+      // Handle user rejecting signature or other errors
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <span className="mr-2">{currentChain?.icon || '🔗'}</span>
+        <Button variant="outline" size="sm" disabled={isSwitchingChain}>
+          <span className="mr-2"><img src={currentChain?.logo_url} alt={currentChain?.chain_name} className="h-4 w-4" /></span>
           <span className="hidden sm:inline">
-            {currentChain?.name || 'Unknown Chain'}
+            {currentChain?.chain_name || 'Unknown Chain'}
           </span>
           <ChevronDown className="ml-2 h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        {supportedChains.map((chain) => (
+        {Array.isArray(chains) && chains.map((chain) => (
           <DropdownMenuItem
             key={chain.id}
-            onClick={() => switchChain({ chainId: chain.id })}
+            onClick={() => handleChainSwitch(chain.chain_id)}
             className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
+            disabled={isSwitchingChain}
           >
-            <span className="mr-3 text-lg">{chain.icon}</span>
+            <span className="mr-3 text-lg"><img src={chain.logo_url} alt={chain.chain_name} className="h-5 w-5" /></span>
             <div className="flex flex-col">
-              <span className="font-medium">{chain.name}</span>
+              <span className="font-medium">{chain.chain_name}</span>
               {chainId === chain.id && (
                 <span className="text-xs text-muted-foreground">Connected</span>
               )}
@@ -63,4 +112,4 @@ export function ChainSwitcher() {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-} 
+}

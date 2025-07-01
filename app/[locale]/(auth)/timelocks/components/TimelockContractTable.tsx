@@ -124,8 +124,8 @@ const TimelockContractTable: React.FC = () => {
   ];
 
   return (
-    <div className="p-8 bg-white "> {/* Wrapper with a light gray background */}
-      <div className="max-w-6xl mx-auto"> {/* Max width container to center content */}
+    <div className="bg-white "> {/* Wrapper with a light gray background */}
+      <div className="mx-auto"> {/* Max width container to center content */}
         {/* Header and Buttons Section - All in one row */}
         <div className="flex items-center mb-6"> {/*  items-center for vertical alignment */}
           {/* Left Side: Section Header */}

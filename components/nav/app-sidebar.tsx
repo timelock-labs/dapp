@@ -6,16 +6,15 @@ import {
   Frame,
   ListTodo,
   BellDot,
-  Settings2,
   FileCode,
   Shield,
   Box,
   House
 } from "lucide-react"
+import Image from "next/image"
 import Logo from "@/public/logo.png"
 import { NavMain } from '@/components/nav/nav-main'
 import { NavUser } from '@/components/nav/nav-user'
-import { TeamSwitcher } from '@/components/nav/team-switcher'
 import {
   Sidebar,
   SidebarContent,
@@ -27,8 +26,7 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "support",
-    email: "m@example.com",
+    name: "support@timelock.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -65,39 +63,11 @@ const data = {
       title: "Notify",
       url: "notify",
       icon: BellDot,
-      // items: [
-      //   {
-      //     title: "General",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Security",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Notifications",
-      //     url: "#",
-      //   },
-      // ],
     },
      {
       title: "Ecosystem",
       url: "ecosystem",
       icon: Box,
-      // items: [
-      //   {
-      //     title: "General",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Security",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Notifications",
-      //     url: "#",
-      //   },
-      // ],
     },
   ],
   projects: [
@@ -123,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <img src={Logo.src} alt="Timelock Logo" />
+        <Image src={Logo} alt="Timelock Logo" className="h-8 w-[136px]" />
         {/* <TeamSwitcher teams={data.teams} /> */}
       </SidebarHeader>
       <SidebarContent>

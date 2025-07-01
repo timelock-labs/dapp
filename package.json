@@ -32,6 +32,7 @@
     "config": "link:@/i18n/config",
     "connectkit": "^1.9.0",
     "input-otp": "^1.4.2",
+    "js-cookie": "^3.0.5",
     "locale": "link:@/services/locale",
     "lucide-react": "^0.511.0",
     "next": "15.3.3",
@@ -44,13 +45,16 @@
     "solid": "link:@heroicons/react/24/solid",
     "sonner": "^2.0.4",
     "tailwind-merge": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
     "viem": "^2.30.5",
     "wagmi": "^2.15.4",
-    "zod": "^3.25.46"
+    "zod": "^3.25.46",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

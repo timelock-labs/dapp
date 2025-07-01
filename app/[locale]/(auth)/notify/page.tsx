@@ -45,8 +45,7 @@ const EmailNotificationPage: React.FC = () => {
 
   return (
     <PageLayout title={t('title')}>
-         <div className=" p-8">
-      <div className="max-w-6xl mx-auto flex flex-col space-y-8">
+      <div className="flex flex-col space-y-8">
         {/* Email Rules Header */}
         <EmailRulesHeader />
 
@@ -72,9 +71,7 @@ const EmailNotificationPage: React.FC = () => {
         onClose={() => setIsAddMailboxModalOpen(false)}
         onConfirm={handleAddMailbox}
       />
-    </div>
-    </PageLayout>
-   
+      </PageLayout>
   );
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Inbox } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 
 
 const WalletSection: React.FC = () => {
@@ -23,13 +23,12 @@ const WalletSection: React.FC = () => {
       ">
           {/* Placeholder SVG resembling an inbox/box icon */}
 
-          <Inbox
+          <Wallet
             className="w-12 h-12 /* Visual size of the icon inside the 24x24 box */
           text-black
           stroke-current stroke-2"
             fill="none"
             viewBox="0 0 24 24" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4M4 12c-1.105 0-2 .895-2 2v4a2 2 0 002 2h16a2 2 0 002-2v-4c0-1.105-.895-2-2-2zM4 12V6a2 2 0 012-2h12a2 2 0 012 2v6"></path>
 
         </div>
 
