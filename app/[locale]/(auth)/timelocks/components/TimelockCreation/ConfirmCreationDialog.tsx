@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 // Define interface for the data this dialog will display
 interface ConfirmCreationDialogProps {

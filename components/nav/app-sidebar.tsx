@@ -27,6 +27,7 @@ import {
 const data = {
   user: {
     name: "support@timelock.com",
+    email: "support@timelock.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [

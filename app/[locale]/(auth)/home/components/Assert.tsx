@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslations } from 'next-intl'; // 导入 useTranslations
 import PageLayout from '@/components/layout/PageLayout'; // 导入 PageLayout
 import TotalAssetValue from './TotalAssetValue';
 import AssetList from './AssetList';

@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image';
 import React, { useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming path
 import TextInput from '@/components/ui/TextInput';       // Assuming path
@@ -13,6 +14,7 @@ const ImportTimelockForm: React.FC = () => {
     const [remarks, setRemarks] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [confirmedAbi, setConfirmedAbi] = useState<string | null>(null);
+    
     // Dummy options for select inputs
     const chainOptions = [
         { value: 'timelock_chain', label: 'Timelock' }, // As in the image
@@ -28,7 +30,7 @@ const ImportTimelockForm: React.FC = () => {
     // Dummy data to pass to the modal
     const dummyParameters = {
         chainName: 'Arbitrum',
-        chainIcon: <img src="https://assets.arbitrum.io/logo.png" alt="Arbitrum Logo" className="w-4 h-4 mr-1" />, // Placeholder image
+        chainIcon: <Image src="https://assets.arbitrum.io/logo.png" alt="Arbitrum Logo" width={16} height={16} className="mr-1" />,
         remarks: 'Uniswap 金库合约',
         timelockAddress: '0x73823131a6778210D075140A57cfFAb1421B1a40',
         abiPlaceholder: 'Placeholder for ABI content...',
@@ -51,6 +53,7 @@ const ImportTimelockForm: React.FC = () => {
     };
 
     const handleConfirmParams = (abiContent: string) => {
+        console.log(confirmedAbi);
         setConfirmedAbi(abiContent);
         alert(`Parameters confirmed!\nABI Content:\n${abiContent}`);
         handleCloseModal(); // Close modal after confirmation
@@ -66,7 +69,7 @@ const ImportTimelockForm: React.FC = () => {
                         <SectionHeader
                             title="导入Timelock"
                             description="View and update your personal details and account information."
-                            icon={<img src={QuestionIcon.src} alt="Question Icon" width="15" height="15" />}
+                            icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
                         />
                         {/* Additional content for left column if any */}
                     </div>

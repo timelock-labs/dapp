@@ -47,7 +47,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ onSendCod
               value={code[i] || ''}
               onChange={(e) => handleChange(e, i)}
               onKeyDown={(e) => handleKeyDown(e, i)}
-              ref={(el) => (inputRefs.current[i] = el as HTMLInputElement)}
+              ref={(el) => { inputRefs.current[i] = el as HTMLInputElement; }}
               className={`w-10 h-10 text-center border border-gray-300 shadow-sm focus:outline-none focus:ring-black-500 focus:border-black-500 text-lg font-mono
                 ${i === 0 ? 'rounded-l-md' : ''}
                 ${i === codeLength / 2 - 1 ? 'rounded-r-md' : ''} 
@@ -64,7 +64,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ onSendCod
               value={code[i + codeLength / 2] || ''}
               onChange={(e) => handleChange(e, i + codeLength / 2)}
               onKeyDown={(e) => handleKeyDown(e, i + codeLength / 2)}
-              ref={(el) => (inputRefs.current[i + codeLength / 2] = el as HTMLInputElement)}
+              ref={(el) => { inputRefs.current[i + codeLength / 2] = el as HTMLInputElement; }}
               className={`w-10 h-10 text-center border border-gray-300 shadow-sm focus:outline-none focus:ring-black-500 focus:border-black-500 text-lg font-mono
                 ${i === codeLength / 2 - 1 ? 'rounded-r-md' : ''}
                  ${i === 0 ? 'rounded-l-md' : ''} 

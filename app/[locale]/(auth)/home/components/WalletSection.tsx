@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Wallet } from 'lucide-react';
 
 
 const WalletSection: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedNetwork, setSelectedNetwork] = useState<string>('BNB Smart Chain'); // Default selection
+  // const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  // const [selectedNetwork, setSelectedNetwork] = useState<string>('BNB Smart Chain'); // Default selection
 
-  const networks: string[] = ['Ethereum', 'Arbitrum One', 'BNB Smart Chain'];
+  // const networks: string[] = ['Ethereum', 'Arbitrum One', 'BNB Smart Chain'];
 
   return (
     <div className="bg-white p-12 rounded-lg  flex flex-col items-center justify-center relative border border-gray-200 border-dashed">

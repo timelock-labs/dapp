@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AppStateSchema, type AppState, type User, type Chain } from './schema';
+import { AppStateSchema, type AppState, type User } from './schema';
 import { zodMiddleware } from './zodMiddleware';
 import Cookies from 'js-cookie';
 
@@ -17,7 +17,7 @@ type AppActions = {
 // 创建 store，并包裹 zodMiddleware
 export const useAuthStore = create<AppState & AppActions>()(
   persist(
-    zodMiddleware(
+    zodMiddleware<AppState, AppActions>(
       // 第一个参数是我们的 Zod schema
       AppStateSchema,
       // 第二个参数是标准的 zustand creator
@@ -31,7 +31,7 @@ export const useAuthStore = create<AppState & AppActions>()(
         _hasHydrated: false,
         login: (data) => {
           // Here we handle the business logic, validation is handled by the middleware
-          set({ user: data.user, isAuthenticated: true, accessToken: data.accessToken, refreshToken: data.refreshToken, expiresAt: data.expiresAt });
+          set({ user: data.user, isAuthenticated: true, accessToken: data.accessToken, refreshToken: data.refreshToken, expiresAt: new Date(data.expiresAt).getTime() });
           Cookies.set('accessToken', data.accessToken, { expires: new Date(data.expiresAt) });
           // Assuming refresh token has a longer expiry, e.g., 30 days
           Cookies.set('refreshToken', data.refreshToken, { expires: 30 });
@@ -101,7 +101,6 @@ export const useAuthStore = create<AppState & AppActions>()(
         },
         loginWithInvalidData: () => {
           // This action deliberately sets data that does not conform to the schema
-          // @ts-expect-error - Deliberately setting invalid data for demonstration
           set({ user: { id: '123', name: 'x', email: 'bad-email' } });
         },
       })
@@ -120,12 +119,12 @@ export const useAuthStore = create<AppState & AppActions>()(
           Cookies.remove(name);
         },
       })),
-      onRehydrateStorage: (state) => {
-        console.log('hydration starts', state)
-        return (state) => {
-          state._hasHydrated = true
-        }
-      }
+      // onRehydrateStorage: (state) => {
+      //   console.log('hydration starts', state)
+      //   return (state) => {
+      //     state._hasHydrated = true
+      //   }
+      // }
     }
   )
 );

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 const TimeLockerSplitPage = () => {
   const { address, isConnected, chain } = useAccount();
-  const { data: apiResponse, request: walletConnect, isLoading, error } = useApi();
+  const { data: apiResponse, request: walletConnect, error } = useApi();
   const { signMessageAsync } = useSignMessage();
   const login = useAuthStore((state) => state.login);
   const router = useRouter();

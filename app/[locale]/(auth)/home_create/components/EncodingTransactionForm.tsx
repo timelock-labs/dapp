@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
@@ -49,7 +50,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <SectionHeader
           title="编码交易" // This title is currently hardcoded.
           description="View and update your personal details and account information." // This description is currently hardcoded.
-          icon={<img src={QuestionIcon.src} alt="Question Icon" width="15" height="15" />}
+          icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
         />
       </div>
 

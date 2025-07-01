@@ -11,15 +11,26 @@ interface ApiRequestOptions {
   body?: any;
 }
 
-interface UseApiReturn<T> {
-  data: T | null;
+interface UseApiReturn {
+  data: ApiResponseOptions;
   error: Error | null;
   isLoading: boolean;
   request: (url: string, options?: ApiRequestOptions) => Promise<any>; // Changed return type to Promise<any>
 }
 
-export function useApi<T>(): UseApiReturn<T> {
-  const [data, setData] = useState<T | null>(null);
+interface ApiResponseOptions {
+  data: any | null;
+  error?: {
+    code: string,
+    details: string,
+    message: string
+  } | null;
+  success: boolean;
+}
+
+
+export function useApi(): UseApiReturn {
+  const [data, setData] = useState<ApiResponseOptions>({ data: null, success: false });
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const accessToken = useAuthStore((state) => state.accessToken); // Get accessToken from useAuthStore

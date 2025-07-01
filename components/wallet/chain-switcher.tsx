@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 
 import { useSwitchChain, useChainId, useAccount } from 'wagmi'
 import { Button } from '@/components/ui/button'
@@ -65,8 +66,7 @@ export function ChainSwitcher() {
   const handleChainSwitch = async (newChainId: number) => {
     try {
       // 1. Switch chain in wallet
-      await switchChain({ chainId: newChainId });
-
+      await switchChain({ chainId: newChainId as 1 | 56 | 42161 | 177 });  
       // 3. Call backend API using the request function from useApi
       switchChainRequest('/api/v1/auth/switch-chain', {
         method: 'POST',
@@ -85,7 +85,7 @@ export function ChainSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
-          <span className="mr-2"><img src={currentChain?.logo_url} alt={currentChain?.chain_name} className="h-4 w-4" /></span>
+          <span className="mr-2"><Image src={currentChain?.logo_url || ''} alt={currentChain?.chain_name || ''} width={16} height={16} /></span>
           <span className="hidden sm:inline">
             {currentChain?.chain_name || 'Unknown Chain'}
           </span>
@@ -100,7 +100,7 @@ export function ChainSwitcher() {
             className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
             disabled={isSwitchingChain}
           >
-            <span className="mr-3 text-lg"><img src={chain.logo_url} alt={chain.chain_name} className="h-5 w-5" /></span>
+            <span className="mr-3 text-lg"><Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} /></span>
             <div className="flex flex-col">
               <span className="font-medium">{chain.chain_name}</span>
               {chainId === chain.id && (

@@ -1,5 +1,6 @@
 "use client"
-import React, { useState } from 'react';
+import Image from 'next/image';
+import React, { useState, useRef } from 'react';
 import FirstTimeTimelockIntro from './FirstTimeTimelockIntro';
 import CreateTimelockForm from './CreateTimelockForm';
 import ConfirmCreationDialog from './ConfirmCreationDialog'; // Import the new dialog component
@@ -14,14 +15,14 @@ const CreateTimelockPage: React.FC = () => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   // Dummy data for the dialog (replace with actual form data in a real app)
-  const [dialogCreationDetails, setDialogCreationDetails] = useState({
+  const dialogCreationDetails = useRef({
     chainName: 'Arbitrum',
-    chainIcon: <img src="https://assets.arbitrum.io/logo.png" alt="Arbitrum Logo" className="w-4 h-4 mr-1" />,
+    chainIcon: <Image src="https://assets.arbitrum.io/logo.png" alt="Arbitrum Logo" width={16} height={16} className="mr-1" />,
     timelockAddress: '0x73823131a6778210D075140A57cfFAb1421B1a40',
-    initiatingAddress: '0x73823131a6778210D075140A57cfFAb1421B1a40',
+    initiatingAddress: '0x73823131a6778210D075140A57cfFAb141B1a40',
     transactionHash: '0x73823131a6778210D075140A57cfFAb1421B1a40',
     contractRemarks: '这是合同的备注', // This will be the read-only remark in the dialog
-  });
+  }).current;
 
   const handleCreate = () => {
     // In a real app, you would gather data from `selectedChain`, `selectedStandard`, `minDelay`

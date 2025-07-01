@@ -13,10 +13,16 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>;
 
 export const ChainSchema = z.object({
+  chain_id: z.number(),
+  chain_name: z.string(),
+  created_at: z.string(),
+  display_name: z.string(),
   id: z.number(),
-  name: z.string(),
-  icon: z.string(),
-  color: z.string(),
+  is_active: z.boolean(),
+  is_testnet: z.boolean(),
+  logo_url: z.string(),
+  native_token: z.string(),
+  updated_at: z.string(),
 });
 
 export type Chain = z.infer<typeof ChainSchema>;
@@ -31,8 +37,4 @@ export const AppStateSchema = z.object({
   _hasHydrated: z.boolean(),
 });
 
-export type AppState = z.infer<typeof AppStateSchema>;
-
-// 使用 z.infer 从 schema 中推断出 TypeScript 类型
-export type User = z.infer<typeof UserSchema>;
 export type AppState = z.infer<typeof AppStateSchema>;

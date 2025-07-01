@@ -16,6 +16,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
   const [emailRemark, setEmailRemark] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
+  // const [ _, setVerificationCode] = useState('');
 
   // Dummy data for permissions
   // Consider moving this to props or fetching if it's dynamic
@@ -58,6 +59,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
     setEmailRemark('');
     setSelectedPermissions([]);
     setVerificationCode('');
+    console.log(verificationCode);
   };
 
   if (!isOpen) {

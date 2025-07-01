@@ -8,14 +8,8 @@ import { useAccount } from 'wagmi';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi'; // Import useApi
 
-interface HomePageProps {
-  params: {
-    locale: string;
-  };
-}
 
-export default function Home({ params }: HomePageProps) {
-  const { locale } = React.use(params);
+export default function Home() {
   const { isConnected } = useAccount();
   const router = useRouter();
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -43,7 +37,7 @@ export default function Home({ params }: HomePageProps) {
         'Content-Type': 'application/json',
       },
     });
-  }, [isConnected, accessToken, locale, router, fetchAssets]);
+  }, [isConnected, accessToken, router, fetchAssets]);
 
   useEffect(() => {
     if (assetsResponse) {
