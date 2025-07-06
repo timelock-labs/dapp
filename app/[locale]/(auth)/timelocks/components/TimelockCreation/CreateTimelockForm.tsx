@@ -1,9 +1,10 @@
 // components/timelock-creation/CreateTimelockForm.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import SelectInput from '@/components/ui/SelectInput';     // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ContractStandardSelection from './ContractStandardSelection'; // Adjust path
+import { useAuthStore } from '@/store/userStore';
 
 interface CreateTimelockFormProps {
   selectedChain: string;
@@ -17,11 +18,18 @@ interface CreateTimelockFormProps {
 const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   selectedChain, onChainChange, selectedStandard, onStandardChange, minDelay, onMinDelayChange
 }) => {
-  const chainOptions = [
-    { value: 'timelock', label: 'Timelock' }, // As in image
-    { value: 'ethereum', label: 'Ethereum' },
-    { value: 'bsc', label: 'BNB Smart Chain' },
-  ];
+  const { chains, fetchChains } = useAuthStore();
+
+  useEffect(() => {
+    if (chains.length === 0) {
+      fetchChains();
+    }
+  }, [chains, fetchChains]);
+
+  const chainOptions = chains.map(chain => ({
+    value: chain.chain_id,
+    label: chain.chain_name,
+  }));
 
   return (
     <div className="bg-white p-6 rounded-lg  border-b border-gray-200">
@@ -39,7 +47,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
             value={selectedChain}
             onChange={onChainChange}
             options={chainOptions}
-            placeholder="Timelock"
+            placeholder="选择所在链"
           />
         </div>
 

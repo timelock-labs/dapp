@@ -30,15 +30,15 @@ const TransactionEncoderPage: React.FC = () => {
     useEffect(() => {
         const generatePreview = () => {
             return `chain: BSC
-wallet : 0x73823131a67782100075140A57cfFAb1421B1a40
-timelock: 0x73823131a67782100075140A57cfFAb1421B1a40
-target : ${target || '0x73823131a67782100075140A57cfFAb1421B1a40'}
-value : ${value || '0'}
-calldata: 0x73823131a67782100075140A57cfFAb1421B1a40
-time : ${timeValue || '17903210'}
-Function: ${functionValue || 'N/A'}
-arg1: ${arg1Value || 'N/A'}
-arg2: ${arg2Value || 'N/A'}`;
+                wallet : 0x73823131a67782100075140A57cfFAb1421B1a40
+                timelock: 0x73823131a67782100075140A57cfFAb1421B1a40
+                target : ${target || '0x73823131a67782100075140A57cfFAb1421B1a40'}
+                value : ${value || '0'}
+                calldata: 0x73823131a67782100075140A57cfFAb1421B1a40
+                time : ${timeValue || '17903210'}
+                Function: ${functionValue || 'N/A'}
+                arg1: ${arg1Value || 'N/A'}
+                arg2: ${arg2Value || 'N/A'}`;
         };
         setPreviewContent(generatePreview());
     }, [target, value, timeValue, functionValue, arg1Value, arg2Value]);
