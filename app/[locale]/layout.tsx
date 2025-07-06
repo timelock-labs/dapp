@@ -34,7 +34,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <title>next-intl & next-auth</title>
+        <title>TimeLocker</title>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> {/* Apply font variables here */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
