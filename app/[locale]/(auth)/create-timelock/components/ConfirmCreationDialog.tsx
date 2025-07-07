@@ -99,7 +99,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">合约备注</label>
           <input
             type="text" // Input field for remarks
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900"
+            className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm bg-white text-gray-900"
             placeholder="Placeholder" // As in the image
             value={creationDetails.contractRemarks} // This field is read-only in the modal
             readOnly // Make it read-only

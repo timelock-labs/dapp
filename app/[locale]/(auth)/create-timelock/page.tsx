@@ -1,9 +1,10 @@
 "use client"
 import Image from 'next/image';
 import React, { useState, useRef } from 'react';
-import FirstTimeTimelockIntro from './FirstTimeTimelockIntro';
-import CreateTimelockForm from './CreateTimelockForm';
-import ConfirmCreationDialog from './ConfirmCreationDialog'; // Import the new dialog component
+import FirstTimeTimelockIntro from './components/FirstTimeTimelockIntro';
+import CreateTimelockForm from './components/CreateTimelockForm';
+import ConfirmCreationDialog from './components/ConfirmCreationDialog'; // Import the new dialog component
+import PageLayout from "@/components/layout/PageLayout";
 
 const CreateTimelockPage: React.FC = () => {
   // Form States (existing)
@@ -46,40 +47,42 @@ const CreateTimelockPage: React.FC = () => {
   };
 
   return (
-    <div className=" bg-white p-8">
-      <div className="mx-auto flex flex-col space-y-8">
-        {/* Top Info Section */}
-        <FirstTimeTimelockIntro />
+    <PageLayout title="创建Timelock">
+        <div className=" bg-white p-8">
+        <div className="mx-auto flex flex-col space-y-8">
+            {/* Top Info Section */}
+            <FirstTimeTimelockIntro />
 
-        {/* Main Form Area */}
-        <CreateTimelockForm
-          selectedChain={selectedChain}
-          onChainChange={setSelectedChain}
-          selectedStandard={selectedStandard}
-          onStandardChange={setSelectedStandard}
-          minDelay={minDelay}
-          onMinDelayChange={setMinDelay}
-        />
+            {/* Main Form Area */}
+            <CreateTimelockForm
+            selectedChain={selectedChain}
+            onChainChange={setSelectedChain}
+            selectedStandard={selectedStandard}
+            onStandardChange={setSelectedStandard}
+            minDelay={minDelay}
+            onMinDelayChange={setMinDelay}
+            />
 
-        {/* Create Button (Bottom Right) */}
-        <div className="flex justify-end mt-4">
-          <button
-            onClick={handleCreate}
-            className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-          >
-            创建
-          </button>
+            {/* Create Button (Bottom Right) */}
+            <div className="flex justify-end mt-4">
+            <button
+                onClick={handleCreate}
+                className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+            >
+                创建
+            </button>
+            </div>
         </div>
-      </div>
 
-      {/* Confirmation Dialog (rendered conditionally) */}
-      <ConfirmCreationDialog
-        isOpen={isConfirmDialogOpen}
-        onClose={handleConfirmDialogClose}
-        onConfirm={handleConfirmDialogConfirm}
-        creationDetails={dialogCreationDetails}
-      />
-    </div>
+        {/* Confirmation Dialog (rendered conditionally) */}
+        <ConfirmCreationDialog
+            isOpen={isConfirmDialogOpen}
+            onClose={handleConfirmDialogClose}
+            onConfirm={handleConfirmDialogConfirm}
+            creationDetails={dialogCreationDetails}
+        />
+        </div>
+    </PageLayout>
   );
 };
 

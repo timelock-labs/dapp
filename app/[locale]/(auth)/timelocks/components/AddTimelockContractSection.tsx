@@ -3,16 +3,19 @@
 import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
 import TimelockOptionCard from './TimelockOptionCard'; // Assuming TimelockOptionCard is in components/
+import { useRouter, useParams } from 'next/navigation';
 
 const AddTimelockContractSection: React.FC = () => {
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale;
+
   const handleCreateContract = () => {
-    console.log('Create Timelock Contract option clicked');
-    // Here you would navigate to a page or open a modal for creating a contract
+    router.push(`/${locale}/create-timelock`);
   };
 
   const handleImportContract = () => {
-    console.log('Import existing Timelock Contract option clicked');
-    // Here you would navigate to a page or open a modal for importing a contract
+    router.push(`/${locale}/import-timelock`);
   };
 
   return (

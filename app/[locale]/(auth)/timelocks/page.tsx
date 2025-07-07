@@ -4,13 +4,15 @@ import React, { useEffect } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import AddTimelockContractSection from "./components/AddTimelockContractSection";
 import TimelockContractTable from "./components/TimelockContractTable";
-import ImportTimelockForm from "./components/ImportTimelockForm";
-import CreateTimelockPage from './components/TimelockCreation/CreateTimelockPage'
 import { useApi } from '@/hooks/useApi';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 
 const Timelocks: React.FC = () => {
     const { data: timelockListResponse, request: fetchTimelockList, isLoading, error } = useApi();
+    const params = useParams();
+    const locale = params.locale;
 
     useEffect(() => {
         fetchTimelockList('/api/v1/timelock/list', {
@@ -31,8 +33,7 @@ const Timelocks: React.FC = () => {
     return (
         <PageLayout title="Timelock" >
             {hasTimelocks ? <TimelockContractTable /> : <AddTimelockContractSection />}
-            {/* <ImportTimelockForm />
-            <CreateTimelockPage/> */}
+            
         </PageLayout>
     )
 }

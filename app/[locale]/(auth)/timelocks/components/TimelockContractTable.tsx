@@ -2,6 +2,7 @@
 import React, { useState ,useEffect,useRef} from 'react'; // Import useState
 import TableComponent from '@/components/ui/TableComponent'; // Import the generic table component
 import SectionHeader from '@/components/ui/SectionHeader'; // Reusing SectionHeader
+import { useRouter, useParams } from 'next/navigation';
 
 // Define name for Timelock Contract data from Frame 2 (1).jpg
 interface TimelockContract {
@@ -36,11 +37,15 @@ const TimelockContractTable: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale;
+
   const handleImportContract = () => {
-    console.log('Import existing Timelock Contract button clicked');
+    router.push(`/${locale}/import-timelock`);
   };
   const handleCreateContract = () => {
-    console.log('Create Timelock Contract button clicked');
+    router.push(`/${locale}/create-timelock`);
   };
   const handleEllipsisMenu = (rowId: string) => {
     if (openDropdownId === rowId) {
