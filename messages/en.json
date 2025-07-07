@@ -14,8 +14,8 @@
     "submitButton": "Sign Up",
     "loginLink": "Already have an account? Login"
   },
-   "HomePage": {
-    "title": "Hello world!"
+  "HomePage": {
+    "title": "Home"
   },
   "common": {
     "connect_wallet": "Connect Wallet",

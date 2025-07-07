@@ -1,75 +1,41 @@
 // components/AssetList.tsx
-import React, { useState } from 'react'; // Import useState
-
-// A helper component for the composite icon
-interface CompositeCoinIconProps {
-  mainColor: string; // Tailwind color class for main icon background
-  mainIconText: string; // Text for the main icon (e.g., 'BNB')
-  overlayColor: string; // Tailwind color class for overlay icon background
-  overlayIconText: string; // Text for the overlay icon (e.g., 'E')
-}
-
-const CompositeCoinIcon: React.FC<CompositeCoinIconProps> = ({
-  mainColor,
-  mainIconText,
-  overlayColor,
-  overlayIconText,
-}) => {
-  return (
-    <div className="relative w-9 h-9"> {/* Adjusted size to match visual */}
-      {/* Main Icon */}
-      <div className={`absolute inset-0 rounded-full ${mainColor} flex items-center justify-center text-white text-sm font-bold`}>
-        {mainIconText}
-      </div>
-      {/* Overlay Icon */}
-      <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full ${overlayColor} flex items-center justify-center text-white text-xs`}>
-        {overlayIconText}
-      </div>
-    </div>
-  );
-};
+import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface Asset {
-  id: string;
-  name: string;
-  price: string;
-  amount: string;
-  value: string;
-  // Now using specific props for the composite icon
-  mainIconColor: string;
-  mainIconText: string;
-  overlayIconColor: string;
-  overlayIconText: string;
+  balance: string;
+  balance_wei: string;
+  chain_display_name: string;
+  chain_id: number;
+  chain_logo_url: string;
+  chain_name: string;
+  contract_address: string;
+  is_native: boolean;
+  is_testnet: boolean;
+  last_updated: string;
+  price_change_24h: number;
+  token_decimals: number;
+  token_logo_url: string;
+  token_name: string;
+  token_price: number;
+  token_symbol: string;
+  usd_value: number;
 }
 
-// Increased dummy data for pagination demonstration
-const dummyAssets: Asset[] = [
-  { id: '1', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-yellow-400', mainIconText: 'BNB', overlayIconColor: 'bg-blue-500', overlayIconText: 'E' },
-  { id: '2', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-yellow-400', mainIconText: 'BNB', overlayIconColor: 'bg-purple-500', overlayIconText: 'P' },
-  { id: '3', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-blue-500', mainIconText: 'ETH', overlayIconColor: 'bg-yellow-400', overlayIconText: 'B' },
-  { id: '4', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-yellow-400', mainIconText: 'BNB', overlayIconColor: 'bg-red-500', overlayIconText: 'R' },
-  { id: '5', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-orange-500', mainIconText: 'BTC', overlayIconColor: 'bg-yellow-400', overlayIconText: 'B' },
-  { id: '6', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-yellow-400', mainIconText: 'BNB', overlayIconColor: 'bg-green-500', overlayIconText: 'G' },
-  { id: '7', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-yellow-400', mainIconText: 'BNB', overlayIconColor: 'bg-pink-500', overlayIconText: 'X' },
-  // Second page of data
-  { id: '8', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-red-400', mainIconText: 'DOT', overlayIconColor: 'bg-yellow-400', overlayIconText: 'Y' },
-  { id: '9', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-green-400', mainIconText: 'ADA', overlayIconColor: 'bg-blue-500', overlayIconText: 'Z' },
-  { id: '10', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-purple-400', mainIconText: 'SOL', overlayIconColor: 'bg-orange-500', overlayIconText: 'A' },
-  // Third page of data (partial)
-  { id: '11', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-indigo-400', mainIconText: 'XRP', overlayIconColor: 'bg-gray-500', overlayIconText: 'B' },
-  { id: '12', name: 'BNB', price: '$617.19', amount: '36.26', value: '$180,269.75', mainIconColor: 'bg-teal-400', mainIconText: 'LTC', overlayIconColor: 'bg-red-500', overlayIconText: 'C' },
-];
+interface AssetListProps {
+  assets: Asset[];
+}
 
-const AssetList: React.FC = () => {
+const AssetList: React.FC<AssetListProps> = ({ assets }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7; // As shown in "1-7 of 120"
 
-  const totalItems = dummyAssets.length;
+  const totalItems = assets.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentAssets = dummyAssets.slice(startIndex, endIndex);
+  const currentAssets = assets.slice(startIndex, endIndex);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -98,23 +64,37 @@ const AssetList: React.FC = () => {
 
       {/* Asset List Items */}
       <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-        {currentAssets.map((asset) => ( // Use currentAssets here
-          <div key={asset.id} className="grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0">
+        {currentAssets.map((asset, index) => (
+          <div key={index} className="grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0">
             <div className="flex items-center space-x-3">
-              <CompositeCoinIcon
-                mainColor={asset.mainIconColor}
-                mainIconText={asset.mainIconText}
-                overlayColor={asset.overlayIconColor}
-                overlayIconText={asset.overlayIconText}
-              />
+              <div className="relative w-9 h-9"> {/* Adjusted size to match visual */}
+                {asset.token_logo_url && (
+                  <Image
+                    src={asset.token_logo_url}
+                    alt={asset.token_name || 'Token'}
+                    width={36}
+                    height={36}
+                    className="rounded-full"
+                  />
+                )}
+                {asset.chain_logo_url && (
+                  <Image
+                    src={asset.chain_logo_url}
+                    alt={asset.chain_name || 'Chain'}
+                    width={16}
+                    height={16}
+                    className="absolute bottom-0 right-0 rounded-full border border-white"
+                  />
+                )}
+              </div>
               <div>
-                <p className="text-gray-800 font-medium text-base">{asset.name}</p>
-                <p className="text-gray-500 text-sm">{asset.price}</p>
+                <p className="text-gray-800 font-medium text-base">{asset.token_name || asset.chain_display_name}</p>
+                <p className="text-gray-500 text-sm">${asset.token_price?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-gray-800 font-medium text-base">{asset.amount}</p>
-              <p className="text-gray-500 text-sm">{asset.value}</p>
+              <p className="text-gray-800 font-medium text-base">{asset.balance}</p>
+              <p className="text-gray-500 text-sm">${asset.usd_value?.toFixed(2) || '0.00'}</p>
             </div>
           </div>
         ))}
