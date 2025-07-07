@@ -13,10 +13,17 @@ interface CreateTimelockFormProps {
   onStandardChange: (value: string) => void;
   minDelay: string;
   onMinDelayChange: (value: string) => void;
+  proposers: string;
+  onProposersChange: (value: string) => void;
+  executors: string;
+  onExecutorsChange: (value: string) => void;
+  admin: string;
+  onAdminChange: (value: string) => void;
 }
 
 const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
-  selectedChain, onChainChange, selectedStandard, onStandardChange, minDelay, onMinDelayChange
+  selectedChain, onChainChange, selectedStandard, onStandardChange, minDelay, onMinDelayChange,
+  proposers, onProposersChange, executors, onExecutorsChange, admin, onAdminChange
 }) => {
   const { chains, fetchChains } = useAuthStore();
 
@@ -39,9 +46,8 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6">
-        {/* Left Column for overall layout, right column for form fields */}
         {/* Select Chain */}
-        <div className="md:col-start-2 min-w-[548px]"> {/* This field is in the right column of the internal grid */}
+        <div className="md:col-start-2 min-w-[548px]">
           <SelectInput
             label="选择所在链"
             value={selectedChain}
@@ -52,7 +58,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         </div>
 
         {/* Contract Standard Selection */}
-        <div className="md:col-start-2"> {/* This field is in the right column of the internal grid */}
+        <div className="md:col-start-2">
           <ContractStandardSelection
             selectedStandard={selectedStandard}
             onStandardChange={onStandardChange}
@@ -60,7 +66,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         </div>
 
         {/* minDelay Input */}
-        <div className="md:col-start-2 min-w-[548px]"> {/* This field is in the right column of the internal grid */}
+        <div className="md:col-start-2 min-w-[548px]"> 
           <TextInput
             label="minDelay"
             value={minDelay}
@@ -69,6 +75,34 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
             type="number" // Assuming delay is a number
           />
         </div>
+        {selectedStandard === 'openzeppelin' && (
+          <>
+            <div className="md:col-start-2 min-w-[548px]">
+              <TextInput
+                label="Proposers"
+                value={proposers}
+                onChange={onProposersChange}
+                placeholder="授予提议者和取消者角色的账户"
+              />
+            </div>
+            <div className="md:col-start-2 min-w-[548px]">
+              <TextInput
+                label="Executors"
+                value={executors}
+                onChange={onExecutorsChange}
+                placeholder="被授予执行者角色的账户"
+              />
+            </div>
+            <div className="md:col-start-2 min-w-[548px]">
+              <TextInput
+                label="Admin"
+                value={admin}
+                onChange={onAdminChange}
+                placeholder="授予管理员角色的可选帐户；使用零地址禁用"
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

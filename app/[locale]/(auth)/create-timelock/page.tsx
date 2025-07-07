@@ -11,6 +11,9 @@ const CreateTimelockPage: React.FC = () => {
   const [selectedChain, setSelectedChain] = useState('timelock'); // Default value for demo
   const [selectedStandard, setSelectedStandard] = useState('compound');
   const [minDelay, setMinDelay] = useState('3600'); // Default value for demo
+  const [proposers, setProposers] = useState('');
+  const [executors, setExecutors] = useState('');
+  const [admin, setAdmin] = useState('');
 
   // State for the Confirm Creation Dialog
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
@@ -55,12 +58,18 @@ const CreateTimelockPage: React.FC = () => {
 
             {/* Main Form Area */}
             <CreateTimelockForm
-            selectedChain={selectedChain}
-            onChainChange={setSelectedChain}
-            selectedStandard={selectedStandard}
-            onStandardChange={setSelectedStandard}
-            minDelay={minDelay}
-            onMinDelayChange={setMinDelay}
+              selectedChain={selectedChain}
+              onChainChange={setSelectedChain}
+              selectedStandard={selectedStandard}
+              onStandardChange={setSelectedStandard}
+              minDelay={minDelay}
+              onMinDelayChange={setMinDelay}
+              proposers={proposers}
+              onProposersChange={setProposers}
+              executors={executors}
+              onExecutorsChange={setExecutors}
+              admin={admin}
+              onAdminChange={setAdmin}
             />
 
             {/* Create Button (Bottom Right) */}

@@ -98,6 +98,10 @@
     "cancelSuccess": "交易取消成功。",
     "cancelError": "交易取消失败。",
     "executeSuccess": "交易执行成功。",
+    "executeError": "交易执行失败。",
+    "cancelSuccess": "交易取消成功。",
+    "cancelError": "交易取消失败。",
+    "executeSuccess": "交易执行成功。",
     "executeError": "交易执行失败。"
   },
   "LocaleSwitcher": {

@@ -1,104 +1,55 @@
-"use client";
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+// components/AddTimelockContractSection.tsx
+"use client"
+import React from 'react';
+import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
+import TimelockOptionCard from './TimelockOptionCard'; // Assuming TimelockOptionCard is in components/
+import { useRouter, useParams } from 'next/navigation';
 
-interface AddTimelockContractSectionProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAddTimelock: (data: any) => void; // Placeholder for actual data type
-}
+const AddTimelockContractSection: React.FC = () => {
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale;
 
-const AddTimelockContractSection: React.FC<AddTimelockContractSectionProps> = ({ isOpen, onClose, onAddTimelock }) => {
-  const t = useTranslations("Timelocks");
-  const [contractAddress, setContractAddress] = useState('');
-  const [chainId, setChainId] = useState('');
-  const [standard, setStandard] = useState('');
-  const [remark, setRemark] = useState('');
+  const handleCreateContract = () => {
+    router.push(`/${locale}/create-timelock`);
+  };
 
-  const handleSubmit = () => {
-    // Basic validation
-    if (!contractAddress || !chainId || !standard) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-    onAddTimelock({
-      contract_address: contractAddress,
-      chain_id: parseInt(chainId),
-      standard,
-      remark,
-    });
-    onClose();
+  const handleImportContract = () => {
+    router.push(`/${locale}/import-timelock`);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{t('newTimelock')}</DialogTitle>
-          <DialogDescription>
-            {t('managedTimelocksDescription')}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="contractAddress" className="text-right">
-              {t('contractAddress')}
-            </Label>
-            <Input
-              id="contractAddress"
-              value={contractAddress}
-              onChange={(e) => setContractAddress(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="chainId" className="text-right">
-              {t('chain')}
-            </Label>
-            <Input
-              id="chainId"
-              value={chainId}
-              onChange={(e) => setChainId(e.target.value)}
-              className="col-span-3"
-              type="number"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="standard" className="text-right">
-              {t('standard')}
-            </Label>
-            <Input
-              id="standard"
-              value={standard}
-              onChange={(e) => setStandard(e.target.value)}
-              className="col-span-3"
-              placeholder="compound or openzeppelin"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="remark" className="text-right">
-              {t('remark')}
-            </Label>
-            <Input
-              id="remark"
-              value={remark}
-              onChange={(e) => setRemark(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
+    <div className="bg-white "> {/* Wrapper with a light gray background */}
+      <div className="mx-auto"> {/* Max width container to center content */}
+        {/* Section Header */}
+        <SectionHeader
+          title="添加Timelock 合约"
+          description="Manage or upgrade your plan."
+        />
+
+        {/* Two option cards in a responsive grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          {/* Black Card: Create Timelock Contract */}
+          <TimelockOptionCard
+            title="创建 Timelock 合约"
+            description="This is a card description."
+            bgColor="bg-black"
+            textColor="text-white"
+            onClick={handleCreateContract}
+          />
+
+          {/* White Card: Import existing Timelock Contract */}
+          <TimelockOptionCard
+            title="导入现有 Timelock 合约"
+            description="This is a card description."
+            bgColor="bg-white"
+            textColor="text-gray-900"
+            borderColor="border-gray-200" // Explicit border for visibility on white background
+            onClick={handleImportContract}
+          />
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            {t('cancel')}
-          </Button>
-          <Button onClick={handleSubmit}>{t('add')}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
