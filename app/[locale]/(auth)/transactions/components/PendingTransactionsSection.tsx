@@ -19,6 +19,8 @@ interface PendingTxRow {
   status: string;
   operations: React.ReactNode;
   chainIcon: React.ReactNode;
+  can_cancel: boolean;
+  can_execute: boolean;
 }
 
 const getPendingTxTypeStyle = (type: string) => {
@@ -73,6 +75,79 @@ const PendingTransactionsSection: React.FC = () => {
     }
   }, [error]);
 
+  const { data: cancelResponse, request: cancelTx, error: cancelError } = useApi();
+  const { data: executeResponse, request: executeTx, error: executeError } = useApi();
+
+  const handleCancel = async (id: number) => {
+    if (accessToken) {
+      await cancelTx(`/api/v1/transaction/${id}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+  };
+
+  const handleExecute = async (id: number) => {
+    if (accessToken) {
+      await executeTx(`/api/v1/transaction/${id}/execute`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (cancelResponse && cancelResponse.success) {
+      toast.success(t('cancelSuccess'));
+      // Refresh pending transactions after successful cancellation
+      debouncedFetch(`/api/v1/transaction/pending?page=1&page_size=10${searchQuery ? `&q=${searchQuery}` : ''}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } else if (cancelResponse && !cancelResponse.success) {
+      toast.error(t('cancelError'));
+    }
+  }, [cancelResponse, t, debouncedFetch, accessToken, searchQuery]);
+
+  useEffect(() => {
+    if (executeResponse && executeResponse.success) {
+      toast.success(t('executeSuccess'));
+      // Refresh pending transactions after successful execution
+      debouncedFetch(`/api/v1/transaction/pending?page=1&page_size=10${searchQuery ? `&q=${searchQuery}` : ''}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } else if (executeResponse && !executeResponse.success) {
+      toast.error(t('executeError'));
+    }
+  }, [executeResponse, t, debouncedFetch, accessToken, searchQuery]);
+
+  useEffect(() => {
+    if (cancelError) {
+      console.error('Cancel API Error:', cancelError);
+      toast.error(t('cancelError'));
+    }
+  }, [cancelError, t]);
+
+  useEffect(() => {
+    if (executeError) {
+      console.error('Execute API Error:', executeError);
+      toast.error(t('executeError'));
+    }
+  }, [executeError, t]);
+
   const columns = [
     {
       key: 'chain_name',
@@ -100,9 +175,24 @@ const PendingTransactionsSection: React.FC = () => {
       key: 'operations',
       header: t('operations'),
       render: (row: PendingTxRow) => (
-        <button onClick={() => console.log('Operations for:', row.id)} className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors">
-          ...
-        </button>
+        <div className="flex space-x-2">
+          {row.can_cancel && (
+            <button
+              onClick={() => handleCancel(row.id)}
+              className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-100 transition-colors"
+            >
+              {t('cancel')}
+            </button>
+          )}
+          {row.can_execute && (
+            <button
+              onClick={() => handleExecute(row.id)}
+              className="text-green-500 hover:text-green-700 p-1 rounded-md hover:bg-green-100 transition-colors"
+            >
+              {t('execute')}
+            </button>
+          )}
+        </div>
       ),
     },
   ];

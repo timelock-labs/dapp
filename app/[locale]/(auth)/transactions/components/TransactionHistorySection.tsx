@@ -141,7 +141,7 @@ const TransactionHistorySection: React.FC = () => {
           </div>
           <div className="flex items-center space-x-3">
             <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search" />
-            <ExportButton onClick={handleExport} />
+            <ExportButton onClick={handleExport} disabled={historyTxs.length === 0} />
           </div>
         </div>
       </div>

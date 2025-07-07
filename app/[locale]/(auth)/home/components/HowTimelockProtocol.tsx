@@ -12,7 +12,7 @@ const HowTimelockWorks: React.FC = () => {
         Timelock Protocol 提供了全套的基于 Timelock 机制的工具，用户可以在平台上创建一个 Timelock 合约或者导入符合标准的已有 Timelock 合约，即可在平台上实现
       </p>
       <a
-        href="#"
+        href="https://timelock.gitbook.io/timelock/"
         className="inline-flex items-center justify-center bg-white text-black py-2 px-4 rounded-md text-sm font-semibold border border-gray-300 hover:shadow-md /* Add shadow on hover for the button itself */ focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300"
       >
         Read more{' '}

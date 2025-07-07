@@ -99,7 +99,7 @@
   },
   "Timelocks": {
     "title": "Timelocks",
-    "managedTimelocks": "Managed Timelocks",
+    "managedTimelocks": "Add Timelock Contract",
     "managedTimelocksDescription": "View and manage your timelock contracts.",
     "newTimelock": "New Timelock",
     "contractAddress": "Contract Address",
@@ -160,7 +160,19 @@
     "execute": "Execute",
     "retrySubmit": "Retry Submit",
     "fetchTransactionListSuccess": "Transaction list fetched successfully.",
-    "fetchTransactionListError": "Failed to fetch transaction list: {message}"
+    "fetchTransactionListError": "Failed to fetch transaction list: {message}",
+    "cancelSuccess": "Transaction cancelled successfully.",
+    "cancelError": "Failed to cancel transaction.",
+    "executeSuccess": "Transaction executed successfully.",
+    "executeError": "Failed to execute transaction.",
+    "cancelSuccess": "Transaction cancelled successfully.",
+    "cancelError": "Failed to cancel transaction.",
+    "executeSuccess": "Transaction executed successfully.",
+    "executeError": "Failed to execute transaction.",
+    "cancelSuccess": "Transaction cancelled successfully.",
+    "cancelError": "Failed to cancel transaction.",
+    "executeSuccess": "Transaction executed successfully.",
+    "executeError": "Failed to execute transaction."
   },
   "Notify": {
     "title": "Email Notifications",

@@ -12,7 +12,7 @@ const HowTimelockWorks: React.FC = () => {
         Timelock 是一种智能合约安全机制，同时也是一种钱包，用于在区块链中延迟执行特定操作。它通过设置一个“解锁时间”，在该时间之前，操作无法被执行。这种机制...
       </p>
       <a
-        href="#"
+        href="https://timelock.gitbook.io/timelock/"
         className="inline-flex items-center justify-center bg-white text-black py-2 px-4 rounded-md text-sm font-semibold border border-gray-300 hover:shadow-md /* Add shadow on hover for the button itself */ focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300"
       >
         Read more{' '}
