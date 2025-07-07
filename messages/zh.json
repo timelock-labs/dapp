@@ -1,5 +1,5 @@
 {
-   "ABI-Lib": {
+  "ABI-Lib": {
     "title": "ABI 库",
     "abiName": "ABI 名称",
     "addressUser": "地址用户",
@@ -23,6 +23,27 @@
     "deleteAbiSuccess": "ABI 删除成功。",
     "deleteAbiError": "删除 ABI 失败：{message}"
   },
+  "Timelocks": {
+    "title": "时间锁",
+    "managedTimelocks": "管理的时间锁",
+    "managedTimelocksDescription": "查看和管理您的时间锁合约。",
+    "newTimelock": "新建时间锁",
+    "contractAddress": "合约地址",
+    "chain": "链",
+    "standard": "标准",
+    "status": "状态",
+    "remark": "备注",
+    "createdAt": "创建时间",
+    "operations": "操作",
+    "viewDetail": "查看详情",
+    "delete": "删除",
+    "fetchTimelockListSuccess": "时间锁列表获取成功。",
+    "fetchTimelockListError": "获取时间锁列表失败：{message}",
+    "cancel": "取消",
+    "add": "添加",
+    "createTimelockSuccess": "时间锁创建成功。",
+    "createTimelockError": "创建时间锁失败：{message}"
+  },
   "Ecosystem": {
     "title": "Ecosystem"
   },
@@ -34,23 +55,38 @@
   },
   "Transactions": {
     "title": "交易",
-    "encodingSectionTitle": "编码交易",
-    "encodingSectionDescription": "查看并更新您的个人详细信息和账户信息。",
-    "sendTransactionButton": "发起交易",
-    "previewSectionTitle": "编码预览",
-    "previewSectionDescription": "查看已编码交易的详细信息。",
-    "AddABIForm": {
-      "title": "添加 ABI",
-      "description": "请输入 ABI 的名称和 JSON 内容。",
-      "nameLabel": "名称",
-      "descriptionLabel": "描述",
-      "contentLabel": "ABI 内容 (JSON)",
-      "addButton": "添加",
-      "cancelButton": "取消"
-    }
-  },
-  "Timelocks": {
-    "title": "Timelocks"
+    "pending": "待处理",
+    "history": "历史",
+    "pendingTransactions": "待处理交易",
+    "transactionHistory": "交易历史",
+    "chain": "所在链",
+    "tagRemark": "标签备注",
+    "timelockAddress": "Timelock 地址",
+    "txHash": "交易hash",
+    "type": "类型",
+    "operations": "操作",
+    "fetchPendingTxsSuccess": "待处理交易获取成功。",
+    "fetchPendingTxsError": "获取待处理交易失败。",
+    "fetchHistoryTxsSuccess": "交易历史获取成功。",
+    "fetchHistoryTxsError": "获取交易历史失败。",
+    "all": "全部",
+    "queued": "排队中",
+    "executed": "已执行",
+    "expired": "已失效",
+    "canceled": "已取消",
+    "newTransaction": "新建交易",
+    "id": "ID",
+    "standard": "标准",
+    "status": "状态",
+    "description": "描述",
+    "eta": "ETA",
+    "createdAt": "创建时间",
+    "viewDetail": "查看详情",
+    "cancel": "取消",
+    "execute": "执行",
+    "retrySubmit": "重试提交",
+    "fetchTransactionListSuccess": "交易列表获取成功。",
+    "fetchTransactionListError": "获取交易列表失败：{message}"
   },
   "LocaleSwitcher": {
     "en": "英",
