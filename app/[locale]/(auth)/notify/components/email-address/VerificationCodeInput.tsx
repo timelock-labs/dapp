@@ -1,15 +1,19 @@
 // components/email-address/VerificationCodeInput.tsx
 import React, { useState, useRef, useEffect } from 'react';
+import { useApi } from '@/hooks/useApi';
+import { toast } from 'sonner';
 
 interface VerificationCodeInputProps {
+  email: string;
   onSendCode: () => void;
   onCodeChange: (code: string) => void;
   codeLength?: number;
 }
 
-const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ onSendCode, onCodeChange, codeLength = 6 }) => {
+const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, onSendCode, onCodeChange, codeLength = 6 }) => {
   const [code, setCode] = useState<string[]>(Array(codeLength).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const { request: resendCode } = useApi();
 
   useEffect(() => {
     onCodeChange(code.join(''));
@@ -32,6 +36,25 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ onSendCod
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === 'Backspace' && !code[index] && index > 0 && inputRefs.current[index - 1]) {
       inputRefs.current[index - 1].focus();
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (!email) {
+      toast.error('请输入邮箱地址！');
+      return;
+    }
+    const response = await resendCode('/api/v1/email-notifications/resend-code', {
+      method: 'POST',
+      body: {
+        email,
+      },
+    });
+
+    if (response && response.success) {
+      toast.success('验证码已发送！');
+    } else if (response && !response.success) {
+      toast.error(`发送验证码失败: ${response.error?.message || '未知错误'}`);
     }
   };
 

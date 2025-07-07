@@ -1,47 +1,91 @@
 "use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import EmailRulesHeader from './components/email-notifications/EmailRulesHeader';
 import MailboxCard from './components/email-notifications/MailboxCard';
 import AddMailboxCard from './components/email-notifications/AddMailboxCard';
-import AddMailboxModal from "./components/email-address/AddMailboxModal"
+import AddMailboxModal from "./components/email-address/AddMailboxModal";
+import EditMailboxModal from "./components/email-address/EditMailboxModal";
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
+import { useApi } from '@/hooks/useApi';
+import { toast } from 'sonner';
 
-interface Mailbox {
-  id: string;
-  name: string;
+interface EmailNotification {
+  created_at: string;
   email: string;
+  email_remark: string;
+  id: number;
+  is_active: boolean;
+  is_verified: boolean;
+  timelock_contracts: string[];
+  updated_at: string;
 }
 
 const EmailNotificationPage: React.FC = () => {
-    const  t  = useTranslations('Notify');
-  // Dummy data for mailboxes
-  const [mailboxes, setMailboxes] = useState<Mailbox[]>([
-    { id: 'm1', name: 'Uniswap 安全部门', email: 'kaso@foxmail.com' },
-    { id: 'm2', name: 'Uniswap 安全部门', email: 'kaso@foxmail.com' },
-    { id: 'm3', name: 'Uniswap 安全部门', email: 'kaso@foxmail.com' },
-    { id: 'm4', name: 'Uniswap 安全部门', email: 'kaso@foxmail.com' },
-  ]);
-
+  const t = useTranslations('Notify');
+  const [mailboxes, setMailboxes] = useState<EmailNotification[]>([]);
   const [isAddMailboxModalOpen, setIsAddMailboxModalOpen] = useState(false);
+  const [isEditMailboxModalOpen, setIsEditMailboxModalOpen] = useState(false);
+  const [editingMailbox, setEditingMailbox] = useState<EmailNotification | null>(null);
 
-  const handleDeleteMailbox = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this mailbox?')) {
-      setMailboxes(mailboxes.filter((mb) => mb.id !== id));
-      console.log(`Deleted mailbox with ID: ${id}`);
+  const { data: emailListResponse, request: fetchEmailList, isLoading, error } = useApi();
+  const { data: deleteEmailResponse, request: deleteEmail } = useApi();
+
+  useEffect(() => {
+    fetchEmailList('/api/v1/email-notifications', {
+      method: 'GET',
+    });
+  }, [fetchEmailList, deleteEmailResponse]);
+
+  useEffect(() => {
+    if (emailListResponse && emailListResponse.success) {
+      setMailboxes(emailListResponse.data.items);
+      toast.success(t('fetchEmailListSuccess'));
+    } else if (emailListResponse && !emailListResponse.success) {
+      toast.error(t('fetchEmailListError', { message: emailListResponse.error?.message || 'Unknown error' }));
+    }
+  }, [emailListResponse, t]);
+
+  useEffect(() => {
+    if (error) {
+      console.error('API Error:', error);
+    }
+  }, [error]);
+
+  const handleDeleteMailbox = async (id: number, email: string) => {
+    if (window.confirm(t('confirmDeleteMailbox', { email })) ) {
+      const response = await deleteEmail(`/api/v1/email-notifications/${email}`, {
+        method: 'DELETE',
+      });
+      if (response && response.success) {
+        toast.success(t('deleteMailboxSuccess'));
+      } else if (response && !response.success) {
+        toast.error(t('deleteMailboxError', { message: response.error?.message || 'Unknown error' }));
+      }
     }
   };
 
-  const handleAddMailbox = (address: string, name: string) => {
-    const newMailbox: Mailbox = {
-      id: `m${mailboxes.length + 1}`, // Simple ID generation
-      name: name,
-      email: address,
-    };
-    setMailboxes([...mailboxes, newMailbox]);
-    console.log('Added new mailbox:', newMailbox);
-    setIsAddMailboxModalOpen(false); // Close modal
+  const handleAddMailboxSuccess = () => {
+    fetchEmailList('/api/v1/email-notifications', { method: 'GET' });
   };
+
+  const handleEditMailbox = (mailbox: EmailNotification) => {
+    setEditingMailbox(mailbox);
+    setIsEditMailboxModalOpen(true);
+  };
+
+  const handleEditMailboxSuccess = () => {
+    fetchEmailList('/api/v1/email-notifications', { method: 'GET' });
+  };
+
+  if (isLoading) {
+    return <PageLayout title={t('title')}>Loading...</PageLayout>;
+  }
+
+  if (error) {
+    return <PageLayout title={t('title')}>Error: {error.message}</PageLayout>;
+  }
 
   return (
     <PageLayout title={t('title')}>
@@ -55,9 +99,10 @@ const EmailNotificationPage: React.FC = () => {
             <MailboxCard
               key={mailbox.id}
               id={mailbox.id}
-              name={mailbox.name}
+              name={mailbox.email_remark}
               email={mailbox.email}
               onDelete={handleDeleteMailbox}
+              onEdit={handleEditMailbox}
             />
           ))}
           {/* Add Mailbox Card */}
@@ -69,9 +114,17 @@ const EmailNotificationPage: React.FC = () => {
       <AddMailboxModal
         isOpen={isAddMailboxModalOpen}
         onClose={() => setIsAddMailboxModalOpen(false)}
-        onConfirm={handleAddMailbox}
+        onSuccess={handleAddMailboxSuccess}
       />
-      </PageLayout>
+
+      {/* Edit Mailbox Modal (Conditional Rendering) */}
+      <EditMailboxModal
+        isOpen={isEditMailboxModalOpen}
+        onClose={() => setIsEditMailboxModalOpen(false)}
+        onSuccess={handleEditMailboxSuccess}
+        initialData={editingMailbox}
+      />
+    </PageLayout>
   );
 };
 

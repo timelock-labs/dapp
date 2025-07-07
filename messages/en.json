@@ -97,13 +97,23 @@
     "deleteAbiSuccess": "ABI deleted successfully.",
     "deleteAbiError": "Failed to delete ABI: {message}"
   },
-  "Transactions.AddABIForm": {
-    "title": "Add New ABI",
-    "description": "Enter the details for the new ABI.",
-    "nameLabel": "ABI Name",
-    "descriptionLabel": "Description",
-    "contentLabel": "ABI Content (JSON)",
-    "cancelButton": "Cancel",
-    "addButton": "Add"
+  "Transactions": {
+    "AddABIForm": {
+      "title": "Add New ABI",
+      "description": "Enter the details for the new ABI.",
+      "nameLabel": "ABI Name",
+      "descriptionLabel": "Description",
+      "contentLabel": "ABI Content (JSON)",
+      "cancelButton": "Cancel",
+      "addButton": "Add"
+    }
+  },
+  "Notify": {
+    "title": "Email Notifications",
+    "fetchEmailListSuccess": "Email list fetched successfully.",
+    "fetchEmailListError": "Failed to fetch email list: {message}",
+    "confirmDeleteMailbox": "Are you sure you want to delete {email}?",
+    "deleteMailboxSuccess": "Mailbox deleted successfully.",
+    "deleteMailboxError": "Failed to delete mailbox: {message}"
   }
 } 

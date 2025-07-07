@@ -4,19 +4,23 @@ import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
+import { useApi } from '@/hooks/useApi';
+import { toast } from 'sonner';
 
 interface AddMailboxModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (address: string, name: string) => void;
+  onSuccess: () => void; // Callback to trigger re-fetch in parent
 }
 
-const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
-  // const [ _, setVerificationCode] = useState('');
+
+  const { data: addEmailResponse, request: addEmail } = useApi();
+  const { request: verifyEmail } = useApi();
 
   // Dummy data for permissions
   // Consider moving this to props or fetching if it's dynamic
@@ -33,9 +37,8 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
   };
 
   const handleSendCode = () => {
-    alert('发送验证码 button clicked!');
-    console.log('Sending code to:', emailAddress);
-    // Implement sending verification code logic
+    // The API call for sending the verification code is handled by the VerificationCodeInput component.
+    // This function is a placeholder if any additional logic is needed in the parent.
   };
 
   const handleCancel = () => {
@@ -47,19 +50,54 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
     setVerificationCode('');
   };
 
-  const handleSave = () => {
-    // Basic validation (optional, can be more robust)
+  const handleSave = async () => {
     if (!emailAddress || !emailRemark) {
-      alert('邮箱地址和备注不能为空！');
+      toast.error('邮箱地址和备注不能为空！');
       return;
     }
-    onConfirm(emailAddress, emailRemark); // Call the onConfirm prop with email and remark
-    // Optionally reset form state after successful save, or let onClose handle it
-    setEmailAddress('');
-    setEmailRemark('');
-    setSelectedPermissions([]);
-    setVerificationCode('');
-    console.log(verificationCode);
+
+    if (!verificationCode) {
+      toast.error('请输入验证码！');
+      return;
+    }
+
+    const timelockContracts = selectedPermissions.map(permId => {
+      const perm = dummyPermissions.find(p => p.id === permId);
+      return perm ? perm.subLabel : '';
+    }).filter(Boolean);
+
+    const response = await addEmail('/api/v1/email-notifications', {
+      method: 'POST',
+      body: {
+        email: emailAddress,
+        email_remark: emailRemark,
+        timelock_contracts: timelockContracts,
+      },
+    });
+
+    if (response && response.success) {
+      const verifyResponse = await verifyEmail('/api/v1/email-notifications/verify', {
+        method: 'POST',
+        body: {
+          email: emailAddress,
+          verification_code: verificationCode,
+        },
+      });
+
+      if (verifyResponse && verifyResponse.success) {
+        toast.success('邮箱地址添加成功！');
+        onSuccess();
+        onClose();
+        setEmailAddress('');
+        setEmailRemark('');
+        setSelectedPermissions([]);
+        setVerificationCode('');
+      } else if (verifyResponse && !verifyResponse.success) {
+        toast.error(`验证码验证失败: ${verifyResponse.error?.message || '未知错误'}`);
+      }
+    } else if (response && !response.success) {
+      toast.error(`添加邮箱地址失败: ${response.error?.message || '未知错误'}`);
+    }
   };
 
   if (!isOpen) {
@@ -106,6 +144,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
 
         {/* Verification Code Input Section */}
         <VerificationCodeInput
+          email={emailAddress}
           onSendCode={handleSendCode}
           onCodeChange={setVerificationCode}
           codeLength={6}
