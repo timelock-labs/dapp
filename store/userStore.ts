@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AppStateSchema, type AppState, type User } from './schema';
 import { zodMiddleware } from './zodMiddleware';
-import Cookies from 'js-cookie';
 
 // 定义 Store 的 actions (方法)
 type AppActions = {
@@ -30,16 +29,19 @@ export const useAuthStore = create<AppState & AppActions>()(
         chains: [],
         _hasHydrated: false,
         login: (data) => {
-          // Here we handle the business logic, validation is handled by the middleware
-          set({ user: data.user, isAuthenticated: true, accessToken: data.accessToken, refreshToken: data.refreshToken, expiresAt: new Date(data.expiresAt).getTime() });
-          Cookies.set('accessToken', data.accessToken, { expires: new Date(data.expiresAt) });
-          // Assuming refresh token has a longer expiry, e.g., 30 days
-          Cookies.set('refreshToken', data.refreshToken, { expires: 30 });
+          // The persist middleware will automatically save the state.
+          // No need for manual storage management.
+          set({
+            user: data.user,
+            isAuthenticated: true,
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+            expiresAt: new Date(data.expiresAt).getTime(),
+          });
         },
         logout: () => {
+          // The persist middleware will automatically clear the persisted state.
           set({ user: null, isAuthenticated: false, accessToken: null, refreshToken: null, expiresAt: null });
-          Cookies.remove('accessToken');
-          Cookies.remove('refreshToken');
         },
         fetchChains: async () => {
           try {
@@ -81,13 +83,12 @@ export const useAuthStore = create<AppState & AppActions>()(
 
             if (response.ok) {
               const data = await response.json();
+              // Persist middleware will automatically save the updated tokens.
               set({
                 accessToken: data.data.access_token,
                 refreshToken: data.data.refresh_token,
-                expiresAt: data.data.expires_at,
+                expiresAt: new Date(data.data.expires_at).getTime(),
               });
-              Cookies.set('accessToken', data.data.access_token, { expires: new Date(data.data.expires_at) });
-              Cookies.set('refreshToken', data.data.refresh_token, { expires: 30 }); // Assuming refresh token has a longer expiry
               console.log('Access token refreshed successfully.');
             } else {
               console.error('Failed to refresh access token:', response.statusText);
@@ -106,25 +107,23 @@ export const useAuthStore = create<AppState & AppActions>()(
       })
     ),
     {
-      name: 'app-storage', // name of the item in storage (e.g. localStorage key)
-      storage: createJSONStorage(() => ({
-        getItem: (name) => {
-          const item = Cookies.get(name);
-          return item ? item : null;
-        },
-        setItem: (name, value) => {
-          Cookies.set(name, value);
-        },
-        removeItem: (name) => {
-          Cookies.remove(name);
-        },
-      })),
-      // onRehydrateStorage: (state) => {
-      //   console.log('hydration starts', state)
-      //   return (state) => {
-      //     state._hasHydrated = true
-      //   }
-      // }
+      name: 'auth-storage', // 使用唯一的键名以避免冲突
+      storage: createJSONStorage(() => localStorage), // 按要求使用 localStorage
+      // partialize 是必须的，它告诉 middleware 只持久化数据状态，而不是 action (方法)
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        expiresAt: state.expiresAt,
+        chains: state.chains,
+      }),
+      // onRehydrateStorage 会在从 storage 恢复状态后执行
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isAuthenticated = !!state.accessToken; // 确保认证状态在加载时是正确的
+        }
+      },
     }
   )
 );
