@@ -1,0 +1,1 @@
+export const compoundTimelockBytecode = "0x..." as `0x${string}`; // Replace with actual bytecode

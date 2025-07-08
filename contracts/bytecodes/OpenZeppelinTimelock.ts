@@ -1,0 +1,1 @@
+export const openzeppelinTimelockBytecode = "0x..." as `0x${string}`; // Replace with actual bytecode

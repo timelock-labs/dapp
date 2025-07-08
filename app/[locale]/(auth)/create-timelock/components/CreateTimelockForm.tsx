@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import SelectInput from '@/components/ui/SelectInput';     // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
+import { Button } from '@/components/ui/button';
 import ContractStandardSelection from './ContractStandardSelection'; // Adjust path
 import { useAuthStore } from '@/store/userStore';
 
@@ -19,11 +20,14 @@ interface CreateTimelockFormProps {
   onExecutorsChange: (value: string) => void;
   admin: string;
   onAdminChange: (value: string) => void;
+  onDeploy: () => void;
+  isLoading: boolean;
 }
 
 const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   selectedChain, onChainChange, selectedStandard, onStandardChange, minDelay, onMinDelayChange,
-  proposers, onProposersChange, executors, onExecutorsChange, admin, onAdminChange
+  proposers, onProposersChange, executors, onExecutorsChange, admin, onAdminChange,
+  onDeploy, isLoading
 }) => {
   const { chains, fetchChains } = useAuthStore();
 
@@ -103,6 +107,11 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
             </div>
           </>
         )}
+      </div>
+      <div className="mt-6 flex justify-end">
+        <Button onClick={onDeploy} disabled={isLoading}>
+          {isLoading ? '部署中...' : '创建Timelock'}
+        </Button>
       </div>
     </div>
   );
