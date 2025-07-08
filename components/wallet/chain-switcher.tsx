@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image';
 
-import { useSwitchChain, useChainId, useAccount, useSignMessage } from 'wagmi'
+import { useSwitchChain, useChainId, useConnectionStatus, useSigner } from '@thirdweb-dev/react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -15,12 +15,13 @@ import { useEffect } from 'react'
 import { useApi } from '@/hooks/useApi';
 
 export function ChainSwitcher() {
-  const { switchChain } = useSwitchChain()
+  const switchChain = useSwitchChain()
   const chainId = useChainId()
-  const { isConnected } = useAccount()
+  const connectionStatus = useConnectionStatus()
+  const isConnected = connectionStatus === "connected"
+  const signer = useSigner()
   const { chains, fetchChains, _hasHydrated, login } = useAuthStore()
   const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
-  const { signMessageAsync } = useSignMessage();
 
   useEffect(() => {
     if (_hasHydrated) {
@@ -67,11 +68,11 @@ export function ChainSwitcher() {
   const handleChainSwitch = async (newChainId: number) => {
     try {
       // 1. Switch chain in wallet
-      await switchChain({ chainId: newChainId as 1 | 56 | 42161 | 177 });
+      await switchChain(newChainId);
 
       // 2. Sign a message
       const message = `Switching to chain ${newChainId}`;
-      const signature = await signMessageAsync({ message });
+      const signature = await signer?.signMessage(message);
 
       // 3. Call backend API using the request function from useApi
       switchChainRequest('/api/v1/auth/switch-chain', {

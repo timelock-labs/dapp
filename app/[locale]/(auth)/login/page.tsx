@@ -3,34 +3,38 @@
 import React, { useEffect } from 'react';
 import Logo from '@/components/layout/Logo';
 import { ConnectWallet } from '@/components/wallet/connect-wallet';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useConnectionStatus, useAddress, useSigner } from '@thirdweb-dev/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 
 const TimeLockerSplitPage = () => {
-  const { address, isConnected, chain } = useAccount();
+  const address = useAddress();
+  const connectionStatus = useConnectionStatus();
+  const isConnected = connectionStatus === "connected";
+  const signer = useSigner();
   const { data: apiResponse, request: walletConnect, error } = useApi();
-  const { signMessageAsync } = useSignMessage();
+  // const { signMessageAsync } = useSignMessage();
   const login = useAuthStore((state) => state.login);
   const router = useRouter();
 
   useEffect(() => {
-    if (isConnected && address && chain) {
+    if (isConnected && address && signer) {
       const message = 'welcome to TimeLocker!';
-      signMessageAsync({ message }).then(async (signature) => {
+      signer.signMessage(message).then(async (signature) => {
+        const chainId = await signer.getChainId();
         walletConnect('/api/v1/auth/wallet-connect', {
           method: 'POST',
           body: {
             wallet_address: address,
             signature: signature,
             message: message,
-            chain_id: chain.id,
+            chain_id: chainId,
           },
         });
       });
     }
-  }, [isConnected, address, chain, signMessageAsync, walletConnect]);
+  }, [isConnected, address, signer, walletConnect]);
 
   useEffect(() => {
     if (apiResponse && apiResponse.success) {

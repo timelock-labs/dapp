@@ -4,13 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Assert from './components/Assert';
 import CreateProtocol from './components/CreateProtocol';
-import { useAccount } from 'wagmi';
+import { useConnectionStatus } from '@thirdweb-dev/react';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi'; // Import useApi
 
 
 export default function Home() {
-  const { isConnected } = useAccount();
+  const connectionStatus = useConnectionStatus();
+  const isConnected = connectionStatus === "connected";
   const router = useRouter();
   const accessToken = useAuthStore((state) => state.accessToken);
 

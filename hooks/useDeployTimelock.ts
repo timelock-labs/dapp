@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import { useWalletClient, usePublicClient, useAccount } from 'wagmi';
+import { useSDK, useAddress, useSigner } from '@thirdweb-dev/react';
 import { Abi, Address, Hash } from 'viem';
 import { toast } from 'sonner';
 
@@ -28,21 +28,16 @@ interface DeployOpenZeppelinParams {
 }
 
 export const useDeployTimelock = () => {
-  const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
-  const { address: accountAddress } = useAccount();
+  const sdk = useSDK();
+  const signer = useSigner();
+  const accountAddress = useAddress();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const deployContract = async (abi: Abi, bytecode: Address, args: any[]): Promise<DeployResult> => {
-    if (!walletClient || !accountAddress) {
+    if (!sdk || !accountAddress || !signer) {
       const err = new Error("Please connect your wallet first.");
-      toast.error(err.message);
-      throw err;
-    }
-    if (!publicClient) {
-      const err = new Error("Could not connect to the network.");
       toast.error(err.message);
       throw err;
     }
@@ -52,16 +47,15 @@ export const useDeployTimelock = () => {
 
     try {
       toast.info("Deploying contract... Please confirm in your wallet.");
-      const hash = await walletClient.deployContract({
+      const deployedContract = await sdk.deployer.deployContract({
         abi,
         bytecode,
         args,
-        account: accountAddress,
       });
 
-      toast.loading("Transaction sent. Waiting for confirmation...", { id: hash });
+      toast.loading("Transaction sent. Waiting for confirmation...", { id: deployedContract.receipt.transactionHash });
 
-      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      const receipt = deployedContract.receipt;
 
       if (receipt.status === 'reverted' || !receipt.contractAddress) {
         throw new Error("Transaction failed or contract address not found.");

@@ -13,4 +13,6 @@
 10. Timelock 其余接口对接
 11. ABI 对接
 12. Transaction 对接
-13.
+13. [Assets](http://localhost:8080/swagger/index.html#/Assets) 对接
+14. [Email Notifications](http://localhost:8080/swagger/index.html#/Email%20Notifications) 对接
+15.
