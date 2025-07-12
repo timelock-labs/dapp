@@ -1,10 +1,12 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
 import TableComponent from '@/components/ui/TableComponent';   // Assuming TableComponent is in components/
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import AddABIForm from './components/AddABIForm'; // Import the new form component
+import ConfirmDialog from '@/components/ui/ConfirmDialog'; // Import the confirm dialog
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
@@ -26,6 +28,8 @@ const ABILibPage: React.FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isAddABIOpen, setIsAddABIOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
   const [abis, setAbis] = useState<ABIRow[]>([]);
   const accessToken = useAuthStore((state) => state.accessToken);
 
@@ -145,17 +149,30 @@ ${viewAbiResponse.data.abi_content}`);
     }
   };
 
-  const handleDeleteABI = async (row: ABIRow) => {
-    if (window.confirm(`Are you sure you want to delete ABI: ${row.name}?`)) {
-      await deleteAbi(`/api/v1/abi/${row.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      setOpenDropdownId(null);
-    }
+  const handleDeleteABI = (row: ABIRow) => {
+    setAbiToDelete(row);
+    setIsDeleteDialogOpen(true);
+    setOpenDropdownId(null);
+  };
+
+  const confirmDeleteABI = async () => {
+    if (!abiToDelete) return;
+    
+    await deleteAbi(`/api/v1/abi/${abiToDelete.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    setIsDeleteDialogOpen(false);
+    setAbiToDelete(null);
+  };
+
+  const cancelDeleteABI = () => {
+    setIsDeleteDialogOpen(false);
+    setAbiToDelete(null);
   };
 
   useEffect(() => {
@@ -214,7 +231,22 @@ ${viewAbiResponse.data.abi_content}`);
 
   // Define columns for TableComponent
   const columns = [
-    { key: 'name', header: t('abiName') },
+    { 
+      key: 'name', 
+      header: t('abiName'),
+      render: (row: ABIRow) => (
+        <div className="flex items-center space-x-2">
+          <span>{row.name}</span>
+          <Image 
+            src="/ABI.png" 
+            alt="abi name" 
+            width={16} 
+            height={16} 
+            className="text-000"
+          />
+        </div>
+      )
+    },
     { key: 'owner', header: t('addressUser') },
     { 
       key: 'created_at', 
@@ -313,6 +345,17 @@ ${viewAbiResponse.data.abi_content}`);
         isOpen={isAddABIOpen}
         onClose={() => setIsAddABIOpen(false)}
         onAddABI={handleAddABI}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={cancelDeleteABI}
+        onConfirm={confirmDeleteABI}
+        title="Delete ABI"
+        description={`Are you sure you want to delete ABI "${abiToDelete?.name || ''}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
       />
     </PageLayout>
 

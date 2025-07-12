@@ -57,14 +57,14 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[558px] h-[470px]"> {/* Adjusted width slightly */}
+      <DialogContent className="w-[558px] h-[470px] overflow-hidden"> {/* Added overflow-hidden */}
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>
             {t('description')}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 overflow-hidden">
           {/* Name Input Field - Vertical Layout */}
           <div className="space-y-2">
             <Label htmlFor="abiName">
@@ -84,7 +84,14 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
             <Label htmlFor="abiContent">
               {t('contentLabel')}
             </Label>
-            <Textarea id="abiContent" value={abi} onChange={(e) => setAbi(e.target.value)} placeholder={t('contentLabel')} rows={5} className="overflow-y-auto" />
+            <Textarea 
+              id="abiContent" 
+              value={abi} 
+              onChange={(e) => setAbi(e.target.value)} 
+              placeholder={t('contentLabel')} 
+              rows={5} 
+              className="overflow-y-auto overflow-x-hidden resize-none min-h-[120px] max-h-[200px] whitespace-pre-wrap break-all w-full max-w-full box-border" 
+            />
           </div>
         </div>
         <DialogFooter>
