@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
@@ -35,6 +35,13 @@ const getHistoryTxTypeStyle = (type: string) => {
 
 import debounce from 'lodash.debounce';
 
+// 导入API请求选项类型
+interface ApiRequestOptions {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: Record<string, string>;
+  body?: unknown;
+}
+
 const TransactionHistorySection: React.FC = () => {
   const t = useTranslations('Transactions');
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,11 +55,19 @@ const TransactionHistorySection: React.FC = () => {
     setActiveTab(tabId);
   };
 
-  const debouncedFetch = debounce((url: string, options: RequestInit) => {
-    fetchHistoryTxs(url, options);
-  }, 500);
+  // 使用 useCallback 来稳定 debouncedFetch 函数
+  const debouncedFetch = useCallback(
+    (url: string, options: ApiRequestOptions) => {
+      const debouncedFn = debounce(() => {
+        fetchHistoryTxs(url, options);
+      }, 500);
+      debouncedFn();
+    },
+    [fetchHistoryTxs]
+  );
 
-  useEffect(() => {
+  // 创建获取数据的函数
+  const fetchHistoryTransactions = useCallback(() => {
     if (accessToken) {
       let url = `/api/v1/transaction/list?page=1&page_size=10`;
       if (activeTab !== 'all') {
@@ -72,10 +87,14 @@ const TransactionHistorySection: React.FC = () => {
   }, [accessToken, activeTab, searchQuery, debouncedFetch]);
 
   useEffect(() => {
-    if (historyTxsResponse && historyTxsResponse.success) {
-      setHistoryTxs(historyTxsResponse.data.transactions);
-      toast.success(t('fetchHistoryTxsSuccess'));
-    } else if (historyTxsResponse && !historyTxsResponse.success) {
+    fetchHistoryTransactions();
+  }, [fetchHistoryTransactions]);
+
+  useEffect(() => {
+    if (historyTxsResponse?.success === true) {
+      setHistoryTxs(historyTxsResponse.data.transactions || []);
+      // 移除成功toast，避免频繁提示
+    } else if (historyTxsResponse?.success === false && historyTxsResponse.data !== null) {
       toast.error(t('fetchHistoryTxsError'));
     }
   }, [historyTxsResponse, t]);

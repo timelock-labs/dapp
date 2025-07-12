@@ -164,14 +164,6 @@
     "cancelSuccess": "Transaction cancelled successfully.",
     "cancelError": "Failed to cancel transaction.",
     "executeSuccess": "Transaction executed successfully.",
-    "executeError": "Failed to execute transaction.",
-    "cancelSuccess": "Transaction cancelled successfully.",
-    "cancelError": "Failed to cancel transaction.",
-    "executeSuccess": "Transaction executed successfully.",
-    "executeError": "Failed to execute transaction.",
-    "cancelSuccess": "Transaction cancelled successfully.",
-    "cancelError": "Failed to cancel transaction.",
-    "executeSuccess": "Transaction executed successfully.",
     "executeError": "Failed to execute transaction."
   },
   "Notify": {

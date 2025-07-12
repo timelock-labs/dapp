@@ -1,12 +1,15 @@
 'use client'
 
-import { useConnectionStatus, useSigner, ConnectWallet as ThirdwebConnectWallet } from '@thirdweb-dev/react'
+import { useConnectionStatus, useSigner, useAddress, useConnect, useDisconnect, metamaskWallet } from '@thirdweb-dev/react'
 import { memo, useEffect, useRef } from 'react'
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolean, fullWidth?: boolean, headerStyle?: boolean }) {
-  // const connect = useConnect()
+  const connect = useConnect()
+  const disconnect = useDisconnect()
+  const address = useAddress()
   const connectionStatus = useConnectionStatus()
   const signer = useSigner()
   const prevConnectionStatus = useRef(connectionStatus)
@@ -15,6 +18,7 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
 
   const isConnected = connectionStatus === "connected"
   const isDisconnected = connectionStatus === "disconnected"
+  const isConnecting = connectionStatus === "connecting"
 
   useEffect(() => {
     if (prevConnectionStatus.current !== "connected" && isConnected) {
@@ -27,7 +31,7 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
       });
     }
     prevConnectionStatus.current = connectionStatus
-  }, [connectionStatus, signer])
+  }, [connectionStatus, signer, isConnected])
 
   useEffect(() => {
     if (isDisconnected) {
@@ -36,28 +40,29 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
     }
   }, [isDisconnected, logout, router]);
 
+  const handleConnect = async () => {
+    if (isConnected) {
+      disconnect();
+    } else {
+      try {
+        await connect(metamaskWallet());
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+      }
+    }
+  };
+
   return (
-    // <Button
-    //     onClick={handleConnect}
-    //     disabled={isConnecting}
-    //     variant={props.headerStyle ? "default" : (isConnected ? "outline" : "default")}
-    //     size={props.icon ? "sm" : "lg"}
-    //     className={props.fullWidth ? "w-full" : (props.headerStyle ? "bg-black text-white" : "")}
-    //   >
-    //     {
-    //       props.icon && !props.headerStyle ? <Wallet className="mr-2 h-4 w-4" /> : null
-    //     }
-    //     {isConnecting && "Connecting..."}
-    //     {isConnected && `${address?.slice(0, 6)}...${address?.slice(-4)}`}
-    //     {!isConnected && !isConnecting && "Connect Wallet"}
-    //   </Button>
-    <ThirdwebConnectWallet
-      theme="dark"
-      // The component handles its own states (connecting, connected, address display, etc.)
-      // We can apply custom classes for styling.
-      className={`${props.fullWidth ? "w-full" : ""} ${props.headerStyle ? "!bg-black !text-white" : ""}`}
-      // Note: The thirdweb component has its own styling. Overriding it completely
-      // with custom classes might require '!important' or more specific selectors.
-    />
+    <Button
+        onClick={handleConnect}
+        disabled={isConnecting}
+        variant={props.headerStyle ? "default" : (isConnected ? "outline" : "default")}
+        size={props.icon ? "sm" : "lg"}
+        className={props.fullWidth ? "w-full" : (props.headerStyle ? "bg-black text-white" : "")}
+      >
+        {isConnecting && "Connecting..."}
+        {isConnected && address && `${address.slice(0, 6)}...${address.slice(-4)}`}
+        {!isConnected && !isConnecting && "Connect Wallet"}
+      </Button>
   )
 }) 

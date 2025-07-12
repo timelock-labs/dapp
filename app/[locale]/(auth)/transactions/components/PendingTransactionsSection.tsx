@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SearchBar from '@/components/ui/SearchBar';
 import NewButton from '@/components/ui/NewButton';
@@ -33,6 +33,13 @@ const getPendingTxTypeStyle = (type: string) => {
 
 import debounce from 'lodash.debounce';
 
+// 导入API请求选项类型
+interface ApiRequestOptions {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: Record<string, string>;
+  body?: unknown;
+}
+
 const PendingTransactionsSection: React.FC = () => {
   const t = useTranslations('Transactions');
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,11 +47,19 @@ const PendingTransactionsSection: React.FC = () => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const { data: pendingTxsResponse, request: fetchPendingTxs, error } = useApi();
 
-  const debouncedFetch = debounce((url: string, options: RequestInit) => {
-    fetchPendingTxs(url, options);
-  }, 500);
+  // 使用 useCallback 来稳定 debouncedFetch 函数  
+  const debouncedFetch = useCallback(
+    (url: string, options: ApiRequestOptions) => {
+      const debouncedFn = debounce(() => {
+        fetchPendingTxs(url, options);
+      }, 500);
+      debouncedFn();
+    },
+    [fetchPendingTxs]
+  );
 
-  useEffect(() => {
+  // 创建获取数据的函数
+  const fetchPendingTransactions = useCallback(() => {
     if (accessToken) {
       let url = `/api/v1/transaction/pending?page=1&page_size=10`;
       if (searchQuery) {
@@ -61,10 +76,14 @@ const PendingTransactionsSection: React.FC = () => {
   }, [accessToken, searchQuery, debouncedFetch]);
 
   useEffect(() => {
-    if (pendingTxsResponse && pendingTxsResponse.success) {
-      setPendingTxs(pendingTxsResponse.data.transactions);
-      toast.success(t('fetchPendingTxsSuccess'));
-    } else if (pendingTxsResponse && !pendingTxsResponse.success) {
+    fetchPendingTransactions();
+  }, [fetchPendingTransactions]);
+
+  useEffect(() => {
+    if (pendingTxsResponse?.success === true) {
+      setPendingTxs(pendingTxsResponse.data.transactions || []);
+      // 移除成功toast，避免频繁提示
+    } else if (pendingTxsResponse?.success === false && pendingTxsResponse.data !== null) {
       toast.error(t('fetchPendingTxsError'));
     }
   }, [pendingTxsResponse, t]);
@@ -103,36 +122,24 @@ const PendingTransactionsSection: React.FC = () => {
   };
 
   useEffect(() => {
-    if (cancelResponse && cancelResponse.success) {
+    if (cancelResponse?.success === true) {
       toast.success(t('cancelSuccess'));
-      // Refresh pending transactions after successful cancellation
-      debouncedFetch(`/api/v1/transaction/pending?page=1&page_size=10${searchQuery ? `&q=${searchQuery}` : ''}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    } else if (cancelResponse && !cancelResponse.success) {
+      // 刷新数据
+      fetchPendingTransactions();
+    } else if (cancelResponse?.success === false && cancelResponse.data !== null) {
       toast.error(t('cancelError'));
     }
-  }, [cancelResponse, t, debouncedFetch, accessToken, searchQuery]);
+  }, [cancelResponse, t, fetchPendingTransactions]);
 
   useEffect(() => {
-    if (executeResponse && executeResponse.success) {
+    if (executeResponse?.success === true) {
       toast.success(t('executeSuccess'));
-      // Refresh pending transactions after successful execution
-      debouncedFetch(`/api/v1/transaction/pending?page=1&page_size=10${searchQuery ? `&q=${searchQuery}` : ''}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    } else if (executeResponse && !executeResponse.success) {
+      // 刷新数据
+      fetchPendingTransactions();
+    } else if (executeResponse?.success === false && executeResponse.data !== null) {
       toast.error(t('executeError'));
     }
-  }, [executeResponse, t, debouncedFetch, accessToken, searchQuery]);
+  }, [executeResponse, t, fetchPendingTransactions]);
 
   useEffect(() => {
     if (cancelError) {
@@ -178,6 +185,7 @@ const PendingTransactionsSection: React.FC = () => {
         <div className="flex space-x-2">
           {row.can_cancel && (
             <button
+              type="button"
               onClick={() => handleCancel(row.id)}
               className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-100 transition-colors"
             >
@@ -186,6 +194,7 @@ const PendingTransactionsSection: React.FC = () => {
           )}
           {row.can_execute && (
             <button
+              type="button"
               onClick={() => handleExecute(row.id)}
               className="text-green-500 hover:text-green-700 p-1 rounded-md hover:bg-green-100 transition-colors"
             >
