@@ -1,5 +1,4 @@
 "use client"
-"use client";
 import React, { useState, useEffect } from 'react';
 import EmailRulesHeader from './components/email-notifications/EmailRulesHeader';
 import MailboxCard from './components/email-notifications/MailboxCard';
@@ -8,19 +7,8 @@ import AddMailboxModal from "./components/email-address/AddMailboxModal";
 import EditMailboxModal from "./components/email-address/EditMailboxModal";
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
-import { useApi } from '@/hooks/useApi';
+import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
 import { toast } from 'sonner';
-
-interface EmailNotification {
-  created_at: string;
-  email: string;
-  email_remark: string;
-  id: number;
-  is_active: boolean;
-  is_verified: boolean;
-  timelock_contracts: string[];
-  updated_at: string;
-}
 
 const EmailNotificationPage: React.FC = () => {
   const t = useTranslations('Notify');
@@ -28,46 +16,46 @@ const EmailNotificationPage: React.FC = () => {
   const [isAddMailboxModalOpen, setIsAddMailboxModalOpen] = useState(false);
   const [isEditMailboxModalOpen, setIsEditMailboxModalOpen] = useState(false);
   const [editingMailbox, setEditingMailbox] = useState<EmailNotification | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data: emailListResponse, request: fetchEmailList, isLoading, error } = useApi();
-  const { data: deleteEmailResponse, request: deleteEmail } = useApi();
+  const {
+    getEmailNotifications,
+    deleteEmailNotification
+  } = useNotificationApi();
 
-  useEffect(() => {
-    fetchEmailList('/api/v1/email-notifications', {
-      method: 'GET',
-    });
-  }, [fetchEmailList, deleteEmailResponse]);
-
-  useEffect(() => {
-    if (emailListResponse && emailListResponse.success) {
-      setMailboxes(emailListResponse.data.items);
-      toast.success(t('fetchEmailListSuccess'));
-    } else if (emailListResponse && !emailListResponse.success) {
-      toast.error(t('fetchEmailListError', { message: emailListResponse.error?.message || 'Unknown error' }));
+  // Fetch email notifications
+  const fetchEmailNotifications = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getEmailNotifications({ page: 1, page_size: 50 });
+      setMailboxes(response.items || []);
+    } catch (error) {
+      console.error('Failed to fetch email notifications:', error);
+      toast.error(t('fetchEmailListError', { message: error instanceof Error ? error.message : 'Unknown error' }));
+    } finally {
+      setIsLoading(false);
     }
-  }, [emailListResponse, t]);
+  };
 
   useEffect(() => {
-    if (error) {
-      console.error('API Error:', error);
-    }
-  }, [error]);
+    fetchEmailNotifications();
+  }, []);
 
   const handleDeleteMailbox = async (id: number, email: string) => {
-    if (window.confirm(t('confirmDeleteMailbox', { email })) ) {
-      const response = await deleteEmail(`/api/v1/email-notifications/${email}`, {
-        method: 'DELETE',
-      });
-      if (response && response.success) {
+    if (window.confirm(t('confirmDeleteMailbox', { email }))) {
+      try {
+        await deleteEmailNotification(email);
         toast.success(t('deleteMailboxSuccess'));
-      } else if (response && !response.success) {
-        toast.error(t('deleteMailboxError', { message: response.error?.message || 'Unknown error' }));
+        await fetchEmailNotifications(); // Refresh data
+      } catch (error) {
+        console.error('Delete failed:', error);
+        toast.error(t('deleteMailboxError', { message: error instanceof Error ? error.message : 'Unknown error' }));
       }
     }
   };
 
   const handleAddMailboxSuccess = () => {
-    fetchEmailList('/api/v1/email-notifications', { method: 'GET' });
+    fetchEmailNotifications();
   };
 
   const handleEditMailbox = (mailbox: EmailNotification) => {
@@ -76,15 +64,11 @@ const EmailNotificationPage: React.FC = () => {
   };
 
   const handleEditMailboxSuccess = () => {
-    fetchEmailList('/api/v1/email-notifications', { method: 'GET' });
+    fetchEmailNotifications();
   };
 
   if (isLoading) {
     return <PageLayout title={t('title')}>Loading...</PageLayout>;
-  }
-
-  if (error) {
-    return <PageLayout title={t('title')}>Error: {error.message}</PageLayout>;
   }
 
   return (

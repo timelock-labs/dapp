@@ -4,7 +4,7 @@ import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
-import { useApi } from '@/hooks/useApi';
+import { useNotificationApi } from '@/hooks/useNotificationApi';
 import { toast } from 'sonner';
 
 interface AddMailboxModalProps {
@@ -19,8 +19,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
 
-  const { data: addEmailResponse, request: addEmail } = useApi();
-  const { request: verifyEmail } = useApi();
+  const {
+    createEmailNotification,
+    verifyEmail
+  } = useNotificationApi();
 
   // Dummy data for permissions
   // Consider moving this to props or fetching if it's dynamic
@@ -66,37 +68,30 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       return perm ? perm.subLabel : '';
     }).filter(Boolean);
 
-    const response = await addEmail('/api/v1/email-notifications', {
-      method: 'POST',
-      body: {
+    try {
+      // Create email notification
+      await createEmailNotification({
         email: emailAddress,
         email_remark: emailRemark,
         timelock_contracts: timelockContracts,
-      },
-    });
-
-    if (response && response.success) {
-      const verifyResponse = await verifyEmail('/api/v1/email-notifications/verify', {
-        method: 'POST',
-        body: {
-          email: emailAddress,
-          verification_code: verificationCode,
-        },
       });
 
-      if (verifyResponse && verifyResponse.success) {
-        toast.success('邮箱地址添加成功！');
-        onSuccess();
-        onClose();
-        setEmailAddress('');
-        setEmailRemark('');
-        setSelectedPermissions([]);
-        setVerificationCode('');
-      } else if (verifyResponse && !verifyResponse.success) {
-        toast.error(`验证码验证失败: ${verifyResponse.error?.message || '未知错误'}`);
-      }
-    } else if (response && !response.success) {
-      toast.error(`添加邮箱地址失败: ${response.error?.message || '未知错误'}`);
+      // Verify email with code
+      await verifyEmail({
+        email: emailAddress,
+        verification_code: verificationCode,
+      });
+
+      toast.success('邮箱地址添加成功！');
+      onSuccess();
+      onClose();
+      setEmailAddress('');
+      setEmailRemark('');
+      setSelectedPermissions([]);
+      setVerificationCode('');
+    } catch (error) {
+      console.error('Failed to add mailbox:', error);
+      toast.error(`添加邮箱地址失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   };
 

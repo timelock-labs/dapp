@@ -3,19 +3,8 @@ import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TextInput from '@/components/ui/TextInput';
 import ListeningPermissions from './ListeningPermissions';
-import { useApi } from '@/hooks/useApi';
+import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
 import { toast } from 'sonner';
-
-interface EmailNotification {
-  created_at: string;
-  email: string;
-  email_remark: string;
-  id: number;
-  is_active: boolean;
-  is_verified: boolean;
-  timelock_contracts: string[];
-  updated_at: string;
-}
 
 interface EditMailboxModalProps {
   isOpen: boolean;
@@ -33,7 +22,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   const [emailRemark, setEmailRemark] = useState(initialData?.email_remark || '');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>(initialData?.timelock_contracts || []);
 
-  const { request: updateEmail } = useApi();
+  const { updateEmailNotification } = useNotificationApi();
 
   useEffect(() => {
     if (initialData) {
@@ -78,20 +67,18 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
       return perm ? perm.subLabel : '';
     }).filter(Boolean);
 
-    const response = await updateEmail(`/api/v1/email-notifications/${initialData.email}`, {
-      method: 'PUT',
-      body: {
+    try {
+      await updateEmailNotification(initialData.email, {
         email_remark: emailRemark,
         timelock_contracts: timelockContracts,
-      },
-    });
+      });
 
-    if (response && response.success) {
       toast.success('邮箱通知配置更新成功！');
       onSuccess();
       onClose();
-    } else if (response && !response.success) {
-      toast.error(`更新邮箱通知配置失败: ${response.error?.message || '未知错误'}`);
+    } catch (error) {
+      console.error('Failed to update mailbox:', error);
+      toast.error(`更新邮箱通知配置失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   };
 

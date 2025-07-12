@@ -3,12 +3,8 @@ import React from 'react';
 import EcosystemSearchHeader from './components/EcosystemSearchHeader';
 import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
-import { useTranslations } from 'next-intl';
 
 const EcosystemPage: React.FC = () => {
-    const t = useTranslations('Ecosystem');
-
-    // Dummy data for partner cards (emojis for icons for simplicity)
     const dummyPartners = [
         { id: 'aave', title: 'AAVE', description: 'Decentralized lending and borrowing protocol.', icon: '🏦', link: 'https://github.com/aave/arc-timelock' },
         { id: 'lido', title: 'Lido', description: 'Liquid staking solution for Ethereum.', icon: '🌊', link: 'https://github.com/lidofinance/dual-governance/blob/main/contracts/TimelockedGovernance.sol' },
@@ -22,7 +18,7 @@ const EcosystemPage: React.FC = () => {
     ];
 
     return (
-        <PageLayout title={t('title')}>
+        <PageLayout title="Ecosystem">
             <div className="min-h-screen  ">
                 <div className="mx-auto flex flex-col space-y-8 pt-4">
                     {/* Top Header Section */}

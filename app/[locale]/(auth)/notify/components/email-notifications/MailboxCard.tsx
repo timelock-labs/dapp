@@ -1,25 +1,34 @@
 import React from 'react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
-import { useApi } from '@/hooks/useApi';
-import { toast } from 'sonner';
+import { EmailNotification } from '@/hooks/useNotificationApi';
 
 interface MailboxCardProps {
   id: number;
   name: string;
   email: string;
   onDelete: (id: number, email: string) => void;
-  onEdit: (mailbox: { id: number; name: string; email: string; }) => void;
+  onEdit: (mailbox: EmailNotification) => void;
 }
 
 const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, onEdit }) => {
-  const { request: updateEmail } = useApi();
 
   const handleDeleteClick = () => {
     onDelete(id, email);
   };
 
   const handleEditClick = () => {
-    onEdit({ id, name, email });
+    // Create a minimal EmailNotification object for editing
+    const mailboxData: EmailNotification = {
+      id,
+      email,
+      email_remark: name,
+      created_at: '',
+      updated_at: '',
+      is_active: true,
+      is_verified: true,
+      timelock_contracts: []
+    };
+    onEdit(mailboxData);
   };
 
   return (
