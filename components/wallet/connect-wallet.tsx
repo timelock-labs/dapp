@@ -56,9 +56,9 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
     <Button
         onClick={handleConnect}
         disabled={isConnecting}
-        variant={props.headerStyle ? "default" : (isConnected ? "outline" : "default")}
+        variant="default"
         size={props.icon ? "sm" : "lg"}
-        className={props.fullWidth ? "w-full" : (props.headerStyle ? "bg-black text-white" : "")}
+        className={`bg-black text-white hover:bg-gray-800 ${props.fullWidth ? "w-full" : ""}`}
       >
         {isConnecting && "Connecting..."}
         {isConnected && address && `${address.slice(0, 6)}...${address.slice(-4)}`}
