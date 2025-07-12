@@ -1,18 +1,17 @@
 "use client"
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Define interface for the data this dialog will display
 interface ConfirmCreationDialogProps {
-  isOpen: boolean; // Controls if the dialog is visible
-  onClose: () => void; // Callback to close the dialog (used by buttons & Escape key)
-  onConfirm: () => void; // Callback on confirm (e.g., final submit)
-  creationDetails: { // Data to display in the dialog
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (remark: string) => void; // Pass remark to confirm handler
+  creationDetails: {
     chainName: string;
-    chainIcon: React.ReactNode; // For the chain icon (e.g., Arbitrum icon)
+    chainIcon: React.ReactNode;
     timelockAddress: string;
     initiatingAddress: string;
     transactionHash: string;
-    contractRemarks: string;
   };
 }
 
@@ -22,7 +21,15 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
   onConfirm,
   creationDetails,
 }) => {
-  const dialogRef = useRef<HTMLDivElement>(null); // Ref for focusing the dialog content
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const [remark, setRemark] = useState('');
+
+  // Reset remark when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setRemark('');
+    }
+  }, [isOpen]);
 
   // Effect to manage Escape key press
   useEffect(() => {
@@ -94,28 +101,30 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
           {creationDetails.transactionHash}
         </ParameterDisplayRow>
 
-        {/* Contract Remarks is a TextInput, not a display row in this modal */}
+        {/* Contract Remarks Input Field */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">合约备注</label>
           <input
-            type="text" // Input field for remarks
-            className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm bg-white text-gray-900"
-            placeholder="Placeholder" // As in the image
-            value={creationDetails.contractRemarks} // This field is read-only in the modal
-            readOnly // Make it read-only
+            type="text"
+            className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            placeholder="请输入合约备注信息（可选）"
+            value={remark}
+            onChange={(e) => setRemark(e.target.value)}
           />
         </div>
 
         {/* Action Buttons */}
         <div className="flex justify-end space-x-3 mt-6">
           <button
-            onClick={onClose} // Cancel closes the dialog
+            type="button"
+            onClick={onClose}
             className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
           <button
-            onClick={onConfirm} // Confirm closes the dialog and triggers parent's confirm logic
+            type="button"
+            onClick={() => onConfirm(remark)}
             className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
           >
             确认添加

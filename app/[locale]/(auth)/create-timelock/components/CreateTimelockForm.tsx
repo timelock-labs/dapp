@@ -38,7 +38,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   }, [chains, fetchChains]);
 
   const chainOptions = chains.map(chain => ({
-    value: chain.chain_id,
+    value: chain.chain_id.toString(),
     label: chain.chain_name,
   }));
 
@@ -76,7 +76,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
             value={minDelay}
             onChange={onMinDelayChange}
             placeholder="操作的初始最小延迟 (秒)"
-            type="number" // Assuming delay is a number
+            type="number"
           />
         </div>
         {selectedStandard === 'openzeppelin' && (

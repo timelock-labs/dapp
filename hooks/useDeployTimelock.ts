@@ -136,7 +136,9 @@ export const useDeployTimelock = () => {
   };
 
   const deployOpenZeppelinTimelock = async ({ minDelay, proposers, executors, admin }: DeployOpenZeppelinParams) => {
-    return deployContract(openzeppelinTimelockAbi as ContractInterface, openzeppelinTimelockBytecode, [BigInt(minDelay), proposers, executors, admin]);
+    // For OpenZeppelin, if admin is provided as zero address, we pass an empty array for the admin parameter
+    const adminAddress = admin === '0x0000000000000000000000000000000000000000' ? [] : [admin];
+    return deployContract(openzeppelinTimelockAbi as ContractInterface, openzeppelinTimelockBytecode, [BigInt(minDelay), proposers, executors, adminAddress]);
   };
 
   return {

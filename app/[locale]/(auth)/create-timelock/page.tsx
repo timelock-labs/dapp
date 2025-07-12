@@ -5,7 +5,7 @@ import { useApi } from '@/hooks/useApi';
 import { useDeployTimelock } from '@/hooks/useDeployTimelock';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
+import { useAddress } from '@thirdweb-dev/react';
 import FirstTimeTimelockIntro from './components/FirstTimeTimelockIntro';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog'; // Import the new dialog component
@@ -19,11 +19,10 @@ const CreateTimelockPage: React.FC = () => {
   const [proposers, setProposers] = useState('');
   const [executors, setExecutors] = useState('');
   const [admin, setAdmin] = useState('');
-  const [remark] = useState('');
 
-  const { request: createTimelockApiCall } = useApi(); // Rename to avoid conflict
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const t = useTranslations('Timelocks');
+  const { request: createTimelockApiCall } = useApi();
+  const { accessToken, chains } = useAuthStore();
+  const walletAddress = useAddress();
 
   const { deployCompoundTimelock, deployOpenZeppelinTimelock, isLoading } = useDeployTimelock();
 
@@ -35,14 +34,24 @@ const CreateTimelockPage: React.FC = () => {
     chainName: '',
     chainIcon: <Image src="" alt="Chain Logo" width={16} height={16} className="mr-1" />,
     timelockAddress: '',
-    initiatingAddress: '', // This would typically come from the connected wallet
+    initiatingAddress: '',
     transactionHash: '',
-    contractRemarks: '',
   });
 
   const handleCreate = async () => {
-    if (!accessToken) {
-      toast.error(t('createTimelockError', { message: 'Please connect your wallet.' }));
+    if (!accessToken || !walletAddress) {
+      toast.error('Please connect your wallet first.');
+      return;
+    }
+
+    // Validation
+    if (!selectedChain || !minDelay) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    if (selectedStandard === 'openzeppelin' && (!proposers.trim() || !executors.trim())) {
+      toast.error('Proposers and Executors are required for OpenZeppelin standard.');
       return;
     }
 
@@ -50,38 +59,45 @@ const CreateTimelockPage: React.FC = () => {
     let transactionHash: string | null = null;
 
     try {
-      console.log(selectedStandard, 'selectedStandard');
+      console.log('Deploying timelock with standard:', selectedStandard);
+      
       if (selectedStandard === 'compound') {
         const result = await deployCompoundTimelock({
           minDelay: parseInt(minDelay),
-          admin: (admin || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+          admin: (admin.trim() || walletAddress) as `0x${string}`,
         });
         deployedContractAddress = result.contractAddress;
         transactionHash = result.transactionHash;
       } else if (selectedStandard === 'openzeppelin') {
+        const proposersList = proposers.split(',').map(addr => addr.trim()).filter(addr => addr !== '') as `0x${string}`[];
+        const executorsList = executors.split(',').map(addr => addr.trim()).filter(addr => addr !== '') as `0x${string}`[];
+        
         const result = await deployOpenZeppelinTimelock({
           minDelay: parseInt(minDelay),
-          proposers: proposers.split(',').map(addr => addr.trim()).filter(addr => addr !== '') as `0x${string}`[],
-          executors: executors.split(',').map(addr => addr.trim()).filter(addr => addr !== '') as `0x${string}`[],
-          admin: (admin || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+          proposers: proposersList,
+          executors: executorsList,
+          admin: (admin.trim() || '0x0000000000000000000000000000000000000000') as `0x${string}`,
         });
         deployedContractAddress = result.contractAddress;
         transactionHash = result.transactionHash;
       }
 
       if (deployedContractAddress && transactionHash) {
+        // Find chain name from chains data
+        const selectedChainData = chains.find(chain => chain.chain_id.toString() === selectedChain);
+        const chainName = selectedChainData?.chain_name || 'Unknown Chain';
+        
         setDialogDetails({
-          chainName: selectedChain, // You might want to map chain_id to chain_name properly
-          chainIcon: <Image src="" alt="Chain Logo" width={16} height={16} className="mr-1" />, // Placeholder
+          chainName: chainName,
+          chainIcon: <Image src="" alt="Chain Logo" width={16} height={16} className="mr-1" />,
           timelockAddress: deployedContractAddress,
-          initiatingAddress: '0xYourWalletAddressHere', // Replace with actual connected wallet address
+          initiatingAddress: walletAddress,
           transactionHash: transactionHash,
-          contractRemarks: remark, // Use the remark from the form
         });
         setIsConfirmDialogOpen(true);
       }
     } catch (error) {
-      console.error("Deployment failed:", error);
+      console.error('Deployment failed:', error);
       // The useDeployTimelock hook already handles toast messages for errors.
     }
   };
@@ -90,53 +106,70 @@ const CreateTimelockPage: React.FC = () => {
     setIsConfirmDialogOpen(false);
   };
 
-  const handleConfirmDialogConfirm = async () => {
-    // This function is called when the user clicks "确认添加" in the dialog.
-    // Now, call the backend API to record the Timelock.
-
-    if (!accessToken) {
-      toast.error(t('createTimelockError'), { description: 'Please connect your wallet.' });
+  const handleConfirmDialogConfirm = async (remarkFromDialog: string) => {
+    if (!accessToken || !walletAddress) {
+      toast.error('Please connect your wallet.');
       return;
     }
 
     const body: Record<string, unknown> = {
       chain_id: parseInt(selectedChain),
-      chain_name: dialogDetails.chainName, // Use chain name from dialog details
+      chain_name: dialogDetails.chainName,
       min_delay: parseInt(minDelay),
-      remark: dialogDetails.contractRemarks, // Use remark from dialog details
+      remark: remarkFromDialog || '',
       standard: selectedStandard,
-      tx_hash: dialogDetails.transactionHash, // Use actual txHash from dialog details
-      contract_address: dialogDetails.timelockAddress, // Use actual contract address from dialog details
+      tx_hash: dialogDetails.transactionHash,
+      contract_address: dialogDetails.timelockAddress,
     };
 
     if (selectedStandard === 'compound') {
-      body.admin = admin;
+      body.admin = admin.trim() || walletAddress;
     } else if (selectedStandard === 'openzeppelin') {
-      body.proposers = proposers.split(',').map(addr => addr.trim());
-      body.executors = executors.split(',').map(addr => addr.trim());
-      body.cancellers = proposers.split(',').map(addr => addr.trim());
-      body.admin = admin;
+      const proposersList = proposers.split(',').map(addr => addr.trim()).filter(addr => addr !== '');
+      const executorsList = executors.split(',').map(addr => addr.trim()).filter(addr => addr !== '');
+      
+      body.proposers = proposersList;
+      body.executors = executorsList;
+      body.cancellers = proposersList; // As per API doc: proposers就是cancellers
+      body.admin = admin.trim() || '0x0000000000000000000000000000000000000000';
     }
 
-    const { data: apiResponse, error: apiError } = await createTimelockApiCall('/api/v1/timelock/create', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    });
+    try {
+      console.log('Creating timelock record with body:', body);
+      
+      const apiResponse = await createTimelockApiCall('/api/v1/timelock/create', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      });
 
-    if (apiResponse && apiResponse.success) {
-      toast.success(t('createTimelockSuccess'));
-      // Optionally, redirect or update UI after successful API call
-      // router.push('/home'); // Example redirect
-    } else {
-      console.error('API Error:', apiError || apiResponse?.error?.message);
-      toast.error(t('createTimelockError'), { description: apiError?.message || apiResponse?.error?.message || 'Unknown error' });
+      if (apiResponse && apiResponse.success) {
+        toast.success('Timelock created successfully!');
+        // Reset form
+        setSelectedChain('');
+        setSelectedStandard('compound');
+        setMinDelay('259200');
+        setProposers('');
+        setExecutors('');
+        setAdmin('');
+        setRemark('');
+        // Optionally redirect
+        // router.push('/timelocks');
+      } else {
+        throw new Error(apiResponse?.error?.message || 'Failed to create timelock record');
+      }
+    } catch (error: unknown) {
+      console.error('API Error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error('Failed to create timelock record', { 
+        description: errorMessage
+      });
+    } finally {
+      setIsConfirmDialogOpen(false);
     }
-
-    setIsConfirmDialogOpen(false); // Close dialog after API call
   };
 
   return (

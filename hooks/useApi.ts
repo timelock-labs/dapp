@@ -39,6 +39,10 @@ export function useApi(): UseApiReturn {
     setIsLoading(true);
     setError(null);
 
+    // Ensure the URL is absolute
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+    const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -51,7 +55,7 @@ export function useApi(): UseApiReturn {
     console.log(accessToken, 'accessToken');
     console.log(headers, 'headers');
     try {
-      const response = await fetch(url, {
+      const response = await fetch(fullUrl, {
         method: options.method || 'GET',
         headers: headers,
         body: options.body ? JSON.stringify(options.body) : null,
