@@ -4,10 +4,11 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import SearchBar from '@/components/ui/SearchBar';
 import NewButton from '@/components/ui/NewButton';
 import TableComponent from '@/components/ui/TableComponent';
-import { useApi } from '@/hooks/useApi';
+import { useTransactionApi, Transaction } from '@/hooks/useTransactionApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 // Define Transaction type specific to this table
 interface PendingTxRow {
@@ -17,143 +18,133 @@ interface PendingTxRow {
   timelock_address: string;
   tx_hash: string;
   status: string;
+  eta: number;
+  time_remaining: number;
+  creator_address: string;
   operations: React.ReactNode;
   chainIcon: React.ReactNode;
   can_cancel: boolean;
   can_execute: boolean;
+  can_retry_submit: boolean;
 }
 
 const getPendingTxTypeStyle = (type: string) => {
   switch (type) {
-    case 'queued': return 'bg-gray-100 text-gray-800';
-    case 'ready': return 'bg-black text-white';
+    case 'queued': return 'bg-blue-100 text-blue-800';
+    case 'ready': return 'bg-green-100 text-green-800';
+    case 'executing': return 'bg-yellow-100 text-yellow-800';
+    case 'failed': return 'bg-red-100 text-red-800';
+    case 'submit_failed': return 'bg-red-100 text-red-800';
+    case 'submitting': return 'bg-gray-100 text-gray-800';
     default: return 'bg-gray-100 text-gray-800';
   }
 };
 
-import debounce from 'lodash.debounce';
-
-// 导入API请求选项类型
-interface ApiRequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  headers?: Record<string, string>;
-  body?: unknown;
-}
-
 const PendingTransactionsSection: React.FC = () => {
   const t = useTranslations('Transactions');
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [pendingTxs, setPendingTxs] = useState<PendingTxRow[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const accessToken = useAuthStore((state) => state.accessToken);
-  const { data: pendingTxsResponse, request: fetchPendingTxs, error } = useApi();
+  
+  const {
+    getPendingTransactions,
+    cancelTransaction,
+    executeTransaction,
+    retrySubmitTransaction
+  } = useTransactionApi();
 
-  // 使用 useCallback 来稳定 debouncedFetch 函数  
-  const debouncedFetch = useCallback(
-    (url: string, options: ApiRequestOptions) => {
-      const debouncedFn = debounce(() => {
-        fetchPendingTxs(url, options);
-      }, 500);
-      debouncedFn();
-    },
-    [fetchPendingTxs]
-  );
-
-  // 创建获取数据的函数
-  const fetchPendingTransactions = useCallback(() => {
-    if (accessToken) {
-      let url = `/api/v1/transaction/pending?page=1&page_size=10`;
-      if (searchQuery) {
-        url += `&q=${searchQuery}`;
-      }
-      debouncedFetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+  // Fetch pending transactions
+  const fetchPendingTransactions = useCallback(async () => {
+    if (!accessToken) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await getPendingTransactions({
+        page: 1,
+        page_size: 10,
+        // Add search functionality if needed
       });
+      
+      const transformedData: PendingTxRow[] = (response?.transactions || []).map((tx: Transaction) => ({
+        ...tx,
+        chainIcon: <div className="w-4 h-4 bg-gray-300 rounded-full" />, // Placeholder icon
+        operations: null, // Will be rendered by column render function
+      }));
+      
+      setPendingTxs(transformedData);
+    } catch (error) {
+      console.error('Failed to fetch pending transactions:', error);
+      toast.error(t('fetchPendingTxsError'));
+    } finally {
+      setIsLoading(false);
     }
-  }, [accessToken, searchQuery, debouncedFetch]);
+  }, [accessToken, getPendingTransactions, t]);
 
   useEffect(() => {
     fetchPendingTransactions();
   }, [fetchPendingTransactions]);
 
-  useEffect(() => {
-    if (pendingTxsResponse?.success === true) {
-      setPendingTxs(pendingTxsResponse.data.transactions || []);
-      // 移除成功toast，避免频繁提示
-    } else if (pendingTxsResponse?.success === false && pendingTxsResponse.data !== null) {
-      toast.error(t('fetchPendingTxsError'));
-    }
-  }, [pendingTxsResponse, t]);
-
-  useEffect(() => {
-    if (error) {
-      console.error('API Error:', error);
-    }
-  }, [error]);
-
-  const { data: cancelResponse, request: cancelTx, error: cancelError } = useApi();
-  const { data: executeResponse, request: executeTx, error: executeError } = useApi();
-
   const handleCancel = async (id: number) => {
-    if (accessToken) {
-      await cancelTx(`/api/v1/transaction/${id}/cancel`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+    try {
+      await cancelTransaction(id);
+      toast.success(t('cancelSuccess'));
+      await fetchPendingTransactions(); // Refresh data
+    } catch (error) {
+      console.error('Cancel failed:', error);
+      toast.error(t('cancelError'));
     }
   };
 
   const handleExecute = async (id: number) => {
-    if (accessToken) {
-      await executeTx(`/api/v1/transaction/${id}/execute`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+    try {
+      // For now, we'll use a placeholder transaction hash
+      // In a real implementation, this would come from the blockchain interaction
+      const executeTxHash = `0x${Math.random().toString(16).substring(2, 66)}`;
+      
+      await executeTransaction(id, {
+        execute_tx_hash: executeTxHash,
+        id: id
       });
+      toast.success(t('executeSuccess'));
+      await fetchPendingTransactions(); // Refresh data
+    } catch (error) {
+      console.error('Execute failed:', error);
+      toast.error(t('executeError'));
     }
   };
 
-  useEffect(() => {
-    if (cancelResponse?.success === true) {
-      toast.success(t('cancelSuccess'));
-      // 刷新数据
-      fetchPendingTransactions();
-    } else if (cancelResponse?.success === false && cancelResponse.data !== null) {
-      toast.error(t('cancelError'));
+  const handleRetrySubmit = async (id: number) => {
+    try {
+      // For now, we'll use a placeholder transaction hash
+      // In a real implementation, this would come from the blockchain interaction
+      const newTxHash = `0x${Math.random().toString(16).substring(2, 66)}`;
+      
+      await retrySubmitTransaction(id, newTxHash);
+      toast.success(t('retrySubmitSuccess'));
+      await fetchPendingTransactions(); // Refresh data
+    } catch (error) {
+      console.error('Retry submit failed:', error);
+      toast.error(t('retrySubmitError'));
     }
-  }, [cancelResponse, t, fetchPendingTransactions]);
+  };
 
-  useEffect(() => {
-    if (executeResponse?.success === true) {
-      toast.success(t('executeSuccess'));
-      // 刷新数据
-      fetchPendingTransactions();
-    } else if (executeResponse?.success === false && executeResponse.data !== null) {
-      toast.error(t('executeError'));
-    }
-  }, [executeResponse, t, fetchPendingTransactions]);
+  const formatTimeRemaining = (seconds: number) => {
+    if (seconds <= 0) return t('ready');
+    
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
 
-  useEffect(() => {
-    if (cancelError) {
-      console.error('Cancel API Error:', cancelError);
-      toast.error(t('cancelError'));
-    }
-  }, [cancelError, t]);
-
-  useEffect(() => {
-    if (executeError) {
-      console.error('Execute API Error:', executeError);
-      toast.error(t('executeError'));
-    }
-  }, [executeError, t]);
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
 
   const columns = [
     {
@@ -166,15 +157,48 @@ const PendingTransactionsSection: React.FC = () => {
         </div>
       ),
     },
-    { key: 'description', header: t('tagRemark') },
-    { key: 'timelock_address', header: t('timelockAddress') },
-    { key: 'tx_hash', header: t('txHash') },
+    { 
+      key: 'description', 
+      header: t('description'),
+      render: (row: PendingTxRow) => (
+        <span className="max-w-xs truncate" title={row.description}>
+          {row.description || 'No description'}
+        </span>
+      )
+    },
+    { 
+      key: 'timelock_address', 
+      header: t('timelockAddress'),
+      render: (row: PendingTxRow) => (
+        <span className="font-mono text-sm" title={row.timelock_address}>
+          {formatAddress(row.timelock_address)}
+        </span>
+      )
+    },
+    { 
+      key: 'tx_hash', 
+      header: t('txHash'),
+      render: (row: PendingTxRow) => (
+        <span className="font-mono text-sm" title={row.tx_hash}>
+          {formatAddress(row.tx_hash)}
+        </span>
+      )
+    },
     {
       key: 'status',
-      header: t('type'),
+      header: t('status'),
       render: (row: PendingTxRow) => (
         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPendingTxTypeStyle(row.status)}`}>
           {row.status}
+        </span>
+      ),
+    },
+    {
+      key: 'time_remaining',
+      header: 'Time Remaining',
+      render: (row: PendingTxRow) => (
+        <span className="text-sm text-gray-600">
+          {formatTimeRemaining(row.time_remaining)}
         </span>
       ),
     },
@@ -201,12 +225,23 @@ const PendingTransactionsSection: React.FC = () => {
               {t('execute')}
             </button>
           )}
+          {row.can_retry_submit && row.status === 'submit_failed' && (
+            <button
+              type="button"
+              onClick={() => handleRetrySubmit(row.id)}
+              className="text-blue-500 hover:text-blue-700 p-1 rounded-md hover:bg-blue-100 transition-colors"
+            >
+              {t('retry')}
+            </button>
+          )}
         </div>
       ),
     },
   ];
 
-  const handleNew = () => console.log('New clicked!');
+  const handleNew = () => {
+    router.push('/create-transaction'); // Navigate to create transaction page
+  };
 
   return (
     <div className="bg-white p-6 border border-gray-200 flex flex-col h-[400px] pt-0 pb-0">
@@ -227,6 +262,7 @@ const PendingTransactionsSection: React.FC = () => {
           columns={columns}
           data={pendingTxs}
           showPagination={false}
+          itemsPerPage={10}
         />
       </div>
     </div>

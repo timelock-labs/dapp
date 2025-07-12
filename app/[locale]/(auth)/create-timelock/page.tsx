@@ -155,7 +155,7 @@ const CreateTimelockPage: React.FC = () => {
         setProposers('');
         setExecutors('');
         setAdmin('');
-        setRemark('');
+        // Remark is now managed in the dialog
         // Optionally redirect
         // router.push('/timelocks');
       } else {

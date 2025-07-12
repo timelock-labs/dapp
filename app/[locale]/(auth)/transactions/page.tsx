@@ -8,7 +8,7 @@ const Transactions: React.FC = () => {
     const  t  = useTranslations('Transactions');
   return (
     <PageLayout title={t('title')}>
-      <div className="bg-white flex flex-col space-y-8 h-full overflow-y-auto">
+      <div className="bg-white flex flex-col space-y-8 h-full overflow-y-auto p-6">
       {/* Pending Transactions Section */}
       <PendingTransactionsSection />
 

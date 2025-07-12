@@ -5,7 +5,7 @@ import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
 import TableComponent from '@/components/ui/TableComponent';
-import { useApi } from '@/hooks/useApi';
+import { useTransactionApi, Transaction } from '@/hooks/useTransactionApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -19,6 +19,10 @@ interface HistoryTxRow {
   timelock_address: string;
   tx_hash: string;
   status: string;
+  created_at: string;
+  executed_at?: string;
+  canceled_at?: string;
+  creator_address: string;
   chainIcon: React.ReactNode;
 }
 
@@ -32,78 +36,47 @@ const getHistoryTxTypeStyle = (type: string) => {
   }
 };
 
-
-import debounce from 'lodash.debounce';
-
-// 导入API请求选项类型
-interface ApiRequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  headers?: Record<string, string>;
-  body?: unknown;
-}
-
 const TransactionHistorySection: React.FC = () => {
   const t = useTranslations('Transactions');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
   const accessToken = useAuthStore((state) => state.accessToken);
-  const { data: historyTxsResponse, request: fetchHistoryTxs, error } = useApi();
+  
+  const { getTransactionList } = useTransactionApi();
 
   const handleTabChange = (tabId: string) => {
     console.log('activeTab:', tabId);
     setActiveTab(tabId);
   };
 
-  // 使用 useCallback 来稳定 debouncedFetch 函数
-  const debouncedFetch = useCallback(
-    (url: string, options: ApiRequestOptions) => {
-      const debouncedFn = debounce(() => {
-        fetchHistoryTxs(url, options);
-      }, 500);
-      debouncedFn();
-    },
-    [fetchHistoryTxs]
-  );
-
-  // 创建获取数据的函数
-  const fetchHistoryTransactions = useCallback(() => {
-    if (accessToken) {
-      let url = `/api/v1/transaction/list?page=1&page_size=10`;
-      if (activeTab !== 'all') {
-        url += `&status=${activeTab}`;
-      }
-      if (searchQuery) {
-        url += `&q=${searchQuery}`;
-      }
-      debouncedFetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+  // Fetch transaction history
+  const fetchHistoryTransactions = useCallback(async () => {
+    if (!accessToken) return;
+    
+    try {
+      const response = await getTransactionList({
+        page: 1,
+        page_size: 10,
+        status: activeTab === 'all' ? undefined : activeTab,
+        // Add search functionality if needed
       });
+      
+      const transformedData: HistoryTxRow[] = (response?.transactions || []).map((tx: Transaction) => ({
+        ...tx,
+        chainIcon: <div className="w-4 h-4 bg-gray-300 rounded-full" />, // Placeholder icon
+      }));
+      
+      setHistoryTxs(transformedData);
+    } catch (error) {
+      console.error('Failed to fetch transaction history:', error);
+      toast.error(t('fetchHistoryTxsError'));
     }
-  }, [accessToken, activeTab, searchQuery, debouncedFetch]);
+  }, [accessToken, activeTab, getTransactionList, t]);
 
   useEffect(() => {
     fetchHistoryTransactions();
   }, [fetchHistoryTransactions]);
-
-  useEffect(() => {
-    if (historyTxsResponse?.success === true) {
-      setHistoryTxs(historyTxsResponse.data.transactions || []);
-      // 移除成功toast，避免频繁提示
-    } else if (historyTxsResponse?.success === false && historyTxsResponse.data !== null) {
-      toast.error(t('fetchHistoryTxsError'));
-    }
-  }, [historyTxsResponse, t]);
-
-  useEffect(() => {
-    if (error) {
-      console.error('API Error:', error);
-    }
-  }, [error]);
 
   const historyTabs = [
     { id: 'all', label: t('all') },
@@ -112,6 +85,27 @@ const TransactionHistorySection: React.FC = () => {
     { id: 'expired', label: t('expired') },
     { id: 'canceled', label: t('canceled') },
   ];
+
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const month = months[date.getMonth()];
+      const day = date.getDate();
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${month} ${day}, ${year} ${hours}:${minutes}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
+  };
 
   const columns = [
     {
@@ -124,25 +118,97 @@ const TransactionHistorySection: React.FC = () => {
         </div>
       ),
     },
-    { key: 'description', header: t('tagRemark') },
-    { key: 'timelock_address', header: t('timelockAddress') },
-    { key: 'tx_hash', header: t('txHash') },
+    { 
+      key: 'description', 
+      header: t('description'),
+      render: (row: HistoryTxRow) => (
+        <span className="max-w-xs truncate" title={row.description}>
+          {row.description || 'No description'}
+        </span>
+      )
+    },
+    { 
+      key: 'timelock_address', 
+      header: t('timelockAddress'),
+      render: (row: HistoryTxRow) => (
+        <span className="font-mono text-sm" title={row.timelock_address}>
+          {formatAddress(row.timelock_address)}
+        </span>
+      )
+    },
+    { 
+      key: 'tx_hash', 
+      header: t('txHash'),
+      render: (row: HistoryTxRow) => (
+        <span className="font-mono text-sm" title={row.tx_hash}>
+          {formatAddress(row.tx_hash)}
+        </span>
+      )
+    },
     {
       key: 'status',
-      header: t('type'),
+      header: t('status'),
       render: (row: HistoryTxRow) => (
         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>
           {row.status}
         </span>
       ),
     },
+    {
+      key: 'created_at',
+      header: t('createdAt'),
+      render: (row: HistoryTxRow) => (
+        <span className="text-sm text-gray-600">
+          {formatDate(row.created_at)}
+        </span>
+      ),
+    },
+    {
+      key: 'completed_at',
+      header: 'Completed At',
+      render: (row: HistoryTxRow) => (
+        <span className="text-sm text-gray-600">
+          {formatDate(row.executed_at || row.canceled_at || '')}
+        </span>
+      ),
+    },
   ];
 
   const handleExport = () => {
-    const worksheet = XLSX.utils.json_to_sheet(historyTxs);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Transaction History");
-    XLSX.writeFile(workbook, "transaction-history.xlsx");
+    if (historyTxs.length === 0) {
+      toast.warning('No data to export');
+      return;
+    }
+
+    try {
+      // Prepare data for export
+      const exportData = historyTxs.map(tx => ({
+        ID: tx.id,
+        Chain: tx.chain_name,
+        Description: tx.description || 'No description',
+        'Timelock Address': tx.timelock_address,
+        'Transaction Hash': tx.tx_hash,
+        Status: tx.status,
+        'Created At': formatDate(tx.created_at),
+        'Completed At': formatDate(tx.executed_at || tx.canceled_at || ''),
+        Creator: tx.creator_address,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Transaction History");
+      
+      // Generate filename with current date
+      const now = new Date();
+      const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+      const filename = `transaction-history-${timestamp}.xlsx`;
+      
+      XLSX.writeFile(workbook, filename);
+      toast.success('Transaction history exported successfully');
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export transaction history');
+    }
   };
 
   return (
@@ -160,7 +226,7 @@ const TransactionHistorySection: React.FC = () => {
           </div>
           <div className="flex items-center space-x-3">
             <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search" />
-            <ExportButton onClick={handleExport} disabled={historyTxs.length === 0} />
+            <ExportButton onClick={handleExport} />
           </div>
         </div>
       </div>
@@ -169,6 +235,7 @@ const TransactionHistorySection: React.FC = () => {
           columns={columns}
           data={historyTxs}
           showPagination={false}
+          itemsPerPage={10}
         />
       </div>
     </div>
