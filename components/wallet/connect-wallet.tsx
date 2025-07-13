@@ -1,6 +1,6 @@
 'use client'
 
-import { useConnectionStatus, useSigner, useAddress, useConnect, useDisconnect, metamaskWallet } from '@thirdweb-dev/react'
+import { useConnectionStatus, useAddress, useConnect, useDisconnect, metamaskWallet } from '@thirdweb-dev/react'
 import { memo, useEffect, useRef } from 'react'
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,6 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
   const disconnect = useDisconnect()
   const address = useAddress()
   const connectionStatus = useConnectionStatus()
-  const signer = useSigner()
   const prevConnectionStatus = useRef(connectionStatus)
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
@@ -21,17 +20,9 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
   const isConnecting = connectionStatus === "connecting"
 
   useEffect(() => {
-    if (prevConnectionStatus.current !== "connected" && isConnected) {
-      const message = 'welcome to TimeLocker!';
-      signer?.signMessage(message).then((signature) => {
-        // You can now use the signature for authentication or other purposes
-        console.log("Signed message:", signature);
-      }).catch((error) => {
-        console.error("Failed to sign message:", error);
-      });
-    }
+    // 移除重复的签名逻辑，签名逻辑统一在登录页面处理
     prevConnectionStatus.current = connectionStatus
-  }, [connectionStatus, signer, isConnected])
+  }, [connectionStatus])
 
   useEffect(() => {
     if (isDisconnected) {

@@ -47,13 +47,17 @@ export const useAuthStore = create<AppState & AppActions>()(
         },
         fetchChains: async () => {
           try {
+            console.log('Fetching chains...');
             const response = await fetch('/api/v1/chain/list');
+            console.log('Chains API response status:', response.status);
             if (response.ok) {
-              const { data } = await response.json();
-              if (Array.isArray(data.chains)) {
-                set({ chains: data.chains });
+              const responseData = await response.json();
+              console.log('Chains API response data:', responseData);
+              if (responseData.data && Array.isArray(responseData.data.chains)) {
+                console.log('Setting chains:', responseData.data.chains);
+                set({ chains: responseData.data.chains });
               } else {
-                console.error('API returned non-array data for chains:', data);
+                console.error('API returned non-array data for chains:', responseData);
                 set({ chains: [] }); // Ensure chains is always an array
               }
             } else {
@@ -126,6 +130,7 @@ export const useAuthStore = create<AppState & AppActions>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.isAuthenticated = !!state.accessToken; // 确保认证状态在加载时是正确的
+          state._hasHydrated = true; // 设置水合状态为 true
         }
       },
     }

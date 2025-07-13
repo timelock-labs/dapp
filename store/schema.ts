@@ -31,10 +31,17 @@ export const TimelockContractSchema = z.object({
   id: z.number(),
   chain_name: z.string(),
   contract_address: z.string(),
-  admin: z.string(),
+  admin: z.string().optional(),
   created_at: z.string(),
   remark: z.string(),
   status: z.string(),
+  standard: z.enum(['compound', 'openzeppelin']).optional(),
+  // OpenZeppelin specific fields
+  proposers: z.string().optional(),
+  executors: z.string().optional(),
+  cancellers: z.string().optional(),
+  // Compound specific fields
+  pending_admin: z.string().optional(),
 });
 
 export type TimelockContract = z.infer<typeof TimelockContractSchema>;

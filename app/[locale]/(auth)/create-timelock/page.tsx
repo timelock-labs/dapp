@@ -6,6 +6,7 @@ import { useDeployTimelock } from '@/hooks/useDeployTimelock';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useAddress } from '@thirdweb-dev/react';
+import { useRouter, useParams } from 'next/navigation';
 import FirstTimeTimelockIntro from './components/FirstTimeTimelockIntro';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog'; // Import the new dialog component
@@ -23,6 +24,9 @@ const CreateTimelockPage: React.FC = () => {
   const { request: createTimelockApiCall } = useApi();
   const { accessToken, chains } = useAuthStore();
   const walletAddress = useAddress();
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale;
 
   const { deployCompoundTimelock, deployOpenZeppelinTimelock, isLoading } = useDeployTimelock();
 
@@ -156,8 +160,8 @@ const CreateTimelockPage: React.FC = () => {
         setExecutors('');
         setAdmin('');
         // Remark is now managed in the dialog
-        // Optionally redirect
-        // router.push('/timelocks');
+        // Redirect to timelocks page
+        router.push(`/${locale}/timelocks`);
       } else {
         throw new Error(apiResponse?.error?.message || 'Failed to create timelock record');
       }

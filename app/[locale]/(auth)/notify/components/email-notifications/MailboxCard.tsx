@@ -1,5 +1,6 @@
 import React from 'react';
-import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import DeleteButton from '@/components/ui/DeleteButton';
 import { EmailNotification } from '@/hooks/useNotificationApi';
 import { useTranslations } from 'next-intl';
 
@@ -53,15 +54,16 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
             {t('edit')}
           </span>
         </button>
-        <button
-          onClick={handleDeleteClick}
-          className="w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-        >
-          <span className="flex items-center gap-2 text-[#0A0A0A]">
-            <TrashIcon className="w-4 h-4" />
-            {t('delete')}
-          </span>
-        </button>
+        <DeleteButton
+          onDelete={handleDeleteClick}
+          title={t('deleteConfirmTitle')}
+          description={t('deleteConfirmDescription')}
+          confirmText={t('delete')}
+          cancelText={t('cancel')}
+          variant="default"
+          size="md"
+          className="w-[85px] h-[32px] border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 transition-colors flex items-center justify-center"
+        />
       </div>
     </div>
   );

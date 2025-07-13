@@ -5,26 +5,34 @@ import PageLayout from "@/components/layout/PageLayout";
 import AddTimelockContractSection from "./components/AddTimelockContractSection";
 import TimelockContractTable from "./components/TimelockContractTable";
 import { useApi } from '@/hooks/useApi';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { useAuthStore } from "@/store/userStore";
-
+import type { TimelockContract } from "@/store/schema";
 
 const Timelocks: React.FC = () => {
     const { data: timelockListResponse, request: fetchTimelockList, isLoading, error } = useApi();
-    const params = useParams();
-    const locale = params.locale;
     const { allTimelocks, setAllTimelocks } = useAuthStore();
 
-    useEffect(() => {
+    const refetchTimelocks = React.useCallback(() => {
         fetchTimelockList('/api/v1/timelock/list', {
             method: 'GET',
         });
     }, [fetchTimelockList]);
 
     useEffect(() => {
+        refetchTimelocks();
+    }, [refetchTimelocks]);
+
+    useEffect(() => {
         if (timelockListResponse && timelockListResponse.success && timelockListResponse.data) {
-            const combinedTimelocks = [...timelockListResponse.data.compound_timelocks, ...timelockListResponse.data.openzeppelin_timelocks];
+            const compoundTimelocks: TimelockContract[] = timelockListResponse.data.compound_timelocks.map((timelock: TimelockContract): TimelockContract => ({
+                ...timelock,
+                standard: 'compound' as const
+            }));
+            const openzeppelinTimelocks: TimelockContract[] = timelockListResponse.data.openzeppelin_timelocks.map((timelock: TimelockContract): TimelockContract => ({
+                ...timelock,
+                standard: 'openzeppelin' as const
+            }));
+            const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
             setAllTimelocks(combinedTimelocks);
         }
     }, [timelockListResponse, setAllTimelocks]);
@@ -41,7 +49,7 @@ const Timelocks: React.FC = () => {
 
     return (
         <PageLayout title="Timelock" >
-            {hasTimelocks ? <TimelockContractTable data={allTimelocks} /> : <AddTimelockContractSection />}
+            {hasTimelocks ? <TimelockContractTable data={allTimelocks} onDataUpdate={refetchTimelocks} /> : <AddTimelockContractSection />}
         </PageLayout>
     )
 }

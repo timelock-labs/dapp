@@ -1,6 +1,5 @@
 'use client'
 import Image from 'next/image';
-
 import { useSwitchChain, useChainId, useConnectionStatus, useSigner } from '@thirdweb-dev/react'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown, Network } from 'lucide-react'
 import { useAuthStore } from '@/store/userStore';
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useApi } from '@/hooks/useApi';
 
 export function ChainSwitcher() {
@@ -22,12 +21,19 @@ export function ChainSwitcher() {
   const signer = useSigner()
   const { chains, fetchChains, _hasHydrated, login } = useAuthStore()
   const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
+  const hasFetchedChains = useRef(false);
 
   useEffect(() => {
-    if (_hasHydrated) {
+    console.log('ChainSwitcher: _hasHydrated =', _hasHydrated);
+    console.log('ChainSwitcher: chains length =', chains?.length);
+    console.log('ChainSwitcher: hasFetchedChains =', hasFetchedChains.current);
+    
+    if (_hasHydrated && !hasFetchedChains.current && (!chains || chains.length === 0)) {
+      console.log('ChainSwitcher: Calling fetchChains');
+      hasFetchedChains.current = true;
       fetchChains()
     }
-  }, [fetchChains, _hasHydrated])
+  }, [fetchChains, _hasHydrated]) // 移除 chains 依赖以避免无限循环
 
   useEffect(() => {
     if (switchChainError) {
