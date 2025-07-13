@@ -1,6 +1,7 @@
 // components/email-address/VerificationCodeInput.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useApi } from '@/hooks/useApi';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface VerificationCodeInputProps {
@@ -11,6 +12,7 @@ interface VerificationCodeInputProps {
 }
 
 const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, onSendCode, onCodeChange, codeLength = 6 }) => {
+  const t = useTranslations('Notify.verificationCode');
   const [code, setCode] = useState<string[]>(Array(codeLength).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const { request: resendCode } = useApi();
@@ -41,7 +43,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 
   const handleResendCode = async () => {
     if (!email) {
-      toast.error('请输入邮箱地址！');
+      toast.error(t('pleaseEnterEmail'));
       return;
     }
     const response = await resendCode('/api/v1/email-notifications/resend-code', {
@@ -52,15 +54,15 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
     });
 
     if (response && response.success) {
-      toast.success('验证码已发送！');
+      toast.success(t('verificationCodeSent'));
     } else if (response && !response.success) {
-      toast.error(`发送验证码失败: ${response.error?.message || '未知错误'}`);
+      toast.error(t('sendCodeError', { message: response.error?.message || t('unknownError') }));
     }
   };
 
   return (
     <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2">接收验证码</label>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{t('label')}</label>
       <div className="flex items-center ">
         {Array.from({ length: codeLength / 2 }).map((_, i) => (
           <React.Fragment key={`part1-${i}`}>
@@ -100,7 +102,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
           onClick={onSendCode}
           className="ml-4 bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
         >
-          发送验证码
+          {t('sendCode')}
         </button>
       </div>
     </div>

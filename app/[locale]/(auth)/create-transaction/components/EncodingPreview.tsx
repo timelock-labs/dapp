@@ -7,21 +7,21 @@ interface EncodingPreviewProps {
 }
 
 const EncodingPreview: React.FC<EncodingPreviewProps> = ({ previewContent }) => {
-  const t = useTranslations('Transactions');
+  const t = useTranslations('CreateTransaction');
 
   return (
     // Use a grid layout for left (header) and right (content) sections
-    <div className="bg-white p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start h-full border-b border-gray-300">
+    <div className="bg-white py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start h-full border-b border-gray-300">
       {/* Left Column: Section Header */}
       <div className="lg:col-span-1 lg:sticky lg:top-4">
         <SectionHeader
-          title='编码预览'
-          description={t('View and update your personal details and account information.')}
+          title={t('preview.title')}
+          description={t('preview.description')}
         />
       </div>
       {/* Right Column: Preview Content */}
       <div className="lg:col-span-1 bg-gray-900 text-gray-100 p-4 rounded-md text-sm font-mono whitespace-pre-wrap overflow-auto h-full min-h-[200px]"> {/* Added min-h for better visibility if content is short */}
-        {previewContent || "No data to preview."} {/* Added a fallback message */}
+        {previewContent || t('preview.noData')} {/* Added a fallback message */}
       </div>
     </div>
   );

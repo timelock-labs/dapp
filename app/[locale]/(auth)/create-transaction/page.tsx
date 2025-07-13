@@ -1,17 +1,26 @@
-// pages/TransactionEncoderPage.tsx (or components/TransactionEncoderPage.tsx)
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import PageLayout from '@/components/layout/PageLayout';
 import EncodingTransactionForm from './components/EncodingTransactionForm';
 import EncodingPreview from './components/EncodingPreview';
 import MailboxSelection from './components/MailboxSelection';
 import { useTranslations } from 'next-intl';
+import { useTransactionApi, CreateTransactionRequest } from '@/hooks/useTransactionApi';
+import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
+import { toast } from 'sonner';
 const TransactionEncoderPage: React.FC = () => {
+    const router = useRouter();
+    const t = useTranslations('CreateTransaction');
+    const { createTransaction } = useTransactionApi();
+    const account = useActiveAccount();
+    const chain = useActiveWalletChain();
 
     // Form States
     const [timelockType, setTimelockType] = useState('');
     const [timelockMethod, setTimelockMethod] = useState('');
+    const [timelockAddress, setTimelockAddress] = useState('');
     const [target, setTarget] = useState('');
     const [value, setValue] = useState('');
     const [abiValue, setAbiValue] = useState('');
@@ -19,12 +28,12 @@ const TransactionEncoderPage: React.FC = () => {
     const [timeValue, setTimeValue] = useState('');
     const [arg1Value, setArg1Value] = useState('');
     const [arg2Value, setArg2Value] = useState('');
-    const [selectedMailbox, setSelectedMailbox] = useState('');
+    const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
+    const [description, setDescription] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Preview State
     const [previewContent, setPreviewContent] = useState('');
-
-    const t = useTranslations('Transactions');
 
     // Effect to update preview content whenever form fields change
     useEffect(() => {
@@ -43,14 +52,55 @@ const TransactionEncoderPage: React.FC = () => {
         setPreviewContent(generatePreview());
     }, [target, value, timeValue, functionValue, arg1Value, arg2Value]);
 
-    const handleSendTransaction = () => {
-        alert('发起交易 button clicked!');
-        console.log({
-            timelockType, timelockMethod, target, value, abiValue,
-            functionValue, timeValue, arg1Value, arg2Value, selectedMailbox,
-            previewContent
-        });
-        // Implement actual transaction logic here
+    const handleSendTransaction = async () => {
+        if (!account?.address) {
+            toast.error('Please connect your wallet first');
+            return;
+        }
+
+        if (!chain?.id) {
+            toast.error('Please select a network');
+            return;
+        }
+
+        // Validate required fields
+        if (!timelockAddress || !target || !functionValue || !timeValue) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+
+            // Prepare transaction data
+            const transactionData: CreateTransactionRequest = {
+                chain_id: chain.id,
+                chain_name: chain.name || 'Unknown',
+                description: description || `Transaction to ${target}`,
+                eta: parseInt(timeValue) || 0,
+                function_sig: functionValue,
+                operation_id: `${Date.now()}-${account.address}`, // Generate unique operation ID
+                target: target,
+                timelock_address: timelockAddress,
+                timelock_standard: timelockType === 'compound' ? 'compound' : 'openzeppelin',
+                tx_data: abiValue || '0x',
+                tx_hash: '', // Will be set when transaction is submitted to blockchain
+                value: value || '0',
+            };
+
+            const result = await createTransaction(transactionData);
+            
+            toast.success('Transaction created successfully!');
+            console.log('Transaction created:', result);
+            
+            // Navigate to transaction details or list
+            router.push('/transactions');
+        } catch (error: any) {
+            console.error('Failed to create transaction:', error);
+            toast.error(error.message || 'Failed to create transaction');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -62,6 +112,7 @@ const TransactionEncoderPage: React.FC = () => {
                     <EncodingTransactionForm
                         timelockType={timelockType} onTimelockTypeChange={setTimelockType}
                         timelockMethod={timelockMethod} onTimelockMethodChange={setTimelockMethod}
+                        onTimelockAddressChange={setTimelockAddress}
                         target={target} onTargetChange={setTarget}
                         value={value} onValueChange={setValue}
                         abiValue={abiValue} onAbiChange={setAbiValue}
@@ -69,6 +120,7 @@ const TransactionEncoderPage: React.FC = () => {
                         timeValue={timeValue} onTimeChange={setTimeValue}
                         arg1Value={arg1Value} onArg1Change={setArg1Value}
                         arg2Value={arg2Value} onArg2Change={setArg2Value}
+                        description={description} onDescriptionChange={setDescription}
                     />
                     <EncodingPreview previewContent={previewContent} />
                     <MailboxSelection
@@ -76,13 +128,15 @@ const TransactionEncoderPage: React.FC = () => {
                         onMailboxChange={setSelectedMailbox}
                     />
 
-                    {/* 将按钮容器推到底部，并使按钮在容器内右对齐 */}
+                    {/* Submit button container */}
                     <div className="mt-auto flex justify-end">
                         <button
+                            type="button"
                             onClick={handleSendTransaction}
-                            className="text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center w-[88px] h-[36px] text-sm" // 应用固定宽高，并居中文本
+                            disabled={isSubmitting}
+                            className="text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4"
                         >
-                            {t('sendTransactionButton')}
+                            {isSubmitting ? t('submitting') : t('sendTransactionButton')}
                         </button>
                     </div>
 

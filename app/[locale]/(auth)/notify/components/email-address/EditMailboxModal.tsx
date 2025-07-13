@@ -5,6 +5,7 @@ import TextInput from '@/components/ui/TextInput';
 import ListeningPermissions from './ListeningPermissions';
 import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
 import { useTimelockApi } from '@/hooks/useTimelockApi';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface Permission {
@@ -33,6 +34,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   onSuccess,
   initialData,
 }) => {
+  const t = useTranslations('Notify.editMailbox');
   const [emailRemark, setEmailRemark] = useState(initialData?.email_remark || '');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>(initialData?.timelock_contracts || []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -76,7 +78,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
       }
     } catch (error) {
       console.error('Failed to fetch timelocks:', error);
-      toast.error('获取Timelock列表失败');
+      toast.error(t('fetchTimelockListError'));
     } finally {
       setIsLoadingTimelocks(false);
     }
@@ -111,12 +113,12 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 
   const handleSave = async () => {
     if (!emailRemark) {
-      toast.error('邮箱备注不能为空！');
+      toast.error(t('emailRemarkRequired'));
       return;
     }
 
     if (!initialData?.email) {
-      toast.error('无法获取邮箱地址进行更新！');
+      toast.error(t('cannotGetEmailAddress'));
       return;
     }
 
@@ -126,12 +128,12 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
         timelock_contracts: selectedPermissions,
       });
 
-      toast.success('邮箱通知配置更新成功！');
+      toast.success(t('updateSuccess'));
       onSuccess();
       onClose();
     } catch (error) {
       console.error('Failed to update mailbox:', error);
-      toast.error(`更新邮箱通知配置失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      toast.error(t('updateError', { message: error instanceof Error ? error.message : t('unknownError') }));
     }
   };
 
@@ -147,12 +149,12 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
       >
         <div className='p-6'>
           <SectionHeader
-            title="编辑邮箱地址"
-            description="更新您的邮箱备注和监听权限。"
+            title={t('title')}
+            description={t('description')}
           />
 
           <TextInput
-            label="邮箱地址 (不可编辑)"
+            label={t('emailAddressReadOnly')}
             value={initialData?.email || ''}
             onChange={() => {}} // Read-only
             placeholder=""
@@ -160,21 +162,19 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
           />
 
           <TextInput
-            label="邮箱备注"
+            label={t('emailRemark')}
             value={emailRemark}
             onChange={setEmailRemark}
             placeholder=""
           />
 
-          {isLoadingTimelocks ? (
-            <div className="py-4 text-center text-gray-500">加载Timelock列表中...</div>
-          ) : (
-            <ListeningPermissions
-              permissions={permissions}
-              selectedPermissions={selectedPermissions}
-              onPermissionChange={handlePermissionChange}
-            />
-          )}
+          {/* Listening Permissions Section */}
+          <ListeningPermissions
+            permissions={permissions}
+            selectedPermissions={selectedPermissions}
+            onPermissionChange={handlePermissionChange}
+            isLoading={isLoadingTimelocks}
+          />
         </div>
 
         <div className="flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200">
@@ -183,14 +183,14 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
             onClick={handleCancel}
             className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
           >
-            取消
+            {t('cancel')}
           </button>
           <button
             type="button"
             onClick={handleSave}
             className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
           >
-            保存
+            {t('save')}
           </button>
         </div>
       </div>

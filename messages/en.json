@@ -172,6 +172,115 @@
     "fetchEmailListError": "Failed to fetch email list: {message}",
     "confirmDeleteMailbox": "Are you sure you want to delete {email}?",
     "deleteMailboxSuccess": "Mailbox deleted successfully.",
-    "deleteMailboxError": "Failed to delete mailbox: {message}"
+    "deleteMailboxError": "Failed to delete mailbox: {message}",
+    "confirmDialog": {
+      "title": "Delete Mailbox",
+      "description": "Are you sure you want to delete the mailbox for {email}? This action cannot be undone.",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    },
+    "emailRulesHeader": {
+      "title": "Email Notification Rules",
+      "rule1": "We will monitor and notify you of every transaction sent from the timelock contract;",
+      "rule2Before": "Please note that emails will be sent from ",
+      "rule2After": ". If you don't receive emails, please check your spam folder and add the email to your whitelist;",
+      "rule3": "Configure your email notifications promptly to avoid missing important information."
+    },
+    "addMailboxCard": {
+      "addMailbox": "Add Mailbox"
+    },
+    "mailboxCard": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "listeningPermissions": {
+      "title": "Listening Permissions",
+      "loading": "Loading timelock contracts...",
+      "noTimelocks": "No timelock contracts available. Please add some timelock contracts first."
+    },
+    "addMailbox": {
+      "title": "Add Email Address",
+      "description": "Enter your email address to receive timelock notifications.",
+      "emailAddress": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "emailRemark": "Email Remark",
+      "remarkPlaceholder": "Enter email remark",
+      "cancel": "Cancel",
+      "save": "Save",
+      "pleaseEnterEmail": "Please enter an email address",
+      "verificationCodeSent": "Verification code sent successfully",
+      "sendVerificationCodeError": "Failed to send verification code: {message}",
+      "emailAndRemarkRequired": "Email address and remark are required",
+      "pleaseEnterVerificationCode": "Please enter verification code",
+      "pleaseVerifyEmailFirst": "Please verify your email first",
+      "mailboxAddedSuccessfully": "Mailbox added successfully",
+      "addMailboxError": "Failed to add mailbox: {message}",
+      "emailVerificationSuccess": "Email verification successful",
+      "emailVerificationError": "Email verification failed: {message}",
+      "unknownError": "Unknown error",
+      "verificationSuccess": "Verification successful",
+      "verificationCodeIncorrect": "Verification code incorrect",
+      "fetchTimelockListError": "Failed to fetch timelock list"
+    },
+    "editMailbox": {
+      "title": "Edit Email Address",
+      "description": "Edit your email notification settings.",
+      "emailAddressReadOnly": "Email Address (Read Only)",
+      "emailRemark": "Email Remark",
+      "cancel": "Cancel",
+      "save": "Save",
+      "emailRemarkRequired": "Email remark is required",
+      "cannotGetEmailAddress": "Cannot get email address",
+      "updateSuccess": "Mailbox updated successfully",
+      "updateError": "Failed to update mailbox: {message}",
+      "unknownError": "Unknown error",
+      "fetchTimelockListError": "Failed to fetch timelock list"
+    },
+    "verificationCode": {
+      "label": "Verification Code",
+      "sendCode": "Send Code",
+      "pleaseEnterEmail": "Please enter email address first",
+      "verificationCodeSent": "Verification code sent successfully",
+      "sendCodeError": "Failed to send verification code: {message}",
+      "unknownError": "Unknown error"
+    }
+  },
+  "CreateTransaction": {
+    "title": "Create Transaction",
+    "encodingTransaction": {
+      "title": "Encode Transaction",
+      "description": "Configure your timelock transaction parameters.",
+      "selectTimelock": "Select Timelock",
+      "selectTimelockMethod": "Select Timelock Method",
+      "timelockAddress": "Timelock Address *",
+      "target": "Target",
+      "value": "Value",
+      "formDescription": "Description",
+      "descriptionPlaceholder": "Transaction description"
+    },
+    "preview": {
+      "title": "Encoding Preview",
+      "description": "Preview your transaction encoding before submission.",
+      "noData": "No data to preview."
+    },
+    "mailbox": {
+      "title": "Listening Mailbox",
+      "description": "Select the mailbox to receive transaction notifications.",
+      "selectLabel": "Select Configured Mailbox",
+      "selectPlaceholder": "Select configured mailbox",
+      "option1": "Mailbox 1",
+      "option2": "Mailbox 2"
+    },
+    "targetABI": {
+      "label": "Target ABI",
+      "placeholder": "Select ABI",
+      "function": "Function",
+      "selectFunction": "Select Function",
+      "time": "Time",
+      "arg1": "Argument 1",
+      "arg2": "Argument 2"
+    },
+    "submitting": "Submitting...",
+    "sendTransactionButton": "Send Transaction"
   }
 } 

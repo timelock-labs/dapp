@@ -124,10 +124,10 @@ const EmailNotificationPage: React.FC = () => {
         isOpen={deleteConfirmDialog.isOpen}
         onClose={() => setDeleteConfirmDialog({ isOpen: false, email: '', id: 0 })}
         onConfirm={confirmDeleteMailbox}
-        title="确认删除"
-        description={`确定要删除邮箱 "${deleteConfirmDialog.email}" 吗？此操作无法撤销。`}
-        confirmText="删除"
-        cancelText="取消"
+        title={t('confirmDialog.title')}
+        description={t('confirmDialog.description', { email: deleteConfirmDialog.email })}
+        confirmText={t('confirmDialog.confirmText')}
+        cancelText={t('confirmDialog.cancelText')}
         variant="destructive"
       />
     </PageLayout>

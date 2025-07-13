@@ -6,6 +6,7 @@ import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
 import { useNotificationApi } from '@/hooks/useNotificationApi';
 import { useTimelockApi } from '@/hooks/useTimelockApi';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface Permission {
@@ -28,6 +29,7 @@ interface AddMailboxModalProps {
 }
 
 const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const t = useTranslations('Notify.addMailbox');
   const [emailAddress, setEmailAddress] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
@@ -79,7 +81,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       }
     } catch (error) {
       console.error('Failed to fetch timelines:', error);
-      toast.error('获取Timelock列表失败');
+      toast.error(t('fetchTimelockListError'));
     } finally {
       setIsLoadingTimelocks(false);
     }
@@ -103,11 +105,11 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           verification_code: code,
         });
         setIsEmailVerified(true);
-        toast.success('邮箱验证成功！');
+        toast.success(t('emailVerificationSuccess'));
       } catch (error) {
         console.error('Email verification failed:', error);
         setIsEmailVerified(false);
-        toast.error(`邮箱验证失败: ${error instanceof Error ? error.message : '未知错误'}`);
+        toast.error(t('emailVerificationError', { message: error instanceof Error ? error.message : t('unknownError') }));
       }
     } else {
       setIsEmailVerified(false);
@@ -122,18 +124,18 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
   const handleSendCode = async () => {
     if (!emailAddress) {
-      toast.error('请先输入邮箱地址！');
+      toast.error(t('pleaseEnterEmail'));
       return;
     }
 
     try {
       await resendVerificationCode({ email: emailAddress });
-      toast.success('验证码已发送到您的邮箱！');
+      toast.success(t('verificationCodeSent'));
       // Reset verification status when new code is sent
       setIsEmailVerified(false);
     } catch (error) {
       console.error('Failed to send verification code:', error);
-      toast.error(`发送验证码失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      toast.error(t('sendVerificationCodeError', { message: error instanceof Error ? error.message : t('unknownError') }));
     }
   };
 
@@ -149,17 +151,17 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
   const handleSave = async () => {
     if (!emailAddress || !emailRemark) {
-      toast.error('邮箱地址和备注不能为空！');
+      toast.error(t('emailAndRemarkRequired'));
       return;
     }
 
     if (!verificationCode) {
-      toast.error('请输入验证码！');
+      toast.error(t('pleaseEnterVerificationCode'));
       return;
     }
 
     if (!isEmailVerified) {
-      toast.error('请先验证邮箱地址！');
+      toast.error(t('pleaseVerifyEmailFirst'));
       return;
     }
 
@@ -171,7 +173,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
         timelock_contracts: selectedPermissions,
       });
 
-      toast.success('邮箱地址添加成功！');
+      toast.success(t('mailboxAddedSuccessfully'));
       onSuccess();
       onClose();
       // Reset form state
@@ -182,7 +184,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       setIsEmailVerified(false);
     } catch (error) {
       console.error('Failed to add mailbox:', error);
-      toast.error(`添加邮箱地址失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      toast.error(t('addMailboxError', { message: error instanceof Error ? error.message : t('unknownError') }));
     }
   };
 
@@ -201,36 +203,33 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
         <div className='p-6'>
  {/* Header Section */}
         <SectionHeader
-          title="添加邮箱地址"
-          description="输入您的全名或您想使用的显示名称。" // Updated description to Chinese
+          title={t('title')}
+          description={t('description')}
         />
 
         {/* Email Address Input */}
         <TextInput
-          label="邮箱地址"
+          label={t('emailAddress')}
           value={emailAddress}
           onChange={setEmailAddress}
-          placeholder="target" 
+          placeholder={t('emailPlaceholder')}
         />
 
         {/* Email Remark Input */}
         <TextInput
-          label="邮箱备注"
+          label={t('emailRemark')}
           value={emailRemark}
           onChange={setEmailRemark}
-          placeholder="target" 
+          placeholder={t('remarkPlaceholder')}
         />
 
         {/* Listening Permissions Section */}
-        {isLoadingTimelocks ? (
-          <div className="py-4 text-center text-gray-500">加载Timelock列表中...</div>
-        ) : (
-          <ListeningPermissions
-            permissions={permissions}
-            selectedPermissions={selectedPermissions}
-            onPermissionChange={handlePermissionChange}
-          />
-        )}
+        <ListeningPermissions
+          permissions={permissions}
+          selectedPermissions={selectedPermissions}
+          onPermissionChange={handlePermissionChange}
+          isLoading={isLoadingTimelocks}
+        />
 
         {/* Verification Code Input Section */}
         <VerificationCodeInput
@@ -246,12 +245,12 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             {isEmailVerified ? (
               <div className="flex items-center">
                 <span className="text-green-500 mr-2">✓</span>
-                邮箱验证成功
+                {t('verificationSuccess')}
               </div>
             ) : (
               <div className="flex items-center">
                 <span className="text-red-500 mr-2">✗</span>
-                验证码错误，请重新输入
+                {t('verificationCodeIncorrect')}
               </div>
             )}
           </div>
@@ -266,14 +265,14 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             onClick={handleCancel}
             className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
           >
-            取消 {/* Updated to Chinese */}
+            {t('cancel')}
           </button>
           <button
             type="button"
             onClick={handleSave}
             className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
           >
-            保存 {/* Updated to Chinese */}
+            {t('save')}
           </button>
         </div>
       </div>

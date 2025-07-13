@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { EmailNotification } from '@/hooks/useNotificationApi';
+import { useTranslations } from 'next-intl';
 
 interface MailboxCardProps {
   id: number;
@@ -11,6 +12,7 @@ interface MailboxCardProps {
 }
 
 const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, onEdit }) => {
+  const t = useTranslations('Notify.mailboxCard');
 
   const handleDeleteClick = () => {
     onDelete(id, email);
@@ -48,7 +50,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
         >
           <span className="flex items-center gap-2 text-[#0A0A0A]">
             <PencilIcon className="w-4 h-4" />
-            Edit
+            {t('edit')}
           </span>
         </button>
         <button
@@ -57,7 +59,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
         >
           <span className="flex items-center gap-2 text-[#0A0A0A]">
             <TrashIcon className="w-4 h-4" />
-            Delete
+            {t('delete')}
           </span>
         </button>
       </div>
