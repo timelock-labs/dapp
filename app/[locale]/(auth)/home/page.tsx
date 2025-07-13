@@ -23,7 +23,6 @@ export default function Home() {
       setHasAssets(false); // If not connected, assume no assets to display
       return;
     }
-    console.log(accessToken, 'accessToken');
     // if (!accessToken) {
     //   console.warn('No access token found. Redirecting to login.');
     //   router.push(`/${locale}/login`);

@@ -52,8 +52,7 @@ export function useApi(): UseApiReturn {
     if (url !== '/api/v1/auth/wallet-connect' && accessToken) {
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    console.log(accessToken, 'accessToken');
-    console.log(headers, 'headers');
+
     try {
       const response = await fetch(fullUrl, {
         method: options.method || 'GET',

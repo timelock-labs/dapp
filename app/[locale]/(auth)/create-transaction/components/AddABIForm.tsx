@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'; // Assuming TextInput is a wrapper around Input or similar
 import { Label } from '@/components/ui/label'; // Assuming you have a Label component or use Shadcn/ui Label
-import { Textarea } from '@/components/ui/textarea'; // Assuming TextAreaInput is a wrapper around Textarea or similar
+import ABITextarea from '@/components/ui/ABITextarea';
 import {
   Dialog,
   DialogContent,
@@ -68,13 +68,14 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
             </Label>
             <Input id="abiName" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('nameLabel')} />
           </div>
-          {/* ABI Content Textarea - Vertical Layout */}
-          <div className="space-y-2">
-            <Label htmlFor="abiContent">
-              {t('contentLabel')}
-            </Label>
-            <Textarea id="abiContent" value={abi} onChange={(e) => setAbi(e.target.value)} placeholder={t('contentLabel')} rows={8} />
-          </div>
+          <ABITextarea
+            id="abiContent"
+            label={t('contentLabel')}
+            value={abi}
+            onChange={setAbi}
+            placeholder={t('contentLabel')}
+            rows={8}
+          />
         </div>
         <DialogFooter>
           <DialogClose asChild>

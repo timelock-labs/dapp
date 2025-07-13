@@ -5,6 +5,7 @@ import MailboxCard from './components/email-notifications/MailboxCard';
 import AddMailboxCard from './components/email-notifications/AddMailboxCard';
 import AddMailboxModal from "./components/email-address/AddMailboxModal";
 import EditMailboxModal from "./components/email-address/EditMailboxModal";
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
@@ -17,6 +18,11 @@ const EmailNotificationPage: React.FC = () => {
   const [isEditMailboxModalOpen, setIsEditMailboxModalOpen] = useState(false);
   const [editingMailbox, setEditingMailbox] = useState<EmailNotification | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<{
+    isOpen: boolean;
+    email: string;
+    id: number;
+  }>({ isOpen: false, email: '', id: 0 });
 
   const {
     getEmailNotifications,
@@ -41,16 +47,20 @@ const EmailNotificationPage: React.FC = () => {
     fetchEmailNotifications();
   }, []);
 
-  const handleDeleteMailbox = async (id: number, email: string) => {
-    if (window.confirm(t('confirmDeleteMailbox', { email }))) {
-      try {
-        await deleteEmailNotification(email);
-        toast.success(t('deleteMailboxSuccess'));
-        await fetchEmailNotifications(); // Refresh data
-      } catch (error) {
-        console.error('Delete failed:', error);
-        toast.error(t('deleteMailboxError', { message: error instanceof Error ? error.message : 'Unknown error' }));
-      }
+  const handleDeleteMailbox = (id: number, email: string) => {
+    setDeleteConfirmDialog({ isOpen: true, email, id });
+  };
+
+  const confirmDeleteMailbox = async () => {
+    try {
+      await deleteEmailNotification(deleteConfirmDialog.email);
+      toast.success(t('deleteMailboxSuccess'));
+      await fetchEmailNotifications(); // Refresh data
+    } catch (error) {
+      console.error('Delete failed:', error);
+      toast.error(t('deleteMailboxError', { message: error instanceof Error ? error.message : 'Unknown error' }));
+    } finally {
+      setDeleteConfirmDialog({ isOpen: false, email: '', id: 0 });
     }
   };
 
@@ -107,6 +117,18 @@ const EmailNotificationPage: React.FC = () => {
         onClose={() => setIsEditMailboxModalOpen(false)}
         onSuccess={handleEditMailboxSuccess}
         initialData={editingMailbox}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirmDialog.isOpen}
+        onClose={() => setDeleteConfirmDialog({ isOpen: false, email: '', id: 0 })}
+        onConfirm={confirmDeleteMailbox}
+        title="确认删除"
+        description={`确定要删除邮箱 "${deleteConfirmDialog.email}" 吗？此操作无法撤销。`}
+        confirmText="删除"
+        cancelText="取消"
+        variant="destructive"
       />
     </PageLayout>
   );

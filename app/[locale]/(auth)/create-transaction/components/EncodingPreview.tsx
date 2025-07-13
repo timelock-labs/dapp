@@ -15,7 +15,7 @@ const EncodingPreview: React.FC<EncodingPreviewProps> = ({ previewContent }) => 
       {/* Left Column: Section Header */}
       <div className="lg:col-span-1 lg:sticky lg:top-4">
         <SectionHeader
-          title={t('previewSectionTitle')}
+          title='编码预览'
           description={t('View and update your personal details and account information.')}
         />
       </div>

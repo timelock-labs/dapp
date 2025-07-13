@@ -52,7 +52,6 @@ const ABILibPage: React.FC = () => {
   }, [accessToken, fetchAbiList]);
 
   useEffect(() => {
-    console.log(accessToken, 'accessToken');
     refreshAbiList();
   }, [accessToken, refreshAbiList]); // 添加 refreshAbiList 到依赖数组
 
