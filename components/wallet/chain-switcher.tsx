@@ -23,6 +23,13 @@ export function ChainSwitcher() {
   const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
   const hasFetchedChains = useRef(false);
 
+  // 使用单独的 useEffect 来重置 fetch 状态当 chains 变为非空时
+  useEffect(() => {
+    if (chains && chains.length > 0) {
+      hasFetchedChains.current = false; // 允许下次重新获取
+    }
+  }, [chains]);
+
   useEffect(() => {
     console.log('ChainSwitcher: _hasHydrated =', _hasHydrated);
     console.log('ChainSwitcher: chains length =', chains?.length);
@@ -33,7 +40,7 @@ export function ChainSwitcher() {
       hasFetchedChains.current = true;
       fetchChains()
     }
-  }, [fetchChains, _hasHydrated]) // 移除 chains 依赖以避免无限循环
+  }, [fetchChains, _hasHydrated])
 
   useEffect(() => {
     if (switchChainError) {

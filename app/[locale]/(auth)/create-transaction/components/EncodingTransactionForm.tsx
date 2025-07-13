@@ -1,11 +1,12 @@
 import Image from 'next/image';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
 import TargetABISection from './TargetABISection';
 import { useTranslations } from 'next-intl';
-import { useTimelockApi } from '@/hooks/useTimelockApi';
+import { useAuthStore } from '@/store/userStore';
+import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
 interface EncodingTransactionFormProps {
   timelockType: string;
@@ -23,68 +24,116 @@ interface EncodingTransactionFormProps {
   onFunctionChange: (value: string) => void;
   timeValue: string;
   onTimeChange: (value: string) => void;
-  arg1Value: string;
-  onArg1Change: (value: string) => void;
-  arg2Value: string;
-  onArg2Change: (value: string) => void;
+  // Dynamic arguments
+  argumentValues: string[];
+  onArgumentChange: (index: number, value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
   // Function to get timelock address from selected timelock
   onTimelockAddressChange: (address: string) => void;
+  // Function to receive timelock details
+  onTimelockDetailsChange?: (details: Record<string, unknown>) => void;
 }
 
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   timelockType, onTimelockTypeChange, timelockMethod, onTimelockMethodChange,
   target, onTargetChange, value, onValueChange,
   abiValue, onAbiChange, functionValue, onFunctionChange,
-  timeValue, onTimeChange, arg1Value, onArg1Change, arg2Value, onArg2Change,
-  description, onDescriptionChange, onTimelockAddressChange
+  timeValue, onTimeChange, argumentValues, onArgumentChange,
+  description, onDescriptionChange, onTimelockAddressChange, onTimelockDetailsChange
 }) => {
   const t = useTranslations('CreateTransaction');
-  const { getTimelockList } = useTimelockApi();
-  const [timelockList, setTimelockList] = React.useState<any[]>([]);
-  const [isLoadingTimelocks, setIsLoadingTimelocks] = React.useState(false);
-
-  // Fetch timelock list on component mount
-  useEffect(() => {
-    const fetchTimelocks = async () => {
-      setIsLoadingTimelocks(true);
-      try {
-        const response = await getTimelockList();
-        if (response.success && response.data) {
-          setTimelockList(response.data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch timelocks:', error);
-      } finally {
-        setIsLoadingTimelocks(false);
-      }
-    };
-
-    fetchTimelocks();
-  }, [getTimelockList]);
+  const { allTimelocks, accessToken } = useAuthStore();
+  const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
   // Convert timelock list to options format
   const timelockOptions = useMemo(() => {
-    return timelockList.map(timelock => ({
-      value: timelock.id || timelock.address,
-      label: `${timelock.remark || timelock.name || 'Timelock'} (${timelock.address?.slice(0, 6)}...${timelock.address?.slice(-4)})`,
-      address: timelock.address,
+    if (!Array.isArray(allTimelocks)) {
+      return [];
+    }
+    return allTimelocks.map(timelock => ({
+      value: timelock.id.toString(),
+      label: `${timelock.remark || 'Timelock'} (${timelock.contract_address?.slice(0, 6)}...${timelock.contract_address?.slice(-4)})`,
+      address: timelock.contract_address,
     }));
-  }, [timelockList]);
+  }, [allTimelocks]);
 
   // Handle timelock selection and update address
-  const handleTimelockChange = (value: string) => {
+  const handleTimelockChange = async (value: string) => {
     onTimelockTypeChange(value);
     const selectedTimelock = timelockOptions.find(option => option.value === value);
+    
     if (selectedTimelock) {
       onTimelockAddressChange(selectedTimelock.address);
+      
+      // Find the full timelock object to get standard
+      const fullTimelock = allTimelocks.find(tl => tl.id.toString() === value);
+      if (fullTimelock && fullTimelock.standard && accessToken) {
+        setIsLoadingDetails(true);
+        
+        try {
+          console.log(`Fetching timelock details for ${fullTimelock.standard}/${fullTimelock.id}`);
+          
+          await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          });
+        } catch (error) {
+          console.error('Failed to fetch timelock details:', error);
+        } finally {
+          setIsLoadingDetails(false);
+        }
+      }
     }
   };
-  const timelockMethodOptions = [
-    { value: 'methodA', label: 'Method A' },
-    { value: 'methodB', label: 'Method B' },
-  ];
+  
+  // Handle timelock detail response and generate method options
+  React.useEffect(() => {
+    if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
+      console.log('Timelock details received:', timelockDetailResponse.data);
+      onTimelockDetailsChange(timelockDetailResponse.data);
+    }
+  }, [timelockDetailResponse, onTimelockDetailsChange]);
+
+  // Generate timelock method options based on selected timelock's standard
+  const timelockMethodOptions = React.useMemo(() => {
+    if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
+      return [];
+    }
+
+    const selectedTimelock = allTimelocks.find(tl => tl.id.toString() === timelockType);
+    if (!selectedTimelock || !selectedTimelock.standard) {
+      return [];
+    }
+
+    if (selectedTimelock.standard === 'compound') {
+      return [
+        { value: 'queueTransaction', label: 'queueTransaction' },
+        { value: 'executeTransaction', label: 'executeTransaction' },
+        { value: 'cancelTransaction', label: 'cancelTransaction' },
+        { value: 'setPendingAdmin', label: 'setPendingAdmin' },
+        { value: 'acceptAdmin', label: 'acceptAdmin' },
+        { value: 'setDelay', label: 'setDelay' },
+      ];
+    } else if (selectedTimelock.standard === 'openzeppelin') {
+      return [
+        { value: 'schedule', label: 'schedule' },
+        { value: 'scheduleBatch', label: 'scheduleBatch' },
+        { value: 'execute', label: 'execute' },
+        { value: 'executeBatch', label: 'executeBatch' },
+        { value: 'cancel', label: 'cancel' },
+        { value: 'updateDelay', label: 'updateDelay' },
+        { value: 'grantRole', label: 'grantRole' },
+        { value: 'revokeRole', label: 'revokeRole' },
+      ];
+    }
+
+    return [];
+  }, [timelockType, allTimelocks]);
 
   return (
     // Use a grid layout for left (header) and right (form content) sections
@@ -106,14 +155,14 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
             value={timelockType}
             onChange={handleTimelockChange}
             options={timelockOptions}
-            placeholder={isLoadingTimelocks ? 'Loading timelocks...' : 'Select Timelock'}
+            placeholder={isLoadingDetails ? 'Loading timelock details...' : (allTimelocks.length === 0 ? 'No timelocks available' : 'Select Timelock')}
           />
           <SelectInput
             label={t('encodingTransaction.selectTimelockMethod')}
             value={timelockMethod}
             onChange={onTimelockMethodChange}
             options={timelockMethodOptions}
-            placeholder="Timelock Method"
+            placeholder={timelockType ? 'Select Timelock Method' : 'Select Timelock first'}
           />
         </div>
 
@@ -143,10 +192,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           onFunctionChange={onFunctionChange}
           timeValue={timeValue}
           onTimeChange={onTimeChange}
-          arg1Value={arg1Value}
-          onArg1Change={onArg1Change}
-          arg2Value={arg2Value}
-          onArg2Change={onArg2Change}
+          argumentValues={argumentValues}
+          onArgumentChange={onArgumentChange}
         />
       </div>
     </div>

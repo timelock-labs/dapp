@@ -9,6 +9,7 @@ import MailboxSelection from './components/MailboxSelection';
 import { useTranslations } from 'next-intl';
 import { useTransactionApi, CreateTransactionRequest } from '@/hooks/useTransactionApi';
 import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
+import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 const TransactionEncoderPage: React.FC = () => {
     const router = useRouter();
@@ -16,6 +17,7 @@ const TransactionEncoderPage: React.FC = () => {
     const { createTransaction } = useTransactionApi();
     const account = useActiveAccount();
     const chain = useActiveWalletChain();
+    const { allTimelocks } = useAuthStore();
 
     // Form States
     const [timelockType, setTimelockType] = useState('');
@@ -26,8 +28,7 @@ const TransactionEncoderPage: React.FC = () => {
     const [abiValue, setAbiValue] = useState('');
     const [functionValue, setFunctionValue] = useState('');
     const [timeValue, setTimeValue] = useState('');
-    const [arg1Value, setArg1Value] = useState('');
-    const [arg2Value, setArg2Value] = useState('');
+    const [argumentValues, setArgumentValues] = useState<string[]>([]);
     const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
     const [description, setDescription] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,22 +36,49 @@ const TransactionEncoderPage: React.FC = () => {
     // Preview State
     const [previewContent, setPreviewContent] = useState('');
 
+    // Handle argument changes
+    const handleArgumentChange = (index: number, value: string) => {
+        const newArgumentValues = [...argumentValues];
+        newArgumentValues[index] = value;
+        setArgumentValues(newArgumentValues);
+    };
+
+    // Handle function changes and clear arguments
+    const handleFunctionChange = (value: string) => {
+        setFunctionValue(value);
+        setArgumentValues([]); // Clear all argument values when function changes
+    };
+
+    // Handle ABI changes and clear arguments and function
+    const handleAbiChange = (value: string) => {
+        setAbiValue(value);
+        setFunctionValue(''); // Clear selected function when ABI changes
+        setArgumentValues([]); // Clear all argument values when ABI changes
+    };
+
     // Effect to update preview content whenever form fields change
     useEffect(() => {
         const generatePreview = () => {
-            return `chain: BSC
-                wallet : 0x73823131a67782100075140A57cfFAb1421B1a40
-                timelock: 0x73823131a67782100075140A57cfFAb1421B1a40
-                target : ${target || '0x73823131a67782100075140A57cfFAb1421B1a40'}
-                value : ${value || '0'}
-                calldata: 0x73823131a67782100075140A57cfFAb1421B1a40
-                time : ${timeValue || '17903210'}
-                Function: ${functionValue || 'N/A'}
-                arg1: ${arg1Value || 'N/A'}
-                arg2: ${arg2Value || 'N/A'}`;
+            // Get selected timelock's chain name
+            const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
+            const chainName = selectedTimelock?.chain_name || 'Not selected';
+            
+            const argsDisplay = argumentValues.length > 0 
+                ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || 'N/A'}`).join('\n')
+                : 'No arguments';
+                
+            return `chain: ${chainName}
+ wallet: ${account?.address || 'Not connected'}
+ timelock: ${timelockAddress || 'Not selected'}
+ target: ${target || 'Not specified'}
+ value: ${value || '0'}
+ calldata: ${abiValue || 'Not generated'}
+ time: ${timeValue || 'Not specified'}
+ Function: ${functionValue || 'Not selected'}
+ ${argsDisplay}`;
         };
         setPreviewContent(generatePreview());
-    }, [target, value, timeValue, functionValue, arg1Value, arg2Value]);
+    }, [target, value, timeValue, functionValue, argumentValues, account, timelockAddress, abiValue, timelockType, allTimelocks]);
 
     const handleSendTransaction = async () => {
         if (!account?.address) {
@@ -115,11 +143,10 @@ const TransactionEncoderPage: React.FC = () => {
                         onTimelockAddressChange={setTimelockAddress}
                         target={target} onTargetChange={setTarget}
                         value={value} onValueChange={setValue}
-                        abiValue={abiValue} onAbiChange={setAbiValue}
-                        functionValue={functionValue} onFunctionChange={setFunctionValue}
+                        abiValue={abiValue} onAbiChange={handleAbiChange}
+                        functionValue={functionValue} onFunctionChange={handleFunctionChange}
                         timeValue={timeValue} onTimeChange={setTimeValue}
-                        arg1Value={arg1Value} onArg1Change={setArg1Value}
-                        arg2Value={arg2Value} onArg2Change={setArg2Value}
+                        argumentValues={argumentValues} onArgumentChange={handleArgumentChange}
                         description={description} onDescriptionChange={setDescription}
                     />
                     <EncodingPreview previewContent={previewContent} />

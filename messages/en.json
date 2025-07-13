@@ -276,9 +276,7 @@
       "placeholder": "Select ABI",
       "function": "Function",
       "selectFunction": "Select Function",
-      "time": "Time",
-      "arg1": "Argument 1",
-      "arg2": "Argument 2"
+      "time": "Time"
     },
     "submitting": "Submitting...",
     "sendTransactionButton": "Send Transaction"

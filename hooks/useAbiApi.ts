@@ -16,7 +16,10 @@ export interface ABIItem {
 }
 
 export interface ABIListResponse {
-  data: ABIItem[];
+  data: {
+    shared_abis: ABIItem[];
+    user_abis: ABIItem[];
+  };
   error?: {
     code: string;
     details: string;
@@ -53,8 +56,14 @@ export const useAbiApi = () => {
         throw new Error(response?.error?.message || 'Failed to fetch ABI list');
       }
 
-      setAbiList(response.data);
-      return response.data;
+      // Combine shared_abis and user_abis into a single array
+      const combinedAbis = [
+        ...(response.data.shared_abis || []),
+        ...(response.data.user_abis || [])
+      ];
+      
+      setAbiList(combinedAbis);
+      return combinedAbis;
     } finally {
       setIsLoading(false);
     }
