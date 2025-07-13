@@ -94,26 +94,35 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     }
   }, [isOpen, fetchTimelocks]);
 
-  const handleVerificationCodeChange = async (code: string) => {
-    setVerificationCode(code);
-    
-    // Auto-verify when code is complete (assuming 6 digits)
-    if (code.length === 6 && emailAddress) {
-      try {
-        await verifyEmail({
-          email: emailAddress,
-          verification_code: code,
-        });
-        setIsEmailVerified(true);
-        toast.success(t('emailVerificationSuccess'));
-      } catch (error) {
-        console.error('Email verification failed:', error);
-        setIsEmailVerified(false);
-        toast.error(t('emailVerificationError', { message: error instanceof Error ? error.message : t('unknownError') }));
-      }
+  // Debounce email verification
+  useEffect(() => {
+    if (verificationCode.length === 6 && emailAddress) {
+      const handler = setTimeout(async () => {
+        try {
+          await verifyEmail({
+            email: emailAddress,
+            verification_code: verificationCode,
+          });
+          setIsEmailVerified(true);
+          toast.success(t('emailVerificationSuccess'));
+        } catch (error) {
+          console.error('Email verification failed:', error);
+          setIsEmailVerified(false);
+          toast.error(t('emailVerificationError', { message: error instanceof Error ? error.message : t('unknownError') }));
+        }
+      }, 500); // 500ms debounce time
+
+      return () => {
+        clearTimeout(handler);
+      };
     } else {
       setIsEmailVerified(false);
     }
+  }, [verificationCode, emailAddress, verifyEmail, t]);
+
+  const handleVerificationCodeChange = (code: string) => {
+    setVerificationCode(code);
+    setIsEmailVerified(false); // Reset verification status on code change
   };
 
   const handlePermissionChange = (id: string, checked: boolean) => {

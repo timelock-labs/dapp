@@ -1,4 +1,3 @@
-// components/email-address/VerificationCodeInput.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { useTranslations } from 'next-intl';
@@ -16,10 +15,24 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
   const [code, setCode] = useState<string[]>(Array(codeLength).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const { request: resendCode } = useApi();
+  const [countdown, setCountdown] = useState(0); // New state for countdown
+  const [isSendingCode, setIsSendingCode] = useState(false); // New state for button disable
 
   useEffect(() => {
     onCodeChange(code.join(''));
   }, [code, onCodeChange]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    } else {
+      setIsSendingCode(false); // Re-enable button when countdown finishes
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
@@ -46,6 +59,9 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
       toast.error(t('pleaseEnterEmail'));
       return;
     }
+    setIsSendingCode(true); // Disable button
+    setCountdown(60); // Start countdown
+
     const response = await resendCode('/api/v1/email-notifications/resend-code', {
       method: 'POST',
       body: {
@@ -55,8 +71,11 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 
     if (response && response.success) {
       toast.success(t('verificationCodeSent'));
+      onSendCode(); // Call the parent's onSendCode
     } else if (response && !response.success) {
       toast.error(t('sendCodeError', { message: response.error?.message || t('unknownError') }));
+      setIsSendingCode(false); // Re-enable button if sending fails
+      setCountdown(0); // Reset countdown if sending fails
     }
   };
 
@@ -99,10 +118,11 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
         ))}
 
         <button
-          onClick={onSendCode}
-          className="ml-4 bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
+          onClick={handleResendCode}
+          disabled={isSendingCode}
+          className="ml-4 bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {t('sendCode')}
+          {isSendingCode ? `resend code (${countdown}s)` : t('sendCode')}
         </button>
       </div>
     </div>

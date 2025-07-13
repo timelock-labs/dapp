@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AppStateSchema, type AppState, type User } from './schema';
+import { AppStateSchema, type AppState, type User, type TimelockContract } from './schema';
 import { zodMiddleware } from './zodMiddleware';
 
 // 定义 Store 的 actions (方法)
@@ -11,6 +11,7 @@ type AppActions = {
   refreshAccessToken: () => Promise<void>;
   // 模拟一个错误的 action
   loginWithInvalidData: () => void;
+  setAllTimelocks: (timelocks: TimelockContract[]) => void;
 };
 
 // 创建 store，并包裹 zodMiddleware
@@ -27,6 +28,7 @@ export const useAuthStore = create<AppState & AppActions>()(
         refreshToken: null,
         expiresAt: null,
         chains: [],
+        allTimelocks: [],
         _hasHydrated: false,
         login: (data) => {
           // The persist middleware will automatically save the state.
@@ -41,7 +43,7 @@ export const useAuthStore = create<AppState & AppActions>()(
         },
         logout: () => {
           // The persist middleware will automatically clear the persisted state.
-          set({ user: null, isAuthenticated: false, accessToken: null, refreshToken: null, expiresAt: null });
+          set({ user: null, isAuthenticated: false, accessToken: null, refreshToken: null, expiresAt: null, allTimelocks: [] });
         },
         fetchChains: async () => {
           try {
@@ -104,6 +106,7 @@ export const useAuthStore = create<AppState & AppActions>()(
           // This action deliberately sets data that does not conform to the schema
           set({ user: { id: '123', name: 'x', email: 'bad-email' } });
         },
+        setAllTimelocks: (timelocks) => set({ allTimelocks: timelocks }),
       })
     ),
     {
@@ -117,6 +120,7 @@ export const useAuthStore = create<AppState & AppActions>()(
         refreshToken: state.refreshToken,
         expiresAt: state.expiresAt,
         chains: state.chains,
+        allTimelocks: state.allTimelocks,
       }),
       // onRehydrateStorage 会在从 storage 恢复状态后执行
       onRehydrateStorage: () => (state) => {

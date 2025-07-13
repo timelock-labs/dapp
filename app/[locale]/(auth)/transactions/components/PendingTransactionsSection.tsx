@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { formatTimeRemaining, formatAddress } from '@/lib/utils';
 
 // Define Transaction type specific to this table
 interface PendingTxRow {
@@ -130,21 +131,7 @@ const PendingTransactionsSection: React.FC = () => {
     }
   };
 
-  const formatTimeRemaining = (seconds: number) => {
-    if (seconds <= 0) return t('ready');
-    
-    const days = Math.floor(seconds / 86400);
-    const hours = Math.floor((seconds % 86400) / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    
-    if (days > 0) return `${days}d ${hours}h`;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
-  };
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
+  
 
   const columns = [
     {

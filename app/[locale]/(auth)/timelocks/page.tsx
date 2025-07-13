@@ -7,18 +7,27 @@ import TimelockContractTable from "./components/TimelockContractTable";
 import { useApi } from '@/hooks/useApi';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useAuthStore } from "@/store/userStore";
 
 
 const Timelocks: React.FC = () => {
     const { data: timelockListResponse, request: fetchTimelockList, isLoading, error } = useApi();
     const params = useParams();
     const locale = params.locale;
+    const { allTimelocks, setAllTimelocks } = useAuthStore();
 
     useEffect(() => {
         fetchTimelockList('/api/v1/timelock/list', {
             method: 'GET',
         });
     }, [fetchTimelockList]);
+
+    useEffect(() => {
+        if (timelockListResponse && timelockListResponse.success && timelockListResponse.data) {
+            const combinedTimelocks = [...timelockListResponse.data.compound_timelocks, ...timelockListResponse.data.openzeppelin_timelocks];
+            setAllTimelocks(combinedTimelocks);
+        }
+    }, [timelockListResponse, setAllTimelocks]);
 
     if (isLoading) {
         return <PageLayout title="Timelock">Loading...</PageLayout>;
@@ -28,18 +37,13 @@ const Timelocks: React.FC = () => {
         return <PageLayout title="Timelock">Error: {error.message}</PageLayout>;
     }
 
-    const hasTimelocks = timelockListResponse && timelockListResponse.success && timelockListResponse.data && timelockListResponse.data.length > 0;
+    const hasTimelocks = allTimelocks.length > 0;
 
     return (
         <PageLayout title="Timelock" >
-            {hasTimelocks ? <TimelockContractTable /> : <AddTimelockContractSection />}
-            
+            {hasTimelocks ? <TimelockContractTable data={allTimelocks} /> : <AddTimelockContractSection />}
         </PageLayout>
     )
 }
 
 export default Timelocks;
-
-// 没有的话显示12，有的话显示5
-// 倒入是6， 创建是7 ，
-// 交易是4。点发起交易跳转到8

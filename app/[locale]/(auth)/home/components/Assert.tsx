@@ -1,20 +1,46 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TotalAssetValue from './TotalAssetValue';
 import AssetList from './AssetList';
 import PendingTransactions from './PendingTransactions';
-import { useApi } from '@/hooks/useApi';
 
-const Assert: React.FC = () => {
-  const { data: assetsResponse, request: fetchAssets, isLoading, error } = useApi();
+interface Asset {
+  balance: string;
+  balance_wei: string;
+  chain_display_name: string;
+  chain_id: number;
+  chain_logo_url: string;
+  chain_name: string;
+  contract_address: string;
+  is_native: boolean;
+  is_testnet: boolean;
+  last_updated: string;
+  price_change_24h: number;
+  token_decimals: number;
+  token_logo_url: string;
+  token_name: string;
+  token_price: number;
+  token_symbol: string;
+  usd_value: number;
+}
 
-  useEffect(() => {
-    fetchAssets('/api/v1/assets', {
-      method: 'GET',
-    });
-  }, [fetchAssets]);
+interface AssetsResponse {
+  success: boolean;
+  data?: {
+    assets: Asset[];
+    total_usd_value: number;
+  };
+}
+
+interface AssertProps {
+  assetsResponse: AssetsResponse | null;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+const Assert: React.FC<AssertProps> = ({ assetsResponse, isLoading, error }) => {
 
   if (isLoading) {
     return <PageLayout title="Home">Loading assets...</PageLayout>;

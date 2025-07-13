@@ -66,7 +66,7 @@ export default function Home() {
   }
 
   if (hasAssets) {
-    return <Assert />;
+    return <Assert assetsResponse={assetsResponse} isLoading={isLoading} error={error} />;
   } else {
     return <CreateProtocol />;
   }

@@ -10,6 +10,7 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog'; // Import the confirm
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
+import { formatDate } from '@/lib/utils';
 
 // Define the interface for a single ABI row based on API response
 interface ABIRow {
@@ -206,27 +207,7 @@ ${viewAbiResponse.data.abi_content}`);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [openDropdownId]);
 
-  // 格式化日期函数
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ];
-      
-      const month = months[date.getMonth()];
-      const day = date.getDate();
-      const year = date.getFullYear();
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      
-      return `${month} ${day}, ${year} ${hours}:${minutes}`;
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return dateString;
-    }
-  };
+  
 
   // Define columns for TableComponent
   const columns = [
