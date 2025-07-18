@@ -4,7 +4,7 @@ import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
-import { useNotificationApi } from '@/hooks/useNotificationApi';
+import { useNotificationApi, ApiError } from '@/hooks/useNotificationApi';
 import { useTimelockApi } from '@/hooks/useTimelockApi';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -37,6 +37,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isLoadingTimelocks, setIsLoadingTimelocks] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
   const {
     createEmailNotification,
@@ -85,7 +86,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     } finally {
       setIsLoadingTimelocks(false);
     }
-  }, [getTimelockList]);
+  }, [getTimelockList, t]);
 
   // Fetch timelock list when modal opens
   useEffect(() => {
@@ -132,19 +133,43 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   };
 
   const handleSendCode = async () => {
-    if (!emailAddress) {
-      toast.error(t('pleaseEnterEmail'));
+    if (!emailAddress || !emailRemark) {
+      toast.error(t('emailAndRemarkRequired'));
       return;
     }
 
     try {
-      await resendVerificationCode({ email: emailAddress });
-      toast.success(t('verificationCodeSent'));
+      if (!isEmailNotificationCreated) {
+        // First time - try to create email notification
+        try {
+          await createEmailNotification({
+            email: emailAddress,
+            email_remark: emailRemark,
+            timelock_contracts: selectedPermissions,
+          });
+          setIsEmailNotificationCreated(true);
+          toast.success(t('verificationCodeSent'));
+        } catch (createError: string) {
+          // Failed to send verification code: Error: API request failed with status 409
+          // // If email already exists, switch to resend mode and send code
+          // if (createError.includes('API request failed with status 409')) {
+          //   setIsEmailNotificationCreated(true);
+          //   await resendVerificationCode({ email: emailAddress });
+          //   toast.success(t('verificationCodeResent'));
+          // } else {
+          //   throw createError; // Re-throw other errors
+          // }
+        }
+      } else {
+        // Subsequent times - resend verification code
+        await resendVerificationCode({ email: emailAddress });
+        toast.success(t('verificationCodeResent'));
+      }
       // Reset verification status when new code is sent
       setIsEmailVerified(false);
     } catch (error) {
       console.error('Failed to send verification code:', error);
-      toast.error(t('sendVerificationCodeError', { message: error instanceof Error ? error.message : t('unknownError') }));
+      toast.error(t('addMailboxError', { message: error instanceof Error ? error.message : t('unknownError') }));
     }
   };
 
@@ -156,32 +181,17 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     setSelectedPermissions([]);
     setVerificationCode('');
     setIsEmailVerified(false);
+    setIsEmailNotificationCreated(false);
   };
 
   const handleSave = async () => {
-    if (!emailAddress || !emailRemark) {
-      toast.error(t('emailAndRemarkRequired'));
-      return;
-    }
-
-    if (!verificationCode) {
-      toast.error(t('pleaseEnterVerificationCode'));
-      return;
-    }
-
     if (!isEmailVerified) {
       toast.error(t('pleaseVerifyEmailFirst'));
       return;
     }
 
     try {
-      // Only create email notification if email is verified
-      await createEmailNotification({
-        email: emailAddress,
-        email_remark: emailRemark,
-        timelock_contracts: selectedPermissions,
-      });
-
+      // Email notification was already created in handleSendCode, just need to confirm verification
       toast.success(t('mailboxAddedSuccessfully'));
       onSuccess();
       onClose();
@@ -191,9 +201,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       setSelectedPermissions([]);
       setVerificationCode('');
       setIsEmailVerified(false);
+      setIsEmailNotificationCreated(false);
     } catch (error) {
-      console.error('Failed to add mailbox:', error);
-      toast.error(t('addMailboxError', { message: error instanceof Error ? error.message : t('unknownError') }));
+      console.error('Failed to save mailbox:', error);
+      toast.error(t('saveMailboxError', { message: error instanceof Error ? error.message : t('unknownError') }));
     }
   };
 
@@ -246,6 +257,9 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           onSendCode={handleSendCode}
           onCodeChange={handleVerificationCodeChange}
           codeLength={6}
+          buttonText={!isEmailNotificationCreated ? t('addAndSendCode') : t('resendCode')}
+          disabledText={!isEmailNotificationCreated ? t('adding') : t('resending')}
+          isFirstTime={!isEmailNotificationCreated}
         />
         
         {/* Verification Status Indicator */}

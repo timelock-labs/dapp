@@ -15,7 +15,7 @@ interface UseApiReturn {
   data: ApiResponseOptions;
   error: Error | null;
   isLoading: boolean;
-  request: (url: string, options?: ApiRequestOptions) => Promise<any>; // Changed return type to Promise<any>
+  request: (url: string, options?: ApiRequestOptions, retryCount?: number) => Promise<any>; // Added retryCount parameter
 }
 
 interface ApiResponseOptions {
@@ -35,13 +35,12 @@ export function useApi(): UseApiReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const accessToken = useAuthStore((state) => state.accessToken); // Get accessToken from useAuthStore
 
-  const request = useCallback(async (url: string, options: ApiRequestOptions = {}) => {
+  const request = useCallback(async (url: string, options: ApiRequestOptions = {}, retryCount: number = 0) => {
     setIsLoading(true);
     setError(null);
 
-    // Ensure the URL is absolute
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-    const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+    // Use relative URLs to leverage Next.js API rewrites
+    const fullUrl = url.startsWith('http') ? url : url;
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -62,7 +61,17 @@ export function useApi(): UseApiReturn {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `API request failed with status ${response.status}`);
+        console.log(errorData, 'errorData');
+        // const errorMessage = errorData.message || `API request failed with status ${response.status}`;
+        
+        // // Auto-retry for 409 status codes (conflict) up to 2 times with exponential backoff
+        // if (response.status === 409 && retryCount < 2) {
+        //   const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s delays
+        //   await new Promise(resolve => setTimeout(resolve, delay));
+        //   return request(url, options, retryCount + 1);
+        // }
+        
+        throw new Error(errorData);
       }
 
       const responseData = await response.json();

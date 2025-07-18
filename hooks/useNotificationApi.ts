@@ -16,6 +16,17 @@ export interface EmailNotification {
   updated_at: string;
 }
 
+// Custom error class for API errors
+export class ApiError extends Error {
+  public code?: string;
+  
+  constructor(message: string, code?: string) {
+    super(message);
+    this.code = code;
+    this.name = 'ApiError';
+  }
+}
+
 export interface EmailNotificationListResponse {
   items: EmailNotification[];
   page: number;
@@ -107,7 +118,7 @@ export const useNotificationApi = () => {
     });
 
     if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to create email notification');
+      throw new ApiError(response?.error?.message || 'Failed to create email notification', response?.error?.code);
     }
 
     return response.data;

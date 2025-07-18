@@ -187,7 +187,8 @@
       "rule3": "Configure your email notifications promptly to avoid missing important information."
     },
     "addMailboxCard": {
-      "addMailbox": "Add Mailbox"
+      "addMailbox": "Add Mailbox",
+      "addAndSendCode": "Add And Send Code"
     },
     "mailboxCard": {
       "edit": "Edit",
@@ -215,6 +216,8 @@
       "pleaseVerifyEmailFirst": "Please verify your email first",
       "mailboxAddedSuccessfully": "Mailbox added successfully",
       "addMailboxError": "Failed to add mailbox: {message}",
+      "adding": "Adding...",
+      "addAndSendCode": "Add And Send Code",
       "emailVerificationSuccess": "Email verification successful",
       "emailVerificationError": "Email verification failed: {message}",
       "unknownError": "Unknown error",
