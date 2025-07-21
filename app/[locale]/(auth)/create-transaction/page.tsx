@@ -7,16 +7,20 @@ import EncodingTransactionForm from './components/EncodingTransactionForm';
 import EncodingPreview from './components/EncodingPreview';
 import MailboxSelection from './components/MailboxSelection';
 import { useTranslations } from 'next-intl';
+import { useTimelockTransaction } from '@/hooks/useTimelockTransaction';
 import { useTransactionApi, CreateTransactionRequest } from '@/hooks/useTransactionApi';
-import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
+import { useAddress, useChain, useChainId } from '@thirdweb-dev/react'
+
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 const TransactionEncoderPage: React.FC = () => {
     const router = useRouter();
     const t = useTranslations('CreateTransaction');
     const { createTransaction } = useTransactionApi();
-    const account = useActiveAccount();
-    const chain = useActiveWalletChain();
+    const { sendTransaction, isLoading: isSending, error: sendError } = useTimelockTransaction();
+    const address = useAddress();
+    const chain = useChain();
+    const chainId = useChainId();
     const { allTimelocks } = useAuthStore();
 
     // Form States
@@ -68,7 +72,7 @@ const TransactionEncoderPage: React.FC = () => {
                 : 'No arguments';
                 
             return `chain: ${chainName}
- wallet: ${account?.address || 'Not connected'}
+ wallet: ${address || 'Not connected'}
  timelock: ${timelockAddress || 'Not selected'}
  target: ${target || 'Not specified'}
  value: ${value || '0'}
@@ -78,15 +82,16 @@ const TransactionEncoderPage: React.FC = () => {
  ${argsDisplay}`;
         };
         setPreviewContent(generatePreview());
-    }, [target, value, timeValue, functionValue, argumentValues, account, timelockAddress, abiValue, timelockType, allTimelocks]);
+    }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks]);
 
     const handleSendTransaction = async () => {
-        if (!account?.address) {
+        if (!address) {
             toast.error('Please connect your wallet first');
             return;
         }
+        console.log(chain,'chain');
 
-        if (!chain?.id) {
+        if (!chainId) {
             toast.error('Please select a network');
             return;
         }
@@ -96,26 +101,35 @@ const TransactionEncoderPage: React.FC = () => {
             toast.error('Please fill in all required fields');
             return;
         }
-
+        const selectedTimelock = allTimelocks.find(tl => tl.id.toString() === timelockType);
+        const timelockStandard = selectedTimelock?.standard as 'compound' | 'openzeppelin';
+        
         try {
             setIsSubmitting(true);
 
+            const txResult = await sendTransaction({
+                timelockAddress,
+                timelockStandard,
+                functionName: functionValue,
+                args: argumentValues,
+            });
+
             // Prepare transaction data
             const transactionData: CreateTransactionRequest = {
-                chain_id: chain.id,
-                chain_name: chain.name || 'Unknown',
+                chain_id: chainId,
+                chain_name: chain?.name || 'Unknown',
                 description: description || `Transaction to ${target}`,
                 eta: parseInt(timeValue) || 0,
                 function_sig: functionValue,
-                operation_id: `${Date.now()}-${account.address}`, // Generate unique operation ID
+                operation_id: `${Date.now()}-${address}`, // Generate unique operation ID
                 target: target,
                 timelock_address: timelockAddress,
-                timelock_standard: timelockType === 'compound' ? 'compound' : 'openzeppelin',
+                timelock_standard: timelockStandard!,
                 tx_data: abiValue || '0x',
-                tx_hash: '', // Will be set when transaction is submitted to blockchain
+                tx_hash: txResult.transactionHash, // Will be set when transaction is submitted to blockchain
                 value: value || '0',
             };
-
+            console.log(transactionData,'transactionData');
             const result = await createTransaction(transactionData);
             
             toast.success('Transaction created successfully!');
@@ -123,7 +137,7 @@ const TransactionEncoderPage: React.FC = () => {
             
             // Navigate to transaction details or list
             router.push('/transactions');
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Failed to create transaction:', error);
             toast.error(error.message || 'Failed to create transaction');
         } finally {

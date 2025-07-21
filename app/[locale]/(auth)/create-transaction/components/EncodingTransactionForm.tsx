@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
+
 interface EncodingTransactionFormProps {
   timelockType: string;
   onTimelockTypeChange: (value: string) => void;
@@ -17,37 +18,76 @@ interface EncodingTransactionFormProps {
   onTargetChange: (value: string) => void;
   value: string;
   onValueChange: (value: string) => void;
-  // Props for TargetABISection
   abiValue: string;
   onAbiChange: (value: string) => void;
   functionValue: string;
   onFunctionChange: (value: string) => void;
   timeValue: string;
   onTimeChange: (value: string) => void;
-  // Dynamic arguments
   argumentValues: string[];
   onArgumentChange: (index: number, value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
-  // Function to get timelock address from selected timelock
   onTimelockAddressChange: (address: string) => void;
-  // Function to receive timelock details
   onTimelockDetailsChange?: (details: Record<string, unknown>) => void;
 }
 
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
-  timelockType, onTimelockTypeChange, timelockMethod, onTimelockMethodChange,
-  target, onTargetChange, value, onValueChange,
-  abiValue, onAbiChange, functionValue, onFunctionChange,
-  timeValue, onTimeChange, argumentValues, onArgumentChange,
-  description, onDescriptionChange, onTimelockAddressChange, onTimelockDetailsChange
+  timelockType,
+  onTimelockTypeChange,
+  timelockMethod,
+  onTimelockMethodChange,
+  target,
+  onTargetChange,
+  value,
+  onValueChange,
+  abiValue,
+  onAbiChange,
+  functionValue,
+  onFunctionChange,
+  timeValue,
+  onTimeChange,
+  argumentValues,
+  onArgumentChange,
+  description,
+  onDescriptionChange,
+  onTimelockAddressChange,
+  onTimelockDetailsChange,
 }) => {
   const t = useTranslations('CreateTransaction');
   const { allTimelocks, accessToken } = useAuthStore();
   const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
 
-  // Convert timelock list to options format
+  const validateTarget = (target: string) => {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(target)) {
+      return 'Invalid Ethereum address';
+    }
+    return undefined;
+  };
+
+  const validateValue = (value: string) => {
+    try {
+      BigInt(value);
+      return undefined;
+    } catch {
+      return 'Invalid bigint value';
+    }
+  };
+
+  const handleTargetChange = (newValue: string) => {
+    onTargetChange(newValue);
+    const error = validateTarget(newValue);
+    setValidationErrors(prev => ({ ...prev, target: error }));
+  };
+
+  const handleValueChange = (newValue: string) => {
+    onValueChange(newValue);
+    const error = validateValue(newValue);
+    setValidationErrors(prev => ({ ...prev, value: error }));
+  };
+
   const timelockOptions = useMemo(() => {
     if (!Array.isArray(allTimelocks)) {
       return [];
@@ -59,22 +99,18 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }));
   }, [allTimelocks]);
 
-  // Handle timelock selection and update address
   const handleTimelockChange = async (value: string) => {
     onTimelockTypeChange(value);
     const selectedTimelock = timelockOptions.find(option => option.value === value);
-    
+
     if (selectedTimelock) {
       onTimelockAddressChange(selectedTimelock.address);
-      
-      // Find the full timelock object to get standard
+
       const fullTimelock = allTimelocks.find(tl => tl.id.toString() === value);
       if (fullTimelock && fullTimelock.standard && accessToken) {
         setIsLoadingDetails(true);
-        
+
         try {
-          console.log(`Fetching timelock details for ${fullTimelock.standard}/${fullTimelock.id}`);
-          
           await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
             method: 'GET',
             headers: {
@@ -90,16 +126,13 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       }
     }
   };
-  
-  // Handle timelock detail response and generate method options
+
   React.useEffect(() => {
     if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
-      console.log('Timelock details received:', timelockDetailResponse.data);
       onTimelockDetailsChange(timelockDetailResponse.data);
     }
   }, [timelockDetailResponse, onTimelockDetailsChange]);
 
-  // Generate timelock method options based on selected timelock's standard
   const timelockMethodOptions = React.useMemo(() => {
     if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
       return [];
@@ -136,9 +169,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   }, [timelockType, allTimelocks]);
 
   return (
-    // Use a grid layout for left (header) and right (form content) sections
     <div className="bg-white py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start border-b border-gray-300">
-      {/* Left Column: Section Header */}
       <div className="lg:col-span-1 lg:sticky lg:top-4">
         <SectionHeader
           title={t('encodingTransaction.title')}
@@ -147,7 +178,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         />
       </div>
 
-      {/* Right Column: Form Elements */}
       <div className="lg:col-span-1 flex flex-col space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SelectInput
@@ -169,14 +199,16 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <TextInput
           label={t('encodingTransaction.target')}
           value={target}
-          onChange={onTargetChange}
+          onChange={handleTargetChange}
           placeholder="Target"
+          error={validationErrors.target}
         />
         <TextInput
           label={t('encodingTransaction.value')}
           value={value}
-          onChange={onValueChange}
+          onChange={handleValueChange}
           placeholder="Value"
+          error={validationErrors.value}
         />
         <TextInput
           label={t('encodingTransaction.formDescription')}

@@ -4,7 +4,7 @@ import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
-import { useNotificationApi, ApiError } from '@/hooks/useNotificationApi';
+import { useNotificationApi } from '@/hooks/useNotificationApi';
 import { useTimelockApi } from '@/hooks/useTimelockApi';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -149,7 +149,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           });
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
-        } catch (createError: string) {
+        } catch (createError) {
           // Failed to send verification code: Error: API request failed with status 409
           // // If email already exists, switch to resend mode and send code
           // if (createError.includes('API request failed with status 409')) {

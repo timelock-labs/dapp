@@ -56,7 +56,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({
                  item.stateMutability !== 'view' && 
                  item.stateMutability !== 'pure';
         })
-        .map((func: Record<string, unknown>, index: number) => {
+        .map((func: Record<string, unknown>) => {
           // Create unique value using function name and input types
           const inputs = Array.isArray(func.inputs) ? func.inputs : [];
           const inputTypes = inputs.map((input: Record<string, unknown>) => input.type).join(',');
