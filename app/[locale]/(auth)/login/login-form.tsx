@@ -13,7 +13,7 @@ export function LoginForm({
         <Image src={logo} alt="logo" />
         <h1 className="text-2xl font-bold">Get started</h1>
         <p className="text-muted-foreground text-sm text-balance">
-          Connect your wallet to create a new TImelock Account or import an existing one.
+          Connect your wallet to create a new Timelock Account or import an existing one.
         </p>
       </div>
       <div className="grid gap-6">

@@ -34,7 +34,7 @@ export function ChainSwitcher() {
     console.log('ChainSwitcher: _hasHydrated =', _hasHydrated);
     console.log('ChainSwitcher: chains length =', chains?.length);
     console.log('ChainSwitcher: hasFetchedChains =', hasFetchedChains.current);
-    
+
     if (_hasHydrated && !hasFetchedChains.current && (!chains || chains.length === 0)) {
       console.log('ChainSwitcher: Calling fetchChains');
       hasFetchedChains.current = true;
@@ -81,7 +81,46 @@ export function ChainSwitcher() {
   const handleChainSwitch = async (newChainId: number) => {
     try {
       // 1. Switch chain in wallet
-      await switchChain(newChainId);
+      try {
+        await switchChain(newChainId);
+      } catch (error: any) {
+        // If the chain is not configured, try to add it
+        if (error?.name?.includes('ChainNotConfigured')) {
+          const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;
+                      
+          if (chainToAdd && typeof window !== 'undefined' && (window as any).ethereum) {
+            try {
+              await (window as any).ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                  {
+                    chainId: "0x89", // 16进制形式的 chainId（Polygon 主网为 137）
+                    chainName: "Polygon Mainnet",
+                    nativeCurrency: {
+                      name: "MATIC",
+                      symbol: "MATIC",
+                      decimals: 18,
+                    },
+                    rpcUrls: ["https://polygon-rpc.com/"],
+                    blockExplorerUrls: ["https://polygonscan.com/"],
+                  },
+                ],
+              });
+              // Try switching again after adding
+              await switchChain(newChainId);
+            } catch (addError) {
+              console.error('Failed to add chain to wallet:', addError);
+              return;
+            }
+          } else {
+            console.error('Chain info not found or ethereum provider missing');
+            return;
+          }
+        } else {
+          console.error('Failed to switch chain:', error);
+          return;
+        }
+      }
 
       // 2. Sign a message
       const message = `Switching to chain ${newChainId}`;
