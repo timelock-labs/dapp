@@ -212,7 +212,7 @@ const TransactionHistorySection: React.FC = () => {
   };
 
   return (
-    <div className="bg-white border border-gray-200 flex flex-col h-[400px] px-6">
+    <div className="rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6">
       <div className="h-[152px] flex flex-col justify-between pt-6 pb-4">
         <div>
           <SectionHeader

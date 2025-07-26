@@ -231,7 +231,7 @@ const PendingTransactionsSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-6 border border-gray-200 flex flex-col h-[400px] pt-0 pb-0">
+    <div className="bg-white rounded-xl  p-6 border border-gray-200 flex flex-col h-[400px] pt-0 pb-0">
       <div className="flex justify-between items-center h-[100px] mb-4 p-0">
         <div>
           <SectionHeader
