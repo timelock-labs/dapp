@@ -15,7 +15,9 @@
     "loginLink": "Already have an account? Login"
   },
   "HomePage": {
-    "title": "Home"
+    "title": "Home",
+    "create_new": "Create new",
+    "create_new_contract": "Create New Contract"
   },
   "common": {
     "connect_wallet": "Connect Wallet",
@@ -283,5 +285,10 @@
     },
     "submitting": "Submitting...",
     "sendTransactionButton": "Send Transaction"
+  },
+  "wallet": {
+    "noTimelockWallet": "You don't have a Timelock wallet yet",
+    "description": "Read and write directly to databases and stores from your projects.",
+    "createNew": "Create new"
   }
 } 

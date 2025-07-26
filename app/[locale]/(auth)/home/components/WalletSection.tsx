@@ -1,11 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import Link from 'next/link';
 import timelockewallet from '@/public/timelockewallet.png';
 
 
 const WalletSection: React.FC = () => {
+  const t = useTranslations('HomePage');
   // const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   // const [selectedNetwork, setSelectedNetwork] = useState<string>('BNB Smart Chain'); // Default selection
 
@@ -34,9 +37,11 @@ const WalletSection: React.FC = () => {
       </div>
       <p className="text-xl font-semibold text-gray-800 mb-2 mt-4">你还没有 Timelock 钱包</p>
       <p className="text-gray-600 text-sm mb-6">Read and write directly to databases and stores from your projects.</p>
-      <button className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-        Create new
-      </button>
+      <Link href="/create-timelock">
+        <button className="bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
+          {t('create_new')}
+        </button>
+      </Link>
     </div>
   );
 };
