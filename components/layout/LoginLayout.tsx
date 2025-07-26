@@ -6,6 +6,7 @@ type Props = {
 
 export default function LoginLayout({children, title}: Props) {
   console.log('children, title',children, title)
+  
   return (
     <>
   <div

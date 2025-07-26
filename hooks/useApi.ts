@@ -71,7 +71,7 @@ export function useApi(): UseApiReturn {
         //   return request(url, options, retryCount + 1);
         // }
         
-        throw new Error(errorData);
+        // throw new Error(errorData);
       }
 
       const responseData = await response.json();
