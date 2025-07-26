@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import axios from 'axios';
 import { useAuthStore } from '@/store/userStore'; // Import useAuthStore
 
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -53,30 +54,20 @@ export function useApi(): UseApiReturn {
     }
 
     try {
-      const response = await fetch(fullUrl, {
-        method: options.method || 'GET',
-        headers: headers,
-        body: options.body ? JSON.stringify(options.body) : null,
-      });
+      try {
+        const response = await axios.request({
+          url: fullUrl,
+          method: options.method || 'GET',
+          headers: headers,
+          data: options.body
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.log(errorData, 'errorData');
-        // const errorMessage = errorData.message || `API request failed with status ${response.status}`;
-        
-        // // Auto-retry for 409 status codes (conflict) up to 2 times with exponential backoff
-        // if (response.status === 409 && retryCount < 2) {
-        //   const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s delays
-        //   await new Promise(resolve => setTimeout(resolve, delay));
-        //   return request(url, options, retryCount + 1);
-        // }
-        
-        // throw new Error(errorData);
+        setData(response.data);
+        return response.data;
+      } catch (error: any) {
+        console.log(error.response?.data, 'errorData');
+        throw error;
       }
-
-      const responseData = await response.json();
-      setData(responseData);
-      return responseData; // Return responseData for direct use in components
     } catch (err: any) {
       setError(err);
       throw err; // Re-throw error so components can catch it if needed
