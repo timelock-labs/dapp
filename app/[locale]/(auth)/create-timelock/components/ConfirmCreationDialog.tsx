@@ -78,14 +78,14 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
         aria-modal="true" // Indicates that the dialog blocks content behind it
         aria-labelledby={dialogTitleId} // Links the dialog to its title for screen readers
         tabIndex={-1} // Makes the dialog content focusable
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4 relative outline-none" // outline-none removes focus outline
+        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4 relative outline-none" // outline-none removes focus outline
       >
         {/* Dialog Title */}
         <h2 id={dialogTitleId} className="text-xl font-semibold text-gray-900 mb-6">请检查参数</h2>
 
         {/* Parameter Display Fields */}
         <ParameterDisplayRow label="所在链">
-          {creationDetails.chainIcon}
+          {/* {creationDetails.chainIcon} */}
           <span className="ml-2">{creationDetails.chainName}</span>
         </ParameterDisplayRow>
 
