@@ -145,14 +145,14 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
                         <button
                             type="button"
                             onClick={handleImportContract}
-                            className="bg-white text-gray-900 px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm"
+                            className="bg-white text-gray-900 px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer"
                         >
                             Import Existing Contract
                         </button>
                         <button 
                             type="button"
                             onClick={handleCreateContract} 
-                            className="ml-2.5 bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors text-sm"
+                            className="ml-2.5 bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors text-sm cursor-pointer"
                         >
                             Create New Contract
                         </button>
