@@ -31,7 +31,7 @@ export const zodMiddleware = <T extends object, A extends object>(
 
     if (!result.success) {
       console.groupCollapsed('%c[Zustand]  Zustand State Validation Failed', 'color: red; font-weight: bold;');
-      console.error('Validation errors:', result.error.flatten());
+      // console.error('Validation errors:', result.error.flatten());
       console.log('Previous state:', oldState);
       console.log('Next state (invalid):', nextState);
       console.groupEnd();

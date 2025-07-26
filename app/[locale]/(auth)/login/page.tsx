@@ -19,11 +19,22 @@ const TimeLockerSplitPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    console.log('TimeLockerSplitPage: useEffect triggered');
+    console.log('TimeLockerSplitPage: isConnected =', isConnected);
+    console.log('TimeLockerSplitPage: address =', address);
+    console.log('TimeLockerSplitPage: signer =', signer);
+    handleUserSignature();
+  }, [isConnected, address, JSON.stringify(signer)]);
+
+  const handleUserSignature = async () => {
     if (isConnected && address && signer) {
       const message = 'welcome to TimeLocker!';
-      signer.signMessage(message).then(async (signature) => {
-        const chainId = await signer.getChainId();
-        walletConnect('/api/v1/auth/wallet-connect', {
+      try {
+        const signature = await signer.signMessage(message);
+        console.log('Message:', message);
+        console.log('Signature:', signature);
+        const chainId = await signer.getChainId();  
+        await walletConnect('/api/v1/auth/wallet-connect', {
           method: 'POST',
           body: {
             wallet_address: address,
@@ -32,9 +43,13 @@ const TimeLockerSplitPage = () => {
             chain_id: chainId,
           },
         });
-      });
+      } catch (error) {
+        console.error('Error signing message:', error);
+              alert('Please connect your wallet first.');
+      } 
     }
-  }, [isConnected, address, signer, walletConnect]);
+ 
+  };
 
   useEffect(() => {
     if (apiResponse && apiResponse.success) {
@@ -53,6 +68,7 @@ const TimeLockerSplitPage = () => {
       console.error('Backend connection failed:', error);
     }
   }, [error]);
+
   return (
     <div className="flex items-center justify-center h-screen bg-withe text-white">
       {/* Left Panel */}
