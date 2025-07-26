@@ -148,7 +148,7 @@ export function ChainSwitcher() {
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
           <span className="mr-1">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
           <span className="hidden sm:inline">
-            {currentChain?.chain_name || 'Unknown Chain'}
+            {currentChain?.chain_name || 'Unsupport Chain'}
           </span>
           <ChevronDown className="ml-2 h-3 w-3" />
         </Button>

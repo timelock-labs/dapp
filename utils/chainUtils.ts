@@ -89,7 +89,7 @@ export class ChainUtils {
    */
   static getChainName(chains: any[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
-    return chain?.chain_name || chain?.display_name || 'Unknown Chain';
+    return chain?.chain_name || chain?.display_name || 'Unsupport Chain';
   }
 
   /**
@@ -133,7 +133,7 @@ export class ChainUtils {
    */
   static getDisplayName(chains: any[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
-    if (!chain) return 'Unknown Chain';
+    if (!chain) return 'Unsupport Chain';
     
     const name = chain.display_name || chain.chain_name;
     return chain.is_testnet ? `${name} (Testnet)` : name;

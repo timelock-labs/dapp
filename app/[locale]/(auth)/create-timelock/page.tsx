@@ -89,7 +89,7 @@ const CreateTimelockPage: React.FC = () => {
       if (deployedContractAddress && transactionHash) {
         // Find chain name from chains data
         const selectedChainData = chains.find(chain => chain.chain_id.toString() === selectedChain);
-        const chainName = selectedChainData?.chain_name || 'Unknown Chain';
+        const chainName = selectedChainData?.chain_name || 'Unsupport Chain';
         
         setDialogDetails({
           chainName: chainName,
