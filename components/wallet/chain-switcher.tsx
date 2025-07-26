@@ -107,7 +107,7 @@ export function ChainSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
-          <span className="mr-2">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
+          <span className="mr-1">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
           <span className="hidden sm:inline">
             {currentChain?.chain_name || 'Unknown Chain'}
           </span>
@@ -122,7 +122,7 @@ export function ChainSwitcher() {
             className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
             disabled={isSwitchingChain}
           >
-            <span className="mr-3 text-lg"><Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} /></span>
+            <span className="mr-1 text-lg"><Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} /></span>
             <div className="flex flex-col">
               <span className="font-medium">{chain.chain_name}</span>
               {chainId === chain.id && (
