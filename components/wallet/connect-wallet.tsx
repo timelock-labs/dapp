@@ -27,7 +27,7 @@ export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolea
   useEffect(() => {
     if (isDisconnected) {
       logout();
-      // router.push('/login');
+      router.push('/login');
     }
   }, [isDisconnected, logout, router]);
 
