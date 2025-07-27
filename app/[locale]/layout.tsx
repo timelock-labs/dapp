@@ -38,7 +38,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <title>TimeLocker</title>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> {/* Apply font variables here */}
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="lightTheme" enableSystem>
           <Web3Provider> {/* Use the main Web3Provider component */}
             <NextIntlClientProvider locale={locale} messages={messages}>
               {children}
