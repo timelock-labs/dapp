@@ -123,18 +123,18 @@ export function ChainSwitcher() {
       }
 
       // 2. Sign a message
-      const message = `Switching to chain ${newChainId}`;
-      const signature = await signer?.signMessage(message);
+      // const message = `Switching to chain ${newChainId}`;
+      // const signature = await signer?.signMessage(message);
 
       // 3. Call backend API using the request function from useApi
-      switchChainRequest('/api/v1/auth/switch-chain', {
-        method: 'POST',
-        body: {
-          chain_id: newChainId,
-          message,
-          signature,
-        },
-      });
+      // switchChainRequest('/api/v1/auth/switch-chain', {
+      //   method: 'POST',
+      //   body: {
+      //     chain_id: newChainId,
+      //     message,
+      //     signature,
+      //   },
+      // });
 
     } catch (error) {
       console.error('Failed to switch chain or sign message:', error);
@@ -148,7 +148,7 @@ export function ChainSwitcher() {
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
           <span className="mr-1">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
           <span className="hidden sm:inline">
-            {currentChain?.chain_name || 'Unsupport Chain'}
+            {currentChain?.display_name || 'Unsupport Chain'}{JSON.stringify(currentChain)}
           </span>
           <ChevronDown className="ml-2 h-3 w-3" />
         </Button>
@@ -163,7 +163,7 @@ export function ChainSwitcher() {
           >
             <span className="mr-1 text-lg"><Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} /></span>
             <div className="flex flex-col">
-              <span className="font-medium">{chain.chain_name}</span>
+              <span className="font-medium">{chain.display_name}</span>
               {chainId === chain.id && (
                 <span className="text-xs text-muted-foreground">Connected</span>
               )}
