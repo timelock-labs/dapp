@@ -30,8 +30,11 @@ const ABILibPage: React.FC = () => {
   const t = useTranslations("ABI-Lib");
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const [isAddABIOpen, setIsAddABIOpen] = useState(false);
+  const [isViewABIOpen, setIsViewABIOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
   const [abis, setAbis] = useState<ABIRow[]>([]);
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -41,6 +44,8 @@ const ABILibPage: React.FC = () => {
   const { data: deleteAbiResponse, request: deleteAbi } = useApi();
   const { data: viewAbiResponse, request: viewAbi } = useApi();
   const { request: validateAbi } = useApi();
+
+  const [viewAbiContent, setViewAbiContent] = useState<any>("");
 
   const refreshAbiList = useCallback(() => {
     if (accessToken) {
@@ -60,7 +65,6 @@ const ABILibPage: React.FC = () => {
 
   useEffect(() => {
     if (abiListResponse?.success === true) {
-      console.log(abiListResponse, "abiListResponse");
       const allAbis = [...(abiListResponse.data.user_abis || []), ...(abiListResponse.data.shared_abis || [])];
       setAbis(allAbis);
       // 移除成功通知，避免页面加载时显示
@@ -122,14 +126,11 @@ const ABILibPage: React.FC = () => {
   };
 
   const handleViewABI = async (row: ABIRow) => {
-    await viewAbi(`/api/v1/abi/${row.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
+    setIsViewABIOpen(true);
+    setViewAbiContent(row);
   };
+
+
 
   useEffect(() => {
     if (viewAbiResponse?.success === true) {
@@ -214,10 +215,10 @@ ${viewAbiResponse.data.abi_content}`);
       key: "name",
       header: t("abiName"),
       render: (row: ABIRow) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 cursor-pointer" onClick={()=>handleViewABI(row)}>
           <span>{row.name}</span>
-          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000" />
-          {JSON.stringify(row)}
+          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000"  />
+          {/* {JSON.stringify(row)} */}
         </div>
       ),
     },
@@ -262,8 +263,6 @@ ${viewAbiResponse.data.abi_content}`);
                 </button>
                 {openDropdownId === row.id && (
                   <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                    {" "}
-                    {/* Dropdown container */}
                     <button
                       type="button"
                       onClick={() => handleDeleteABI(row)}
@@ -291,15 +290,9 @@ ${viewAbiResponse.data.abi_content}`);
   return (
     <PageLayout title={t("title")}>
       <div className="min-h-screen  ">
-        {" "}
-        {/* Page background */}
         <div className="mx-auto border border-gray-200 rounded-lg p-6 ">
-          {" "}
-          {/* Centered content area */}
-          {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
             <SectionHeader title={t("storedABI")} description={t("storedABIDescription")} />
-            {/* New Button - styled black */}
             <button
               type="button"
               onClick={handleNewABI}
@@ -311,7 +304,6 @@ ${viewAbiResponse.data.abi_content}`);
               <span>{t("new")}</span>
             </button>
           </div>
-          {/* ABI Table */}
           <TableComponent<ABIRow>
             columns={columns}
             data={abis}
@@ -322,14 +314,11 @@ ${viewAbiResponse.data.abi_content}`);
       </div>
 
       <AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
-      {/* <ViewABIForm
-        isOpen={!!viewAbiResponse}
-        onClose={() => viewAbiResponse && viewAbiResponse.data && handleViewABI(viewAbiResponse.data)}
-        abiContent={viewAbiResponse?.data?.abi_content || ''}
-        abiName={viewAbiResponse?.data?.name || ''}
-        abiDescription={viewAbiResponse?.data?.description || ''}
-        onViewABI={handleViewABI}
-      /> */}
+      <ViewABIForm
+        isOpen={isViewABIOpen}
+        onClose={() => setIsViewABIOpen(false)}
+        viewAbiContent={viewAbiContent} // Pass the viewAbi
+      />
 
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}

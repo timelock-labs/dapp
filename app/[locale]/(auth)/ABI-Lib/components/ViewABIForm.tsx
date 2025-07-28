@@ -11,59 +11,43 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 interface AddABIFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddABI: (name: string, description: string, abi: string) => void;
+  // viewAbiContent:{
+  //   name: string;
+  //   description: string;
+  //   abi_content: any[];
+  // }
+    viewAbiContent:any
 }
 
-const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
+const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
   const t = useTranslations("Transactions.AddABIForm");
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [abi, setAbi] = useState<string>("");
-
-  const handleCancel = () => {
-    console.log("Cancel button clicked");
-    setName("");
-    setDescription("");
-    setAbi("");
-    onClose();
-  };
-
-  const handleSave = () => {
-    console.log("Save button clicked");
-    console.log("Name:", name);
-    console.log("Description:", description);
-    console.log("ABI:", abi);
-    // Here you would typically send data to a backend or update global state
-    if (name.trim() && description.trim() && abi.trim()) {
-      onAddABI(name, description, abi);
-      setName("");
-      setDescription("");
-      setAbi("");
-      onClose(); // Close the dialog after saving
-    }
-  };
 
   if (!isOpen) {
     return null;
   }
 
+  const handleCancel = () => {
+    onClose();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
+
       <DialogContent className="w-[558px] h-[470px] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>{t("title")}</DialogTitle>
-          <DialogDescription>{t("description")}</DialogDescription>
+          <DialogTitle>View</DialogTitle>
+          <DialogDescription>View ABI Details</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4 overflow-hidden">
           <div className="space-y-2">
             <Label htmlFor="abiName">{t("nameLabel")}</Label>
-            <Input id="abiName" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("nameLabel")} />
+            <Input id="abiName" value={viewAbiContent.name} disabled />
           </div>
           <div className="space-y-2">
             <Label htmlFor="abiDescription">{t("descriptionLabel")}</Label>
-            <Input id="abiDescription" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("descriptionLabel")} />
+            <Input id="abiDescription" value={viewAbiContent.description}  disabled/>
           </div>
-          <ABITextarea id="abiContent" label={t("contentLabel")} value={abi} onChange={setAbi} placeholder={t("contentLabel")} rows={5} />
+          <ABITextarea id="abiContent" label={t("contentLabel")} value={JSON.stringify(viewAbiContent.abi_content,null,2)} rows={5}  disabled/>
         </div>
         <DialogFooter>
           <DialogClose asChild>
@@ -71,9 +55,6 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
               {t("cancelButton")}
             </Button>
           </DialogClose>
-          <Button type="button" onClick={handleSave}>
-            {t("addButton")}
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
