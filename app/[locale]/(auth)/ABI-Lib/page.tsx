@@ -130,8 +130,6 @@ const ABILibPage: React.FC = () => {
     setViewAbiContent(row);
   };
 
-
-
   useEffect(() => {
     if (viewAbiResponse?.success === true) {
       console.log(`ABI Content for ${viewAbiResponse.data.name}:
@@ -215,9 +213,9 @@ ${viewAbiResponse.data.abi_content}`);
       key: "name",
       header: t("abiName"),
       render: (row: ABIRow) => (
-        <div className="flex items-center space-x-2 cursor-pointer" onClick={()=>handleViewABI(row)}>
+        <div className="flex items-center space-x-2 cursor-pointer" onClick={() => handleViewABI(row)}>
           <span>{row.name}</span>
-          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000"  />
+          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000" />
           {/* {JSON.stringify(row)} */}
         </div>
       ),

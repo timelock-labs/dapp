@@ -17,7 +17,7 @@ interface AddABIFormProps {
   //   description: string;
   //   abi_content: any[];
   // }
-  viewAbiContent: any
+  viewAbiContent: any;
 }
 
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
@@ -33,7 +33,6 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-
       <DialogContent className="w-[558px] overflow-hidden">
         <DialogHeader>
           <DialogTitle>View ABI Details</DialogTitle>
@@ -51,7 +50,6 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
             <Label>Interface Details</Label>
             <Textarea className="h-[300px]" value={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
           </div>
-
         </div>
         <DialogFooter>
           <DialogClose asChild>
