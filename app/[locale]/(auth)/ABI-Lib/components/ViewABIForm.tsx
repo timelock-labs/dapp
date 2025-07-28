@@ -22,10 +22,6 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
     return null;
   }
 
-  const handleCancel = () => {
-    onClose();
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[558px] overflow-hidden">
@@ -35,20 +31,20 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
         <div className="grid gap-4 py-4 overflow-hidden">
           <div className="space-y-2">
             <Label>{t("nameLabel")}</Label>
-            <Input value={viewAbiContent.name} />
+            <Input defaultValue={viewAbiContent.name} />
           </div>
           <div className="space-y-2">
             <Label>{t("descriptionLabel")}</Label>
-            <Textarea value={viewAbiContent.description} />
+            <Textarea defaultValue={viewAbiContent.description} />
           </div>
           <div className="space-y-2">
             <Label>Interface Details</Label>
-            <Textarea className="h-[300px]" value={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
+            <Textarea className="h-[300px]" defaultValue={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="outline" onClick={handleCancel}>
+            <Button type="button" variant="outline" onClick={()=>onClose()}>
               {t("cancelButton")}
             </Button>
           </DialogClose>
