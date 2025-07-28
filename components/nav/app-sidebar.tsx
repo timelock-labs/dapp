@@ -94,7 +94,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Image src={Logo} alt="Timelock Logo" className="h-8 w-[136px]" />
+        {/* <Image src={Logo} alt="Timelock Logo" className="h-8 w-[136px]" /> */}
+        <div className="logo-font font-xl font-bold text-xl">TimeLocker</div>
         {/* <TeamSwitcher teams={data.teams} /> */}
       </SidebarHeader>
       <SidebarContent>

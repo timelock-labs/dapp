@@ -122,3 +122,16 @@
   }
 }
 
+
+
+@font-face {
+  font-family: 'Righteous';
+  src: url('/righteous-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.logo-font {
+  font-family: 'Righteous'!important;
+}

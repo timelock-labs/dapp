@@ -80,7 +80,7 @@ const TimeLockerSplitPage = () => {
 
         {/* Main Motto Section */}
         <main className="flex-grow flex items-center justify-center text-center px-8">
-          <p className="text-4xl font-bold leading-tight">安全无捷径，时间即防线</p>
+          <p className="text-4xl font-bold leading-tight logo-font">安全无捷径，时间即防线</p>
         </main>
 
         {/* Footer / Why use Timelock section */}
