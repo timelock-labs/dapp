@@ -186,10 +186,6 @@ ${viewAbiResponse.data.abi_content}`);
     }
   }, [deleteAbiResponse, t, refreshAbiList]);
 
-  const handleNewABI = () => {
-    setIsAddABIOpen(true);
-  };
-
   // Effect to handle clicks outside the dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -236,10 +232,6 @@ ${viewAbiResponse.data.abi_content}`);
         <div className="relative flex items-center space-x-2">
           {!row.is_shared && (
             <>
-              <button type="button" onClick={() => handleViewABI(row)} className="text-black hover:underline text-sm font-medium underline">
-                {t("viewABI")}
-              </button>
-
               <div className="relative">
                 <button
                   type="button"
@@ -273,6 +265,20 @@ ${viewAbiResponse.data.abi_content}`);
                       </svg>
                       <span>{t("delete")}</span>
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => handleViewABI(row)}
+                      className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center space-x-2"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 8v4m0 0v4m0-4h4m-4 0H8m1-10h6a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"
+                        />
+                      </svg>
+                      <span>{t("viewABI")}</span> 
+                    </button>
                   </div>
                 )}
               </div>
@@ -291,7 +297,7 @@ ${viewAbiResponse.data.abi_content}`);
             <SectionHeader title={t("storedABI")} description={t("storedABIDescription")} />
             <button
               type="button"
-              onClick={handleNewABI}
+              onClick={() => setIsAddABIOpen(true)}
               className="inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
