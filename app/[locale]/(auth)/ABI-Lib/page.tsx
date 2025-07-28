@@ -12,6 +12,8 @@ import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { formatDate } from '@/lib/utils';
 
+import ViewABIForm from './components/ViewABIForm'; // Import the view ABI form component
+
 // Define the interface for a single ABI row based on API response
 interface ABIRow {
   id: number;
@@ -224,6 +226,7 @@ ${viewAbiResponse.data.abi_content}`);
             height={16} 
             className="text-000"
           />
+          {JSON.stringify(row)}
         </div>
       )
     },
@@ -304,6 +307,7 @@ ${viewAbiResponse.data.abi_content}`);
               onClick={handleNewABI}
               className="inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
+  
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m0 0H6"></path>
               </svg>
@@ -326,6 +330,14 @@ ${viewAbiResponse.data.abi_content}`);
         onClose={() => setIsAddABIOpen(false)}
         onAddABI={handleAddABI}
       />
+      {/* <ViewABIForm
+        isOpen={!!viewAbiResponse}
+        onClose={() => viewAbiResponse && viewAbiResponse.data && handleViewABI(viewAbiResponse.data)}
+        abiContent={viewAbiResponse?.data?.abi_content || ''}
+        abiName={viewAbiResponse?.data?.name || ''}
+        abiDescription={viewAbiResponse?.data?.description || ''}
+        onViewABI={handleViewABI}
+      /> */}
 
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}

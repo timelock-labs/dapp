@@ -90,9 +90,9 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button className=' cursor-pointer' type="button" variant="outline" onClick={handleCancel}>{t('cancelButton')}</Button>
+            <Button type="button" variant="outline" onClick={handleCancel}>{t('cancelButton')}</Button>
           </DialogClose>
-          <Button  className=' cursor-pointer' type="button" onClick={handleSave}>{t('addButton')}</Button>
+          <Button type="button" onClick={handleSave}>{t('addButton')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
