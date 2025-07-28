@@ -215,8 +215,6 @@ ${viewAbiResponse.data.abi_content}`);
       render: (row: ABIRow) => (
         <div className="flex items-center space-x-2 cursor-pointer" onClick={() => handleViewABI(row)}>
           <span>{row.name}</span>
-          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000" />
-          {/* {JSON.stringify(row)} */}
         </div>
       ),
     },

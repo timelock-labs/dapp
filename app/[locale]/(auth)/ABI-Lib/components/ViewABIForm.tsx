@@ -12,11 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 interface AddABIFormProps {
   isOpen: boolean;
   onClose: () => void;
-  // viewAbiContent:{
-  //   name: string;
-  //   description: string;
-  //   abi_content: any[];
-  // }
   viewAbiContent: any;
 }
 
