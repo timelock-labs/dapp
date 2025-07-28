@@ -230,7 +230,7 @@ ${viewAbiResponse.data.abi_content}`);
       header: t("operations"), // Operations column
       render: (row: ABIRow) => (
         <div className="relative flex items-center space-x-2">
-          {!row.is_shared && (
+       
             <>
               <div className="relative">
                 <button
@@ -283,7 +283,7 @@ ${viewAbiResponse.data.abi_content}`);
                 )}
               </div>
             </>
-          )}
+          
         </div>
       ),
     },
