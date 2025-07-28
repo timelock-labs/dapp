@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import SectionHeader from "@/components/ui/SectionHeader"; // Assuming SectionHeader is in components/ui/
 import TableComponent from "@/components/ui/TableComponent"; // Assuming TableComponent is in components/
 import PageLayout from "@/components/layout/PageLayout";
@@ -13,6 +12,12 @@ import { toast } from "sonner";
 import { formatDate } from "@/lib/utils";
 
 import ViewABIForm from "./components/ViewABIForm"; // Import the view ABI form component
+
+import StarSVG from "@/components/icons/star"; // Import the star icon
+import DeleteSVG from "@/components/icons/delete"; // Import the delete icon
+import FileSVG from "@/components/icons/file"; // Import the file icon
+import EllipsesSVG from "@/components/icons/ellipses"; // Import the ellipses icon
+import AddSVG from "@/components/icons/add"; // Import the add icon
 
 // Define the interface for a single ABI row based on API response
 interface ABIRow {
@@ -210,11 +215,7 @@ ${viewAbiResponse.data.abi_content}`);
       header: t("abiName"),
       render: (row: ABIRow) => (
         <div className="flex items-center space-x-2 cursor-pointer" onClick={() => handleViewABI(row)}>
-          {!row.is_shared && (
-            <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 15l-5.878 3.09 1.122-6.535L1 7.91l6.556-.955L10 1l2.444 5.955L19 7.91l-4.244 3.645 1.122 6.535L10 15z" />
-            </svg>
-          )}
+          {!row.is_shared && <StarSVG />}
           <span>{row.name}</span>
         </div>
       ),
@@ -235,59 +236,39 @@ ${viewAbiResponse.data.abi_content}`);
       header: t("operations"), // Operations column
       render: (row: ABIRow) => (
         <div className="relative flex items-center space-x-2">
-            <>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => handleEllipsisMenu(row.id)}
-                  className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors"
-                  aria-label="More options"
-                  title="More options"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                    ></path>
-                  </svg>
-                </button>
-                {openDropdownId === row.id && (
-                  <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteABI(row)}
-                      className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                      <span>{t("delete")}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleViewABI(row)}
-                      className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center space-x-2"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 8v4m0 0v4m0-4h4m-4 0H8m1-10h6a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"
-                        />
-                      </svg>
-                      <span>{t("viewABI")}</span> 
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          
+          <>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => handleEllipsisMenu(row.id)}
+                className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors"
+                aria-label="More options"
+                title="More options"
+              >
+                <EllipsesSVG />
+              </button>
+              {openDropdownId === row.id && (
+                <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteABI(row)}
+                    className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2"
+                  >
+                    <DeleteSVG />
+                    <span>{t("delete")}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleViewABI(row)}
+                    className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center space-x-2"
+                  >
+                    <FileSVG />
+                    <span>{t("viewABI")}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
         </div>
       ),
     },
@@ -304,9 +285,7 @@ ${viewAbiResponse.data.abi_content}`);
               onClick={() => setIsAddABIOpen(true)}
               className="inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m0 0H6"></path>
-              </svg>
+              <AddSVG />
               <span>{t("new")}</span>
             </button>
           </div>

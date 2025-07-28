@@ -44,7 +44,7 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="outline" onClick={()=>onClose()}>
+            <Button type="button" variant="outline" onClick={() => onClose()}>
               {t("cancelButton")}
             </Button>
           </DialogClose>
