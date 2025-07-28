@@ -76,7 +76,7 @@ export default function PageLayout({
 
             <div className="flex items-center gap-3 ml-auto pr-4">
               <ChainSwitcher />
-              <ConnectWallet icon={false} headerStyle={true} />
+              <ConnectWallet icon={true} headerStyle={true}  />
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-8">
