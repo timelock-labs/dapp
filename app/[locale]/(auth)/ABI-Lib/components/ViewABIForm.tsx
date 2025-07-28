@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"; // Assuming TextInput is a wrappe
 import { Label } from "@/components/ui/label"; // Assuming you have a Label component or use Shadcn/ui Label
 import ABITextarea from "@/components/ui/ABITextarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AddABIFormProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ interface AddABIFormProps {
   //   description: string;
   //   abi_content: any[];
   // }
-    viewAbiContent:any
+  viewAbiContent: any
 }
 
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
@@ -33,21 +34,24 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
 
-      <DialogContent className="w-[558px] h-[470px] overflow-hidden">
+      <DialogContent className="w-[558px] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>View</DialogTitle>
-          <DialogDescription>View ABI Details</DialogDescription>
+          <DialogTitle>View ABI Details</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4 overflow-hidden">
           <div className="space-y-2">
-            <Label htmlFor="abiName">{t("nameLabel")}</Label>
-            <Input id="abiName" value={viewAbiContent.name} disabled />
+            <Label>{t("nameLabel")}</Label>
+            <Input value={viewAbiContent.name} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="abiDescription">{t("descriptionLabel")}</Label>
-            <Input id="abiDescription" value={viewAbiContent.description}  disabled/>
+            <Label>{t("descriptionLabel")}</Label>
+            <Textarea value={viewAbiContent.description} />
           </div>
-          <ABITextarea id="abiContent" label={t("contentLabel")} value={JSON.stringify(viewAbiContent.abi_content,null,2)} rows={5}  disabled/>
+          <div className="space-y-2">
+            <Label>Interface Details</Label>
+            <Textarea className="h-[300px]" value={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
+          </div>
+
         </div>
         <DialogFooter>
           <DialogClose asChild>
