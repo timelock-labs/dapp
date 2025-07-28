@@ -1,18 +1,18 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
-import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
-import TableComponent from '@/components/ui/TableComponent';   // Assuming TableComponent is in components/
-import PageLayout from '@/components/layout/PageLayout';
-import { useTranslations } from 'next-intl';
-import AddABIForm from './components/AddABIForm'; // Import the new form component
-import ConfirmDialog from '@/components/ui/ConfirmDialog'; // Import the confirm dialog
-import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
-import { toast } from 'sonner';
-import { formatDate } from '@/lib/utils';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
+import SectionHeader from "@/components/ui/SectionHeader"; // Assuming SectionHeader is in components/ui/
+import TableComponent from "@/components/ui/TableComponent"; // Assuming TableComponent is in components/
+import PageLayout from "@/components/layout/PageLayout";
+import { useTranslations } from "next-intl";
+import AddABIForm from "./components/AddABIForm"; // Import the new form component
+import ConfirmDialog from "@/components/ui/ConfirmDialog"; // Import the confirm dialog
+import { useApi } from "@/hooks/useApi";
+import { useAuthStore } from "@/store/userStore";
+import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 
-import ViewABIForm from './components/ViewABIForm'; // Import the view ABI form component
+import ViewABIForm from "./components/ViewABIForm"; // Import the view ABI form component
 
 // Define the interface for a single ABI row based on API response
 interface ABIRow {
@@ -44,11 +44,11 @@ const ABILibPage: React.FC = () => {
 
   const refreshAbiList = useCallback(() => {
     if (accessToken) {
-      fetchAbiList('/api/v1/abi/list', {
-        method: 'GET',
+      fetchAbiList("/api/v1/abi/list", {
+        method: "GET",
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
       });
     }
@@ -60,29 +60,28 @@ const ABILibPage: React.FC = () => {
 
   useEffect(() => {
     if (abiListResponse?.success === true) {
-      console.log(abiListResponse, 'abiListResponse');
+      console.log(abiListResponse, "abiListResponse");
       const allAbis = [...(abiListResponse.data.user_abis || []), ...(abiListResponse.data.shared_abis || [])];
       setAbis(allAbis);
       // 移除成功通知，避免页面加载时显示
     } else if (abiListResponse?.success === false && abiListResponse.data !== null) {
-      console.error('Failed to fetch ABI list:', abiListResponse.error);
-      toast.error(t('fetchAbiListError', { message: abiListResponse.error?.message || 'Unknown error' }));
+      console.error("Failed to fetch ABI list:", abiListResponse.error);
+      toast.error(t("fetchAbiListError", { message: abiListResponse.error?.message || "Unknown error" }));
     }
   }, [abiListResponse, t]);
 
   useEffect(() => {
     if (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
     }
   }, [error]);
 
-
   const handleAddABI = async (name: string, description: string, abi_content: string) => {
     try {
-      const validationResponse = await validateAbi('/api/v1/abi/validate', {
-        method: 'POST',
+      const validationResponse = await validateAbi("/api/v1/abi/validate", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: {
           abi_content,
@@ -90,11 +89,11 @@ const ABILibPage: React.FC = () => {
       });
 
       if (validationResponse?.success && validationResponse.data.is_valid) {
-        const addResponse = await addAbi('/api/v1/abi', {
-          method: 'POST',
+        const addResponse = await addAbi("/api/v1/abi", {
+          method: "POST",
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
           },
           body: {
             name,
@@ -102,32 +101,32 @@ const ABILibPage: React.FC = () => {
             abi_content,
           },
         });
-        
+
         if (addResponse?.success) {
-          toast.success(t('addAbiSuccess'));
+          toast.success(t("addAbiSuccess"));
           refreshAbiList(); // 刷新列表
           setIsAddABIOpen(false);
         } else {
-          toast.error(t('addAbiError', { message: addResponse?.error?.message || 'Unknown error' }));
+          toast.error(t("addAbiError", { message: addResponse?.error?.message || "Unknown error" }));
         }
       } else {
-        const errorMessage = validationResponse?.error?.message || validationResponse?.data?.error_message || 'Unknown validation error';
-        console.error('ABI validation failed:', errorMessage);
-        toast.error(t('validateAbiError', { message: errorMessage }));
+        const errorMessage = validationResponse?.error?.message || validationResponse?.data?.error_message || "Unknown validation error";
+        console.error("ABI validation failed:", errorMessage);
+        toast.error(t("validateAbiError", { message: errorMessage }));
       }
     } catch (error: unknown) {
-      console.error('Error in handleAddABI:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      toast.error(t('addAbiError', { message: errorMessage }));
+      console.error("Error in handleAddABI:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      toast.error(t("addAbiError", { message: errorMessage }));
     }
   };
 
   const handleViewABI = async (row: ABIRow) => {
     await viewAbi(`/api/v1/abi/${row.id}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
     });
   };
@@ -136,10 +135,10 @@ const ABILibPage: React.FC = () => {
     if (viewAbiResponse?.success === true) {
       console.log(`ABI Content for ${viewAbiResponse.data.name}:
 ${viewAbiResponse.data.abi_content}`);
-      toast.success(t('viewAbiSuccess', { name: viewAbiResponse.data.name }));
+      toast.success(t("viewAbiSuccess", { name: viewAbiResponse.data.name }));
     } else if (viewAbiResponse?.success === false && viewAbiResponse.data !== null) {
-      console.error('Failed to fetch ABI details:', viewAbiResponse.error);
-      toast.error(t('viewAbiError', { message: viewAbiResponse.error?.message || 'Unknown error' }));
+      console.error("Failed to fetch ABI details:", viewAbiResponse.error);
+      toast.error(t("viewAbiError", { message: viewAbiResponse.error?.message || "Unknown error" }));
     }
   }, [viewAbiResponse, t]);
 
@@ -159,15 +158,15 @@ ${viewAbiResponse.data.abi_content}`);
 
   const confirmDeleteABI = async () => {
     if (!abiToDelete) return;
-    
+
     await deleteAbi(`/api/v1/abi/${abiToDelete.id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
     });
-    
+
     setIsDeleteDialogOpen(false);
     setAbiToDelete(null);
   };
@@ -180,11 +179,11 @@ ${viewAbiResponse.data.abi_content}`);
   useEffect(() => {
     if (deleteAbiResponse?.success === true) {
       console.log(`ABI deleted successfully.`);
-      toast.success(t('deleteAbiSuccess'));
+      toast.success(t("deleteAbiSuccess"));
       refreshAbiList(); // 刷新列表
     } else if (deleteAbiResponse?.success === false && deleteAbiResponse.data !== null) {
-      console.error('Failed to delete ABI:', deleteAbiResponse.error);
-      toast.error(t('deleteAbiError', { message: deleteAbiResponse.error?.message || 'Unknown error' }));
+      console.error("Failed to delete ABI:", deleteAbiResponse.error);
+      toast.error(t("deleteAbiError", { message: deleteAbiResponse.error?.message || "Unknown error" }));
     }
   }, [deleteAbiResponse, t, refreshAbiList]);
 
@@ -201,120 +200,117 @@ ${viewAbiResponse.data.abi_content}`);
     };
 
     if (openDropdownId) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     }
 
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openDropdownId]);
-
-  
 
   // Define columns for TableComponent
   const columns = [
-    { 
-      key: 'name', 
-      header: t('abiName'),
+    {
+      key: "name",
+      header: t("abiName"),
       render: (row: ABIRow) => (
         <div className="flex items-center space-x-2">
           <span>{row.name}</span>
-          <Image 
-            src="/ABI.png" 
-            alt="abi name" 
-            width={16} 
-            height={16} 
-            className="text-000"
-          />
+          <Image src="/ABI.png" alt="abi name" width={16} height={16} className="text-000" />
           {JSON.stringify(row)}
         </div>
-      )
-    },
-    { key: 'owner', header: t('addressUser') },
-    { 
-      key: 'created_at', 
-      header: t('addedTime'),
-      render: (row: ABIRow) => formatDate(row.created_at)
-    },
-    {
-      key: 'type',
-      header: t('abiType'),
-      render: (row: ABIRow) => (
-        <span>{row.is_shared ? t('platformShared') : t('userImported')}</span>
       ),
     },
+    { key: "owner", header: t("addressUser") },
     {
-      key: 'operations',
-      header: t('operations'), // Operations column
+      key: "created_at",
+      header: t("addedTime"),
+      render: (row: ABIRow) => formatDate(row.created_at),
+    },
+    {
+      key: "type",
+      header: t("abiType"),
+      render: (row: ABIRow) => <span>{row.is_shared ? t("platformShared") : t("userImported")}</span>,
+    },
+    {
+      key: "operations",
+      header: t("operations"), // Operations column
       render: (row: ABIRow) => (
         <div className="relative flex items-center space-x-2">
           {!row.is_shared && (
             <>
-              <button
-                type="button"
-                onClick={() => handleViewABI(row)}
-                className="text-black hover:underline text-sm font-medium underline"
-              >
-                {t('viewABI')}
+              <button type="button" onClick={() => handleViewABI(row)} className="text-black hover:underline text-sm font-medium underline">
+                {t("viewABI")}
               </button>
 
               <div className="relative">
-                <button 
+                <button
                   type="button"
-                  onClick={() => handleEllipsisMenu(row.id)} 
+                  onClick={() => handleEllipsisMenu(row.id)}
                   className="text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors"
                   aria-label="More options"
                   title="More options"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                    ></path>
+                  </svg>
                 </button>
                 {openDropdownId === row.id && (
-                  <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200"> {/* Dropdown container */}
+                  <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                    {" "}
+                    {/* Dropdown container */}
                     <button
                       type="button"
                       onClick={() => handleDeleteABI(row)}
                       className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
-                      <span>{t('delete')}</span>
+                      <span>{t("delete")}</span>
                     </button>
                   </div>
                 )}
               </div>
             </>
           )}
-
         </div>
       ),
     },
   ];
 
   return (
-    <PageLayout title={t('title')}>
-      <div className="min-h-screen  "> {/* Page background */}
-        <div className="mx-auto border border-gray-200 rounded-lg p-6 "> {/* Centered content area */}
+    <PageLayout title={t("title")}>
+      <div className="min-h-screen  ">
+        {" "}
+        {/* Page background */}
+        <div className="mx-auto border border-gray-200 rounded-lg p-6 ">
+          {" "}
+          {/* Centered content area */}
           {/* Header Section */}
           <div className="flex justify-between items-center mb-6">
-            <SectionHeader
-              title={t('storedABI')}
-              description={t('storedABIDescription')}
-            />
+            <SectionHeader title={t("storedABI")} description={t("storedABIDescription")} />
             {/* New Button - styled black */}
             <button
               type="button"
               onClick={handleNewABI}
               className="inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
-  
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m0 0H6"></path>
               </svg>
-              <span>{t('new')}</span>
+              <span>{t("new")}</span>
             </button>
           </div>
-
           {/* ABI Table */}
           <TableComponent<ABIRow>
             columns={columns}
@@ -325,11 +321,7 @@ ${viewAbiResponse.data.abi_content}`);
         </div>
       </div>
 
-      <AddABIForm
-        isOpen={isAddABIOpen}
-        onClose={() => setIsAddABIOpen(false)}
-        onAddABI={handleAddABI}
-      />
+      <AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
       {/* <ViewABIForm
         isOpen={!!viewAbiResponse}
         onClose={() => viewAbiResponse && viewAbiResponse.data && handleViewABI(viewAbiResponse.data)}
@@ -344,13 +336,12 @@ ${viewAbiResponse.data.abi_content}`);
         onClose={cancelDeleteABI}
         onConfirm={confirmDeleteABI}
         title="Delete ABI"
-        description={`Are you sure you want to delete ABI "${abiToDelete?.name || ''}"? This action cannot be undone.`}
+        description={`Are you sure you want to delete ABI "${abiToDelete?.name || ""}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         variant="destructive"
       />
     </PageLayout>
-
   );
 };
 
