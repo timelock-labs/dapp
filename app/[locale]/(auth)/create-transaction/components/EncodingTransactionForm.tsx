@@ -182,25 +182,20 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }
 
     if (selectedTimelock.standard === 'compound') {
-      return [
-        { value: 'queueTransaction', label: 'queueTransaction' },
-        { value: 'executeTransaction', label: 'executeTransaction' },
-        { value: 'cancelTransaction', label: 'cancelTransaction' },
-        { value: 'setPendingAdmin', label: 'setPendingAdmin' },
-        { value: 'acceptAdmin', label: 'acceptAdmin' },
-        { value: 'setDelay', label: 'setDelay' },
-      ];
+      // 从 ABI 读取所有 function 名称作为 options
+      const functions = TimelockCompundABI.filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
+      return functions.map(fn => ({
+        value: fn.name,
+        label: fn.name,
+      }));
     } else if (selectedTimelock.standard === 'openzeppelin') {
-      return [
-        { value: 'schedule', label: 'schedule' },
-        { value: 'scheduleBatch', label: 'scheduleBatch' },
-        { value: 'execute', label: 'execute' },
-        { value: 'executeBatch', label: 'executeBatch' },
-        { value: 'cancel', label: 'cancel' },
-        { value: 'updateDelay', label: 'updateDelay' },
-        { value: 'grantRole', label: 'grantRole' },
-        { value: 'revokeRole', label: 'revokeRole' },
-      ];
+      // 从 ABI 读取所有 function 名称作为 options
+      const functions = TimelockOpenZeppelinABI
+        .filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
+      return functions.map(fn => ({
+        value: fn.name,
+        label: fn.name,
+      }));
     }
 
     return [];
