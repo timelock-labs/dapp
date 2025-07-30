@@ -10,6 +10,9 @@ import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
 import { useChainId, useSwitchChain } from '@thirdweb-dev/react';
 
+import TimelockCompundABI from '@/components/abi/TimelockCompound.json';
+import TimelockOpenZeppelinABI from '@/components/abi/TimelockOpenZeppelin.json';
+
 interface EncodingTransactionFormProps {
   timelockType: string;
   onTimelockTypeChange: (value: string) => void;
