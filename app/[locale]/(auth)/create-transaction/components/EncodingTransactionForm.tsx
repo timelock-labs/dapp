@@ -215,66 +215,62 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 
   return (
-    <div className="bg-white py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start border-b border-gray-300">
-      <div className="lg:col-span-1 lg:sticky lg:top-4">
-        <SectionHeader
-          title={t('encodingTransaction.title')}
-          description={t('encodingTransaction.description')}
-          icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
+    <div className="bg-white py-6 flex flex-col gap-8 items-start">
+      <SectionHeader
+      title={t('encodingTransaction.title')}
+      description={t('encodingTransaction.description')}
+      icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
+      />
+      <div className="flex flex-col space-y-4 w-full">
+      <div className="grid grid-cols-1 gap-4">
+        <SelectInput
+        label={t('encodingTransaction.selectTimelock')}
+        value={timelockType}
+        onChange={handleTimelockChange}
+        options={timelockOptions}
+        placeholder={isLoadingDetails ? 'Loading timelock details...' : (allTimelocks.length === 0 ? 'No timelocks available' : 'Select Timelock')}
+        />
+
+        <SelectInput
+        label={t('encodingTransaction.selectTimelockMethod')}
+        value={timelockMethod}
+        onChange={onTimelockMethodChange}
+        options={timelockMethodOptions}
+        placeholder={timelockType ? 'Select Timelock Method' : 'Select Timelock first'}
         />
       </div>
-      {JSON.stringify(currentTimelockDetails)}
 
-      <div className="lg:col-span-1 flex flex-col space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SelectInput
-            label={t('encodingTransaction.selectTimelock')}
-            value={timelockType}
-            onChange={handleTimelockChange}
-            options={timelockOptions}
-            placeholder={isLoadingDetails ? 'Loading timelock details...' : (allTimelocks.length === 0 ? 'No timelocks available' : 'Select Timelock')}
-          />
+      <TextInput
+        label={t('encodingTransaction.target')}
+        value={target}
+        onChange={handleTargetChange}
+        placeholder="Target"
+        error={validationErrors.target}
+      />
+      <TextInput
+        label={t('encodingTransaction.value')}
+        value={value}
+        onChange={handleValueChange}
+        placeholder="Value"
+        error={validationErrors.value}
+      />
+      <TextInput
+        label={t('encodingTransaction.formDescription')}
+        value={description}
+        onChange={onDescriptionChange}
+        placeholder={t('encodingTransaction.descriptionPlaceholder')}
+      />
 
-          <SelectInput
-            label={t('encodingTransaction.selectTimelockMethod')}
-            value={timelockMethod}
-            onChange={onTimelockMethodChange}
-            options={timelockMethodOptions}
-            placeholder={timelockType ? 'Select Timelock Method' : 'Select Timelock first'}
-          />
-        </div>
-
-        <TextInput
-          label={t('encodingTransaction.target')}
-          value={target}
-          onChange={handleTargetChange}
-          placeholder="Target"
-          error={validationErrors.target}
-        />
-        <TextInput
-          label={t('encodingTransaction.value')}
-          value={value}
-          onChange={handleValueChange}
-          placeholder="Value"
-          error={validationErrors.value}
-        />
-        <TextInput
-          label={t('encodingTransaction.formDescription')}
-          value={description}
-          onChange={onDescriptionChange}
-          placeholder={t('encodingTransaction.descriptionPlaceholder')}
-        />
-
-        <TargetABISection
-          abiValue={abiValue}
-          onAbiChange={onAbiChange}
-          functionValue={functionValue}
-          onFunctionChange={onFunctionChange}
-          timeValue={timeValue}
-          onTimeChange={onTimeChange}
-          argumentValues={argumentValues}
-          onArgumentChange={onArgumentChange}
-        />
+      <TargetABISection
+        abiValue={abiValue}
+        onAbiChange={onAbiChange}
+        functionValue={functionValue}
+        onFunctionChange={onFunctionChange}
+        timeValue={timeValue}
+        onTimeChange={onTimeChange}
+        argumentValues={argumentValues}
+        onArgumentChange={onArgumentChange}
+      />
       </div>
     </div>
   );

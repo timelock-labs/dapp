@@ -66,11 +66,11 @@ const TransactionEncoderPage: React.FC = () => {
             // Get selected timelock's chain name
             const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
             const chainName = selectedTimelock?.chain_name || 'Not selected';
-            
-            const argsDisplay = argumentValues.length > 0 
+
+            const argsDisplay = argumentValues.length > 0
                 ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || 'N/A'}`).join('\n')
                 : 'No arguments';
-                
+
             return `chain: ${chainName}
  wallet: ${address || 'Not connected'}
  timelock: ${timelockAddress || 'Not selected'}
@@ -89,7 +89,7 @@ const TransactionEncoderPage: React.FC = () => {
             toast.error('Please connect your wallet first');
             return;
         }
-        console.log(chain,'chain');
+        console.log(chain, 'chain');
 
         if (!chainId) {
             toast.error('Please select a network');
@@ -103,7 +103,7 @@ const TransactionEncoderPage: React.FC = () => {
         }
         const selectedTimelock = allTimelocks.find(tl => tl.id.toString() === timelockType);
         const timelockStandard = selectedTimelock?.standard as 'compound' | 'openzeppelin';
-        
+
         try {
             setIsSubmitting(true);
 
@@ -131,12 +131,12 @@ const TransactionEncoderPage: React.FC = () => {
                 tx_hash: txResult.transactionHash, // Will be set when transaction is submitted to blockchain
                 value: value || '0',
             };
-            console.log(transactionData,'transactionData');
+            console.log(transactionData, 'transactionData');
             const result = await createTransaction(transactionData);
-            
+
             toast.success('Transaction created successfully!');
             console.log('Transaction created:', result);
-            
+
             // Navigate to transaction details or list
             router.push('/transactions');
         } catch (error: unknown) {
@@ -152,19 +152,23 @@ const TransactionEncoderPage: React.FC = () => {
             <div className="min-h-screen bg-withe p-8">
                 <div className="mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
-                    <EncodingTransactionForm
-                        timelockType={timelockType} onTimelockTypeChange={setTimelockType}
-                        timelockMethod={timelockMethod} onTimelockMethodChange={setTimelockMethod}
-                        onTimelockAddressChange={setTimelockAddress}
-                        target={target} onTargetChange={setTarget}
-                        value={value} onValueChange={setValue}
-                        abiValue={abiValue} onAbiChange={handleAbiChange}
-                        functionValue={functionValue} onFunctionChange={handleFunctionChange}
-                        timeValue={timeValue} onTimeChange={setTimeValue}
-                        argumentValues={argumentValues} onArgumentChange={handleArgumentChange}
-                        description={description} onDescriptionChange={setDescription}
-                    />
-                    <EncodingPreview previewContent={previewContent} />
+                    <div className='flex  space-y-4 border-b border-gray-300 justify-between pb-4'>
+                        <EncodingTransactionForm
+                            timelockType={timelockType} onTimelockTypeChange={setTimelockType}
+                            timelockMethod={timelockMethod} onTimelockMethodChange={setTimelockMethod}
+                            onTimelockAddressChange={setTimelockAddress}
+                            target={target} onTargetChange={setTarget}
+                            value={value} onValueChange={setValue}
+                            abiValue={abiValue} onAbiChange={handleAbiChange}
+                            functionValue={functionValue} onFunctionChange={handleFunctionChange}
+                            timeValue={timeValue} onTimeChange={setTimeValue}
+                            argumentValues={argumentValues} onArgumentChange={handleArgumentChange}
+                            description={description} onDescriptionChange={setDescription}
+                        />
+                        <EncodingPreview previewContent={previewContent} />
+                    </div>
+
+
                     <MailboxSelection
                         selectedMailbox={selectedMailbox}
                         onMailboxChange={setSelectedMailbox}
