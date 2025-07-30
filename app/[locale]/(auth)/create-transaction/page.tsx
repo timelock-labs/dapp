@@ -149,7 +149,6 @@ const TransactionEncoderPage: React.FC = () => {
         <PageLayout title={t('title')}>
             <div className="min-h-screen bg-withe p-8">
                 <div className="mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
-
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
                     <EncodingTransactionForm
                         timelockType={timelockType} onTimelockTypeChange={setTimelockType}

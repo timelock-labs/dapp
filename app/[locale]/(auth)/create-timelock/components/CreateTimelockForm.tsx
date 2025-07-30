@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import ContractStandardSelection from './ContractStandardSelection'; // Adjust path
 import { useAuthStore } from '@/store/userStore';
 
+
 interface CreateTimelockFormProps {
-  selectedChain: string;
-  onChainChange: (value: string) => void;
+  selectedChain: number;
+  onChainChange: (value: number) => void;
   selectedStandard: string;
   onStandardChange: (value: string) => void;
   minDelay: string;
@@ -39,7 +40,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
   const chainOptions = chains.map(chain => ({
     value: chain.chain_id.toString(),
-    label: chain.chain_name,
+    label: chain.display_name,
   }));
 
   return (
