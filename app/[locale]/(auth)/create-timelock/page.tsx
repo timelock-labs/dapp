@@ -5,7 +5,7 @@ import { useApi } from '@/hooks/useApi';
 import { useDeployTimelock } from '@/hooks/useDeployTimelock';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { useAddress, useChainId,useSwitchChain } from '@thirdweb-dev/react';
+import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain  } from 'thirdweb/react';
 import { useRouter, useParams } from 'next/navigation';
 import FirstTimeTimelockIntro from './components/FirstTimeTimelockIntro';
 import CreateTimelockForm from './components/CreateTimelockForm';
@@ -22,12 +22,13 @@ const CreateTimelockPage: React.FC = () => {
   const [executors, setExecutors] = useState('');
   const [admin, setAdmin] = useState('');
 
-  const chainId = useChainId();
-    const switchChain = useSwitchChain()
+  const { id: chainId } = useActiveWalletChain() || {};
+  const switchChain = useSwitchActiveWalletChain()
 
   const { request: createTimelockApiCall } = useApi();
   const { accessToken, chains } = useAuthStore();
-  const walletAddress = useAddress();
+  const { address: walletAddress } = useActiveAccount() || {};
+
   const router = useRouter();
   const params = useParams();
   const locale = params.locale;

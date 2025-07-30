@@ -8,8 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
-import { useChainId, useSwitchChain } from '@thirdweb-dev/react';
-
+import { useActiveWalletChain, useSwitchActiveWalletChain  } from 'thirdweb/react';
 import TimelockCompundABI from '@/components/abi/TimelockCompound.json';
 import TimelockOpenZeppelinABI from '@/components/abi/TimelockOpenZeppelin.json';
 
@@ -65,8 +64,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
   const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
 
-  const chainId = useChainId();
-  const switchChain = useSwitchChain();
+  const { id: chainId } = useActiveWalletChain() || {};
+  const switchChain = useSwitchActiveWalletChain();
 
   const validateTarget = (target: string) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(target)) {

@@ -9,7 +9,7 @@ import MailboxSelection from './components/MailboxSelection';
 import { useTranslations } from 'next-intl';
 import { useTimelockTransaction } from '@/hooks/useTimelockTransaction';
 import { useTransactionApi, CreateTransactionRequest } from '@/hooks/useTransactionApi';
-import { useAddress, useChain, useChainId } from '@thirdweb-dev/react'
+import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain  } from 'thirdweb/react';
 
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
@@ -18,9 +18,8 @@ const TransactionEncoderPage: React.FC = () => {
     const t = useTranslations('CreateTransaction');
     const { createTransaction } = useTransactionApi();
     const { sendTransaction, isLoading: isSending, error: sendError } = useTimelockTransaction();
-    const address = useAddress();
-    const chain = useChain();
-    const chainId = useChainId();
+    const { address } = useActiveAccount() || {};
+    const { id: chainId, name: chainName } = useActiveWalletChain() || {};
     const { allTimelocks } = useAuthStore();
 
     // Form States
@@ -90,7 +89,7 @@ ${argsDisplay}`;
             toast.error('Please connect your wallet first');
             return;
         }
-        console.log(chain, 'chain');
+        console.log(chainName, 'chainName');
 
         if (!chainId) {
             toast.error('Please select a network');
@@ -120,7 +119,7 @@ ${argsDisplay}`;
             // Prepare transaction data
             const transactionData: CreateTransactionRequest = {
                 chain_id: chainId,
-                chain_name: chain?.name || 'Unknown',
+                chain_name: chainName || 'Unknown',
                 description: description || `Transaction to ${target}`,
                 eta: parseInt(timeValue) || 0,
                 function_sig: functionValue,

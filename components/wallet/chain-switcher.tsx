@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image';
-import { useSwitchChain, useChainId, useConnectionStatus, useSigner } from '@thirdweb-dev/react'
+import { useSwitchActiveWalletChain, useActiveWalletChain, useActiveWalletConnectionStatus } from 'thirdweb/react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -12,14 +12,13 @@ import { ChevronDown, Network } from 'lucide-react'
 import { useAuthStore } from '@/store/userStore';
 import { useEffect, useRef,useState } from 'react'
 import { useApi } from '@/hooks/useApi';
-import { set } from 'zod';
 
 export function ChainSwitcher() {
-  const switchChain = useSwitchChain()
-  const chainId = useChainId()
-  const connectionStatus = useConnectionStatus()
+  const switchChain = useSwitchActiveWalletChain()
+  const { id: chainId } = useActiveWalletChain() || {};
+
+  const connectionStatus = useActiveWalletConnectionStatus()
   const isConnected = connectionStatus === "connected"
-  const signer = useSigner()
   const { chains, fetchChains, _hasHydrated, login } = useAuthStore()
   const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
   const hasFetchedChains = useRef(false);

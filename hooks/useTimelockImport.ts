@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { useAddress, useSDK } from '@thirdweb-dev/react';
+import { useActiveAccount } from 'thirdweb/react';
 import { toast } from 'sonner';
 
 // Compound Timelock ABI (basic signatures)
@@ -67,8 +67,7 @@ export interface ImportTimelockRequest {
 export const useTimelockImport = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [parameters, setParameters] = useState<TimelockParameters | null>(null);
-  const sdk = useSDK();
-  const walletAddress = useAddress();
+  const { address: walletAddress } = useActiveAccount() || {};
 
   /**
    * Get role members for OpenZeppelin timelock

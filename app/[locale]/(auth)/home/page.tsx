@@ -3,11 +3,11 @@
 import React from 'react';
 import Assert from './components/Assert';
 import CreateProtocol from './components/CreateProtocol';
-import { useConnectionStatus } from '@thirdweb-dev/react';
+import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useAssetsApi } from '@/hooks/useAssetsApi';
 
 export default function Home() {
-  const connectionStatus = useConnectionStatus();
+  const connectionStatus = useActiveWalletConnectionStatus();
   const isConnected = connectionStatus === "connected";
 
   const { data: assetsData, isLoading, error, hasAssets } = useAssetsApi();

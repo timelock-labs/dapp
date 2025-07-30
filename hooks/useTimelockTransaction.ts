@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { ethers, ContractReceipt, ContractInterface } from 'ethers';
-import { useAddress, useSigner } from '@thirdweb-dev/react';
+import { useActiveAccount } from 'thirdweb/react';
+
 import { toast } from 'sonner';
 
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
@@ -23,17 +24,16 @@ interface SendTransactionParams {
 }
 
 export const useTimelockTransaction = () => {
-  const accountAddress = useAddress();
-  const signer = useSigner();
+  const { address: accountAddress, sendTransaction: sendTx } = useActiveAccount()!;
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const sendTransaction = async ({ timelockAddress, toAddress,calldata,value }:any)  => {
+  const sendTransaction = async ({ timelockAddress, toAddress,calldata,value = 0 }:any)  => {
 
     alert(`Sending transaction to ${timelockAddress} with calldata: ${calldata}`);
 
-    if (!accountAddress || !signer) {
+    if (!accountAddress) {
       const err = new Error("Please connect your wallet first.");
       toast.error(err.message);
       throw err;
@@ -45,13 +45,13 @@ export const useTimelockTransaction = () => {
     try {
       toast.info("Sending transaction... Please confirm in your wallet.");
 
-      const tx = await signer.sendTransaction({
+      const tx = await sendTx({
         to: timelockAddress,
         data: calldata,
-        value: value ? ethers.BigNumber.from(value) : undefined,
+        value: ethers.BigNumber.from(value),
       });
 
-      const hash = tx.hash;
+      const hash = tx.transactionHash;
 
       toast.loading("Transaction sent. Waiting for confirmation...", {
         id: hash,

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ethers, ContractReceipt } from 'ethers';
 import type { ContractInterface } from 'ethers';
-import { useAddress, useSigner } from '@thirdweb-dev/react';
+import { useActiveAccount } from 'thirdweb/react'; 
 import { toast } from 'sonner';
 
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
@@ -33,8 +33,8 @@ interface DeployOpenZeppelinParams {
 }
 
 export const useDeployTimelock = () => {
-  const accountAddress = useAddress();
-  const signer = useSigner();
+  const { address: accountAddress } = useActiveAccount() || {};
+  const signer = useActiveAccount();
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

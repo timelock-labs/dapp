@@ -3,18 +3,19 @@
 import React, { useEffect } from 'react';
 import Logo from '@/components/layout/Logo';
 import { ConnectWallet } from '@/components/wallet/connect-wallet';
-import { useConnectionStatus, useAddress, useSigner } from '@thirdweb-dev/react';
+import { useActiveWalletConnectionStatus, useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 
 const TimeLockerSplitPage = () => {
-  const address = useAddress();
-  const connectionStatus = useConnectionStatus();
+  const { address, signMessage } = useActiveAccount() || {};
+  const { id: chainId } = useActiveWalletChain() || {};
+
+  const connectionStatus = useActiveWalletConnectionStatus();
+  console.log('TimeLockerSplitPage: connectionStatus =', connectionStatus);
   const isConnected = connectionStatus === "connected";
-  const signer = useSigner();
   const { data: apiResponse, request: walletConnect, error } = useApi();
-  // const { signMessageAsync } = useSignMessage();
   const login = useAuthStore((state) => state.login);
   const router = useRouter();
 
@@ -22,18 +23,16 @@ const TimeLockerSplitPage = () => {
     console.log('TimeLockerSplitPage: useEffect triggered');
     console.log('TimeLockerSplitPage: isConnected =', isConnected);
     console.log('TimeLockerSplitPage: address =', address);
-    console.log('TimeLockerSplitPage: signer =', signer);
     handleUserSignature();
-  }, [isConnected, address, JSON.stringify(signer)]);
+  }, [isConnected, address]);
 
   const handleUserSignature = async () => {
-    if (isConnected && address && signer) {
+    if (isConnected && address) {
       const message = 'welcome to TimeLocker!';
       try {
-        const signature = await signer.signMessage(message);
+        const signature = await signMessage({ message: message, chainId: chainId });
         console.log('Message:', message);
         console.log('Signature:', signature);
-        const chainId = await signer.getChainId();  
         await walletConnect('/api/v1/auth/wallet-connect', {
           method: 'POST',
           body: {
