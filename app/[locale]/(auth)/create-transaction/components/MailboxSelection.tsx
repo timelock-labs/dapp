@@ -36,43 +36,43 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
   };
 
   return (
-    // Use a grid layout for left (header) and right (checkbox) sections
-    <div className="bg-white py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start border-b border-gray-300">
-      {/* Left Column: Section Header */}
-      <div className="lg:col-span-1 lg:sticky lg:top-4">
-        <SectionHeader
-          title={t('mailbox.title')}
-          description={t('mailbox.description')}
-        />
+    // Change to vertical (top-bottom) layout
+    <div className="bg-white py-6 flex flex-col gap-8 items-start">
+      {/* Top: Section Header */}
+      <div>
+      <SectionHeader
+        title={t('mailbox.title')}
+        description={t('mailbox.description')}
+      />
       </div>
 
-      {/* Right Column: Checkbox Options */}
-      <div className="lg:col-span-1">
-        <div className="space-y-3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('mailbox.selectLabel')}
+      {/* Bottom: Checkbox Options */}
+      <div>
+      <div className="space-y-3">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+        {t('mailbox.selectLabel')}
+        </label>
+        <div className="flex flex-wrap gap-2">
+        {mailboxOptions.map((option) => (
+          <div
+          key={option.id}
+          className="flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8"
+          >
+          <Checkbox
+            id={String(option.id)}
+            checked={selectedMailbox.includes(option.email)}
+            onCheckedChange={(checked) => handleCheckboxChange(option.email, checked as boolean)}
+          />
+          <label
+            htmlFor={String(option.id)}
+            className="text-sm text-gray-700 cursor-pointer flex-1"
+          >
+            {option.email_remark || option.email}
           </label>
-          <div className="flex flex-wrap gap-2">
-            {mailboxOptions.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8"
-              >
-                <Checkbox
-                  id={String(option.id)}
-                  checked={selectedMailbox.includes(option.email)}
-                  onCheckedChange={(checked) => handleCheckboxChange(option.email, checked as boolean)}
-                />
-                <label
-                  htmlFor={String(option.id)}
-                  className="text-sm text-gray-700 cursor-pointer flex-1"
-                >
-                  {option.email_remark || option.email}
-                </label>
-              </div>
-            ))}
           </div>
+        ))}
         </div>
+      </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const EncodingPreview: React.FC<EncodingPreviewProps> = ({ previewContent }) => 
 
   return (
     // Use a flex column layout for top (header) and bottom (content) sections
-    <div className="bg-white py-6 flex flex-col gap-8 h-full">
+    <div className="bg-white py-6 flex flex-col gap-8">
       {/* Top: Section Header */}
       <div>
         <SectionHeader

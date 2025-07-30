@@ -152,28 +152,29 @@ const TransactionEncoderPage: React.FC = () => {
             <div className="min-h-screen bg-withe p-8">
                 <div className="mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
-                    <div className='flex  space-y-4 border-b border-gray-300 justify-between pb-4'>
-                        <EncodingTransactionForm
-                            timelockType={timelockType} onTimelockTypeChange={setTimelockType}
-                            timelockMethod={timelockMethod} onTimelockMethodChange={setTimelockMethod}
-                            onTimelockAddressChange={setTimelockAddress}
-                            target={target} onTargetChange={setTarget}
-                            value={value} onValueChange={setValue}
-                            abiValue={abiValue} onAbiChange={handleAbiChange}
-                            functionValue={functionValue} onFunctionChange={handleFunctionChange}
-                            timeValue={timeValue} onTimeChange={setTimeValue}
-                            argumentValues={argumentValues} onArgumentChange={handleArgumentChange}
-                            description={description} onDescriptionChange={setDescription}
-                        />
-                        <EncodingPreview previewContent={previewContent} />
+                    <div className='flex border-b border-gray-300 justify-between'>
+                        <div className='w-1/2 w-max-[550px]'>
+                            <EncodingTransactionForm
+                                timelockType={timelockType} onTimelockTypeChange={setTimelockType}
+                                timelockMethod={timelockMethod} onTimelockMethodChange={setTimelockMethod}
+                                onTimelockAddressChange={setTimelockAddress}
+                                target={target} onTargetChange={setTarget}
+                                value={value} onValueChange={setValue}
+                                abiValue={abiValue} onAbiChange={handleAbiChange}
+                                functionValue={functionValue} onFunctionChange={handleFunctionChange}
+                                timeValue={timeValue} onTimeChange={setTimeValue}
+                                argumentValues={argumentValues} onArgumentChange={handleArgumentChange}
+                                description={description} onDescriptionChange={setDescription}
+                            />
+                        </div>
+                        <div className='flex flex-col gap-4 width-1/2'>
+                            <EncodingPreview previewContent={previewContent} />
+                            <MailboxSelection
+                                selectedMailbox={selectedMailbox}
+                                onMailboxChange={setSelectedMailbox}
+                            />
+                        </div>
                     </div>
-
-
-                    <MailboxSelection
-                        selectedMailbox={selectedMailbox}
-                        onMailboxChange={setSelectedMailbox}
-                    />
-
                     {/* Submit button container */}
                     <div className="mt-auto flex justify-end">
                         <button
