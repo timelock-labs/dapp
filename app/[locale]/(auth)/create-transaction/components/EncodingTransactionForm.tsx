@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useMemo, useState,useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
-import { useChainId,useSwitchChain } from '@thirdweb-dev/react';
+import { useChainId, useSwitchChain } from '@thirdweb-dev/react';
 
 interface EncodingTransactionFormProps {
   timelockType: string;
@@ -119,7 +119,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
         try {
 
-        const timelocks =  await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+          const timelocks = await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -130,7 +130,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           // setCurrentTimelockDetails(timelocks.data);
 
           setCurrentTimelockDetails({
-            chain_id:97
+            chain_id: 97
           });
 
           alert(`Fetched Timelock Details: ${JSON.stringify(timelocks)}`);
@@ -151,12 +151,12 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   }, [timelockDetailResponse, onTimelockDetailsChange]);
 
   useEffect(() => {
-    if(currentTimelockDetails?.chain_id) handleTimelockMethodChange()
+    if (currentTimelockDetails?.chain_id) handleTimelockMethodChange()
   }, [JSON.stringify(currentTimelockDetails)]);
 
   const handleTimelockMethodChange = () => {
 
-    if(currentTimelockDetails.chain_id !== chainId) {
+    if (currentTimelockDetails.chain_id !== chainId) {
       switchChain(parseInt(currentTimelockDetails.chain_id))
         .then(() => {
           console.log('Switched to chain:', currentTimelockDetails.chain_id);
@@ -203,6 +203,17 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     return [];
   }, [timelockType, allTimelocks]);
 
+  useEffect(() => {
+    if (
+      currentTimelockDetails?.chain_id &&
+      parseInt(currentTimelockDetails.chain_id as string) !== chainId
+    ) {
+      handleTimelockChange('');
+      handleTimelockMethodChange();
+    }
+  }, [currentTimelockDetails, chainId]);
+
+
   return (
     <div className="bg-white py-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start border-b border-gray-300">
       <div className="lg:col-span-1 lg:sticky lg:top-4">
@@ -212,7 +223,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
         />
       </div>
-      {JSON.stringify(currentTimelockDetails) }
+      {JSON.stringify(currentTimelockDetails)}
 
       <div className="lg:col-span-1 flex flex-col space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
