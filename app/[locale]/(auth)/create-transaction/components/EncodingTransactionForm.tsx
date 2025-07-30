@@ -252,12 +252,12 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         placeholder="Value"
         error={validationErrors.value}
       />
-      <TextInput
+      {/* <TextInput
         label={t('encodingTransaction.formDescription')}
         value={description}
         onChange={onDescriptionChange}
         placeholder={t('encodingTransaction.descriptionPlaceholder')}
-      />
+      /> */}
 
       <TargetABISection
         abiValue={abiValue}
