@@ -107,11 +107,13 @@ const TransactionEncoderPage: React.FC = () => {
         try {
             setIsSubmitting(true);
 
+
+
             const txResult = await sendTransaction({
                 timelockAddress,
-                timelockStandard,
-                functionName: functionValue,
-                args: argumentValues,
+                toAddress: target,
+                calldata: "0x",
+                value: value || '0', // Default to '0' if not specified
             });
 
             // Prepare transaction data
