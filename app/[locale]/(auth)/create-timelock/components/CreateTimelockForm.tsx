@@ -41,6 +41,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   const chainOptions = chains.map(chain => ({
     value: chain.chain_id.toString(),
     label: chain.display_name,
+    logo: chain.logo_url || '/default-chain-logo.png', // Fallback logo
   }));
 
   return (
@@ -58,6 +59,7 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
             value={selectedChain}
             onChange={onChainChange}
             options={chainOptions}
+            logo={chainOptions.find(option => option.value === selectedChain.toString())?.logo}
             placeholder="选择所在链"
           />
         </div>
