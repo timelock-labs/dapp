@@ -71,15 +71,16 @@ const TransactionEncoderPage: React.FC = () => {
                 ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || 'N/A'}`).join('\n')
                 : 'No arguments';
 
-            return `chain: ${chainName}
- wallet: ${address || 'Not connected'}
- timelock: ${timelockAddress || 'Not selected'}
- target: ${target || 'Not specified'}
- value: ${value || '0'}
- calldata: ${abiValue || 'Not generated'}
- time: ${timeValue || 'Not specified'}
- Function: ${functionValue || 'Not selected'}
- ${argsDisplay}`;
+            
+ return `chain: ${chainName}
+wallet: ${address || 'Not connected'}
+timelock: ${timelockAddress || 'Not selected'}
+target: ${target || 'Not specified'}
+value: ${value || '0'}
+calldata: ${abiValue || 'Not generated'}
+time: ${timeValue || 'Not specified'}
+Function: ${functionValue || 'Not selected'}
+${argsDisplay}`;
         };
         setPreviewContent(generatePreview());
     }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks]);
