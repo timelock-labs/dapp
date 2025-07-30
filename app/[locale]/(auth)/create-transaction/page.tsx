@@ -150,9 +150,9 @@ const TransactionEncoderPage: React.FC = () => {
     return (
         <PageLayout title={t('title')}>
             <div className="min-h-screen bg-withe p-8">
-                <div className="mx-auto flex flex-col space-y-8"> {/* Main vertical stack of major blocks */}
+                <div className="mx-auto flex flex-col"> {/* Main vertical stack of major blocks */}
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
-                    <div className='flex border-b border-gray-300 justify-between'>
+                    <div className='flex justify-between'>
                         <div className='w-1/2 w-max-[550px]'>
                             <EncodingTransactionForm
                                 timelockType={timelockType} onTimelockTypeChange={setTimelockType}
@@ -173,19 +173,20 @@ const TransactionEncoderPage: React.FC = () => {
                                 selectedMailbox={selectedMailbox}
                                 onMailboxChange={setSelectedMailbox}
                             />
+                            <div className="mt-auto flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={handleSendTransaction}
+                                    disabled={isSubmitting}
+                                    className="text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4"
+                                >
+                                    {isSubmitting ? t('submitting') : t('sendTransactionButton')}
+                                </button>
+                            </div>
                         </div>
                     </div>
                     {/* Submit button container */}
-                    <div className="mt-auto flex justify-end">
-                        <button
-                            type="button"
-                            onClick={handleSendTransaction}
-                            disabled={isSubmitting}
-                            className="text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4"
-                        >
-                            {isSubmitting ? t('submitting') : t('sendTransactionButton')}
-                        </button>
-                    </div>
+
 
                 </div>
             </div>

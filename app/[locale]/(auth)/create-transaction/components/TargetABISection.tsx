@@ -118,7 +118,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({
   };
 
   return (
-    <div className="rounded-md mb-4">
+    <div className="rounded-md">
       <div className="flex items-end space-x-4 mb-4">
         <div className="flex-grow">
           <SelectInput

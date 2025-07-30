@@ -215,7 +215,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 
   return (
-    <div className="bg-white py-6 flex flex-col gap-8 items-start">
+    <div className="bg-white pt-6 flex flex-col gap-8 items-start">
       <SectionHeader
       title={t('encodingTransaction.title')}
       description={t('encodingTransaction.description')}
