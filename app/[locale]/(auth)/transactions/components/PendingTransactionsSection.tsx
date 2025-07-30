@@ -200,7 +200,7 @@ const PendingTransactionsSection: React.FC = () => {
               onClick={() => handleCancel(row.id)}
               className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-100 transition-colors"
             >
-              {t('cancel')}
+            Cancel
             </button>
           )}
           {row.can_execute && (

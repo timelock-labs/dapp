@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown, Network } from 'lucide-react'
 import { useAuthStore } from '@/store/userStore';
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef,useState } from 'react'
 import { useApi } from '@/hooks/useApi';
+import { set } from 'zod';
 
 export function ChainSwitcher() {
   const switchChain = useSwitchChain()
@@ -23,12 +24,20 @@ export function ChainSwitcher() {
   const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
   const hasFetchedChains = useRef(false);
 
+  const [currentChain, setCurrentChain] = useState(() => {
+    if (Array.isArray(chains)) {
+      return chains.find(chain => chain.chain_id === chainId) || undefined;
+    }
+    return undefined;
+  });
+
   // 使用单独的 useEffect 来重置 fetch 状态当 chains 变为非空时
   useEffect(() => {
-    if (chains && chains.length > 0) {
+    if (chainId&&chains && chains.length > 0) {
+      setCurrentChain(chains.find(chain => chain.chain_id === chainId) || undefined);
       hasFetchedChains.current = false; // 允许下次重新获取
     }
-  }, [chains]);
+  }, [chains,chainId]);
 
   useEffect(() => {
     console.log('ChainSwitcher: _hasHydrated =', _hasHydrated);
@@ -41,13 +50,6 @@ export function ChainSwitcher() {
       fetchChains()
     }
   }, [fetchChains, _hasHydrated])
-
-  useEffect(() => {
-    if (switchChainError) {
-      console.error('Error switching chain via API:', switchChainError);
-      // Optionally show a toast or alert to the user
-    }
-  }, [switchChainError]);
 
   useEffect(() => {
     if (switchChainResponse && switchChainResponse.success) {
@@ -67,8 +69,6 @@ export function ChainSwitcher() {
     return <div>Loading chains...</div>; // Or a loading spinner
   }
 
-  const currentChain = Array.isArray(chains) ? chains.find(chain => chain.id === chainId) : undefined
-
   if (!isConnected) {
     return (
       <Button variant="outline" size="sm" disabled>
@@ -84,10 +84,11 @@ export function ChainSwitcher() {
       try {
         await switchChain(newChainId);
       } catch (error: any) {
+        alert(`Switching chain failed: ${error.message}`);
         // If the chain is not configured, try to add it
         if (error?.name?.includes('ChainNotConfigured')) {
           const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;
-                      
+
           if (chainToAdd && typeof window !== 'undefined' && (window as any).ethereum) {
             try {
               await (window as any).ethereum.request({
@@ -122,20 +123,6 @@ export function ChainSwitcher() {
         }
       }
 
-      // 2. Sign a message
-      // const message = `Switching to chain ${newChainId}`;
-      // const signature = await signer?.signMessage(message);
-
-      // 3. Call backend API using the request function from useApi
-      // switchChainRequest('/api/v1/auth/switch-chain', {
-      //   method: 'POST',
-      //   body: {
-      //     chain_id: newChainId,
-      //     message,
-      //     signature,
-      //   },
-      // });
-
     } catch (error) {
       console.error('Failed to switch chain or sign message:', error);
       // Handle user rejecting signature or other errors
@@ -148,7 +135,7 @@ export function ChainSwitcher() {
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
           <span className="mr-1">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
           <span className="hidden sm:inline">
-            {currentChain?.display_name || 'Unsupport Chain'}{JSON.stringify(currentChain)}
+            {currentChain?.display_name || 'Unsupport Chain'}
           </span>
           <ChevronDown className="ml-2 h-3 w-3" />
         </Button>

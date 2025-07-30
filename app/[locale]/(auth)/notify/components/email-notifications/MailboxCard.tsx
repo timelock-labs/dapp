@@ -56,10 +56,10 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
         </button>
         <DeleteButton
           onDelete={handleDeleteClick}
-          title={t('deleteConfirmTitle')}
-          description={t('deleteConfirmDescription')}
+          title="Are you sure you want to delete?"
+          // description={t('deleteConfirmDescription')}
           confirmText={t('delete')}
-          cancelText={t('cancel')}
+          cancelText={"Cancel"}
           variant="default"
           size="md"
           className="w-[85px] h-[32px] border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 transition-colors flex items-center justify-center"

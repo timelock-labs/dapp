@@ -257,7 +257,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           onSendCode={handleSendCode}
           onCodeChange={handleVerificationCodeChange}
           codeLength={6}
-          buttonText={!isEmailNotificationCreated ? t('addAndSendCode') : t('resendCode')}
+          buttonText={!isEmailNotificationCreated ? "Send Verify Code" : "Send"}
           disabledText={!isEmailNotificationCreated ? t('adding') : t('resending')}
           isFirstTime={!isEmailNotificationCreated}
         />
@@ -288,7 +288,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             onClick={handleCancel}
             className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
           >
-            {t('cancel')}
+            cancel
           </button>
           <button
             type="button"

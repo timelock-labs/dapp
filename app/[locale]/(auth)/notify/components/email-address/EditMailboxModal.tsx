@@ -183,14 +183,14 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
             onClick={handleCancel}
             className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
           >
-            {t('cancel')}
+            Cancel
           </button>
           <button
             type="button"
             onClick={handleSave}
             className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
           >
-            {t('save')}
+            Save
           </button>
         </div>
       </div>

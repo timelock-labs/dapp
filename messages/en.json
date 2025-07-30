@@ -202,9 +202,9 @@
       "noTimelocks": "No timelock contracts available. Please add some timelock contracts first."
     },
     "addMailbox": {
-      "title": "Add Email Address",
+      "title": "Add Email",
       "description": "Enter your email address to receive timelock notifications.",
-      "emailAddress": "Email Address",
+      "emailAddress": "Email",
       "emailPlaceholder": "Enter your email address",
       "emailRemark": "Email Remark",
       "remarkPlaceholder": "Enter email remark",

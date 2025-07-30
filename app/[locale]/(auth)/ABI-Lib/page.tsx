@@ -220,7 +220,7 @@ ${viewAbiResponse.data.abi_content}`);
         </div>
       ),
     },
-    { key: "owner", header: t("addressUser") },
+    // { key: "owner", header: t("addressUser") },
     {
       key: "created_at",
       header: t("addedTime"),
@@ -294,6 +294,7 @@ ${viewAbiResponse.data.abi_content}`);
             data={abis}
             showPagination={false} // Image does not show pagination for this table
             itemsPerPage={5} // Max 5 items visible in image
+            
           />
         </div>
       </div>
