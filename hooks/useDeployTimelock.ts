@@ -10,6 +10,7 @@ import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock';
 import { openzeppelinTimelockAbi } from '@/contracts/abis/OpenZeppelinTimelock';
 import { openzeppelinTimelockBytecode } from '@/contracts/bytecodes/OpenZeppelinTimelock';
+// Ensure the import path and exported variable name are correct and match your file structure.
 
 type Address = string;
 type Hash = string;
@@ -42,17 +43,6 @@ export const useDeployTimelock = () => {
     if (!accountAddress || !signer) {
       const err = new Error("Please connect your wallet first.");
       toast.error(err.message);
-      throw err;
-    }
-
-    // 验证 bytecode
-    if (!bytecode || bytecode === "0x..." || bytecode.length < 10) {
-      const err = new Error("Contract bytecode is not configured. This appears to be a development environment. Please configure the actual contract bytecode before deployment.");
-      toast.error(err.message);
-      console.error("Bytecode validation failed:", { 
-        bytecode: bytecode?.substring(0, 20) + "...", 
-        length: bytecode?.length 
-      });
       throw err;
     }
 
@@ -134,11 +124,14 @@ export const useDeployTimelock = () => {
   const deployCompoundTimelock = async ({ admin, minDelay }: DeployCompoundParams) => {
     return deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [admin, BigInt(minDelay)]);
   };
-
   const deployOpenZeppelinTimelock = async ({ minDelay, proposers, executors, admin }: DeployOpenZeppelinParams) => {
-    // For OpenZeppelin, if admin is provided as zero address, we pass an empty array for the admin parameter
-    const adminAddress = admin === '0x0000000000000000000000000000000000000000' ? [] : [admin];
-    return deployContract(openzeppelinTimelockAbi as ContractInterface, openzeppelinTimelockBytecode, [BigInt(minDelay), proposers, executors, adminAddress]);
+    // OpenZeppelin TimelockController expects (minDelay, proposers, executors)
+    // Remove admin from the constructor arguments if not required by your contract
+    return deployContract(
+      openzeppelinTimelockAbi as ContractInterface,
+      openzeppelinTimelockBytecode,
+      [BigInt(minDelay), proposers, executors]
+    );
   };
 
   return {
