@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState,useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi';
 import QuestionIcon from '@/public/QuestionIcon.svg';
+import { useChainId,useSwitchChain } from '@thirdweb-dev/react';
 
 interface EncodingTransactionFormProps {
   timelockType: string;
@@ -59,6 +60,10 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
+  const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
+
+  const chainId = useChainId();
+  const switchChain = useSwitchChain();
 
   const validateTarget = (target: string) => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(target)) {
@@ -100,9 +105,11 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   }, [allTimelocks]);
 
   const handleTimelockChange = async (value: string) => {
+
+
     onTimelockTypeChange(value);
     const selectedTimelock = timelockOptions.find(option => option.value === value);
-
+    alert(`Selected Timelock: ${JSON.stringify(selectedTimelock)}`);
     if (selectedTimelock) {
       onTimelockAddressChange(selectedTimelock.address);
 
@@ -111,13 +118,23 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         setIsLoadingDetails(true);
 
         try {
-          await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+
+        const timelocks =  await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${accessToken}`,
               'Content-Type': 'application/json',
             },
           });
+
+          // setCurrentTimelockDetails(timelocks.data);
+
+          setCurrentTimelockDetails({
+            chain_id:97
+          });
+
+          alert(`Fetched Timelock Details: ${JSON.stringify(timelocks)}`);
+
         } catch (error) {
           console.error('Failed to fetch timelock details:', error);
         } finally {
@@ -127,13 +144,31 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
       onTimelockDetailsChange(timelockDetailResponse.data);
     }
   }, [timelockDetailResponse, onTimelockDetailsChange]);
 
-  const timelockMethodOptions = React.useMemo(() => {
+  useEffect(() => {
+    if(currentTimelockDetails?.chain_id) handleTimelockMethodChange()
+  }, [JSON.stringify(currentTimelockDetails)]);
+
+  const handleTimelockMethodChange = () => {
+
+    if(currentTimelockDetails.chain_id !== chainId) {
+      switchChain(parseInt(currentTimelockDetails.chain_id))
+        .then(() => {
+          console.log('Switched to chain:', currentTimelockDetails.chain_id);
+        })
+        .catch(error => {
+          console.error('Failed to switch chain:', error);
+        });
+    }
+
+  }
+
+  const timelockMethodOptions = useMemo(() => {
     if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
       return [];
     }
@@ -177,6 +212,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />}
         />
       </div>
+      {JSON.stringify(currentTimelockDetails) }
 
       <div className="lg:col-span-1 flex flex-col space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -187,6 +223,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
             options={timelockOptions}
             placeholder={isLoadingDetails ? 'Loading timelock details...' : (allTimelocks.length === 0 ? 'No timelocks available' : 'Select Timelock')}
           />
+
           <SelectInput
             label={t('encodingTransaction.selectTimelockMethod')}
             value={timelockMethod}
