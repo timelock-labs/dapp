@@ -149,7 +149,7 @@ const TransactionEncoderPage: React.FC = () => {
 
     return (
         <PageLayout title={t('title')}>
-            <div className="min-h-screen bg-withe p-8">
+            <div className="min-h-screen bg-withe">
                 <div className="mx-auto flex flex-col"> {/* Main vertical stack of major blocks */}
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
                     <div className='flex justify-between'>
