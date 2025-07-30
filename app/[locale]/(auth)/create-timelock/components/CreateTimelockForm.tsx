@@ -56,8 +56,8 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         <div className="md:col-start-2 min-w-[548px]">
           <SelectInput
             label="选择所在链"
-            value={selectedChain}
-            onChange={onChainChange}
+            value={selectedChain.toString()}
+            onChange={(value) => onChainChange(parseInt(value))}
             options={chainOptions}
             logo={chainOptions.find(option => option.value === selectedChain.toString())?.logo}
             placeholder="选择所在链"

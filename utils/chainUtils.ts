@@ -1,6 +1,9 @@
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
-
+import { ethereum, sepolia, polygon, polygonMumbai, bsc, 
+  optimism, optimismSepolia,
+  base, baseSepolia,
+  bscTestnet, arbitrum, arbitrumSepolia } from "thirdweb/chains";
 // Chain info interface based on API response
 export interface ChainInfo {
   chain_id: number;
@@ -25,46 +28,30 @@ export interface ChainApiResponse {
   success: boolean;
 }
 
+// Map chain IDs to thirdweb chain objects
+export const CHAIN_ID_TO_CHAIN = {
+  1: ethereum,
+  11155111: sepolia,
+  137: polygon,
+  80001: polygonMumbai,
+  56: bsc,
+  97: bscTestnet,
+  42161: arbitrum,
+  421614: arbitrumSepolia,
+  10: optimism,
+  420: optimismSepolia,
+  8453: base,
+  84532: baseSepolia,
+} as const;
+
 /**
- * Hook for chain-related operations
+ * Get the thirdweb chain object for a given chain ID
+ * @param chainId - The chain ID to look up
+ * @returns The thirdweb chain object or undefined if not supported
  */
-export const useChainUtils = () => {
-  const { request } = useApi();
-  const { accessToken } = useAuthStore();
-
-  const createHeaders = () => ({
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json',
-  });
-
-  /**
-   * Get chain information by chain ID
-   * @param chainId - The chain ID to query
-   * @returns Promise<ChainInfo | null>
-   */
-  const getChainByChainId = async (chainId: number): Promise<ChainInfo | null> => {
-    try {
-      const response = await request(`/api/v1/chain/chainid/${chainId}`, {
-        method: 'GET',
-        headers: createHeaders(),
-      });
-
-      if (response?.success && response.data) {
-        return response.data as ChainInfo;
-      } else {
-        console.error('Failed to fetch chain info:', response?.error?.message);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching chain info:', error);
-      return null;
-    }
-  };
-
-  return {
-    getChainByChainId,
-  };
-};
+export function getChainObject(chainId: number) {
+  return CHAIN_ID_TO_CHAIN[chainId as keyof typeof CHAIN_ID_TO_CHAIN];
+}
 
 /**
  * Utility functions for chain operations (non-hook functions)

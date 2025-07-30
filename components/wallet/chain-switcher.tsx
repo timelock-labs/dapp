@@ -12,6 +12,7 @@ import { ChevronDown, Network } from 'lucide-react'
 import { useAuthStore } from '@/store/userStore';
 import { useEffect, useRef,useState } from 'react'
 import { useApi } from '@/hooks/useApi';
+import { getChainObject } from '@/utils/chainUtils';
 
 export function ChainSwitcher() {
   const switchChain = useSwitchActiveWalletChain()
@@ -79,9 +80,18 @@ export function ChainSwitcher() {
 
   const handleChainSwitch = async (newChainId: number) => {
     try {
+      // Get the thirdweb chain object for the given chain ID
+      const chainObject = getChainObject(newChainId);
+      
+      if (!chainObject) {
+        console.error(`Chain ID ${newChainId} is not supported by thirdweb`);
+        alert(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
+        return;
+      }
+
       // 1. Switch chain in wallet
       try {
-        await switchChain(newChainId);
+        await switchChain(chainObject);
       } catch (error: any) {
         alert(`Switching chain failed: ${error.message}`);
         // If the chain is not configured, try to add it
@@ -107,7 +117,7 @@ export function ChainSwitcher() {
                 ],
               });
               // Try switching again after adding
-              await switchChain(newChainId);
+              await switchChain(chainObject);
             } catch (addError) {
               console.error('Failed to add chain to wallet:', addError);
               return;

@@ -11,6 +11,7 @@ import FirstTimeTimelockIntro from './components/FirstTimeTimelockIntro';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog'; // Import the new dialog component
 import PageLayout from "@/components/layout/PageLayout";
+import { getChainObject } from '@/utils/chainUtils';
 
 
 const CreateTimelockPage: React.FC = () => {
@@ -129,7 +130,7 @@ const CreateTimelockPage: React.FC = () => {
     }
 
     const body: Record<string, unknown> = {
-      chain_id: parseInt(selectedChain),
+      chain_id: selectedChain,
       chain_name: dialogDetails.chainName,
       min_delay: parseInt(minDelay),
       remark: remarkFromDialog || '',
@@ -187,14 +188,23 @@ const CreateTimelockPage: React.FC = () => {
     }
   };
 
-  const handleChainChange = (newChainId: any) => {
+  const handleChainChange = (newChainId: number) => {
     if (!newChainId) {
       toast.error('Please select a network'); 
       return;
     }
     setSelectedChain(newChainId);
 
-    switchChain(parseInt(newChainId))
+    // Get the thirdweb chain object for the given chain ID
+    const chainObject = getChainObject(newChainId);
+    
+    if (!chainObject) {
+      console.error(`Chain ID ${newChainId} is not supported by thirdweb`);
+      toast.error(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
+      return;
+    }
+
+    switchChain(chainObject);
   };
 
   useEffect(() => {

@@ -4,7 +4,10 @@ import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactNode } from 'react'
-import { ethereum, sepolia } from "thirdweb/chains";
+import { ethereum, sepolia, polygon, polygonMumbai, bsc, 
+  optimism, optimismSepolia,
+  base, baseSepolia,
+  bscTestnet, arbitrum, arbitrumSepolia } from "thirdweb/chains";
 
 const client = createThirdwebClient({
   clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "....",
@@ -24,6 +27,16 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       supportedChains={[
         ethereum,
         sepolia,
+        polygon,
+        polygonMumbai,
+        bsc,
+        bscTestnet,
+        optimism,
+        optimismSepolia,
+        base,
+        baseSepolia,
+        arbitrum,
+        arbitrumSepolia,
       ]}
     >
       <QueryClientProvider client={queryClient}>
