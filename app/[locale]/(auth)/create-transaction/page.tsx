@@ -152,7 +152,7 @@ const TransactionEncoderPage: React.FC = () => {
             <div className="min-h-screen bg-withe">
                 <div className="mx-auto flex flex-col"> {/* Main vertical stack of major blocks */}
                     {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
-                    <div className='flex justify-between'>
+                    <div className='flex justify-between gap-32'>
                         <div className='w-1/2 w-max-[550px]'>
                             <EncodingTransactionForm
                                 timelockType={timelockType} onTimelockTypeChange={setTimelockType}
@@ -167,7 +167,7 @@ const TransactionEncoderPage: React.FC = () => {
                                 description={description} onDescriptionChange={setDescription}
                             />
                         </div>
-                        <div className='flex flex-col gap-4 width-1/2'>
+                        <div className='flex flex-col gap-4 w-1/2'>
                             <EncodingPreview previewContent={previewContent} />
                             <MailboxSelection
                                 selectedMailbox={selectedMailbox}
