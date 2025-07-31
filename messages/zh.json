@@ -50,6 +50,113 @@
   "Notify": {
     "title": "Notify"
   },
+  "sidebar": {
+    "logo": "TimeLocker",
+    "nav": {
+      "timelock_contracts": "时间锁合约",
+      "abi_library": "ABI 库",
+      "notifications": "通知",
+      "ecosystem": "生态系统",
+      "home": "首页",
+      "transactions": "交易管理"
+    },
+    "projects": {
+      "title": "项目",
+      "multisig_wallet": "多签钱包",
+      "token_vesting": "代币归属计划",
+      "governance": "治理"
+    }
+  },
+  "home_page": {
+    "how_it_works": {
+      "title": "Timelock 工作原理",
+      "description": "时间锁（Timelock）是一种智能合约机制，它为特定的区块链操作强制执行一个时间延迟。通过设定一个未来的“解锁时间”，它确保了指定操作在该时间到达前无法被执行。该机制通过防止即时、未经授权的变更并提供一个审查期来增强安全性。"
+    },
+    "how_to_use": {
+      "title": "如何使用时间锁协议？",
+      "description": "时间锁协议提供了一整套基于时间锁机制的工具集。您可以在平台上创建新的时间锁合约，或导入现有的兼容合约，以实现对链上资产和操作的安全、延迟管理。"
+    },
+    "whos_using": {
+      "title": "谁在用",
+      "description": "查看当前用户或管理您的方案。"
+    },
+    "feature_cards": {
+      "aave": {
+        "title": "AAVE",
+        "description": "一个去中心化的借贷协议。"
+      },
+      "compound": {
+        "title": "Compound",
+        "description": "一个领先的、允许用户赚取利息的算法货币市场协议。"
+      },
+      "gitcoin": {
+        "title": "Gitcoin",
+        "description": "一个为开源软件开发者提供资金支持的平台。"
+      },
+      "lido": {
+        "title": "Lido",
+        "description": "以太坊的流动性质押解决方案。"
+      },
+      "eigenlayer": {
+        "title": "EigenLayer",
+        "description": "以太坊的再质押协议。"
+      },
+      "ethena": {
+        "title": "Ethena",
+        "description": "一种合成美元协议。"
+      },
+      "uniswap": {
+        "title": "Uniswap",
+        "description": "一个领先的去中心化交易协议。"
+      },
+      "makerdao": {
+        "title": "MakerDAO",
+        "description": "DAI 稳定币背后的去中心化自治组织。"
+      },
+      "morpho": {
+        "title": "Morpho",
+        "description": "一个优化的借贷协议。"
+      },
+      "pendle": {
+        "title": "Pendle",
+        "description": "一个创新的收益率交易协议。"
+      }
+    },
+    "create_protocol_title": "创建协议"
+  },
+  "CreateTimelock": {
+    "selectChain": "选择链",
+    "selectChainPlaceholder": "请选择链",
+    "minDelay": "最小延迟时间（秒）",
+    "minDelayPlaceholder": "请输入最小延迟时间",
+    "proposers": "提议者地址（以逗号分隔）",
+    "proposersPlaceholder": "请输入提议者地址",
+    "executors": "执行者地址（以逗号分隔）",
+    "executorsPlaceholder": "请输入执行者地址",
+    "admin": "管理员地址",
+    "adminPlaceholder": "请输入管理员地址",
+    "deployContract": "部署合约",
+    "deploying": "部署中...",
+    "firstTimeUser": {
+      "title": "第一次使用 Timelock Protocol？",
+      "description": "Timelock Protocol 提供了全套的基于 Timelock 机制的工具，用户可以在平台上创建一个..."
+    },
+    "actions": {
+      "learnMore": "了解更多",
+      "cancel": "取消",
+      "confirm": "确认"
+    },
+    "dialogTitle": "确认添加 Timelock",
+    "remark": "备注",
+    "remarkPlaceholder": "请输入备注",
+    "details": "详情",
+    "confirmAdd": "确认添加",
+    "selectContractStandard": "选择合约标准",
+    "compoundStandardLabel": "Compound 标准 Timelock 合约",
+    "compoundStandardDescription": "适合小型企业入门",
+    "openzeppelinStandardLabel": "OpenZeppelin 标准 Timelock 合约",
+    "openzeppelinStandardDescription": "适合成长型企业的高级功能"
+  },
   "HomePage": {
     "title": "Home",
     "create_new": "创建",
@@ -133,6 +240,8 @@
     "loginLink": "已有账户？登录"
   },
   "common": {
+    "language_switcher": "语言切换"
+  ,
     "connect_wallet": "连接钱包",
     "disconnect": "断开连接",
     "copy_address": "复制地址",

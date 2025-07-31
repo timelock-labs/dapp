@@ -1,53 +1,80 @@
-// components/timelock-creation/CreateTimelockForm.tsx
-import React, { useEffect } from 'react';
-import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
-import SelectInput from '@/components/ui/SelectInput';     // Adjust path
-import TextInput from '@/components/ui/TextInput';         // Adjust path
+import React, { useEffect, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import SectionHeader from '@/components/ui/SectionHeader';
+import SelectInput from '@/components/ui/SelectInput';
+import TextInput from '@/components/ui/TextInput';
 import { Button } from '@/components/ui/button';
-import ContractStandardSelection from './ContractStandardSelection'; // Adjust path
+import ContractStandardSelection from './ContractStandardSelection';
 import { useAuthStore } from '@/store/userStore';
+import type { 
+  CreateTimelockFormProps, 
+  ChainOption,
+  ContractStandard 
+} from './types';
 
+const DEFAULT_CHAIN_LOGO = '/default-chain-logo.png';
 
-interface CreateTimelockFormProps {
-  selectedChain: number;
-  onChainChange: (value: number) => void;
-  selectedStandard: string;
-  onStandardChange: (value: string) => void;
-  minDelay: string;
-  onMinDelayChange: (value: string) => void;
-  proposers: string;
-  onProposersChange: (value: string) => void;
-  executors: string;
-  onExecutorsChange: (value: string) => void;
-  admin: string;
-  onAdminChange: (value: string) => void;
-  onDeploy: () => void;
-  isLoading: boolean;
-}
-
-const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
-  selectedChain, onChainChange, selectedStandard, onStandardChange, minDelay, onMinDelayChange,
-  proposers, onProposersChange, executors, onExecutorsChange, admin, onAdminChange,
-  onDeploy, isLoading
+export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
+  selectedChain,
+  onChainChange,
+  selectedStandard,
+  onStandardChange,
+  minDelay,
+  onMinDelayChange,
+  proposers,
+  onProposersChange,
+  executors,
+  onExecutorsChange,
+  admin,
+  onAdminChange,
+  onDeploy,
+  isLoading
 }) => {
+  const t = useTranslations('CreateTimelock');
   const { chains, fetchChains } = useAuthStore();
 
+  // Fetch chains on mount if not already loaded
   useEffect(() => {
     if (chains.length === 0) {
       fetchChains();
     }
-  }, [chains, fetchChains]);
+  }, [chains.length, fetchChains]);
 
-  const chainOptions = chains.map(chain => ({
-    value: chain.chain_id.toString(),
-    label: chain.display_name,
-    logo: chain.logo_url || '/default-chain-logo.png', // Fallback logo
-  }));
+  // Memoize chain options to prevent unnecessary re-renders
+  const chainOptions = useMemo<ChainOption[]>(
+    () =>
+      chains.map((chain) => ({
+        value: chain.chain_id.toString(),
+        label: chain.display_name,
+        logo: chain.logo_url || DEFAULT_CHAIN_LOGO,
+      })),
+    [chains]
+  );
+
+  // Handle chain selection change
+  const handleChainChange = (value: string) => {
+    onChainChange(Number(value));
+  };
+
+  // Format the selected chain value for the SelectInput
+  const selectedChainValue = selectedChain.toString();
+
+  // Handle text input changes
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    return value;
+  };
+
+  // Handle number input changes
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    return value;
+  };
 
   return (
-    <div className="bg-white p-6 rounded-lg  border-b border-gray-200">
+    <div className="bg-white p-6 rounded-lg border-b border-gray-200">
       <SectionHeader
-        title="创建Timelock"
+        title={t('createTimelock')}
         description="View and update your personal details and account information."
       />
 
@@ -73,47 +100,69 @@ const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         </div>
 
         {/* minDelay Input */}
-        <div className="md:col-start-2 min-w-[548px]"> 
+        <div className="md:col-start-2 min-w-[548px]">
           <TextInput
-            label="minDelay"
+            label={t('minDelay')}
             value={minDelay}
-            onChange={onMinDelayChange}
-            placeholder="操作的初始最小延迟 (秒)"
+            onChange={(e) => onMinDelayChange(handleNumberChange(e))}
+            placeholder={t('minDelayPlaceholder')}
             type="number"
+            min="0"
+            step="1"
           />
         </div>
+
+        {/* OpenZeppelin specific fields */}
         {selectedStandard === 'openzeppelin' && (
           <>
             <div className="md:col-start-2 min-w-[548px]">
               <TextInput
-                label="Proposers"
+                label={t('proposers')}
                 value={proposers}
-                onChange={onProposersChange}
-                placeholder="授予提议者和取消者角色的账户"
+                onChange={(e) => onProposersChange(handleTextChange(e))}
+                placeholder={t('proposersPlaceholder')}
               />
             </div>
+
             <div className="md:col-start-2 min-w-[548px]">
               <TextInput
-                label="Executors"
+                label={t('executors')}
                 value={executors}
-                onChange={onExecutorsChange}
-                placeholder="被授予执行者角色的账户"
+                onChange={(e) => onExecutorsChange(handleTextChange(e))}
+                placeholder={t('executorsPlaceholder')}
               />
             </div>
+
             <div className="md:col-start-2 min-w-[548px]">
               <TextInput
-                label="Admin"
+                label={t('admin')}
                 value={admin}
-                onChange={onAdminChange}
-                placeholder="授予管理员角色的可选帐户；使用零地址禁用"
+                onChange={(e) => onAdminChange(handleTextChange(e))}
+                placeholder={t('adminPlaceholder')}
               />
             </div>
           </>
         )}
       </div>
-      <div className="mt-6 flex justify-end">
-        <Button onClick={onDeploy} disabled={isLoading}>
-          {isLoading ? '部署中...' : '创建Timelock'}
+
+      <div className="mt-8 flex justify-end">
+        <Button
+          onClick={onDeploy}
+          disabled={isLoading}
+          className="w-full sm:w-auto bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label={isLoading ? t('deploying') : t('deployContract')}
+        >
+          {isLoading ? (
+            <span className="flex items-center">
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {t('deploying')}
+            </span>
+          ) : (
+            t('deployContract')
+          )}
         </Button>
       </div>
     </div>

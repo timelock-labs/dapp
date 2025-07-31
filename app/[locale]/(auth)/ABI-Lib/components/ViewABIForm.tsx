@@ -9,13 +9,9 @@ import ABITextarea from "@/components/ui/ABITextarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
-interface AddABIFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  viewAbiContent: any;
-}
+import type { ViewABIFormProps } from "./types";
 
-const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
+const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
   const t = useTranslations("Transactions.AddABIForm");
 
   if (!isOpen) {

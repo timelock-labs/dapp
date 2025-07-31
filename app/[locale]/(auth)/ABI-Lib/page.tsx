@@ -14,22 +14,11 @@ import { formatDate } from "@/lib/utils";
 import ViewABIForm from "./components/ViewABIForm"; // Import the view ABI form component
 
 import StarSVG from "@/components/icons/star"; // Import the star icon
-import DeleteSVG from "@/components/icons/delete"; // Import the delete icon
-import FileSVG from "@/components/icons/file"; // Import the file icon
 import EllipsesSVG from "@/components/icons/ellipses"; // Import the ellipses icon
 import AddSVG from "@/components/icons/add"; // Import the add icon
+import ABIRowDropdown from "./components/ABIRowDropdown";
 
-// Define the interface for a single ABI row based on API response
-interface ABIRow {
-  id: number;
-  name: string;
-  description: string;
-  abi_content: string;
-  owner: string;
-  is_shared: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import type { ABIRow, ABIContent } from "./components/types";
 
 const ABILibPage: React.FC = () => {
   const t = useTranslations("ABI-Lib");
@@ -50,7 +39,7 @@ const ABILibPage: React.FC = () => {
   const { data: viewAbiResponse, request: viewAbi } = useApi();
   const { request: validateAbi } = useApi();
 
-  const [viewAbiContent, setViewAbiContent] = useState<any>("");
+  const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
   const refreshAbiList = useCallback(() => {
     if (accessToken) {
@@ -247,26 +236,13 @@ ${viewAbiResponse.data.abi_content}`);
               >
                 <EllipsesSVG />
               </button>
-              {openDropdownId === row.id && (
-                <div ref={dropdownRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteABI(row)}
-                    className="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2"
-                  >
-                    <DeleteSVG />
-                    <span>{t("delete")}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleViewABI(row)}
-                    className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center space-x-2"
-                  >
-                    <FileSVG />
-                    <span>{t("viewABI")}</span>
-                  </button>
-                </div>
-              )}
+              <ABIRowDropdown
+                isOpen={openDropdownId === row.id}
+                dropdownRef={dropdownRef}
+                onDelete={() => handleDeleteABI(row)}
+                onView={() => handleViewABI(row)}
+                t={t}
+              />
             </div>
           </>
         </div>
@@ -294,7 +270,7 @@ ${viewAbiResponse.data.abi_content}`);
             data={abis}
             showPagination={false} // Image does not show pagination for this table
             itemsPerPage={5} // Max 5 items visible in image
-            
+
           />
         </div>
       </div>
@@ -303,7 +279,7 @@ ${viewAbiResponse.data.abi_content}`);
       <ViewABIForm
         isOpen={isViewABIOpen}
         onClose={() => setIsViewABIOpen(false)}
-        viewAbiContent={viewAbiContent} // Pass the viewAbi
+        viewAbiContent={viewAbiContent as ABIContent} // Safe cast, ensure not null when opening
       />
 
       <ConfirmDialog

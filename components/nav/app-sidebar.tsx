@@ -22,88 +22,91 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import LanguageSwitcher from "../LanguageSwitcher"
+import { useTranslations } from 'next-intl';
 
 // This is sample data.
-const data = {
-  user: {
-    name: "support@timelock.com",
-    email: "support@timelock.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Timelock UI",
-      logo: House,
-      plan: "",
-    },
-  ],
-  navMain: [
-    {
-      title: "Home",
-      url: "home",
-      icon: House,
-      // isActive: true,
-    },
-    {
-      title: "Transactions",
-      url: "transactions",
-      icon: ListTodo,
-    },
-    {
-      title: "Timelocks",
-      url: "timelocks",
-      icon: Clock,
-     
-    },
-    {
-      title: "ABI-Lib",
-      url: "ABI-Lib",
-      icon: FileCode,
-    },
-      {
-      title: "Notify",
-      url: "notify",
-      icon: BellDot,
-    },
-     {
-      title: "Ecosystem",
-      url: "ecosystem",
-      icon: Box,
-    },
-  ],
-  projects: [
-    {
-      name: "Multi-Sig Wallet",
-      url: "#",
-      icon: Shield,
-    },
-    {
-      name: "Token Vesting",
-      url: "#",
-      icon: Clock,
-    },
-    {
-      name: "Governance",
-      url: "#",
-      icon: Frame,
-    },
-  ],
-}
+
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const t = useTranslations();
+  const sidebarData = {
+    navMain: [
+      {
+        title: t('sidebar.nav.home'),
+        url: "home",
+        icon: House,
+      },
+      {
+        title: t('sidebar.nav.transactions'),
+        url: "transactions",
+        icon: ListTodo,
+      },
+      {
+        title: t('sidebar.nav.timelock_contracts'),
+        url: "timelocks",
+        icon: Clock,
+      },
+      {
+        title: t('sidebar.nav.abi_library'),
+        url: "abi-lib",
+        icon: FileCode,
+      },
+      {
+        title: t('sidebar.nav.notifications'),
+        url: "notify",
+        icon: BellDot,
+      },
+      {
+        title: t('sidebar.nav.ecosystem'),
+        url: "ecosystem",
+        icon: Box,
+      },
+    ],
+    projects: [
+      {
+        name: t('sidebar.projects.multisig_wallet'),
+        url: "#",
+        icon: Shield,
+      },
+      {
+        name: t('sidebar.projects.token_vesting'),
+        url: "#",
+        icon: Clock,
+      },
+      {
+        name: t('sidebar.projects.governance'),
+        url: "#",
+        icon: Frame,
+      },
+    ],
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         {/* <Image src={Logo} alt="Timelock Logo" className="h-8 w-[136px]" /> */}
-        <div className="logo-font font-xl font-bold text-xl">TimeLocker</div>
-        {/* <TeamSwitcher teams={data.teams} /> */}
+        <div className="logo-font font-xl font-bold text-xl">{t('sidebar.logo')}</div>
+
+        {/* 如需团队切换功能请取消注释并确保 sidebarData.teams 存在 */}
+{/* <TeamSwitcher teams={sidebarData.teams} /> */}
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={sidebarData.navMain} />
+        {/* 项目区块 */}
+        {/* 如需项目区块请取消注释并确保 NavProjects 组件已导入 */}
+        {/* <NavProjects projects={sidebarData.projects} /> */}
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+      <div className="flex flex-col gap-8 justify-center items-center">
+        <LanguageSwitcher />
+        <SidebarFooter>
+          <NavUser user={{
+  name: "support@timelock.com",
+  email: "support@timelock.com",
+  avatar: "/avatars/shadcn.jpg"
+}} />
+        </SidebarFooter>
+      </div>
       <SidebarRail />
     </Sidebar>
 

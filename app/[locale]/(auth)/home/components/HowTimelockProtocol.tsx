@@ -1,15 +1,17 @@
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
-const HowTimelockWorks: React.FC = () => {
+const HowTimelockProtocol: React.FC = () => {
+  const t = useTranslations('home_page.how_to_use');
   return (
     // Initial state: white background, light border, gray text
     // Hover state (group-hover): black background, white text, blue border (or transparent/dark)
     <div className="p-8 rounded-xl border border-gray-200 group hover:bg-black hover:shadow-lg hover:border-black transition-all duration-300 cursor-pointer">
       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center group-hover:text-white transition-colors duration-300">
-        <span className="text-black mr-2 group-hover:text-white transition-colors duration-300">&gt;</span> 如何使用 Timelock Protocol？
+        <span className="text-black mr-2 group-hover:text-white transition-colors duration-300">&gt;</span> {t('title')}
       </h3>
       <p className="text-gray-600 text-sm mb-6 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
-        Timelock Protocol 提供了全套的基于 Timelock 机制的工具，用户可以在平台上创建一个 Timelock 合约或者导入符合标准的已有 Timelock 合约，即可在平台上实现
+        {t('description')}
       </p>
       <a
         href="https://timelock.gitbook.io/timelock/"
@@ -30,4 +32,4 @@ const HowTimelockWorks: React.FC = () => {
   );
 };
 
-export default HowTimelockWorks;
+export default HowTimelockProtocol;

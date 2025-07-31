@@ -1,38 +1,45 @@
-// components/timelock-creation/ContractStandardSelection.tsx
 import React from 'react';
-import RadioButtonOption from './RadioButtonOption'; // Adjust path
+import { useTranslations } from 'next-intl';
+import RadioButtonOption from './RadioButtonOption';
+import type { ContractStandard, ContractStandardSelectionProps } from './types';
 
-interface ContractStandardSelectionProps {
-  selectedStandard: string;
-  onStandardChange: (standard: string) => void;
-}
+const STANDARD_OPTIONS = [
+  {
+    value: 'compound' as const,
+    labelKey: 'compoundStandardLabel',
+    descriptionKey: 'compoundStandardDescription'
+  },
+  {
+    value: 'openzeppelin' as const,
+    labelKey: 'openzeppelinStandardLabel',
+    descriptionKey: 'openzeppelinStandardDescription'
+  }
+] as const;
 
 const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({
   selectedStandard,
   onStandardChange,
 }) => {
+  const t = useTranslations('CreateTimelock');
+
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">选择合约标准</label>
-      <div className="space-y-4"> {/* Vertical spacing between radio options */}
-        <RadioButtonOption
-          id="compound-standard"
-          name="contractStandard"
-          value="compound"
-          label="该合约为 Compound 标准 Timelock 合约"
-          description="Perfect for small businesses getting started with our platform"
-          checked={selectedStandard === 'compound'}
-          onChange={onStandardChange}
-        />
-        <RadioButtonOption
-          id="openzeppelin-standard"
-          name="contractStandard"
-          value="openzeppelin"
-          label="该合约为 Openzeppelin 标准 Timelock 合约"
-          description="Advanced features for growing businesses with higher demands"
-          checked={selectedStandard === 'openzeppelin'}
-          onChange={onStandardChange}
-        />
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {t('selectContractStandard')}
+      </label>
+      <div className="space-y-4">
+        {STANDARD_OPTIONS.map((option) => (
+          <RadioButtonOption
+            key={option.value}
+            id={`${option.value}-standard`}
+            name="contractStandard"
+            value={option.value}
+            label={t(option.labelKey)}
+            description={t(option.descriptionKey)}
+            checked={selectedStandard === option.value}
+            onChange={() => onStandardChange(option.value as ContractStandard)}
+          />
+        ))}
       </div>
     </div>
   );

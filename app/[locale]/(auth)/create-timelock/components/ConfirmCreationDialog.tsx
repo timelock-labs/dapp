@@ -1,19 +1,8 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react';
 
-// Define interface for the data this dialog will display
-interface ConfirmCreationDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (remark: string) => void; // Pass remark to confirm handler
-  creationDetails: {
-    chainName: string;
-    chainIcon: React.ReactNode;
-    timelockAddress: string;
-    initiatingAddress: string;
-    transactionHash: string;
-  };
-}
+import type { ConfirmCreationDialogProps } from "./types";
+import ParameterDisplayRow from "./ParameterDisplayRow";
 
 const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
   isOpen,
@@ -55,16 +44,6 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
 
   // If dialog is not open, don't render anything
   if (!isOpen) return null;
-
-  // Inline component for read-only display rows
-  const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <div className="bg-gray-100 text-gray-900 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono">
-        {children}
-      </div>
-    </div>
-  );
 
   const dialogTitleId = "confirm-creation-dialog-title"; // Unique ID for the dialog title
 

@@ -14,12 +14,121 @@
     "submitButton": "Sign Up",
     "loginLink": "Already have an account? Login"
   },
+  "sidebar": {
+    "logo": "TimeLocker",
+    "nav": {
+      "timelock_contracts": "Timelock Contracts",
+      "abi_library": "ABI Library",
+      "notifications": "Notifications",
+      "ecosystem": "Ecosystem",
+      "home": "Home",
+      "transactions": "Transactions"
+    },
+    "projects": {
+      "title": "Projects",
+      "multisig_wallet": "Multisignature Wallet",
+      "token_vesting": "Token Vesting Schedule",
+      "governance": "Governance"
+    }
+  },
+  "home_page": {
+    "how_it_works": {
+      "title": "How Timelock Works",
+      "description": "A Timelock is a smart contract mechanism that enforces a time delay on specific blockchain operations. By setting a future 'unlock time,' it ensures that designated actions cannot be executed until that time has passed. This feature enhances security by preventing immediate, unauthorized changes and allowing for a review period."
+    },
+    "how_to_use": {
+      "title": "How to Use the Timelock Protocol",
+      "description": "The Timelock Protocol offers a comprehensive suite of tools built upon the timelock mechanism. You can create a new timelock contract on the platform or import an existing, compatible one to securely manage and delay on-chain assets and operations."
+    },
+    "whos_using": {
+      "title": "Who's Using",
+      "description": "See current users or manage your plan."
+    },
+    "feature_cards": {
+      "aave": {
+        "title": "AAVE",
+        "description": "A decentralized lending and borrowing protocol."
+      },
+      "compound": {
+        "title": "Compound",
+        "description": "A leading algorithmic money market protocol for earning interest."
+      },
+      "gitcoin": {
+        "title": "Gitcoin",
+        "description": "A platform for funding open-source software development."
+      },
+      "lido": {
+        "title": "Lido",
+        "description": "Liquid staking solution for Ethereum."
+      },
+      "eigenlayer": {
+        "title": "EigenLayer",
+        "description": "A restaking protocol for Ethereum."
+      },
+      "ethena": {
+        "title": "Ethena",
+        "description": "A synthetic dollar protocol."
+      },
+      "uniswap": {
+        "title": "Uniswap",
+        "description": "A leading decentralized exchange protocol."
+      },
+      "makerdao": {
+        "title": "MakerDAO",
+        "description": "The decentralized autonomous organization behind the DAI stablecoin."
+      },
+      "morpho": {
+        "title": "Morpho",
+        "description": "An optimized lending and borrowing protocol."
+      },
+      "pendle": {
+        "title": "Pendle",
+        "description": "An innovative yield-trading protocol."
+      }
+    },
+    "create_protocol_title": "Create Protocol"
+  },
+  "CreateTimelock": {
+    "selectChain": "Select Chain",
+    "selectChainPlaceholder": "Please select a chain",
+    "minDelay": "Minimum Delay (seconds)",
+    "minDelayPlaceholder": "Enter minimum delay",
+    "proposers": "Proposer Addresses",
+    "proposersPlaceholder": "Enter proposer addresses",
+    "executors": "Executor Addresses",
+    "executorsPlaceholder": "Enter executor addresses",
+    "admin": "Admin Address",
+    "adminPlaceholder": "Enter admin address",
+    "deployContract": "Deploy Contract",
+    "deploying": "Deploying...",
+    "firstTimeUser": {
+      "title": "First time using Timelock Protocol?",
+      "description": "Timelock Protocol provides a full suite of timelock-based tools. You can create a timelock contract on the platform..."
+    },
+    "actions": {
+      "learnMore": "Learn more",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "dialogTitle": "Confirm Add Timelock",
+    "remark": "Remark",
+    "remarkPlaceholder": "Enter remark",
+    "details": "Details",
+    "confirmAdd": "Confirm Add",
+    "selectContractStandard": "Select Contract Standard",
+    "compoundStandardLabel": "Compound Standard Timelock Contract",
+    "compoundStandardDescription": "Suitable for small business entry",
+    "openzeppelinStandardLabel": "OpenZeppelin Standard Timelock Contract",
+    "openzeppelinStandardDescription": "Advanced features for growing businesses"
+  },
   "HomePage": {
     "title": "Home",
     "create_new": "Create new",
     "create_new_contract": "Create New Contract"
   },
   "common": {
+    "language_switcher": "Language Switcher",
+
     "connect_wallet": "Connect Wallet",
     "disconnect": "Disconnect",
     "copy_address": "Copy Address",

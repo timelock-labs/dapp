@@ -1,12 +1,15 @@
 import React from 'react';
 
-interface TextInputProps {
+type InputHTMLAttributes = React.InputHTMLAttributes<HTMLInputElement>;
+
+type OnChangeType = 
+  | ((value: string) => void)
+  | ((event: React.ChangeEvent<HTMLInputElement>) => void);
+
+interface TextInputProps extends Omit<InputHTMLAttributes, 'onChange' | 'value'> {
   label: string;
   value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  type?: string;
-  disabled?: boolean;
+  onChange: OnChangeType;
   error?: string | null;
 }
 
@@ -18,6 +21,8 @@ const TextInput: React.FC<TextInputProps> = ({
   type = 'text',
   disabled = false,
   error = null,
+  className = '',
+  ...rest
 }) => {
   return (
     <div className="mb-4">
@@ -28,11 +33,20 @@ const TextInput: React.FC<TextInputProps> = ({
           error ? 'border-red-500' : 'border-gray-300'
         } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 ${
           disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-        }`}
+        } ${className}`}
         placeholder={placeholder || label}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          if (onChange.length === 1) {
+            // Handle direct string handler
+            (onChange as (value: string) => void)(e.target.value);
+          } else {
+            // Handle event handler
+            (onChange as (e: React.ChangeEvent<HTMLInputElement>) => void)(e);
+          }
+        }}
         disabled={disabled}
+        {...rest}
       />
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
