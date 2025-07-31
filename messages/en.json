@@ -17,7 +17,7 @@
   "sidebar": {
     "logo": "TimeLocker",
     "nav": {
-      "timelock_contracts": "Timelock Contracts",
+      "timelock_contracts": "Timelock",
       "abi_library": "ABI Library",
       "notifications": "Notifications",
       "ecosystem": "Ecosystem",

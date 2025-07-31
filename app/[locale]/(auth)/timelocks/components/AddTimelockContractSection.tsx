@@ -4,6 +4,8 @@ import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
 import TimelockOptionCard from './TimelockOptionCard'; // Assuming TimelockOptionCard is in components/
 import { useRouter, useParams } from 'next/navigation';
+import create_bg_img from '../images/create_bg.png'; // Adjust the path as necessary
+import import_bg_img from '../images/import_bg.png'; // Adjust the path as necessary
 
 const AddTimelockContractSection: React.FC = () => {
   const router = useRouter();
@@ -35,6 +37,7 @@ const AddTimelockContractSection: React.FC = () => {
             description="This is a card description."
             bgColor="bg-black"
             textColor="text-white"
+            bgImage={create_bg_img.src} // Background image for the black card
             onClick={handleCreateContract}
           />
 
@@ -45,6 +48,7 @@ const AddTimelockContractSection: React.FC = () => {
             bgColor="bg-white"
             textColor="text-gray-900"
             borderColor="border-gray-200" // Explicit border for visibility on white background
+            bgImage={import_bg_img.src} // Background image for the white card
             onClick={handleImportContract}
           />
         </div>
