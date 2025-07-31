@@ -22,7 +22,7 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[558px] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>View ABI Details</DialogTitle>
+          <DialogTitle>{t("view_details")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4 overflow-hidden">
           <div className="space-y-2">
@@ -34,7 +34,7 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
             <Textarea defaultValue={viewAbiContent.description} />
           </div>
           <div className="space-y-2">
-            <Label>Interface Details</Label>
+            <Label>{t("interface_details")}</Label>
             <Textarea className="h-[300px]" defaultValue={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
           </div>
         </div>

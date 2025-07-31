@@ -97,6 +97,7 @@
   },
   "CreateTimelock": {
     "createTimelock": "Create Timelock",
+     "createTimelockDescription": "Select the appropriate standard to create your Timelock.",
     "selectChain": "Select Chain",
     "selectChainPlaceholder": "Please select a chain",
     "minDelay": "Minimum Delay (seconds)",
@@ -288,7 +289,11 @@
     "cancelSuccess": "Transaction cancelled successfully.",
     "cancelError": "Failed to cancel transaction.",
     "executeSuccess": "Transaction executed successfully.",
-    "executeError": "Failed to execute transaction."
+    "executeError": "Failed to execute transaction.",
+        "AddABIForm":{
+      "view_details":"View Details",
+      "interface_details":"Interface Details"
+    }
   },
   "Notify": {
     "title": "Email Notifications",

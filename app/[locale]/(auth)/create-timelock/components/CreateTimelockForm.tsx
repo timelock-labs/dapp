@@ -75,19 +75,19 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
     <div className="bg-white p-6 rounded-lg border-b border-gray-200">
       <SectionHeader
         title={t('createTimelock')}
-        description="View and update your personal details and account information."
+        description={t("createTimelockDescription")}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6">
         {/* Select Chain */}
         <div className="md:col-start-2 min-w-[548px]">
           <SelectInput
-            label="选择所在链"
+            label={t("selectChain")}
             value={selectedChain.toString()}
             onChange={(value) => onChainChange(parseInt(value))}
             options={chainOptions}
             logo={chainOptions.find(option => option.value === selectedChain.toString())?.logo}
-            placeholder="选择所在链"
+            placeholder={t("selectChainPlaceholder")}
           />
         </div>
 
