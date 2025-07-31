@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { openzeppelinTimelockAbi } from '@/contracts/abis/OpenZeppelinTimelock';
 
+import { useWeb3React } from './useWeb3React';
 type Address = string;
 type Hash = string;
 
@@ -24,12 +25,14 @@ interface SendTransactionParams {
 }
 
 export const useTimelockTransaction = () => {
-  const { address: accountAddress, sendTransaction: sendTx } = useActiveAccount()!;
+  // const { address: accountAddress, sendTransaction: sendTx } = useActiveAccount()!;
+  const { account: accountAddress, sendTransaction: sendTx } = useWeb3React();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const sendTransaction = async ({ timelockAddress, toAddress,calldata,value = 0 }:any)  => {
+
 
     alert(`Sending transaction to ${timelockAddress} with calldata: ${calldata}`);
 
@@ -44,6 +47,7 @@ export const useTimelockTransaction = () => {
 
     try {
       toast.info("Sending transaction... Please confirm in your wallet.");
+      
 
       const tx = await sendTx({
         to: timelockAddress,

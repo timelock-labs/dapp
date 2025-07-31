@@ -33,6 +33,15 @@ export function useWeb3React(): {
     originalMessage?: string | undefined;
     chainId?: number | undefined;
   }) => Promise<`0x${string}`>;
+  sendTransaction: ({
+    to,
+    data,
+    value,
+  }: {
+    to: string;
+    data?: string | undefined;
+    value?: string | number | bigint | undefined;
+  }) => Promise<any>;
 } {
   const client = createThirdwebClient({
     clientId: "0e1974955be2e739c2b5fc550a3f6c0d",
@@ -77,6 +86,33 @@ export function useWeb3React(): {
       throw new Error("No account");
     };
 
+    const sendTransaction = activeAccount
+      ? async ({
+          to,
+          data,
+          value,
+        }: {
+          to: string;
+          data?: string | undefined;
+          value?: string | number | bigint | undefined;
+        }) => {
+          // Ensure data is a hex string if provided
+          let hexData: `0x${string}` | undefined = undefined;
+          if (data !== undefined) {
+            hexData = data.startsWith("0x")
+              ? (data as `0x${string}`)
+              : (`0x${Buffer.from(data, "utf8").toString("hex")}` as `0x${string}`);
+          }
+          return activeAccount.sendTransaction({
+            to,
+            data: hexData,
+            value,
+          } as any);
+        }
+      : () => {
+          throw new Error("No account");
+        };
+
   return {
     activeAccount,
     account: activeAccount?.address,
@@ -89,5 +125,6 @@ export function useWeb3React(): {
     ENSName: data,
     connector: undefined,
     signMessage,
+    sendTransaction,
   };
 }
