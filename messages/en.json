@@ -89,6 +89,7 @@
     "create_protocol_title": "Create Protocol"
   },
   "CreateTimelock": {
+        "createTimelock": "Create Timelock",
     "selectChain": "Select Chain",
     "selectChainPlaceholder": "Please select a chain",
     "minDelay": "Minimum Delay (seconds)",

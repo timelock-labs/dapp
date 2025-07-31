@@ -125,6 +125,7 @@
     "create_protocol_title": "创建协议"
   },
   "CreateTimelock": {
+    "createTimelock": "创建时间锁",
     "selectChain": "选择链",
     "selectChainPlaceholder": "请选择链",
     "minDelay": "最小延迟时间（秒）",
