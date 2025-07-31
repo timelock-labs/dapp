@@ -2,6 +2,7 @@
 import React from 'react';
 import FeatureCard from '@/components/ui/FeatureCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslations } from 'next-intl';
 
 interface Partner {
   id: string;
@@ -18,6 +19,7 @@ interface PartnersGridProps {
 }
 
 const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoading }) => {
+  const t = useTranslations('Ecosystem');
   // Skeleton component for partner cards
   const PartnerSkeleton = () => (
     <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start">
@@ -30,22 +32,10 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
     </div>
   );
 
-  // Render 3 skeleton items for each section
-  const renderSkeletons = () => (
-    <>
-      <Skeleton className="h-8 w-32 mb-6" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <PartnerSkeleton key={index} />
-        ))}
-      </div>
-    </>
-  );
-
   return (
     <>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Sponsors</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">{t("sponsors")}</h2>
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -73,7 +63,7 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
         )}
       </div>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Ecosystem Partners</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">{t("partners")}</h2>
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -99,3 +89,5 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
 };
 
 export default PartnersGrid;
+
+

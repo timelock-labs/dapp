@@ -5,8 +5,10 @@ import EcosystemSearchHeader from './components/EcosystemSearchHeader';
 import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
 import { useSponsorsApi } from '@/hooks/useSponsorsApi';
+import { useTranslations } from 'next-intl';
 
 const EcosystemPage: React.FC = () => {
+    const t = useTranslations('Ecosystem');
     const [sponsors, setSponsors] = useState([]);
     const [partners, setPartners] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,7 @@ const EcosystemPage: React.FC = () => {
     }, [getSponsors]);
 
     return (
-        <PageLayout title="Ecosystem">
+        <PageLayout title={t('title')}>
             <div className="min-h-screen  ">
                 <div className="mx-auto flex flex-col space-y-8 pt-4">
                     {/* Top Header Section */}
