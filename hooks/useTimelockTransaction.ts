@@ -61,18 +61,18 @@ export const useTimelockTransaction = () => {
         id: hash,
       });
 
-      const receipt: ContractReceipt = await tx.wait();
+      // const receipt: ContractReceipt = await tx.wait();
 
-      if (!receipt || receipt.status === 0) {
-        throw new Error("Transaction failed.");
-      }
+      // if (!receipt || receipt.status === 0) {
+      //   throw new Error("Transaction failed.");
+      // }
 
       toast.success("Transaction confirmed successfully!", {
         id: hash,
       });
 
       return {
-        transactionHash: receipt.transactionHash,
+        transactionHash: hash,
       };
     } catch (e: unknown) {
       console.error("Transaction failed:", e);
