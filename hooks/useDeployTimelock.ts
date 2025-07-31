@@ -12,6 +12,8 @@ import { openzeppelinTimelockAbi } from '@/contracts/abis/OpenZeppelinTimelock';
 import { openzeppelinTimelockBytecode } from '@/contracts/bytecodes/OpenZeppelinTimelock';
 // Ensure the import path and exported variable name are correct and match your file structure.
 
+import { useWeb3React } from './useWeb3React';
+
 type Address = string;
 type Hash = string;
 
@@ -34,7 +36,8 @@ interface DeployOpenZeppelinParams {
 
 export const useDeployTimelock = () => {
   const { address: accountAddress } = useActiveAccount() || {};
-  const signer = useActiveAccount();
+  const { signer } = useWeb3React();
+  // const signer = useActiveAccount();
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
