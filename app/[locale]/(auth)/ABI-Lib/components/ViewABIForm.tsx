@@ -1,12 +1,11 @@
 "use client"; // Required for useState and event handlers
 
-import React, { useState } from "react";
+import React from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Assuming TextInput is a wrapper around Input or similar
-import { Label } from "@/components/ui/label"; // Assuming you have a Label component or use Shadcn/ui Label
-import ABITextarea from "@/components/ui/ABITextarea";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { ViewABIFormProps } from "./types";

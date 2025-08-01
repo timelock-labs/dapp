@@ -1,17 +1,24 @@
 // components/ui/NewButton.tsx
 import React from 'react';
-import AddSVG from '@/components/icons/add'; // Adjust the import path as necessary
+import AddSVG from '@/components/icons/add';
+import type { BaseComponentProps, VoidCallback } from '@/types';
 
-interface NewButtonProps {
-  onClick: () => void;
+interface NewButtonProps extends BaseComponentProps {
+  onClick: VoidCallback;
   label?: string;
 }
 
-const NewButton: React.FC<NewButtonProps> = ({ onClick, label = 'New' }) => {
+/**
+ * New button component with add icon
+ * 
+ * @param props - NewButton component props
+ * @returns JSX.Element
+ */
+const NewButton: React.FC<NewButtonProps> = ({ onClick, label = 'New', className }) => {
   return (
     <button
       onClick={onClick}
-      className="inline-flex cursor-pointer items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500"
+      className={`inline-flex cursor-pointer items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500 ${className || ''}`}
     >
       <AddSVG />
       {/* Optional label, can be omitted if not needed */}

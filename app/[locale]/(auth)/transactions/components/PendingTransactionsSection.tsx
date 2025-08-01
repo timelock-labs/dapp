@@ -46,7 +46,7 @@ const PendingTransactionsSection: React.FC = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [pendingTxs, setPendingTxs] = useState<PendingTxRow[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   const accessToken = useAuthStore((state) => state.accessToken);
   
   const {

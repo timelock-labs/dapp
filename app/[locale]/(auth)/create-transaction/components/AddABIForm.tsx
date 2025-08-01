@@ -1,14 +1,20 @@
-"use client"; // Required for useState and event handlers
+"use client";
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Assuming TextInput is a wrapper around Input or similar
-import { Label } from "@/components/ui/label"; // Assuming you have a Label component or use Shadcn/ui Label
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import ABITextarea from "@/components/ui/ABITextarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
-import type { AddABIFormProps } from "./types";
+import type { AddABIFormProps } from "@/types";
 
+/**
+ * Add ABI form component for creating new ABI entries
+ * 
+ * @param props - AddABIForm component props
+ * @returns JSX.Element
+ */
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
   const t = useTranslations("Transactions.AddABIForm");
   const [name, setName] = useState<string>("");

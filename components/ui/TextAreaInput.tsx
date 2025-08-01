@@ -1,32 +1,52 @@
 // components/ui/TextAreaInput.tsx
 import React from 'react';
+import type { BaseComponentProps, ValueCallback } from '@/types';
 
-interface TextAreaInputProps {
+interface TextAreaInputProps extends BaseComponentProps {
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: ValueCallback<string>;
   placeholder?: string;
-  rows?: number; // Number of rows for the textarea height
-  disabled?: boolean; // Optional prop to disable the textarea
+  rows?: number;
+  disabled?: boolean;
+  error?: string;
 }
 
-const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, placeholder, rows = 8,disabled=false }) => {
+/**
+ * Textarea input component with label and error handling
+ * 
+ * @param props - TextAreaInput component props
+ * @returns JSX.Element
+ */
+const TextAreaInput: React.FC<TextAreaInputProps> = ({ 
+  label, 
+  value, 
+  onChange, 
+  placeholder, 
+  rows = 8,
+  disabled = false,
+  error,
+  className 
+}) => {
   return (
     <div className="mb-4">
       <label className={`block text-sm font-medium mb-1 ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>{label}</label>
       <textarea
-      rows={rows}
-      className={`
-        mt-1 block w-full px-3 py-2 border rounded-md shadow-sm
-        focus:outline-none focus:ring-blue-500 focus:border-blue-500
-        sm:text-sm text-gray-900
-        ${disabled ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white border-gray-300'}
-      `}
-      placeholder={placeholder || label}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
+        rows={rows}
+        className={`
+          mt-1 block w-full px-3 py-2 border rounded-md shadow-sm
+          focus:outline-none focus:ring-blue-500 focus:border-blue-500
+          sm:text-sm text-gray-900
+          ${error ? 'border-red-500' : 'border-gray-300'}
+          ${disabled ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white'}
+          ${className || ''}
+        `}
+        placeholder={placeholder || label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
       />
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 };

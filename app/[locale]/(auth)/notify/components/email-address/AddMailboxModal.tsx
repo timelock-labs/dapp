@@ -149,7 +149,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           });
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
-        } catch (createError) {
+        } catch (_createError) {
           // Failed to send verification code: Error: API request failed with status 409
           // // If email already exists, switch to resend mode and send code
           // if (createError.includes('API request failed with status 409')) {

@@ -3,32 +3,10 @@ import {
   polygon, bsc, bscTestnet,
   optimism, avalanche,
   base, arbitrum } from "thirdweb/chains";
-// Chain info interface based on API response
-export interface ChainInfo {
-  chain_id: number;
-  chain_name: string;
-  created_at: string;
-  display_name: string;
-  id: number;
-  is_active: boolean;
-  is_testnet: boolean;
-  logo_url: string;
-  native_token: string;
-  updated_at: string;
-}
-
-export interface ChainApiResponse {
-  data: ChainInfo;
-  error?: {
-    code: string;
-    details: string;
-    message: string;
-  };
-  success: boolean;
-}
+import type { Chain, ChainApiResponse, ChainIdMapping } from '@/types';
 
 // Map chain IDs to thirdweb chain objects
-export const CHAIN_ID_TO_CHAIN = {
+export const CHAIN_ID_TO_CHAIN: ChainIdMapping = {
   1: ethereum,
   11155111: sepolia,
   137: polygon,
@@ -57,9 +35,9 @@ export class ChainUtils {
    * Get chain information from local chains array by chain ID
    * @param chains - Array of chains from store
    * @param chainId - The chain ID to find
-   * @returns ChainInfo | undefined
+   * @returns Chain | undefined
    */
-  static getChainFromLocal(chains: any[], chainId: number | string): any | undefined {
+  static getChainFromLocal(chains: Chain[], chainId: number | string): Chain | undefined {
     const id = typeof chainId === 'string' ? parseInt(chainId) : chainId;
     return chains.find(chain => chain.chain_id === id);
   }
@@ -70,7 +48,7 @@ export class ChainUtils {
    * @param chainId - The chain ID
    * @returns string
    */
-  static getChainName(chains: any[], chainId: number | string): string {
+  static getChainName(chains: Chain[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     return chain?.chain_name || chain?.display_name || 'Unsupport Chain';
   }
@@ -81,7 +59,7 @@ export class ChainUtils {
    * @param chainId - The chain ID
    * @returns string
    */
-  static getChainLogo(chains: any[], chainId: number | string): string {
+  static getChainLogo(chains: Chain[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     return chain?.logo_url || '';
   }
@@ -92,7 +70,7 @@ export class ChainUtils {
    * @param chainId - The chain ID
    * @returns string
    */
-  static getNativeToken(chains: any[], chainId: number | string): string {
+  static getNativeToken(chains: Chain[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     return chain?.native_token || 'ETH';
   }
@@ -103,7 +81,7 @@ export class ChainUtils {
    * @param chainId - The chain ID
    * @returns boolean
    */
-  static isTestnet(chains: any[], chainId: number | string): boolean {
+  static isTestnet(chains: Chain[], chainId: number | string): boolean {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     return chain?.is_testnet || false;
   }
@@ -114,7 +92,7 @@ export class ChainUtils {
    * @param chainId - The chain ID
    * @returns string
    */
-  static getDisplayName(chains: any[], chainId: number | string): string {
+  static getDisplayName(chains: Chain[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     if (!chain) return 'Unsupport Chain';
     

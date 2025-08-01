@@ -1,137 +1,113 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
-import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
+import { useCallback } from 'react';
+import { useApiMutation, useApiBase } from '@/hooks/useApiBase';
+import type { ABIItem, ABIListResponse } from '@/types';
 
-export interface ABIItem {
-  id: number;
-  name: string;
-  description: string;
-  abi_content: string;
-  owner: string;
-  is_shared: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ABIListResponse {
-  data: {
-    shared_abis: ABIItem[];
-    user_abis: ABIItem[];
-  };
-  error?: {
-    code: string;
-    details: string;
-    message: string;
-  };
-  success: boolean;
-}
-
+/**
+ * Hook for ABI API operations with standardized patterns
+ * 
+ * @returns Object containing ABI API methods and hooks
+ */
 export const useAbiApi = () => {
-  const { request } = useApi();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const [abiList, setAbiList] = useState<ABIItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const createHeaders = useCallback(() => ({
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json',
-  }), [accessToken]);
-
-  // Get ABI list
-  const fetchAbiList = useCallback(async (): Promise<ABIItem[]> => {
-    if (!accessToken) {
-      throw new Error('No access token available');
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await request('/api/v1/abi/list', {
-        method: 'GET',
-        headers: createHeaders(),
-      });
-
-      if (!response?.success) {
-        throw new Error(response?.error?.message || 'Failed to fetch ABI list');
+  // Query hooks
+  const useAbiList = () => {
+    const { data, error, isLoading, refetch, isInitialized } = useApiBase<ABIListResponse>(
+      '/api/v1/abi/list',
+      {
+        autoFetch: true,
+        defaultErrorMessage: 'Failed to fetch ABI list'
       }
+    );
 
-      // Combine shared_abis and user_abis into a single array
-      const combinedAbis = [
-        ...(response.data.shared_abis || []),
-        ...(response.data.user_abis || [])
-      ];
-      
-      setAbiList(combinedAbis);
-      return combinedAbis;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [request, createHeaders, accessToken]);
+    // Transform the data to combine shared and user ABIs
+    const abiList = data ? [
+      ...(data.shared_abis || []),
+      ...(data.user_abis || [])
+    ] : [];
 
-  // Add new ABI
-  const addAbi = useCallback(async (name: string, description: string, abiContent: string): Promise<ABIItem> => {
-    const response = await request('/api/v1/abi/add', {
-      method: 'POST',
-      headers: createHeaders(),
-      body: {
-        name,
-        description,
-        abi_content: abiContent,
-      },
+    return {
+      abiList,
+      error,
+      isLoading,
+      refetch,
+      isInitialized
+    };
+  };
+
+  const useAbiDetail = (id: number) => {
+    return useApiBase<ABIItem>(`/api/v1/abi/${id}`, {
+      autoFetch: true,
+      defaultErrorMessage: 'Failed to fetch ABI details'
     });
+  };
 
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to add ABI');
-    }
+  // Mutations
+  const addAbiMutation = useApiMutation<ABIItem, {
+    name: string;
+    description: string;
+    abi_content: string;
+  }>(
+    '/api/v1/abi/add',
+    'POST',
+    { defaultErrorMessage: 'Failed to add ABI' }
+  );
 
-    // Refresh the list after adding
-    await fetchAbiList();
-    return response.data;
-  }, [request, createHeaders, fetchAbiList]);
+  const deleteAbiMutation = useApiMutation<void, { id: number }>(
+    (variables) => `/api/v1/abi/${variables.id}/delete`,
+    'DELETE',
+    { defaultErrorMessage: 'Failed to delete ABI' }
+  );
 
-  // Delete ABI
-  const deleteAbi = useCallback(async (id: number): Promise<void> => {
-    const response = await request(`/api/v1/abi/${id}/delete`, {
-      method: 'DELETE',
-      headers: createHeaders(),
+  // Convenience methods
+  const addAbi = useCallback(async (name: string, description: string, abiContent: string) => {
+    return addAbiMutation.mutate({
+      name,
+      description,
+      abi_content: abiContent,
     });
+  }, [addAbiMutation]);
 
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to delete ABI');
-    }
+  const deleteAbi = useCallback(async (id: number) => {
+    return deleteAbiMutation.mutate({ id });
+  }, [deleteAbiMutation]);
 
-    // Refresh the list after deleting
-    await fetchAbiList();
-  }, [request, createHeaders, fetchAbiList]);
+  // Legacy methods for backward compatibility
+  const { abiList, isLoading, refetch: fetchAbiList } = useAbiList();
 
-  // View ABI details
   const viewAbi = useCallback(async (id: number): Promise<ABIItem> => {
-    const response = await request(`/api/v1/abi/${id}`, {
-      method: 'GET',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to fetch ABI details');
-    }
-
-    return response.data;
-  }, [request, createHeaders]);
-
-  // Auto-fetch ABI list when accessToken is available
-  useEffect(() => {
-    if (accessToken) {
-      fetchAbiList().catch(console.error);
-    }
-  }, [accessToken, fetchAbiList]);
+    const hook = useApiBase<ABIItem>(`/api/v1/abi/${id}`);
+    await hook.refetch();
+    if (hook.error) throw hook.error;
+    return hook.data!;
+  }, []);
 
   return {
+    // Query hooks
+    useAbiList,
+    useAbiDetail,
+    
+    // Mutation methods
+    addAbi,
+    deleteAbi,
+    
+    // Legacy properties (for backward compatibility)
     abiList,
     isLoading,
     fetchAbiList,
-    addAbi,
-    deleteAbi,
     viewAbi,
+    
+    // Mutation states
+    addAbiState: {
+      data: addAbiMutation.data,
+      error: addAbiMutation.error,
+      isLoading: addAbiMutation.isLoading,
+    },
+    deleteAbiState: {
+      data: deleteAbiMutation.data,
+      error: deleteAbiMutation.error,
+      isLoading: deleteAbiMutation.isLoading,
+    },
   };
 };

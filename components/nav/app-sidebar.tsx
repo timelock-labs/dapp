@@ -11,8 +11,6 @@ import {
   Box,
   House
 } from "lucide-react"
-import Image from "next/image"
-import Logo from "@/public/logo.png"
 import { NavMain } from '@/components/nav/nav-main'
 import { NavUser } from '@/components/nav/nav-user'
 import {
@@ -24,11 +22,18 @@ import {
 } from '@/components/ui/sidebar'
 import LanguageSwitcher from "../LanguageSwitcher"
 import { useTranslations } from 'next-intl';
+// import type { BaseComponentProps } from '@/types';
 
-// This is sample data.
 
+// interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+/**
+ * Application sidebar component with navigation and user menu
+ * 
+ * @param props - AppSidebar component props
+ * @returns JSX.Element
+ */
+export function AppSidebar({ ...props }: AppSidebarProps) {
   const t = useTranslations();
   const sidebarData = {
     navMain: [

@@ -4,19 +4,25 @@ import React, { useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import type { BaseComponentProps, VoidCallback } from '@/types';
 
-interface DeleteButtonProps {
-  onDelete: () => void;
+interface DeleteButtonProps extends BaseComponentProps {
+  onDelete: VoidCallback;
   title?: string;
   description?: string;
   confirmText?: string;
   cancelText?: string;
   variant?: 'default' | 'destructive';
   size?: 'sm' | 'md' | 'lg';
-  className?: string;
   disabled?: boolean;
 }
 
+/**
+ * Delete button component with confirmation popover
+ * 
+ * @param props - DeleteButton component props
+ * @returns JSX.Element
+ */
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   onDelete,
   title = "Delete Item",

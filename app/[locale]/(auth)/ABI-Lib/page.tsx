@@ -36,7 +36,7 @@ const ABILibPage: React.FC = () => {
   const { data: abiListResponse, request: fetchAbiList, error } = useApi();
   const { request: addAbi } = useApi();
   const { data: deleteAbiResponse, request: deleteAbi } = useApi();
-  const { data: viewAbiResponse, request: viewAbi } = useApi();
+  const { data: viewAbiResponse } = useApi();
   const { request: validateAbi } = useApi();
 
   const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);

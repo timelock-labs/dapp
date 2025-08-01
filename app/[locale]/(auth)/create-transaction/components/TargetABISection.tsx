@@ -5,8 +5,14 @@ import AddABIForm from "./AddABIForm";
 import { useTranslations } from "next-intl";
 import { useAbiApi } from "@/hooks/useAbiApi";
 import { toast } from "sonner";
-import type { TargetABISectionProps } from "./types";
+import type { TargetABISectionProps } from "@/types";
 
+/**
+ * Target ABI section component for selecting ABI and function with arguments
+ * 
+ * @param props - TargetABISection component props
+ * @returns JSX.Element
+ */
 const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, argumentValues, onArgumentChange }) => {
   const t = useTranslations("CreateTransaction");
   const [isAddABIOpen, setIsAddABIOpen] = useState(false);

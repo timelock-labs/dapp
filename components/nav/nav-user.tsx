@@ -25,16 +25,25 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import type { BaseComponentProps } from '@/types';
 
-export function NavUser({
-  user,
-}: {
+interface NavUserProps extends BaseComponentProps {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+}
+
+/**
+ * Navigation user component with dropdown menu
+ * 
+ * @param props - NavUser component props
+ * @returns JSX.Element
+ */
+export function NavUser({
+  user
+}: NavUserProps) {
   const { isMobile } = useSidebar()
 
   return (

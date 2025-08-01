@@ -1,18 +1,25 @@
 import React from 'react';
+import type { BaseComponentProps, ValueCallback } from '@/types';
 
 type InputHTMLAttributes = React.InputHTMLAttributes<HTMLInputElement>;
 
 type OnChangeType = 
-  | ((value: string) => void)
+  | ValueCallback<string>
   | ((event: React.ChangeEvent<HTMLInputElement>) => void);
 
-interface TextInputProps extends Omit<InputHTMLAttributes, 'onChange' | 'value'> {
+interface TextInputProps extends BaseComponentProps, Omit<InputHTMLAttributes, 'onChange' | 'value'> {
   label: string;
   value: string;
   onChange: OnChangeType;
   error?: string | null;
 }
 
+/**
+ * Enhanced text input component with label and error handling
+ * 
+ * @param props - TextInput component props
+ * @returns JSX.Element
+ */
 const TextInput: React.FC<TextInputProps> = ({
   label,
   value,

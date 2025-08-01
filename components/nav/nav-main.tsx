@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { useLocale } from 'next-intl'; // Changed from usePathname and 'next-intl/client'
+import { useLocale } from 'next-intl';
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -17,24 +17,37 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
+import type { BaseComponentProps } from '@/types';
 
+interface NavMainItem {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: {
+    title: string;
+    url: string;
+  }[];
+}
+
+interface NavMainProps extends BaseComponentProps {
+  items: NavMainItem[];
+}
+
+/**
+ * Main navigation component with collapsible menu items
+ * 
+ * @param props - NavMain component props
+ * @returns JSX.Element
+ */
 export function NavMain({
   items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
-  const locale = useLocale(); // Get the current locale
+  className
+}: NavMainProps) {
+  const locale = useLocale();
+  
   return (
-    <SidebarGroup>
+    <SidebarGroup className={className}>
       <SidebarMenu>
         {items.map((item) => (
           item.items ? (

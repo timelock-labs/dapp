@@ -9,7 +9,7 @@ import MailboxSelection from "./components/MailboxSelection";
 import { useTranslations } from "next-intl";
 import { useTimelockTransaction } from "@/hooks/useTimelockTransaction";
 import { useTransactionApi, CreateTransactionRequest } from "@/hooks/useTransactionApi";
-import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } from "thirdweb/react";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 
 import { useAuthStore } from "@/store/userStore";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ const TransactionEncoderPage: React.FC = () => {
   const router = useRouter();
   const t = useTranslations("CreateTransaction");
   const { createTransaction } = useTransactionApi();
-  const { sendTransaction, isLoading: isSending, error: sendError } = useTimelockTransaction();
+  const { sendTransaction } = useTimelockTransaction();
   const { address } = useActiveAccount() || {};
   const { id: chainId, name: chainName } = useActiveWalletChain() || {};
   const { allTimelocks } = useAuthStore();

@@ -1,7 +1,6 @@
 import React, { RefObject } from "react";
 import DeleteSVG from "@/components/icons/delete";
 import FileSVG from "@/components/icons/file";
-import type { ABIRow } from "./types";
 
 interface ABIRowDropdownProps {
   isOpen: boolean;

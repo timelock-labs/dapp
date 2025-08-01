@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import RadioButtonOption from "./RadioButtonOption";
-import type { ContractStandardSelectionProps, StandardOptionConfig } from "./types";
+import type { ContractStandardSelectionProps, StandardOptionConfig } from "@/types";
 
 const STANDARD_OPTIONS: StandardOptionConfig[] = [
   {
@@ -11,6 +11,12 @@ const STANDARD_OPTIONS: StandardOptionConfig[] = [
   },
 ] as const;
 
+/**
+ * Contract standard selection component with radio button options
+ * 
+ * @param props - ContractStandardSelection component props
+ * @returns JSX.Element
+ */
 const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard, onStandardChange }) => {
   const t = useTranslations("CreateTimelock");
 

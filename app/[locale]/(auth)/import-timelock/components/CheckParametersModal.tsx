@@ -1,6 +1,5 @@
 // components/CheckParametersDialog.tsx
-import React, { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
-import TextAreaInput from '@/components/ui/TextAreaInput'; // Assuming TextAreaInput is in components/ui/
+import React, { useState, useEffect, useRef } from 'react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 
 // Define interface for the data this dialog will display

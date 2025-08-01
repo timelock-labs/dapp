@@ -6,6 +6,7 @@ import { createWallet } from "thirdweb/wallets";
 import { memo } from 'react'
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import type { BaseComponentProps, VoidCallback } from '@/types';
 
 const client = createThirdwebClient({
   clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "....",
@@ -19,27 +20,49 @@ const wallets = [
   createWallet("com.safepal"),
 ];
 
-export const ConnectWallet = memo(function ConnectWallet( props: { icon?: boolean, fullWidth?: boolean, headerStyle?: boolean }) {
+interface ConnectWalletProps extends BaseComponentProps {
+  icon?: boolean;
+  fullWidth?: boolean;
+  headerStyle?: boolean;
+  onConnect?: VoidCallback;
+  onDisconnect?: VoidCallback;
+}
+
+/**
+ * Connect wallet component with thirdweb integration
+ * 
+ * @param props - ConnectWallet component props
+ * @returns JSX.Element
+ */
+export const ConnectWallet = memo(function ConnectWallet({
+  fullWidth,
+  headerStyle,
+  onConnect,
+  onDisconnect,
+  className
+}: ConnectWalletProps) {
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
 
   return (
-    <div className={`connect-wallet-wrapper ${props.fullWidth ? "w-full" : "header-btn"}`}>
+    <div className={`connect-wallet-wrapper ${fullWidth ? "w-full" : "header-btn"} ${className ?? ''}`}>
       <ConnectButton
         client={client}
         connectModal={{ 
           size: "compact",
-          ...(props.headerStyle && { title: "连接钱包" })
+          ...(headerStyle && { title: "连接钱包" })
         }}
         wallets={wallets}
         theme="dark"
         onConnect={() => {
           console.log("Wallet connected");
+          onConnect?.();
         }}
         onDisconnect={() => {
           console.log("Wallet disconnected");
           logout();
           router.push('/login');
+          onDisconnect?.();
         }}
       />
       <style jsx global>{`

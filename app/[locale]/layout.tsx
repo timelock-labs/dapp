@@ -7,8 +7,7 @@ import { TokenRefresher } from '@/components/auth/token-refresher';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import "@/app/globals.css"
 import { Geist, Geist_Mono } from "next/font/google"; // Import fonts here
-import { Toaster } from 'sonner'; // Import Toaster
-import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

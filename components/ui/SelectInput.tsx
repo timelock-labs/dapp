@@ -1,15 +1,34 @@
 import React from 'react';
+import type { BaseComponentProps, ValueCallback, SelectOption } from '@/types';
 
-interface SelectInputProps {
+interface SelectInputProps extends BaseComponentProps {
   label: string;
   value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
+  onChange: ValueCallback<string>;
+  options: SelectOption[];
   placeholder?: string;
-  logo?: string; // Optional logo for the select input
+  logo?: string;
+  error?: string;
+  disabled?: boolean;
 }
 
-const SelectInput: React.FC<SelectInputProps> = ({ logo, label, value, onChange, options, placeholder }) => {
+/**
+ * Select input component with label and optional logo
+ * 
+ * @param props - SelectInput component props
+ * @returns JSX.Element
+ */
+const SelectInput: React.FC<SelectInputProps> = ({ 
+  logo, 
+  label, 
+  value, 
+  onChange, 
+  options, 
+  placeholder,
+  error,
+  disabled = false,
+  className 
+}) => {
   return (
     <div className="mb-4">
       {/* Label for the select input */}
@@ -30,9 +49,14 @@ const SelectInput: React.FC<SelectInputProps> = ({ logo, label, value, onChange,
           )}
           <select
             id={`select-${label}`}
-            className="block w-full pl-3 pr-8 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900 appearance-none"
+            className={`block w-full pl-3 pr-8 py-2 border ${
+              error ? 'border-red-500' : 'border-gray-300'
+            } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 appearance-none ${
+              disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+            } ${className || ''}`}
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
           >
             {placeholder && <option value="" disabled>{placeholder}</option>}
             {options.map((option) => (
@@ -59,6 +83,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ logo, label, value, onChange,
           </svg>
         </div>
       </div>
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 };
