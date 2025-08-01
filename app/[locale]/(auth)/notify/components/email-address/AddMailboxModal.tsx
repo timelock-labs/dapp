@@ -268,7 +268,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             {isEmailVerified ? (
               <div className="flex items-center">
                 <span className="text-green-500 mr-2">✓</span>
-                {t('verificationSuccess')}
+                {t('verificationSuccess')} 
               </div>
             ) : (
               <div className="flex items-center">
