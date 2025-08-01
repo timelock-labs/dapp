@@ -73,24 +73,24 @@
         const calldataDisplay = targetCalldata || abiValue || "Not generated";
 
         return [
-            "================ Transaction Preview ================",
+            "==================== Transaction Preview ====================",
             `Chain:             ${chainName}`,
             `Wallet:            ${address || "Not connected"}`,
             `Timelock Address:  ${timelockAddress || "Not selected"}`,
             `Timelock Method:   ${timelockMethod || "Not selected"}`,
             `Target:            ${target || "Not specified"}`,
             `Value:             ${value || "0"}`,
-            "-----------------------------------------------------",
+            "------------------------------------------------------------",
             `Calldata:          ${calldataDisplay}`,
             `ETA (Time):        ${etaDisplay}`,
             `Function:          ${functionValue || "Not selected"}`,
-            "-----------------------------------------------------",
+            "-------------------------------------------------------------",
             "Arguments:",
             argsDisplay,
-            "-----------------------------------------------------",
+            "-------------------------------------------------------------",
             `Description:       ${description || "No description"}`,
             `Mailboxes:         ${mailboxesDisplay}`,
-            "====================================================="
+            "============================================================="
         ].join("\n");
     };
 

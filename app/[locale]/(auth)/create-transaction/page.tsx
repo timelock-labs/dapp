@@ -56,14 +56,14 @@ const TransactionEncoderPage: React.FC = () => {
     if (targetCalldata) {
       try {
         const iface = new Interface([`function ${timelockMethod}`]);
-        const calldata = iface.encodeFunctionData(timelockMethod.split("(")[0], [target, value, "", targetCalldata, timeValue]);
+        const calldata = iface.encodeFunctionData(timelockMethod.split("(")[0], [target, value, description, targetCalldata, timeValue]);
         setTimelockCalldata(calldata);
       } catch (err) {
         setTargetCallData("");
         console.error("Failed to encode calldata:", err);
       }
     }
-  }, [targetCalldata, value, timelockMethod, timeValue]);
+  }, [targetCalldata, value, timelockMethod, timeValue, description]);
 
 
   useEffect(() => {
@@ -125,7 +125,7 @@ const TransactionEncoderPage: React.FC = () => {
         description,
       }
     ));
-  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks]);
+  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description]);
 
   const handleSendTransaction = async () => {
     if (!address) {

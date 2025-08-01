@@ -232,6 +232,11 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <div id="transaction-details" className="border border-gray-300 rounded-lg p-4 mt-2">
           <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
           <TextInput label={t("encodingTransaction.value")} defaultValue={0} value={value} onChange={handleValueChange} placeholder="Value" />
+          <TextInput
+            label={t("encodingTransaction.description")}
+            value={description}
+            onChange={onDescriptionChange}
+            placeholder={t("encodingTransaction.descriptionPlaceholder")}></TextInput>
           <TextAreaInput
             label={t("encodingTransaction.calldata")}
             value={targetCalldata}
