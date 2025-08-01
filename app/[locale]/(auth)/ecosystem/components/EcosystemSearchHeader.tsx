@@ -6,7 +6,7 @@ import bg_png from "../images/bg.png"; // Adjust the path as necessary
 
 const EcosystemSearchHeader: React.FC = () => {
   return (
-    <div className="bg-black text-white p-6 min-h-[180px] rounded-lg shadow-md flex items-center space-x-4" style={{ backgroundImage: `url(${bg_png.src})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="bg-black text-white p-6 min-h-[60px] rounded-lg shadow-md flex items-center space-x-4" style={{ backgroundImage: `url(${bg_png.src})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <Image
         src="/ecoPanter.png"
         alt="Ecosystem Partner"
