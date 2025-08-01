@@ -406,7 +406,14 @@
       "target": "Target",
       "value": "Value",
       "formDescription": "Description",
-      "descriptionPlaceholder": "Transaction description"
+      "descriptionPlaceholder": "Transaction description",
+      "noTimelocksAvailable": "No timelock contracts available. Please add some timelock contracts first.",
+      "selectTimelockPlaceholder": "Select a timelock contract",
+      "selectTimelockMethodPlaceholder": "Select a method",
+      "targetPlaceholder": "Enter target address",
+      "valuePlaceholder": "Enter value in wei",
+      "selectTimelockFirstPlaceholder": "Please select a timelock contract first",
+      "loadingTimelockDetails": "Loading timelock details..."
     },
     "preview": {
       "title": "Encoding Preview",

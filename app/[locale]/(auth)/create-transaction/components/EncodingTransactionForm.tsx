@@ -221,19 +221,29 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       <div className="flex flex-col space-y-4 w-full">
       <div className="grid grid-cols-1 gap-4">
         <SelectInput
-        label={t('encodingTransaction.selectTimelock')}
-        value={timelockType}
-        onChange={handleTimelockChange}
-        options={timelockOptions}
-        placeholder={isLoadingDetails ? 'Loading timelock details...' : (allTimelocks.length === 0 ? 'No timelocks available' : 'Select Timelock')}
+          label={t('encodingTransaction.selectTimelock')}
+          value={timelockType}
+          onChange={handleTimelockChange}
+          options={timelockOptions}
+          placeholder={
+        isLoadingDetails
+          ? t('encodingTransaction.loadingTimelockDetails')
+          : (allTimelocks.length === 0
+            ? t('encodingTransaction.noTimelocksAvailable')
+            : t('encodingTransaction.selectTimelockPlaceholder'))
+          }
         />
 
         <SelectInput
-        label={t('encodingTransaction.selectTimelockMethod')}
-        value={timelockMethod}
-        onChange={onTimelockMethodChange}
-        options={timelockMethodOptions}
-        placeholder={timelockType ? 'Select Timelock Method' : 'Select Timelock first'}
+          label={t('encodingTransaction.selectTimelockMethod')}
+          value={timelockMethod}
+          onChange={onTimelockMethodChange}
+          options={timelockMethodOptions}
+          placeholder={
+        timelockType
+          ? t('encodingTransaction.selectTimelockMethodPlaceholder')
+          : t('encodingTransaction.selectTimelockFirstPlaceholder')
+          }
         />
       </div>
 
