@@ -108,13 +108,6 @@ export interface ParameterDisplayRowProps extends BaseComponentProps {
 }
 
 /**
- * First time timelock intro props
- */
-export interface FirstTimeTimelockIntroProps extends BaseComponentProps {
-  onLearnMore?: VoidCallback;
-}
-
-/**
  * Contract standard selection props
  */
 export interface ContractStandardSelectionProps extends BaseComponentProps {

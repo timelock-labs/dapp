@@ -108,7 +108,6 @@ export type {
   StandardOption,
   StandardOptionConfig,
   ParameterDisplayRowProps,
-  FirstTimeTimelockIntroProps,
   ContractStandardSelectionProps,
   CreationDetails,
   DialogDetailsState,

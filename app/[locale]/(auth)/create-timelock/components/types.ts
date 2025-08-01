@@ -4,7 +4,6 @@ export type {
   CreateTimelockFormProps,
   RadioButtonOptionProps,
   StandardOption,
-  FirstTimeTimelockIntroProps,
   ContractStandard,
   ContractStandardSelectionProps,
   ConfirmCreationDialogProps,

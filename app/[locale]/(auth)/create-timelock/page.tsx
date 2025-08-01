@@ -8,7 +8,6 @@ import { useAuthStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } from "thirdweb/react";
 import { useRouter, useParams } from "next/navigation";
-import FirstTimeTimelockIntro from "./components/FirstTimeTimelockIntro";
 import CreateTimelockForm from "./components/CreateTimelockForm";
 import ConfirmCreationDialog from "./components/ConfirmCreationDialog";
 import PageLayout from "@/components/layout/PageLayout";
@@ -197,9 +196,6 @@ const CreateTimelockPage: React.FC = () => {
     <PageLayout title="创建Timelock">
       <div className="bg-white p-8">
         <div className="mx-auto flex flex-col space-y-8">
-          {/* Top Info Section */}
-          <FirstTimeTimelockIntro />
-
           {/* Main Form Area */}
           <CreateTimelockForm
             selectedChain={formState.selectedChain}
