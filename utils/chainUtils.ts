@@ -1,9 +1,8 @@
-import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
-import { ethereum, sepolia, polygon, polygonMumbai, bsc, 
-  optimism, optimismSepolia,
-  base, baseSepolia,
-  bscTestnet, arbitrum, arbitrumSepolia } from "thirdweb/chains";
+import { 
+  ethereum, sepolia, 
+  polygon, bsc, bscTestnet,
+  optimism, avalanche,
+  base, arbitrum } from "thirdweb/chains";
 // Chain info interface based on API response
 export interface ChainInfo {
   chain_id: number;
@@ -33,15 +32,12 @@ export const CHAIN_ID_TO_CHAIN = {
   1: ethereum,
   11155111: sepolia,
   137: polygon,
-  80001: polygonMumbai,
+  80001: avalanche,
   56: bsc,
   97: bscTestnet,
   42161: arbitrum,
-  421614: arbitrumSepolia,
   10: optimism,
-  420: optimismSepolia,
   8453: base,
-  84532: baseSepolia,
 } as const;
 
 /**

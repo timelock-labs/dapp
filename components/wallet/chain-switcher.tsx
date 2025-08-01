@@ -138,7 +138,7 @@ export function ChainSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className=' cursor-pointer'>
+      <DropdownMenuTrigger asChild className=' cursor-pointer h-9'>
         <Button variant="outline" size="sm" disabled={isSwitchingChain}>
           <span className="mr-1">{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name || ''} width={16} height={16} />}</span>
           <span className="hidden sm:inline">
