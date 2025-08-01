@@ -123,9 +123,10 @@ const TransactionEncoderPage: React.FC = () => {
         target,
         value,
         description,
+        timelockCalldata
       }
     ));
-  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description]);
+  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description, timelockCalldata]);
 
   const handleSendTransaction = async () => {
     if (!address) {
