@@ -191,6 +191,40 @@ ${JSON.stringify(argumentValues)}}
               </div>
             </div>
           </div>
+          const { allTimelocks } = useAuthStore();
+
+{/* // Form States
+const [timelockType, setTimelockType] = useState("");
+const [timelockMethod, setTimelockMethod] = useState("");
+const [timelockAddress, setTimelockAddress] = useState("");
+const [target, setTarget] = useState("");
+const [value, setValue] = useState("");
+const [abiValue, setAbiValue] = useState("");
+const [functionValue, setFunctionValue] = useState("");
+const [timeValue, setTimeValue] = useState("");
+const [argumentValues, setArgumentValues] = useState<string[]>([]);
+const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
+const [description, setDescription] = useState("");
+const [isSubmitting, setIsSubmitting] = useState(false);
+
+// Preview State
+const [previewContent, setPreviewContent] = useState(""); */}
+          <p> timelockType: {JSON.stringify(timelockType)}</p>
+          <p> timelockMethod: {JSON.stringify(timelockMethod)}</p>
+          <p> timelockAddress: {JSON.stringify(timelockAddress)}</p>
+          <p> target: {JSON.stringify(target)}</p>
+          <p> value: {JSON.stringify(value)}</p>
+          <p> abiValue: {JSON.stringify(abiValue)}</p>
+          <p> functionValue: {JSON.stringify(functionValue)}</p>
+          <p> timeValue: {JSON.stringify(timeValue)}</p>
+          <p> argumentValues: {JSON.stringify(argumentValues)}</p>
+          <p> selectedMailbox: {JSON.stringify(selectedMailbox)}</p>
+          <p> description: {JSON.stringify(description)}</p>
+          <p> isSubmitting: {JSON.stringify(isSubmitting)}</p>
+          <p> previewContent: {JSON.stringify(previewContent)}</p>
+
+        
+
           {/* Submit button container */}
         </div>
       </div>

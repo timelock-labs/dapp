@@ -417,6 +417,7 @@
       "value": "数值",
       "formDescription": "描述",
       "descriptionPlaceholder": "请输入交易描述",
+      "noTimelocksAvailable":"未发现 Timelock 合约，请先添加",
       "selectTimelockPlaceholder": "请选择时间锁合约",
       "selectTimelockMethodPlaceholder": "请选择方法",
       "targetPlaceholder": "请输入目标地址",
