@@ -9,11 +9,6 @@ const STANDARD_OPTIONS: StandardOptionConfig[] = [
     labelKey: "compoundStandardLabel",
     descriptionKey: "compoundStandardDescription",
   },
-  {
-    value: "openzeppelin",
-    labelKey: "openzeppelinStandardLabel",
-    descriptionKey: "openzeppelinStandardDescription",
-  },
 ] as const;
 
 const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard, onStandardChange }) => {

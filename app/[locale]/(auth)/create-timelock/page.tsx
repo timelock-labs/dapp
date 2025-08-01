@@ -13,7 +13,7 @@ import CreateTimelockForm from "./components/CreateTimelockForm";
 import ConfirmCreationDialog from "./components/ConfirmCreationDialog";
 import PageLayout from "@/components/layout/PageLayout";
 import { getChainObject } from "@/utils/chainUtils";
-import type { CreateTimelockFormState, DialogDetailsState, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams, OpenZeppelinTimelockParams } from "./components/types";
+import type { CreateTimelockFormState, DialogDetailsState, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams } from "./components/types";
 
 const CreateTimelockPage: React.FC = () => {
   // Form States
@@ -42,7 +42,7 @@ const CreateTimelockPage: React.FC = () => {
   const { request: createTimelockApiCall } = useApi();
   const { accessToken, chains } = useAuthStore();
   const { address: walletAddress } = useActiveAccount() || {};
-  const { deployCompoundTimelock, deployOpenZeppelinTimelock, isLoading } = useDeployTimelock();
+  const { deployCompoundTimelock, isLoading } = useDeployTimelock();
   const router = useRouter();
   const params = useParams();
   const locale = params.locale;
@@ -74,20 +74,12 @@ const CreateTimelockPage: React.FC = () => {
     [switchChain],
   );
 
-  const handleStandardChange = useCallback((standard: "compound" | "openzeppelin") => {
+  const handleStandardChange = useCallback((standard: "compound") => {
     setFormState((prev) => ({ ...prev, selectedStandard: standard }));
   }, []);
 
   const handleMinDelayChange = useCallback((minDelay: string) => {
     setFormState((prev) => ({ ...prev, minDelay }));
-  }, []);
-
-  const handleProposersChange = useCallback((proposers: string) => {
-    setFormState((prev) => ({ ...prev, proposers }));
-  }, []);
-
-  const handleExecutorsChange = useCallback((executors: string) => {
-    setFormState((prev) => ({ ...prev, executors }));
   }, []);
 
   const handleAdminChange = useCallback((admin: string) => {
@@ -107,11 +99,6 @@ const CreateTimelockPage: React.FC = () => {
       return;
     }
 
-    if (formState.selectedStandard === "openzeppelin" && (!formState.proposers.trim() || !formState.executors.trim())) {
-      toast.error("Proposers and Executors are required for OpenZeppelin standard.");
-      return;
-    }
-
     let deployedContractAddress: string | null = null;
     let transactionHash: string | null = null;
 
@@ -124,25 +111,6 @@ const CreateTimelockPage: React.FC = () => {
           admin: (formState.admin.trim() || walletAddress) as `0x${string}`,
         };
         const result: DeploymentResult = await deployCompoundTimelock(params);
-        deployedContractAddress = result.contractAddress;
-        transactionHash = result.transactionHash;
-      } else if (formState.selectedStandard === "openzeppelin") {
-        const proposersList = formState.proposers
-          .split(",")
-          .map((addr) => addr.trim())
-          .filter((addr) => addr !== "") as `0x${string}`[];
-        const executorsList = formState.executors
-          .split(",")
-          .map((addr) => addr.trim())
-          .filter((addr) => addr !== "") as `0x${string}`[];
-
-        const params: OpenZeppelinTimelockParams = {
-          minDelay: parseInt(formState.minDelay),
-          proposers: proposersList,
-          executors: executorsList,
-          admin: (formState.admin.trim() || "0x0000000000000000000000000000000000000000") as `0x${string}`,
-        };
-        const result: DeploymentResult = await deployOpenZeppelinTimelock(params);
         deployedContractAddress = result.contractAddress;
         transactionHash = result.transactionHash;
       }
@@ -163,7 +131,7 @@ const CreateTimelockPage: React.FC = () => {
       console.error("Deployment failed:", error);
       // The useDeployTimelock hook already handles toast messages for errors.
     }
-  }, [accessToken, walletAddress, formState, selectedChainData, deployCompoundTimelock, deployOpenZeppelinTimelock]);
+  }, [accessToken, walletAddress, formState, selectedChainData, deployCompoundTimelock]);
 
   const handleConfirmDialogClose = useCallback(() => {
     setIsConfirmDialogOpen(false);
@@ -267,10 +235,6 @@ const CreateTimelockPage: React.FC = () => {
             onStandardChange={handleStandardChange}
             minDelay={formState.minDelay}
             onMinDelayChange={handleMinDelayChange}
-            proposers={formState.proposers}
-            onProposersChange={handleProposersChange}
-            executors={formState.executors}
-            onExecutorsChange={handleExecutorsChange}
             admin={formState.admin}
             onAdminChange={handleAdminChange}
             onDeploy={handleCreate}

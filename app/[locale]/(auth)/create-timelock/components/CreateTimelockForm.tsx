@@ -17,10 +17,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   onStandardChange,
   minDelay,
   onMinDelayChange,
-  proposers,
-  onProposersChange,
-  executors,
-  onExecutorsChange,
+
   admin,
   onAdminChange,
   onDeploy,
@@ -92,23 +89,6 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         <div className="md:col-start-2 min-w-[548px]">
           <TextInput label={t("minDelay")} value={minDelay} onChange={(e) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
         </div>
-
-        {/* OpenZeppelin specific fields */}
-        {selectedStandard === "openzeppelin" && (
-          <>
-            <div className="md:col-start-2 min-w-[548px]">
-              <TextInput label={t("proposers")} value={proposers} onChange={(e) => onProposersChange(handleTextChange(e))} placeholder={t("proposersPlaceholder")} />
-            </div>
-
-            <div className="md:col-start-2 min-w-[548px]">
-              <TextInput label={t("executors")} value={executors} onChange={(e) => onExecutorsChange(handleTextChange(e))} placeholder={t("executorsPlaceholder")} />
-            </div>
-
-            <div className="md:col-start-2 min-w-[548px]">
-              <TextInput label={t("admin")} value={admin} onChange={(e) => onAdminChange(handleTextChange(e))} placeholder={t("adminPlaceholder")} />
-            </div>
-          </>
-        )}
       </div>
 
       <div className="mt-8 flex justify-end">

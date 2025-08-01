@@ -162,7 +162,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       }));
     } else if (selectedTimelock.standard === "openzeppelin") {
       // 从 ABI 读取所有 function 名称作为 options
-      const functions = TimelockOpenZeppelinABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure");
+      const functions = TimelockOpenZeppelinABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure" && item.name !== "grantRole" && item.name !== "revokeRole" && item.name !== "renounceRole" && item.name !== "updateDelay");
       return functions.map((fn) => ({
         value: fn.name ?? "",
         label: fn.name ?? "",

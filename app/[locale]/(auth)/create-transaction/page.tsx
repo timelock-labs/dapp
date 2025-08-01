@@ -67,6 +67,8 @@ const TransactionEncoderPage: React.FC = () => {
       const chainName = selectedTimelock?.chain_name || "Not selected";
 
       const argsDisplay = argumentValues.length > 0 ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || "N/A"}`).join("\n") : "No arguments";
+      
+
 
       return `chain: ${chainName}
 wallet: ${address || "Not connected"}
@@ -76,7 +78,11 @@ value: ${value || "0"}
 calldata: ${abiValue || "Not generated"}
 time: ${timeValue || "Not specified"}
 Function: ${functionValue || "Not selected"}
-${argsDisplay}`;
+${argsDisplay}
+
+
+${JSON.stringify(argumentValues)}}
+`;
     };
     setPreviewContent(generatePreview());
   }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks]);
@@ -146,9 +152,6 @@ ${argsDisplay}`;
     <PageLayout title={t("title")}>
       <div className="min-h-screen bg-withe">
         <div className="mx-auto flex flex-col">
-          {" "}
-          {/* Main vertical stack of major blocks */}
-          {/* FIRST MAJOR BLOCK: Encoding Transaction Form (Full Width) */}
           <div className="flex justify-between gap-32">
             <div className="w-1/2 w-max-[550px]">
               <EncodingTransactionForm

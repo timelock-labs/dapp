@@ -20,9 +20,9 @@ export interface CreateTimelockFormProps {
   minDelay: string;
   onMinDelayChange: (value: string) => void;
   proposers: string;
-  onProposersChange: (value: string) => void;
+
   executors: string;
-  onExecutorsChange: (value: string) => void;
+
   admin: string;
   onAdminChange: (value: string) => void;
   onDeploy: () => void;
@@ -65,7 +65,7 @@ export interface FirstTimeTimelockIntroProps {
 /**
  * Supported contract standard types
  */
-export type ContractStandard = "compound" | "openzeppelin";
+export type ContractStandard = "compound";
 
 /**
  * Props for ContractStandardSelection component
@@ -121,16 +121,6 @@ export interface CompoundTimelockParams {
 }
 
 /**
- * OpenZeppelin timelock deployment parameters
- */
-export interface OpenZeppelinTimelockParams {
-  minDelay: number;
-  proposers: `0x${string}`[];
-  executors: `0x${string}`[];
-  admin: `0x${string}`;
-}
-
-/**
  * API request body for creating timelock record
  */
 export interface CreateTimelockRequestBody {
@@ -142,8 +132,7 @@ export interface CreateTimelockRequestBody {
   tx_hash: string;
   contract_address: string;
   admin?: string;
-  proposers?: string[];
-  executors?: string[];
+
   cancellers?: string[];
 }
 
