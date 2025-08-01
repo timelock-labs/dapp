@@ -14,8 +14,6 @@ import type { EncodingTransactionFormProps } from "./types";
 import { getChainObject } from "@/utils/chainUtils";
 import TextAreaInput from "@/components/ui/TextAreaInput";
 
-
-
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   targetCalldata,
   timelockType,
@@ -186,7 +184,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     <div className="bg-white pt-6 flex flex-col gap-8 items-start">
       <SectionHeader title={t("encodingTransaction.title")} description={t("encodingTransaction.description")} icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />} />
       <div className="flex flex-col space-y-4 w-full">
-        <div className="flex flex-row gap-4 border border-blue-200 rounded-lg p-4" id="timelock-selection">
+        <div className="flex flex-row gap-4 border border-gray-300 rounded-lg p-4" id="timelock-selection">
           <div className="flex-1">
             <SelectInput
               label={t("encodingTransaction.selectTimelock")}
@@ -217,9 +215,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           </div>
         </div>
 
-        <div id="transaction-details" className="border border-green-200 rounded-lg p-4 mt-2">
-
-
+        <div id="transaction-details" className="border border-gray-300 rounded-lg p-4 mt-2">
           <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
           <TextInput label={t("encodingTransaction.value")} defaultValue={0} value={value} onChange={handleValueChange} placeholder="Value" />
           <TextAreaInput
@@ -258,7 +254,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           </div>
         </div>
 
-        <div id="target-abi-section" className="border border-purple-200 rounded-lg p-4 mt-2">
+        <div id="target-abi-section" className="border border-gray-300 rounded-lg p-4 mt-2">
           <TargetABISection
             abiValue={abiValue}
             onAbiChange={onAbiChange}

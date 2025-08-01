@@ -413,7 +413,11 @@
       "targetPlaceholder": "Enter target address",
       "valuePlaceholder": "Enter value in wei",
       "selectTimelockFirstPlaceholder": "Please select a timelock contract first",
-      "loadingTimelockDetails": "Loading timelock details..."
+      "loadingTimelockDetails": "Loading timelock details...",
+      "calldata": "Calldata",
+      "calldataPlaceholder": "Will automatically obtain the encoded data",
+      "timePlaceholder": "Enter time in seconds"
+
     },
     "preview": {
       "title": "Encoding Preview",

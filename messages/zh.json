@@ -423,7 +423,10 @@
       "targetPlaceholder": "请输入目标地址",
       "valuePlaceholder": "请输入数值（单位：wei）",
       "selectTimelockFirstPlaceholder": "请先选择时间锁合约",
-      "loadingTimelockDetails": "正在加载时间锁详情..."
+      "loadingTimelockDetails": "正在加载时间锁详情...",
+      "calldata": "编码数据",
+      "calldataPlaceholder": "将自动获取编码数据",
+      "timePlaceholder": "请输入时间（单位：秒）"
     },
     "preview": {
       "title": "编码预览",

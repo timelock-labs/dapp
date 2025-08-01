@@ -6,9 +6,6 @@ import { useActiveAccount } from 'thirdweb/react';
 
 import { toast } from 'sonner';
 
-import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
-import { openzeppelinTimelockAbi } from '@/contracts/abis/OpenZeppelinTimelock';
-
 import { useWeb3React } from './useWeb3React';
 type Address = string;
 type Hash = string;

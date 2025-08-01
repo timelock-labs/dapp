@@ -226,25 +226,8 @@ ${JSON.stringify(argumentValues)}}
               </div>
             </div>
           </div>
-          {/* const { allTimelocks } = useAuthStore(); */}
 
-          {/* // Form States
-const [timelockType, setTimelockType] = useState("");
-const [timelockMethod, setTimelockMethod] = useState("");
-const [timelockAddress, setTimelockAddress] = useState("");
-const [target, setTarget] = useState("");
-const [value, setValue] = useState("");
-const [abiValue, setAbiValue] = useState("");
-const [functionValue, setFunctionValue] = useState("");
-const [timeValue, setTimeValue] = useState("");
-const [argumentValues, setArgumentValues] = useState<string[]>([]);
-const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
-const [description, setDescription] = useState("");
-const [isSubmitting, setIsSubmitting] = useState(false);
-
-// Preview State
-const [previewContent, setPreviewContent] = useState(""); */}
-          <div className="w-1/2 mt-8 p-4 bg-gray-50 rounded-lg overflow-x-auto word-break-all">
+          {/* <div className="w-1/2 mt-8 p-4 bg-gray-50 rounded-lg overflow-x-auto word-break-all">
             <p> timelockType: {JSON.stringify(timelockType)}</p>
             <p> timelockMethod: {JSON.stringify(timelockMethod)}</p>
             <p> timelockAddress: {JSON.stringify(timelockAddress)}</p>
@@ -261,7 +244,7 @@ const [previewContent, setPreviewContent] = useState(""); */}
             <p>allTimelocks:{JSON.stringify(allTimelocks)}</p>
 
             <p>timelockCalldata:{timelockCalldata}</p>
-          </div>
+          </div> */}
 
           {/* Submit button container */}
         </div>
