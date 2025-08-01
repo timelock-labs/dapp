@@ -1,31 +1,19 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import TableComponent from '@/components/ui/TableComponent';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useRouter, useParams } from 'next/navigation';
-import { formatAddress, formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
+import type { TimelockContract, BaseComponentProps, VoidCallback } from '@/types';
 
-// Define the interface for a single Timelock contract based on the API response
-interface TimelockContract {
-    id: number;
-    chain_name: string;
-    contract_address: string;
-    admin: string;
-    created_at: string;
-    remark: string;
-    status: string;
-    standard?: string;
-    // Include other fields from the API that might be needed
-}
-
-// Define the props for the component, which now includes the 'data' prop
-interface TimelockContractTableProps {
+// Define the props for the component
+interface TimelockContractTableProps extends BaseComponentProps {
     data: TimelockContract[];
-    onDataUpdate?: () => void;
+    onDataUpdate?: VoidCallback;
 }
 
 const getStatusBadgeStyle = (status: string) => {
@@ -39,7 +27,13 @@ const getStatusBadgeStyle = (status: string) => {
     }
 };
 
-const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onDataUpdate }) => {
+/**
+ * Timelock contract table component with CRUD operations
+ * 
+ * @param props - TimelockContractTable component props
+ * @returns JSX.Element
+ */
+const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onDataUpdate, className }) => {
     const router = useRouter();
     const params = useParams();
     const locale = params.locale;
@@ -143,7 +137,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
     ];
 
     return (
-        <div className="bg-white">
+        <div className={`bg-white ${className || ''}`}>
             <div className="mx-auto">
                 <div className="flex items-center mb-6">
                     <div className="flex-grow">

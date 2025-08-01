@@ -1,262 +1,217 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
+import { useApiMutation, useApiBase, useFilteredApi } from '@/hooks/useApiBase';
+import { useApi } from './useApi';
+import type { 
+  Transaction,
+  TransactionListResponse,
+  TransactionStats,
+  CreateTransactionRequest,
+  TransactionListFilters,
+  PendingTransactionFilters
+} from '@/types';
 
-// Transaction data types based on API documentation
-export interface Transaction {
-  id: number;
-  chain_id: number;
-  chain_name: string;
-  created_at: string;
-  creator_address: string;
-  description: string;
-  eta: number;
-  executed_at?: string;
-  canceled_at?: string;
-  queued_at?: string;
-  function_sig: string;
-  operation_id: string;
-  status: 'submitting' | 'queued' | 'ready' | 'executing' | 'executed' | 'expired' | 'canceled' | 'failed' | 'submit_failed';
-  status_message: string;
-  target: string;
-  time_remaining: number;
-  timelock_address: string;
-  timelock_standard: 'compound' | 'openzeppelin';
-  timelock_info?: string;
-  tx_data: string;
-  tx_hash: string;
-  updated_at: string;
-  user_permissions: string[];
-  value: string;
-  can_cancel: boolean;
-  can_execute: boolean;
-  can_retry_submit: boolean;
-}
+// Re-export types for backward compatibility
+export type { Transaction, CreateTransactionRequest };
 
-export interface TransactionListResponse {
-  page: number;
-  page_size: number;
-  total: number;
-  total_pages: number;
-  transactions: Transaction[];
-}
-
-export interface TransactionStats {
-  canceled_count: number;
-  executed_count: number;
-  executing_count: number;
-  expired_count: number;
-  failed_count: number;
-  queued_count: number;
-  ready_count: number;
-  submit_failed_count: number;
-  submitting_count: number;
-  total_transactions: number;
-}
-
-export interface CreateTransactionRequest {
-  chain_id: number;
-  chain_name: string;
-  description: string;
-  eta: number;
-  function_sig: string;
-  operation_id: string;
-  target: string;
-  timelock_address: string;
-  timelock_standard: 'compound' | 'openzeppelin';
-  tx_data: string;
-  tx_hash: string;
-  value: string;
-}
-
-export interface TransactionListFilters {
-  chain_id?: number;
-  timelock_address?: string;
-  timelock_standard?: 'compound' | 'openzeppelin';
-  status?: string;
-  page: number;
-  page_size: number;
-}
-
-export interface PendingTransactionFilters {
-  chain_id?: number;
-  only_can_exec?: boolean;
-  page: number;
-  page_size: number;
-}
-
+/**
+ * Hook for transaction API operations with standardized patterns
+ * 
+ * @returns Object containing transaction API methods and hooks
+ */
 export const useTransactionApi = () => {
   const { request } = useApi();
-  const accessToken = useAuthStore((state) => state.accessToken);
 
-  const createHeaders = useCallback(() => ({
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json',
-  }), [accessToken]);
+  // Mutations
+  const createTransactionMutation = useApiMutation<Transaction, CreateTransactionRequest>(
+    '/api/v1/transaction/create',
+    'POST',
+    { defaultErrorMessage: 'Failed to create transaction' }
+  );
 
-  // Create new transaction
-  const createTransaction = useCallback(async (data: CreateTransactionRequest): Promise<Transaction> => {
-    const response = await request('/api/v1/transaction/create', {
-      method: 'POST',
-      headers: createHeaders(),
-      body: data,
+  const cancelTransactionMutation = useApiMutation<void, { id: number }>(
+    (variables) => `/api/v1/transaction/${variables.id}/cancel`,
+    'POST',
+    { defaultErrorMessage: 'Failed to cancel transaction' }
+  );
+
+  const executeTransactionMutation = useApiMutation<void, {
+    id: number;
+    execute_tx_hash: string;
+  }>(
+    (variables) => `/api/v1/transaction/${variables.id}/execute`,
+    'POST',
+    { defaultErrorMessage: 'Failed to execute transaction' }
+  );
+
+  const markTransactionFailedMutation = useApiMutation<void, {
+    id: number;
+    reason: string;
+  }>(
+    (variables) => `/api/v1/transaction/${variables.id}/mark-failed`,
+    'POST',
+    { defaultErrorMessage: 'Failed to mark transaction as failed' }
+  );
+
+  const retrySubmitTransactionMutation = useApiMutation<void, {
+    id: number;
+    tx_hash: string;
+  }>(
+    (variables) => `/api/v1/transaction/${variables.id}/retry-submit`,
+    'POST',
+    { defaultErrorMessage: 'Failed to retry transaction submission' }
+  );
+
+  // Query hooks
+  const useTransactionList = (filters: Omit<TransactionListFilters, 'page' | 'page_size'> = {}) => {
+    return useFilteredApi<TransactionListResponse, TransactionListFilters>(
+      '/api/v1/transaction/list',
+      { page: 1, page_size: 10, ...filters },
+      { autoFetch: true, defaultErrorMessage: 'Failed to fetch transaction list' }
+    );
+  };
+
+  const usePendingTransactions = (filters: Omit<PendingTransactionFilters, 'page' | 'page_size'> = {}) => {
+    return useFilteredApi<TransactionListResponse, PendingTransactionFilters>(
+      '/api/v1/transaction/pending',
+      { page: 1, page_size: 10, ...filters },
+      { autoFetch: true, defaultErrorMessage: 'Failed to fetch pending transactions' }
+    );
+  };
+
+  const useTransactionStats = () => {
+    return useApiBase<TransactionStats>('/api/v1/transaction/stats', {
+      autoFetch: true,
+      defaultErrorMessage: 'Failed to fetch transaction statistics'
     });
+  };
 
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to create transaction');
-    }
+  const useTransactionById = (id: number) => {
+    return useApiBase<Transaction>(`/api/v1/transaction/${id}`, {
+      autoFetch: true,
+      defaultErrorMessage: 'Failed to fetch transaction details'
+    });
+  };
 
-    return response.data;
-  }, [request, createHeaders]);
+  // Convenience methods that wrap the mutations
+  const createTransaction = useCallback(async (data: CreateTransactionRequest) => {
+    return createTransactionMutation.mutate(data);
+  }, [createTransactionMutation]);
 
-  // Get transaction list with filters
+  const cancelTransaction = useCallback(async (id: number) => {
+    return cancelTransactionMutation.mutate({ id });
+  }, [cancelTransactionMutation]);
+
+  const executeTransaction = useCallback(async (id: number, executeData: { execute_tx_hash: string }) => {
+    return executeTransactionMutation.mutate({
+      id,
+      execute_tx_hash: executeData.execute_tx_hash,
+    });
+  }, [executeTransactionMutation]);
+
+  const markTransactionFailed = useCallback(async (id: number, reason: string) => {
+    return markTransactionFailedMutation.mutate({ id, reason });
+  }, [markTransactionFailedMutation]);
+
+  const retrySubmitTransaction = useCallback(async (id: number, txHash: string) => {
+    return retrySubmitTransactionMutation.mutate({ id, tx_hash: txHash });
+  }, [retrySubmitTransactionMutation]);
+
+  // Legacy methods for backward compatibility - using direct API calls
   const getTransactionList = useCallback(async (filters: TransactionListFilters): Promise<TransactionListResponse> => {
-    const params = new URLSearchParams();
-    params.append('page', filters.page.toString());
-    params.append('page_size', filters.page_size.toString());
-    
-    if (filters.chain_id) params.append('chain_id', filters.chain_id.toString());
-    if (filters.timelock_address) params.append('timelock_address', filters.timelock_address);
-    if (filters.timelock_standard) params.append('timelock_standard', filters.timelock_standard);
-    if (filters.status) params.append('status', filters.status);
-
-    const response = await request(`/api/v1/transaction/list?${params.toString()}`, {
-      method: 'GET',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to fetch transaction list');
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value));
+        }
+      });
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/transaction/list?${queryParams.toString()}`
+        : '/api/v1/transaction/list';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
+  }, [request]);
 
-    return response.data;
-  }, [request, createHeaders]);
-
-  // Get pending transactions
   const getPendingTransactions = useCallback(async (filters: PendingTransactionFilters): Promise<TransactionListResponse> => {
-    const params = new URLSearchParams();
-    params.append('page', filters.page.toString());
-    params.append('page_size', filters.page_size.toString());
-    
-    if (filters.chain_id) params.append('chain_id', filters.chain_id.toString());
-    if (filters.only_can_exec !== undefined) params.append('only_can_exec', filters.only_can_exec.toString());
-
-    const response = await request(`/api/v1/transaction/pending?${params.toString()}`, {
-      method: 'GET',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to fetch pending transactions');
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value));
+        }
+      });
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/transaction/pending?${queryParams.toString()}`
+        : '/api/v1/transaction/pending';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
+  }, [request]);
 
-    return response.data;
-  }, [request, createHeaders]);
-
-  // Get transaction statistics
   const getTransactionStats = useCallback(async (): Promise<TransactionStats> => {
-    const response = await request('/api/v1/transaction/stats', {
-      method: 'GET',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to fetch transaction stats');
+    try {
+      const response = await request('/api/v1/transaction/stats', { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
+  }, [request]);
 
-    return response.data;
-  }, [request, createHeaders]);
-
-  // Get transaction details by ID
   const getTransactionById = useCallback(async (id: number): Promise<Transaction> => {
-    const response = await request(`/api/v1/transaction/${id}`, {
-      method: 'GET',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to fetch transaction details');
+    try {
+      const response = await request(`/api/v1/transaction/${id}`, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
-
-    return response.data;
-  }, [request, createHeaders]);
-
-  // Cancel transaction
-  const cancelTransaction = useCallback(async (id: number): Promise<void> => {
-    const response = await request(`/api/v1/transaction/${id}/cancel`, {
-      method: 'POST',
-      headers: createHeaders(),
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to cancel transaction');
-    }
-  }, [request, createHeaders]);
-
-  // Execute transaction
-  const executeTransaction = useCallback(async (id: number, executeData: { execute_tx_hash: string; id: number }): Promise<void> => {
-    const response = await request(`/api/v1/transaction/${id}/execute`, {
-      method: 'POST',
-      headers: createHeaders(),
-      body: executeData,
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to execute transaction');
-    }
-  }, [request, createHeaders]);
-
-  // Mark transaction as failed
-  const markTransactionFailed = useCallback(async (id: number, reason: string): Promise<void> => {
-    const response = await request(`/api/v1/transaction/${id}/mark-failed`, {
-      method: 'POST',
-      headers: createHeaders(),
-      body: { id, reason },
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to mark transaction as failed');
-    }
-  }, [request, createHeaders]);
-
-  // Mark transaction submit as failed
-  const markTransactionSubmitFailed = useCallback(async (id: number, reason: string): Promise<void> => {
-    const response = await request(`/api/v1/transaction/${id}/mark-submit-failed`, {
-      method: 'POST',
-      headers: createHeaders(),
-      body: { id, reason },
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to mark transaction submit as failed');
-    }
-  }, [request, createHeaders]);
-
-  // Retry submit transaction
-  const retrySubmitTransaction = useCallback(async (id: number, txHash: string): Promise<void> => {
-    const response = await request(`/api/v1/transaction/${id}/retry-submit`, {
-      method: 'POST',
-      headers: createHeaders(),
-      body: { id, tx_hash: txHash },
-    });
-
-    if (!response?.success) {
-      throw new Error(response?.error?.message || 'Failed to retry submit transaction');
-    }
-  }, [request, createHeaders]);
+  }, [request]);
 
   return {
+    // Query hooks
+    useTransactionList,
+    usePendingTransactions,
+    useTransactionStats,
+    useTransactionById,
+    
+    // Mutation methods
     createTransaction,
+    cancelTransaction,
+    executeTransaction,
+    markTransactionFailed,
+    retrySubmitTransaction,
+    
+    // Legacy methods (for backward compatibility)
     getTransactionList,
     getPendingTransactions,
     getTransactionStats,
     getTransactionById,
-    cancelTransaction,
-    executeTransaction,
-    markTransactionFailed,
-    markTransactionSubmitFailed,
-    retrySubmitTransaction,
+    
+    // Mutation states
+    createTransactionState: {
+      data: createTransactionMutation.data,
+      error: createTransactionMutation.error,
+      isLoading: createTransactionMutation.isLoading,
+    },
+    cancelTransactionState: {
+      data: cancelTransactionMutation.data,
+      error: cancelTransactionMutation.error,
+      isLoading: cancelTransactionMutation.isLoading,
+    },
+    executeTransactionState: {
+      data: executeTransactionMutation.data,
+      error: executeTransactionMutation.error,
+      isLoading: executeTransactionMutation.isLoading,
+    },
   };
 };

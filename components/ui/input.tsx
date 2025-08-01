@@ -1,8 +1,15 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import type { InputProps } from '@/types'
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+/**
+ * Basic input component with consistent styling
+ * 
+ * @param props - Input component props
+ * @returns JSX.Element
+ */
+function Input({ className, type, ...props }: InputProps) {
   return (
     <input
       type={type}

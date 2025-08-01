@@ -1,132 +1,173 @@
-"use client"
+'use client';
 
-import { useState } from 'react';
-import { ethers, ContractReceipt } from 'ethers';
+// React imports
+import { useCallback, useMemo } from 'react';
+
+// External libraries
 import type { ContractInterface } from 'ethers';
-import { useActiveAccount } from 'thirdweb/react'; 
-import { toast } from 'sonner';
 
+// Internal contracts
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock';
 
-import { useWeb3React } from './useWeb3React';
+// Internal hooks
+import { useAsyncOperation } from './useCommonHooks';
+import { useContractDeployment } from './useBlockchainHooks';
+import { createErrorMessage, validateRequiredFields } from './useHookUtils';
 
-type Address = string;
-type Hash = string;
+// Type imports
+import type { 
+  CompoundTimelockParams, 
+  ContractStandard,
+  DeploymentResult,
+  OpenZeppelinTimelockParams
+} from '@/types';
 
-interface DeployResult {
-  transactionHash: Hash;
-  contractAddress: Address | null;
+/**
+ * Configuration for timelock deployment
+ */
+interface TimelockDeploymentConfig {
+  /** Whether to validate parameters before deployment */
+  validateParams?: boolean;
+  /** Custom gas limit for deployment */
+  gasLimit?: number;
+  /** Custom gas price for deployment */
+  gasPrice?: string;
 }
 
-interface DeployCompoundParams {
-  minDelay: number;
-  admin: Address;
-}
-
-interface DeployOpenZeppelinParams {
-  minDelay: number;
-  proposers: Address[];
-  executors: Address[];
-  admin: Address;
-}
-
-export const useDeployTimelock = () => {
-  const { address: accountAddress } = useActiveAccount() || {};
-  const { signer } = useWeb3React();
-  // const signer = useActiveAccount();
+/**
+ * Hook for deploying timelock contracts using standardized blockchain patterns
+ * Provides optimized deployment methods with proper error handling and validation
+ * 
+ * @param config Optional configuration for deployment behavior
+ * @returns Object containing deployment methods and state
+ */
+export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
+  const { validateParams = true, gasLimit, gasPrice } = config;
+  const { deployContract, isLoading, error, reset } = useContractDeployment();
   
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  // Separate async operation for parameter validation
+  const { execute: executeWithValidation, isLoading: isValidating } = useAsyncOperation({
+    loadingMessage: 'Validating deployment parameters...',
+    errorMessage: 'Parameter validation failed',
+    showToasts: false,
+  });
 
-  const deployContract = async (abi: ContractInterface, bytecode: string, args: unknown[]): Promise<DeployResult> => {
-    if (!accountAddress || !signer) {
-      const err = new Error("Please connect your wallet first.");
-      toast.error(err.message);
-      throw err;
+  // Memoize deployment options
+  const deploymentOptions = useMemo(() => ({
+    gasLimit,
+    gasPrice,
+  }), [gasLimit, gasPrice]);
+
+  /**
+   * Validate Compound timelock parameters
+   */
+  const validateCompoundParams = useCallback((params: CompoundTimelockParams): string[] => {
+    const errors = validateRequiredFields(params, ['admin', 'minDelay']);
+    
+    if (params.minDelay < 0) {
+      errors.push('Minimum delay must be non-negative');
+    }
+    
+    if (params.minDelay > 30 * 24 * 60 * 60) { // 30 days in seconds
+      errors.push('Minimum delay cannot exceed 30 days');
     }
 
-    // 确保 bytecode 以 0x 开头
-    const validBytecode = bytecode.startsWith('0x') ? bytecode : `0x${bytecode}`;
+    return errors;
+  }, []);
 
-    // 额外验证：确保bytecode看起来像有效的合约字节码
-    if (validBytecode.length < 100) {
-      const err = new Error("Bytecode appears to be too short for a valid contract.");
-      toast.error(err.message);
-      throw err;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      console.log("Deploying contract with:", {
-        abiLength: Array.isArray(abi) ? abi.length : "unknown",
-        bytecodeLength: validBytecode.length,
-        argsCount: args.length
-      });
-      // useSigner() 返回的是一个 ethers v5 的 Signer，可以直接使用
-      const factory = new ethers.ContractFactory(abi, validBytecode, signer);
-
-      toast.info("Deploying contract... Please confirm in your wallet.");
-
-      // 部署合约
-      const contract = await factory.deploy(...args);
-
-      const deployTx = contract.deployTransaction;
-      const hash = deployTx.hash;
-
-      toast.loading("Transaction sent. Waiting for confirmation...", {
-        id: hash,
-      });
-
-      // 等待交易被打包 (ethers v5)
-      const receipt: ContractReceipt = await deployTx.wait();
-
-      // 在 ethers v5 中, status 为 0 表示失败, 1 表示成功
-      if (!receipt || receipt.status === 0 || !receipt.contractAddress) {
-        throw new Error("Transaction failed or contract address not found.");
-      }
-
-      toast.success("Contract deployed successfully!", {
-        id: hash,
-      });
-
-      return {
-        transactionHash: receipt.transactionHash,
-        contractAddress: receipt.contractAddress,
-      };
-    } catch (e: unknown) {
-      console.error("Deployment failed:", e);
-      let errorMessage = "An unknown error occurred.";
-      
-      if (e instanceof Error) {
-        errorMessage = e.message;
-        // 检查常见的错误类型
-        if (e.message.includes("invalid bytecode")) {
-          errorMessage = "Invalid contract bytecode. Please check the contract configuration.";
-        } else if (e.message.includes("insufficient funds")) {
-          errorMessage = "Insufficient funds for deployment. Please check your wallet balance.";
-        } else if (e.message.includes("user rejected")) {
-          errorMessage = "Transaction was rejected by user.";
+  /**
+   * Deploy Compound timelock contract with validation and error handling
+   */
+  const deployCompoundTimelock = useCallback(async (
+    params: CompoundTimelockParams
+  ): Promise<DeploymentResult> => {
+    return executeWithValidation(async () => {
+      // Validate parameters if enabled
+      if (validateParams) {
+        const validationErrors = validateCompoundParams(params);
+        if (validationErrors.length > 0) {
+          throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
         }
       }
-      
-      setError(new Error(errorMessage));
-      toast.error("Deployment failed", { description: errorMessage });
-      throw e;
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const deployCompoundTimelock = async ({ admin, minDelay }: DeployCompoundParams) => {
-    return deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [admin, BigInt(minDelay)]);
-  };
+      try {
+        // Deploy the contract
+        const result = await deployContract(
+          compoundTimelockAbi as ContractInterface,
+          compoundTimelockBytecode,
+          [params.admin, BigInt(params.minDelay)],
+          deploymentOptions
+        );
+
+        return {
+          ...result,
+          standard: 'compound' as ContractStandard,
+          parameters: params,
+        };
+      } catch (error) {
+        const message = createErrorMessage(error, 'Failed to deploy Compound timelock');
+        throw new Error(message);
+      }
+    });
+  }, [deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions]);
+
+  /**
+   * Deploy OpenZeppelin timelock contract (placeholder for future implementation)
+   */
+  const deployOpenZeppelinTimelock = useCallback(async (
+    params: OpenZeppelinTimelockParams
+  ): Promise<DeploymentResult> => {
+    return executeWithValidation(async () => {
+      // TODO: Implement OpenZeppelin timelock deployment
+      // This is a placeholder for future implementation
+      throw new Error('OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.');
+    });
+  }, [executeWithValidation]);
+
+  /**
+   * Get deployment cost estimation
+   */
+  const estimateDeploymentCost = useCallback(async (
+    standard: ContractStandard,
+    params: CompoundTimelockParams | OpenZeppelinTimelockParams
+  ) => {
+    if (standard === 'compound') {
+      // This would typically use gas estimation
+      // For now, return a placeholder
+      return {
+        gasLimit: gasLimit || 2000000,
+        gasPrice: gasPrice || '20000000000', // 20 gwei
+        estimatedCost: '0.04', // ETH
+      };
+    }
+    
+    throw new Error(`Cost estimation not available for ${standard} timelock`);
+  }, [gasLimit, gasPrice]);
+
+  /**
+   * Check if deployment is supported for the given standard
+   */
+  const isDeploymentSupported = useCallback((standard: ContractStandard): boolean => {
+    return standard === 'compound';
+  }, []);
 
   return {
+    // Deployment methods
     deployCompoundTimelock,
-    isLoading,
+    deployOpenZeppelinTimelock,
+    
+    // Utility methods
+    estimateDeploymentCost,
+    isDeploymentSupported,
+    validateCompoundParams,
+    
+    // State
+    isLoading: isLoading || isValidating,
+    isValidating,
     error,
+    
+    // Actions
+    reset,
   };
 };

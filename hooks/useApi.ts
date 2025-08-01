@@ -2,36 +2,12 @@
 
 import { useState, useCallback } from 'react';
 import axios from 'axios';
-import { useAuthStore } from '@/store/userStore'; // Import useAuthStore
-
-type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
-interface ApiRequestOptions {
-  method?: ApiMethod;
-  headers?: Record<string, string>;
-  body?: any;
-}
-
-interface UseApiReturn {
-  data: ApiResponseOptions;
-  error: Error | null;
-  isLoading: boolean;
-  request: (url: string, options?: ApiRequestOptions, retryCount?: number) => Promise<any>; // Added retryCount parameter
-}
-
-interface ApiResponseOptions {
-  data: any | null;
-  error?: {
-    code: string,
-    details: string,
-    message: string
-  } | null;
-  success: boolean;
-}
+import { useAuthStore } from '@/store/userStore';
+import type { ApiRequestOptions, UseApiReturn, ApiResponse } from '@/types';
 
 
 export function useApi(): UseApiReturn {
-  const [data, setData] = useState<ApiResponseOptions>({ data: null, success: false });
+  const [data, setData] = useState<ApiResponse>({ data: null, success: false });
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const accessToken = useAuthStore((state) => state.accessToken); // Get accessToken from useAuthStore

@@ -6,10 +6,16 @@ import TextInput from "@/components/ui/TextInput";
 import { Button } from "@/components/ui/button";
 import ContractStandardSelection from "./ContractStandardSelection";
 import { useAuthStore } from "@/store/userStore";
-import type { CreateTimelockFormProps, ChainOption, ContractStandard } from "./types";
+import type { CreateTimelockFormProps, ChainOption } from "@/types";
 
 const DEFAULT_CHAIN_LOGO = "/default-chain-logo.png";
 
+/**
+ * Create timelock form component with chain selection and contract standard options
+ * 
+ * @param props - CreateTimelockForm component props
+ * @returns JSX.Element
+ */
 export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   selectedChain,
   onChainChange,
@@ -52,11 +58,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   // Format the selected chain value for the SelectInput
   const selectedChainValue = selectedChain.toString();
 
-  // Handle text input changes
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    return value;
-  }, []);
+
 
   // Handle number input changes
   const handleNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +86,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
         {/* minDelay Input */}
         <div className="md:col-start-2 min-w-[548px]">
-          <TextInput label={t("minDelay")} value={minDelay} onChange={(e) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
+          <TextInput label={t("minDelay")} value={minDelay} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
         </div>
       </div>
 

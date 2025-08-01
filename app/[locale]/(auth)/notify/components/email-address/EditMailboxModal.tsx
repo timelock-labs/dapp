@@ -82,7 +82,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
     } finally {
       setIsLoadingTimelocks(false);
     }
-  }, [getTimelockList]);
+  }, [getTimelockList, t]);
 
   useEffect(() => {
     if (initialData) {

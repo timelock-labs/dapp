@@ -6,11 +6,12 @@ import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
 import { useSponsorsApi } from '@/hooks/useSponsorsApi';
 import { useTranslations } from 'next-intl';
+import type { Partner } from '@/types/api';
 
 const EcosystemPage: React.FC = () => {
     const t = useTranslations('Ecosystem');
-    const [sponsors, setSponsors] = useState([]);
-    const [partners, setPartners] = useState([]);
+    const [sponsors, setSponsors] = useState<Partner[]>([]);
+    const [partners, setPartners] = useState<Partner[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { getSponsors } = useSponsorsApi();
 
@@ -19,7 +20,7 @@ const EcosystemPage: React.FC = () => {
             try {
                 setIsLoading(true);
                 const response = await getSponsors();
-                if (response.success) {
+                if (response.success && response.data) {
                     setSponsors(response.data.sponsors || []);
                     setPartners(response.data.partners || []);
                 }

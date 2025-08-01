@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import SelectInput from "@/components/ui/SelectInput";
 import TextInput from "@/components/ui/TextInput";
@@ -10,10 +10,16 @@ import { useApi } from "@/hooks/useApi";
 import QuestionIcon from "@/public/QuestionIcon.svg";
 import { useActiveWalletChain, useSwitchActiveWalletChain } from "thirdweb/react";
 import TimelockCompundABI from "@/components/abi/TimelockCompound.json";
-import type { EncodingTransactionFormProps } from "./types";
+import type { EncodingTransactionFormProps } from "@/types";
 import { getChainObject } from "@/utils/chainUtils";
 import TextAreaInput from "@/components/ui/TextAreaInput";
 
+/**
+ * Encoding transaction form component for creating timelock transactions
+ *
+ * @param props - EncodingTransactionForm component props
+ * @returns JSX.Element
+ */
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   targetCalldata,
   timelockType,
@@ -86,58 +92,58 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }));
   }, [allTimelocks]);
 
-  const handleTimelockChange = async (value: string) => {
-    onTimelockTypeChange(value);
-    const selectedTimelock = timelockOptions.find((option) => option.value === value);
-    if (selectedTimelock) {
-      onTimelockAddressChange(selectedTimelock.address);
+  const handleTimelockChange = useCallback(
+    async (value: string) => {
+      onTimelockTypeChange(value);
+      const selectedTimelock = timelockOptions.find((option) => option.value === value);
+      if (selectedTimelock) {
+        onTimelockAddressChange(selectedTimelock.address);
 
-      const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
-      if (fullTimelock && fullTimelock.standard && accessToken) {
-        setIsLoadingDetails(true);
+        const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
+        if (fullTimelock && fullTimelock.standard && accessToken) {
+          setIsLoadingDetails(true);
 
-        try {
-          const timelocks = await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          // setCurrentTimelockDetails(timelocks.data);
-        } catch (error) {
-          console.error("Failed to fetch timelock details:", error);
-        } finally {
-          setIsLoadingDetails(false);
+          try {
+            await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            });
+          } catch (error) {
+            console.error("Failed to fetch timelock details:", error);
+          } finally {
+            setIsLoadingDetails(false);
+          }
         }
       }
-    }
-  };
-
-
+    },
+    [allTimelocks, accessToken, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions],
+  );
 
   useEffect(() => {
-    if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
-      onTimelockDetailsChange(timelockDetailResponse.data);
+    if (timelockDetailResponse && timelockDetailResponse.success) {
+      setCurrentTimelockDetails(timelockDetailResponse.data);
+      if (onTimelockDetailsChange) {
+        onTimelockDetailsChange(timelockDetailResponse.data);
+      }
     }
   }, [timelockDetailResponse, onTimelockDetailsChange]);
 
-  useEffect(() => {
-    if (currentTimelockDetails?.chain_id) handleTimelockMethodChange();
-  }, [JSON.stringify(currentTimelockDetails)]);
-
-  const handleTimelockMethodChange = () => {
+  const handleTimelockMethodChange = useCallback(() => {
     // 修复 currentTimelockDetails 可能为 null 的问题
     if (currentTimelockDetails && currentTimelockDetails.chain_id && Number(currentTimelockDetails.chain_id) !== chainId) {
-
       const chainObject = getChainObject(Number(currentTimelockDetails.chain_id));
-      switchChain(chainObject)
-        .then(() => {
-          console.log("Switched to chain:", currentTimelockDetails.chain_id);
-        })
+      switchChain(chainObject).then(() => {
+        console.log("Switched to chain:", currentTimelockDetails.chain_id);
+      });
     }
-  };
+  }, [chainId, currentTimelockDetails, switchChain]);
+
+  useEffect(() => {
+    if (currentTimelockDetails?.chain_id) handleTimelockMethodChange();
+  }, [currentTimelockDetails, handleTimelockMethodChange]);
 
   const timelockMethodOptions = useMemo(() => {
     if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
@@ -154,9 +160,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       // 从 ABI 读取所有 function 名称作为 options
       const functions = TimelockCompundABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure");
       return functions.map((fn) => {
-        const inputTypes = (fn.inputs || [])
-          .map((input) => input.type)
-          .join(",");
+        const inputTypes = (fn.inputs || []).map((input) => input.type).join(",");
         const signature = `${fn.name}(${inputTypes})`;
         return {
           value: signature,
@@ -169,21 +173,22 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   }, [timelockType, allTimelocks]);
 
   useEffect(() => {
-    if (currentTimelockDetails?.chain_id && parseInt(currentTimelockDetails.chain_id as string) !== chainId) {
+    const currentChainId = currentTimelockDetails?.chain_id;
+    if (currentChainId && parseInt(currentChainId as string) !== chainId) {
       handleTimelockChange("");
       handleTimelockMethodChange();
     }
-  }, [currentTimelockDetails, chainId]);
+  }, [currentTimelockDetails, chainId, handleTimelockChange, handleTimelockMethodChange]);
 
   const timeZone = () => {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const timeOffset = new Date().getTimezoneOffset() / 60;
 
     return zone ? `(${zone} UTC${timeOffset >= 0 ? "+" : ""}${timeOffset})` : `UTC${timeOffset >= 0 ? "+" : ""}${timeOffset}`;
-  }
+  };
 
   function toLocalDateTimeString(date: Date) {
-    const pad = (n: number) => n.toString().padStart(2, '0');
+    const pad = (n: number) => n.toString().padStart(2, "0");
 
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1); // 月份是 0-based
@@ -209,8 +214,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
                 isLoadingDetails
                   ? t("encodingTransaction.loadingTimelockDetails")
                   : allTimelocks.length === 0
-                    ? t("encodingTransaction.noTimelocksAvailable")
-                    : t("encodingTransaction.selectTimelockPlaceholder")
+                  ? t("encodingTransaction.noTimelocksAvailable")
+                  : t("encodingTransaction.selectTimelockPlaceholder")
               }
             />
           </div>
@@ -220,11 +225,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
               value={timelockMethod}
               onChange={onTimelockMethodChange}
               options={timelockMethodOptions}
-              placeholder={
-                timelockType
-                  ? t("encodingTransaction.selectTimelockMethodPlaceholder")
-                  : t("encodingTransaction.selectTimelockFirstPlaceholder")
-              }
+              placeholder={timelockType ? t("encodingTransaction.selectTimelockMethodPlaceholder") : t("encodingTransaction.selectTimelockFirstPlaceholder")}
             />
           </div>
         </div>
@@ -232,43 +233,27 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <div id="transaction-details" className="border border-gray-300 rounded-lg p-4 mt-2">
           <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
           <TextInput label={t("encodingTransaction.value")} defaultValue={0} value={value} onChange={handleValueChange} placeholder="Value" />
-          <TextInput
-            label={t("encodingTransaction.description")}
-            value={description}
-            onChange={onDescriptionChange}
-            placeholder={t("encodingTransaction.descriptionPlaceholder")}></TextInput>
-          <TextAreaInput
-            label={t("encodingTransaction.calldata")}
-            value={targetCalldata}
-            onChange={() => { }}
-            placeholder={t("encodingTransaction.calldataPlaceholder")}
-            disabled={true}
-            rows={3}
-          />
+          <TextInput label={t("encodingTransaction.description")} value={description} onChange={onDescriptionChange} placeholder={t("encodingTransaction.descriptionPlaceholder")}></TextInput>
+          <TextAreaInput label={t("encodingTransaction.calldata")} value={targetCalldata} onChange={() => {}} placeholder={t("encodingTransaction.calldataPlaceholder")} disabled={true} rows={3} />
 
           <div className="flex flex-col md:flex-row gap-4 items-end">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t("targetABI.time")}  {timeZone()}
+                {t("targetABI.time")} {timeZone()}
               </label>
               <div className="flex gap-4 items-center">
                 <input
                   type="datetime-local"
                   value={toLocalDateTimeString(new Date(timeValue * 1000))}
                   className="max-w-[200px] border border-gray-300 rounded px-3 h-[34px]  focus:outline-none focus:ring-2 focus:ring-blue-200"
-                  onChange={e => {
+                  onChange={(e) => {
                     const date = new Date(e.target.value);
                     if (!isNaN(date.getTime())) {
                       onTimeChange(Math.floor(date.getTime() / 1000));
                     }
                   }}
                 />
-                <TextInput
-                  label=""
-                  value={timeValue}
-                  onChange={onTimeChange}
-                  placeholder={t("encodingTransaction.timePlaceholder") || "Time (seconds)"}
-                />
+                <TextInput label="" value={String(timeValue)} onChange={(e: string) => onTimeChange(Number(e))} placeholder={t("encodingTransaction.timePlaceholder") || "Time (seconds)"} />
               </div>
             </div>
           </div>

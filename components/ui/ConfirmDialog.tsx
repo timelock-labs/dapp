@@ -11,18 +11,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import type { ModalProps, VoidCallback } from '@/types';
 
-interface ConfirmDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title?: string;
+interface ConfirmDialogProps extends ModalProps {
+  onConfirm: VoidCallback;
   description: string;
   confirmText?: string;
   cancelText?: string;
   variant?: 'default' | 'destructive';
 }
 
+/**
+ * Confirmation dialog component with customizable actions
+ * 
+ * @param props - ConfirmDialog component props
+ * @returns JSX.Element
+ */
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isOpen,
   onClose,

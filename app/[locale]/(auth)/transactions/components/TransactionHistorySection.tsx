@@ -5,11 +5,12 @@ import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
 import TableComponent from '@/components/ui/TableComponent';
-import { useTransactionApi, Transaction } from '@/hooks/useTransactionApi';
+import { useTransactionApi } from '@/hooks/useTransactionApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import * as XLSX from 'xlsx';
+import type { Transaction, BaseComponentProps } from '@/types';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -36,7 +37,13 @@ const getHistoryTxTypeStyle = (type: string) => {
   }
 };
 
-const TransactionHistorySection: React.FC = () => {
+/**
+ * Transaction history section component with filtering and export functionality
+ * 
+ * @param props - TransactionHistorySection component props
+ * @returns JSX.Element
+ */
+const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) => {
   const t = useTranslations('Transactions');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
@@ -212,7 +219,7 @@ const TransactionHistorySection: React.FC = () => {
   };
 
   return (
-    <div className="rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6">
+    <div className={`rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6 ${className || ''}`}>
       <div className="h-[152px] flex flex-col justify-between pt-6 pb-4">
         <div>
           <SectionHeader

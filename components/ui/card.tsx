@@ -1,8 +1,15 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import type { CardProps } from '@/types'
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+/**
+ * Card component with consistent styling
+ * 
+ * @param props - Card component props
+ * @returns JSX.Element
+ */
+function Card({ className, ...props }: CardProps) {
   return (
     <div
       data-slot="card"

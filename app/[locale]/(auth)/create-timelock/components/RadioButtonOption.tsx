@@ -1,6 +1,12 @@
 import React, { useCallback } from "react";
-import type { RadioButtonOptionProps } from "./types";
+import type { RadioButtonOptionProps } from "@/types";
 
+/**
+ * Radio button option component with label and description
+ * 
+ * @param props - RadioButtonOption component props
+ * @returns JSX.Element
+ */
 const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({ id, name, value, label, description, checked, onChange, className = "", disabled = false }) => {
   const handleChange = useCallback(() => {
     if (!disabled) {

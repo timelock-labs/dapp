@@ -1,11 +1,6 @@
-import {NextConfig} from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin({
-  // 配置默认语言
-  defaultLocale: 'en',
-  localePrefix: 'never', // 不在路径中添加语言前缀
-});
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig = {
   async rewrites() {
@@ -17,7 +12,24 @@ const nextConfig = {
     ];
   },
   images: {
-    remotePatterns: [new URL('https://raw.githubusercontent.com/**')],
+    remotePatterns: [
+      {
+        protocol: 'https' as const,
+        hostname: 'raw.githubusercontent.com',
+      },
+      {
+        protocol: 'https' as const,
+        hostname: 'cryptologos.cc',
+      },
+      {
+        protocol: 'https' as const,
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https' as const,
+        hostname: 'pbs.twimg.com',
+      },
+    ],
   },
 };
 
