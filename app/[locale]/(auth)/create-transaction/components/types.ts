@@ -54,4 +54,4 @@ export interface AddABIFormProps {
   isOpen: boolean;
   onClose: () => void;
   onAddABI: (name: string, abi: string) => void;
-} 
+}
