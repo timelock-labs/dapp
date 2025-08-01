@@ -21,11 +21,7 @@ const CreateTimelockPage: React.FC = () => {
     selectedChain: 1,
     selectedStandard: "compound",
     minDelay: "259200",
-    proposers: "",
-    executors: "",
-    admin: "",
   });
-
 
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [dialogDetails, setDialogDetails] = useState<DialogDetailsState>({
@@ -82,10 +78,6 @@ const CreateTimelockPage: React.FC = () => {
     setFormState((prev) => ({ ...prev, minDelay }));
   }, []);
 
-  const handleAdminChange = useCallback((admin: string) => {
-    setFormState((prev) => ({ ...prev, admin }));
-  }, []);
-
   // Deployment handlers
   const handleCreate = useCallback(async () => {
     if (!accessToken || !walletAddress) {
@@ -108,7 +100,7 @@ const CreateTimelockPage: React.FC = () => {
       if (formState.selectedStandard === "compound") {
         const params: CompoundTimelockParams = {
           minDelay: parseInt(formState.minDelay),
-          admin: (formState.admin.trim() || walletAddress) as `0x${string}`,
+          admin: walletAddress as `0x${string}`,
         };
         const result: DeploymentResult = await deployCompoundTimelock(params);
         deployedContractAddress = result.contractAddress;
@@ -145,6 +137,7 @@ const CreateTimelockPage: React.FC = () => {
       }
 
       const body: CreateTimelockRequestBody = {
+        admin: walletAddress as `0x${string}`,
         chain_id: formState.selectedChain,
         chain_name: dialogDetails.chainName,
         min_delay: parseInt(formState.minDelay),
@@ -153,24 +146,6 @@ const CreateTimelockPage: React.FC = () => {
         tx_hash: dialogDetails.transactionHash,
         contract_address: dialogDetails.timelockAddress,
       };
-
-      if (formState.selectedStandard === "compound") {
-        body.admin = formState.admin.trim() || walletAddress;
-      } else if (formState.selectedStandard === "openzeppelin") {
-        const proposersList = formState.proposers
-          .split(",")
-          .map((addr) => addr.trim())
-          .filter((addr) => addr !== "");
-        const executorsList = formState.executors
-          .split(",")
-          .map((addr) => addr.trim())
-          .filter((addr) => addr !== "");
-
-        body.proposers = proposersList;
-        body.executors = executorsList;
-        body.cancellers = proposersList; // As per API doc: proposers就是cancellers
-        body.admin = formState.admin.trim() || "0x0000000000000000000000000000000000000000";
-      }
 
       try {
         console.log("Creating timelock record with body:", body);
@@ -191,9 +166,6 @@ const CreateTimelockPage: React.FC = () => {
             selectedChain: 1,
             selectedStandard: "compound",
             minDelay: "259200",
-            proposers: "",
-            executors: "",
-            admin: "",
           });
           // Redirect to timelocks page
           router.push(`/${locale}/timelocks`);
@@ -235,8 +207,6 @@ const CreateTimelockPage: React.FC = () => {
             onStandardChange={handleStandardChange}
             minDelay={formState.minDelay}
             onMinDelayChange={handleMinDelayChange}
-            admin={formState.admin}
-            onAdminChange={handleAdminChange}
             onDeploy={handleCreate}
             isLoading={isLoading}
           />

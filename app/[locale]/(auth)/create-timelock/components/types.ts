@@ -1,4 +1,4 @@
-import type { ReactNode, ChangeEvent } from "react";
+import type { ReactNode } from "react";
 
 /**
  * Chain option for dropdown selection
@@ -19,12 +19,6 @@ export interface CreateTimelockFormProps {
   onStandardChange: (value: ContractStandard) => void;
   minDelay: string;
   onMinDelayChange: (value: string) => void;
-  proposers: string;
-
-  executors: string;
-
-  admin: string;
-  onAdminChange: (value: string) => void;
   onDeploy: () => void;
   isLoading: boolean;
 }
@@ -132,8 +126,6 @@ export interface CreateTimelockRequestBody {
   tx_hash: string;
   contract_address: string;
   admin?: string;
-
-  cancellers?: string[];
 }
 
 /**
@@ -154,9 +146,6 @@ export interface CreateTimelockFormState {
   selectedChain: number;
   selectedStandard: ContractStandard;
   minDelay: string;
-  proposers: string;
-  executors: string;
-  admin: string;
 }
 
 /**

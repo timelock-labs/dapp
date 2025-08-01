@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import RadioButtonOption from "./RadioButtonOption";
-import type { ContractStandard, ContractStandardSelectionProps, StandardOptionConfig } from "./types";
+import type { ContractStandardSelectionProps, StandardOptionConfig } from "./types";
 
 const STANDARD_OPTIONS: StandardOptionConfig[] = [
   {

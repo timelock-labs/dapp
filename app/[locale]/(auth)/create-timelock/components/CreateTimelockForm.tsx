@@ -17,9 +17,6 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   onStandardChange,
   minDelay,
   onMinDelayChange,
-
-  admin,
-  onAdminChange,
   onDeploy,
   isLoading,
 }) => {
