@@ -59,7 +59,6 @@ const ImportTimelockPage: React.FC = () => {
     
     const standardOptions = [
         { value: 'compound', label: 'Compound' },
-        { value: 'openzeppelin', label: 'OpenZeppelin' },
     ];
 
     // Handle contract address change (remove auto-detection)
@@ -93,7 +92,9 @@ const ImportTimelockPage: React.FC = () => {
         // Start detection process
         try {
             // First validate the contract address
+            alert(contractAddress)
             const isValid = await validateContractAddress(contractAddress);
+
             if (!isValid) {
                 toast.error('Invalid contract address or not a contract');
                 return;
@@ -153,12 +154,7 @@ const ImportTimelockPage: React.FC = () => {
                     admin: detectedParameters.admin,
                     pending_admin: detectedParameters.pendingAdmin || '',
                 });
-            } else if (detectedParameters.standard === 'openzeppelin') {
-                Object.assign(importData, {
-                    proposers: detectedParameters.proposers || [],
-                    executors: detectedParameters.executors || [],
-                    cancellers: detectedParameters.cancellers || [],
-                });
+
             }
 
             const response = await importTimelock(importData);

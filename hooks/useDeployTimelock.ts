@@ -8,9 +8,6 @@ import { toast } from 'sonner';
 
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock';
-import { openzeppelinTimelockAbi } from '@/contracts/abis/OpenZeppelinTimelock';
-import { openzeppelinTimelockBytecode } from '@/contracts/bytecodes/OpenZeppelinTimelock';
-// Ensure the import path and exported variable name are correct and match your file structure.
 
 import { useWeb3React } from './useWeb3React';
 
@@ -69,6 +66,8 @@ export const useDeployTimelock = () => {
         argsCount: args.length
       });
 
+      alert(validBytecode)
+      alert(args)
       // useSigner() 返回的是一个 ethers v5 的 Signer，可以直接使用
       const factory = new ethers.ContractFactory(abi, validBytecode, signer);
 
@@ -127,19 +126,9 @@ export const useDeployTimelock = () => {
   const deployCompoundTimelock = async ({ admin, minDelay }: DeployCompoundParams) => {
     return deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [admin, BigInt(minDelay)]);
   };
-  const deployOpenZeppelinTimelock = async ({ minDelay, proposers, executors, admin }: DeployOpenZeppelinParams) => {
-    // OpenZeppelin TimelockController expects (minDelay, proposers, executors)
-    // Remove admin from the constructor arguments if not required by your contract
-    return deployContract(
-      openzeppelinTimelockAbi as ContractInterface,
-      openzeppelinTimelockBytecode,
-      [BigInt(minDelay), proposers, executors]
-    );
-  };
 
   return {
     deployCompoundTimelock,
-    deployOpenZeppelinTimelock,
     isLoading,
     error,
   };
