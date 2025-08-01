@@ -85,7 +85,6 @@ export function ChainSwitcher() {
       
       if (!chainObject) {
         console.error(`Chain ID ${newChainId} is not supported by thirdweb`);
-        alert(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
         return;
       }
 
@@ -93,7 +92,6 @@ export function ChainSwitcher() {
       try {
         await switchChain(chainObject);
       } catch (error: any) {
-        alert(`Switching chain failed: ${error.message}`);
         // If the chain is not configured, try to add it
         if (error?.name?.includes('ChainNotConfigured')) {
           const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;

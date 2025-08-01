@@ -44,7 +44,6 @@ const TimeLockerSplitPage = () => {
         });
       } catch (error) {
         console.error('Error signing message:', error);
-              alert('Please connect your wallet first.');
       } 
     }
  

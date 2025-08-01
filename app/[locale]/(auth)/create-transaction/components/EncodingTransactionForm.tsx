@@ -89,7 +89,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   const handleTimelockChange = async (value: string) => {
     onTimelockTypeChange(value);
     const selectedTimelock = timelockOptions.find((option) => option.value === value);
-    alert(`Selected Timelock: ${JSON.stringify(selectedTimelock)}`);
     if (selectedTimelock) {
       onTimelockAddressChange(selectedTimelock.address);
 
@@ -107,9 +106,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           });
 
           // setCurrentTimelockDetails(timelocks.data);
-
-
-          alert(`Fetched Timelock Details: ${JSON.stringify(timelocks)}`);
         } catch (error) {
           console.error("Failed to fetch timelock details:", error);
         } finally {
@@ -134,7 +130,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   const handleTimelockMethodChange = () => {
     // 修复 currentTimelockDetails 可能为 null 的问题
     if (currentTimelockDetails && currentTimelockDetails.chain_id && Number(currentTimelockDetails.chain_id) !== chainId) {
-      alert(`Switching chain to: ${currentTimelockDetails.chain_id}`);
 
       const chainObject = getChainObject(Number(currentTimelockDetails.chain_id));
       switchChain(chainObject)

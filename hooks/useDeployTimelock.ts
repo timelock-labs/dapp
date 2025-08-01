@@ -65,9 +65,6 @@ export const useDeployTimelock = () => {
         bytecodeLength: validBytecode.length,
         argsCount: args.length
       });
-
-      alert(validBytecode)
-      alert(args)
       // useSigner() 返回的是一个 ethers v5 的 Signer，可以直接使用
       const factory = new ethers.ContractFactory(abi, validBytecode, signer);
 

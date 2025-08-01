@@ -92,7 +92,6 @@ const ImportTimelockPage: React.FC = () => {
         // Start detection process
         try {
             // First validate the contract address
-            alert(contractAddress)
             const isValid = await validateContractAddress(contractAddress);
 
             if (!isValid) {

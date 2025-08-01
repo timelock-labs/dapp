@@ -142,7 +142,6 @@ export const useTimelockImport = () => {
       const code = await provider.getCode(address);
       return code !== '0x';
     } catch (error) {
-      alert(error);
       console.error('Error validating contract address:', error);
       return false;
     }
