@@ -32,7 +32,7 @@ export const CHAIN_ID_TO_CHAIN = {
   1: ethereum,
   11155111: sepolia,
   137: polygon,
-  80001: avalanche,
+  43114: avalanche,
   56: bsc,
   97: bscTestnet,
   42161: arbitrum,
