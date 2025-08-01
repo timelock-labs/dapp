@@ -14,7 +14,7 @@ import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } fr
 import { useAuthStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { Interface } from "ethers/lib/utils";
-
+import generatePreview from "./utils/generatePreview";
 const TransactionEncoderPage: React.FC = () => {
   const router = useRouter();
   const t = useTranslations("CreateTransaction");
@@ -105,30 +105,26 @@ const TransactionEncoderPage: React.FC = () => {
 
   // Effect to update preview content whenever form fields change
   useEffect(() => {
-    const generatePreview = () => {
-      // Get selected timelock's chain name
-      const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
-      const chainName = selectedTimelock?.chain_name || "Not selected";
-
-      const argsDisplay = argumentValues.length > 0 ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || "N/A"}`).join("\n") : "No arguments";
 
 
-
-      return `chain: ${chainName}
-wallet: ${address || "Not connected"}
-timelock: ${timelockAddress || "Not selected"}
-target: ${target || "Not specified"}
-value: ${value || "0"}
-calldata: ${abiValue || "Not generated"}
-time: ${timeValue || "Not specified"}
-Function: ${functionValue || "Not selected"}
-${argsDisplay}
-
-
-${JSON.stringify(argumentValues)}}
-`;
-    };
-    setPreviewContent(generatePreview());
+    setPreviewContent(generatePreview(
+      {
+        allTimelocks,
+        timelockType,
+        functionValue,
+        argumentValues,
+        selectedMailbox,
+        timeValue,
+        targetCalldata,
+        abiValue,
+        address,
+        timelockAddress,
+        timelockMethod,
+        target,
+        value,
+        description,
+      }
+    ));
   }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks]);
 
   const handleSendTransaction = async () => {
