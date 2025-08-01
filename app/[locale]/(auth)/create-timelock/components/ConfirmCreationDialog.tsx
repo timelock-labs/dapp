@@ -19,14 +19,11 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
   useEffect(() => {
     if (!isOpen) return; // Only add listener if dialog is open
 
-    const handleEscape = useCallback(
-      (event: KeyboardEvent) => {
-        if (event.key === "Escape") {
-          onClose();
-        }
-      },
-      [onClose],
-    );
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
 
     document.addEventListener("keydown", handleEscape);
 

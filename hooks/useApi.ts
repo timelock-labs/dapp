@@ -41,7 +41,7 @@ export function useApi(): UseApiReturn {
     setError(null);
 
     // Use relative URLs to leverage Next.js API rewrites
-    const fullUrl = url.startsWith('http') ? url : url;
+    const fullUrl = url.startsWith('http') ? url : (url.startsWith('/api') ? url : `/api${url.startsWith('/') ? '' : '/'}${url}`);
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
