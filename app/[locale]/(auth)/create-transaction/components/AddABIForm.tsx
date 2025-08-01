@@ -15,12 +15,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-
-interface AddABIFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAddABI: (name: string, abi: string) => void;
-}
+import type { AddABIFormProps } from './types';
 
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
   const t = useTranslations('Transactions.AddABIForm');

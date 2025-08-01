@@ -11,29 +11,7 @@ import QuestionIcon from '@/public/QuestionIcon.svg';
 import { useActiveWalletChain, useSwitchActiveWalletChain  } from 'thirdweb/react';
 import TimelockCompundABI from '@/components/abi/TimelockCompound.json';
 import TimelockOpenZeppelinABI from '@/components/abi/TimelockOpenZeppelin.json';
-
-interface EncodingTransactionFormProps {
-  timelockType: string;
-  onTimelockTypeChange: (value: string) => void;
-  timelockMethod: string;
-  onTimelockMethodChange: (value: string) => void;
-  target: string;
-  onTargetChange: (value: string) => void;
-  value: string;
-  onValueChange: (value: string) => void;
-  abiValue: string;
-  onAbiChange: (value: string) => void;
-  functionValue: string;
-  onFunctionChange: (value: string) => void;
-  timeValue: string;
-  onTimeChange: (value: string) => void;
-  argumentValues: string[];
-  onArgumentChange: (index: number, value: string) => void;
-  description: string;
-  onDescriptionChange: (value: string) => void;
-  onTimelockAddressChange: (address: string) => void;
-  onTimelockDetailsChange?: (details: Record<string, unknown>) => void;
-}
+import type { EncodingTransactionFormProps } from './types';
 
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   timelockType,
@@ -100,9 +78,9 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       return [];
     }
     return allTimelocks.map(timelock => ({
-      value: timelock.id.toString(),
+      value: String(timelock.id),
       label: `${timelock.remark || 'Timelock'} (${timelock.contract_address?.slice(0, 6)}...${timelock.contract_address?.slice(-4)})`,
-      address: timelock.contract_address,
+      address: timelock.contract_address ?? '',
     }));
   }, [allTimelocks]);
 
@@ -158,8 +136,9 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
   const handleTimelockMethodChange = () => {
 
-    if (currentTimelockDetails.chain_id !== chainId) {
-      switchChain(parseInt(currentTimelockDetails.chain_id))
+    // 修复 currentTimelockDetails 可能为 null 的问题
+    if (currentTimelockDetails && currentTimelockDetails.chain_id && currentTimelockDetails.chain_id !== chainId) {
+      switchChain(Number(currentTimelockDetails.chain_id))
         .then(() => {
           console.log('Switched to chain:', currentTimelockDetails.chain_id);
         })
@@ -184,16 +163,16 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       // 从 ABI 读取所有 function 名称作为 options
       const functions = TimelockCompundABI.filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
       return functions.map(fn => ({
-        value: fn.name,
-        label: fn.name,
+        value: fn.name ?? '',
+        label: fn.name ?? '',
       }));
     } else if (selectedTimelock.standard === 'openzeppelin') {
       // 从 ABI 读取所有 function 名称作为 options
       const functions = TimelockOpenZeppelinABI
         .filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
       return functions.map(fn => ({
-        value: fn.name,
-        label: fn.name,
+        value: fn.name ?? '',
+        label: fn.name ?? '',
       }));
     }
 

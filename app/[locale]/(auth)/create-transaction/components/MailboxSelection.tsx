@@ -3,11 +3,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslations } from 'next-intl';
 import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
-
-interface MailboxSelectionProps {
-  selectedMailbox: string[];
-  onMailboxChange: (value: string[]) => void;
-}
+import type { MailboxSelectionProps } from './types';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
   const t = useTranslations('CreateTransaction');

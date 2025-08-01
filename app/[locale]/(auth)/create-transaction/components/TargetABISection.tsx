@@ -5,21 +5,7 @@ import AddABIForm from './AddABIForm';
 import { useTranslations } from 'next-intl';
 import { useAbiApi } from '@/hooks/useAbiApi';
 import { toast } from 'sonner';
-
-interface TargetABISectionProps {
-  abiValue: string;
-  onAbiChange: (value: string) => void;
-  functionValue: string;
-  onFunctionChange: (value: string) => void;
-  timeValue: string;
-  onTimeChange: (value: string) => void;
-  // Dynamic arguments
-  argumentValues: string[];
-  onArgumentChange: (index: number, value: string) => void;
-  // Timelock method parameters
-  timelockMethodParameters?: Array<{name: string, type: string}>;
-  selectedTimelockMethod?: string;
-}
+import type { TargetABISectionProps } from './types';
 
 const TargetABISection: React.FC<TargetABISectionProps> = ({
   abiValue, onAbiChange, functionValue, onFunctionChange,
