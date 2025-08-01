@@ -366,7 +366,7 @@
       "fetchTimelockListError": "Failed to fetch timelock list",
       "sendCode": "Send Verification Code",
       "hasSend": "Verification code has been sent, please check your email",
-      "resendCode": "Resend Verification Code",
+      "resendCode": "Resend",
       "resending": "Resending...",
       "resendSuccess": "Verification code resent successfully",
       "resendError": "Failed to resend verification code: {message}",

@@ -257,7 +257,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           onSendCode={handleSendCode}
           onCodeChange={handleVerificationCodeChange}
           codeLength={6}
-          buttonText={!isEmailNotificationCreated ? t("sendCode") : t("hasSend")}
+          buttonText={!isEmailNotificationCreated ? t("sendCode") : t("resendCode")}
           disabledText={!isEmailNotificationCreated ? t('adding') : t('resending')}
           isFirstTime={!isEmailNotificationCreated}
         />
