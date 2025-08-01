@@ -180,6 +180,25 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }
   }, [currentTimelockDetails, chainId]);
 
+  const timeZone = () => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timeOffset = new Date().getTimezoneOffset() / 60;
+
+    return zone ? `(${zone} UTC${timeOffset >= 0 ? "+" : ""}${timeOffset})` : `UTC${timeOffset >= 0 ? "+" : ""}${timeOffset}`;
+  }
+
+  function toLocalDateTimeString(date: Date) {
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // 月份是 0-based
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   return (
     <div className="bg-white pt-6 flex flex-col gap-8 items-start">
       <SectionHeader title={t("encodingTransaction.title")} description={t("encodingTransaction.description")} icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />} />
@@ -230,16 +249,17 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
           <div className="flex flex-col md:flex-row gap-4 items-end">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t("targetABI.time")}
+                {t("targetABI.time")}  {timeZone()}
               </label>
               <div className="flex gap-4 items-center">
                 <input
                   type="datetime-local"
+                  value={toLocalDateTimeString(new Date(timeValue * 1000))}
                   className="max-w-[200px] border border-gray-300 rounded px-3 h-[34px]  focus:outline-none focus:ring-2 focus:ring-blue-200"
                   onChange={e => {
                     const date = new Date(e.target.value);
                     if (!isNaN(date.getTime())) {
-                      onTimeChange(Math.floor(date.getTime() / 1000).toString());
+                      onTimeChange(Math.floor(date.getTime() / 1000));
                     }
                   }}
                 />

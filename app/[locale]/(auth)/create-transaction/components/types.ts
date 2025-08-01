@@ -15,8 +15,8 @@ export interface EncodingTransactionFormProps {
   onAbiChange: (value: string) => void;
   functionValue: string;
   onFunctionChange: (value: string) => void;
-  timeValue: string;
-  onTimeChange: (value: string) => void;
+  timeValue: number;
+  onTimeChange: (value: number) => void;
   argumentValues: string[];
   onArgumentChange: (index: number, value: string) => void;
   description: string;

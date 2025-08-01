@@ -32,7 +32,7 @@ const TransactionEncoderPage: React.FC = () => {
   const [value, setValue] = useState("");
   const [abiValue, setAbiValue] = useState("");
   const [functionValue, setFunctionValue] = useState("");
-  const [timeValue, setTimeValue] = useState("");
+  const [timeValue, setTimeValue] = useState(0);
   const [argumentValues, setArgumentValues] = useState<string[]>([]);
   const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
   const [description, setDescription] = useState("");
@@ -40,6 +40,16 @@ const TransactionEncoderPage: React.FC = () => {
   const [targetCalldata, setTargetCallData] = useState("");
 
   const [timelockCalldata, setTimelockCalldata] = useState("");
+
+  useEffect(() => {
+    if (!timeValue) {
+      const now = new Date();
+      now.setDate(now.getDate() + 2);
+      now.setHours(14, 0, 0, 0);
+      const timestamp = Math.floor(now.getTime() / 1000);
+      setTimeValue(timestamp);
+    }
+  }, []);
 
   useEffect(() => {
     setTimelockCalldata("");
