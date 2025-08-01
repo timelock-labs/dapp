@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { useApiBase } from './useApiBase';
+import { useApi } from './useApi';
 import type { SponsorsApiResponse, SponsorsData } from '@/types';
 
 /**
@@ -10,6 +11,8 @@ import type { SponsorsApiResponse, SponsorsData } from '@/types';
  * @returns Object containing sponsors API methods and hooks
  */
 export const useSponsorsApi = () => {
+  const { request } = useApi();
+
   // Query hook for sponsors data
   const useSponsorsData = () => {
     return useApiBase<SponsorsData>('/api/v1/sponsors/public', {
@@ -19,22 +22,24 @@ export const useSponsorsApi = () => {
     });
   };
 
-  // Legacy method for backward compatibility
+  // Legacy method for backward compatibility - using direct API call
   const getSponsors = useCallback(async (): Promise<SponsorsApiResponse> => {
-    const hook = useApiBase<SponsorsData>('/api/v1/sponsors/public', {
-      requiresAuth: false
-    });
-    await hook.refetch();
-    
-    if (hook.error) {
-      throw hook.error;
+    try {
+      const response = await request('/api/v1/sponsors/public', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      return {
+        data: response.data,
+        success: response.success,
+      };
+    } catch (error) {
+      throw error;
     }
-    
-    return {
-      data: hook.data,
-      success: !!hook.data,
-    };
-  }, []);
+  }, [request]);
 
   return {
     // Query hook

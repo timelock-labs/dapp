@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import EmailRulesHeader from './components/email-notifications/EmailRulesHeader';
 import MailboxCard from './components/email-notifications/MailboxCard';
 import AddMailboxCard from './components/email-notifications/AddMailboxCard';

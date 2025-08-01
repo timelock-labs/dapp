@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useApiMutation, useApiBase, usePaginatedApi, useFilteredApi } from '@/hooks/useApiBase';
+import { useApiMutation, useApiBase, useFilteredApi } from '@/hooks/useApiBase';
+import { useApi } from './useApi';
 import type { 
   Transaction,
   TransactionListResponse,
@@ -20,6 +21,7 @@ export type { Transaction, CreateTransactionRequest };
  * @returns Object containing transaction API methods and hooks
  */
 export const useTransactionApi = () => {
+  const { request } = useApi();
 
   // Mutations
   const createTransactionMutation = useApiMutation<Transaction, CreateTransactionRequest>(
@@ -116,40 +118,64 @@ export const useTransactionApi = () => {
     return retrySubmitTransactionMutation.mutate({ id, tx_hash: txHash });
   }, [retrySubmitTransactionMutation]);
 
-  // Legacy methods for backward compatibility
+  // Legacy methods for backward compatibility - using direct API calls
   const getTransactionList = useCallback(async (filters: TransactionListFilters): Promise<TransactionListResponse> => {
-    const hook = useFilteredApi<TransactionListResponse, TransactionListFilters>(
-      '/api/v1/transaction/list',
-      filters
-    );
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value));
+        }
+      });
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/transaction/list?${queryParams.toString()}`
+        : '/api/v1/transaction/list';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getPendingTransactions = useCallback(async (filters: PendingTransactionFilters): Promise<TransactionListResponse> => {
-    const hook = useFilteredApi<TransactionListResponse, PendingTransactionFilters>(
-      '/api/v1/transaction/pending',
-      filters
-    );
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value));
+        }
+      });
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/transaction/pending?${queryParams.toString()}`
+        : '/api/v1/transaction/pending';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getTransactionStats = useCallback(async (): Promise<TransactionStats> => {
-    const hook = useApiBase<TransactionStats>('/api/v1/transaction/stats');
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const response = await request('/api/v1/transaction/stats', { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getTransactionById = useCallback(async (id: number): Promise<Transaction> => {
-    const hook = useApiBase<Transaction>(`/api/v1/transaction/${id}`);
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const response = await request(`/api/v1/transaction/${id}`, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   return {
     // Query hooks

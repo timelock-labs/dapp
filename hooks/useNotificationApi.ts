@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { useApiMutation, useApiBase, useFilteredApi } from '@/hooks/useApiBase';
+import { useApi } from './useApi';
 import type {
   EmailNotification,
   EmailNotificationListResponse,
@@ -34,6 +35,7 @@ export class ApiError extends Error {
  * @returns Object containing notification API methods and hooks
  */
 export const useNotificationApi = () => {
+  const { request } = useApi();
 
   // Query hooks
   const useEmailNotifications = (filters: EmailNotificationFilters = {}) => {
@@ -142,40 +144,68 @@ export const useNotificationApi = () => {
     return handleEmergencyReplyMutation.mutate(data);
   }, [handleEmergencyReplyMutation]);
 
-  // Legacy methods for backward compatibility
+  // Legacy methods for backward compatibility - using direct API calls
   const getEmailNotifications = useCallback(async (filters?: EmailNotificationFilters): Promise<EmailNotificationListResponse> => {
-    const hook = useFilteredApi<EmailNotificationListResponse, EmailNotificationFilters>(
-      '/api/v1/email-notifications',
-      filters || {}
-    );
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const queryParams = new URLSearchParams();
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, String(value));
+          }
+        });
+      }
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/email-notifications?${queryParams.toString()}`
+        : '/api/v1/email-notifications';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getEmailLogs = useCallback(async (filters?: EmailNotificationFilters): Promise<EmailLog[]> => {
-    const hook = useFilteredApi<EmailLog[], EmailNotificationFilters>(
-      '/api/v1/email-notifications/logs',
-      filters || {}
-    );
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const queryParams = new URLSearchParams();
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, String(value));
+          }
+        });
+      }
+      
+      const url = queryParams.toString() 
+        ? `/api/v1/email-notifications/logs?${queryParams.toString()}`
+        : '/api/v1/email-notifications/logs';
+        
+      const response = await request(url, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getVerifiedEmails = useCallback(async (): Promise<EmailNotification[]> => {
-    const hook = useApiBase<EmailNotification[]>('/api/v1/email-notifications/verified-emails');
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const response = await request('/api/v1/email-notifications/verified-emails', { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   const getEmailNotificationByEmail = useCallback(async (email: string): Promise<EmailNotification> => {
-    const hook = useApiBase<EmailNotification>(`/api/v1/email-notifications/${encodeURIComponent(email)}`);
-    await hook.refetch();
-    if (hook.error) throw hook.error;
-    return hook.data!;
-  }, []);
+    try {
+      const response = await request(`/api/v1/email-notifications/${encodeURIComponent(email)}`, { method: 'GET' });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }, [request]);
 
   return {
     // Query hooks
