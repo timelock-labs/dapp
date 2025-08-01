@@ -94,23 +94,34 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
             key: 'name',
             header: 'Name',
             render: (row: TimelockContract) => (
-                 <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(row.status)}`}>
+                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(row.status)}`}>
                     {row.remark}
                 </span>
             ),
         },
-        { 
-            key: 'contract_address', 
-            header: 'Timelock', 
+        {
+            key: 'contract_address',
+            header: 'Timelock',
         },
-        { 
-            key: 'admin', 
-            header: 'Owner', 
+        {
+            key: 'admin',
+            header: 'Owner',
+            render: (row: TimelockContract) => row.admin
         },
-        { 
-            key: 'created_at', 
-            header: 'Added At', 
-            render: (row: TimelockContract) => formatDate(row.created_at) 
+        {
+            key: 'user_permissions',
+            header: 'user_permissions',
+            render: (row: TimelockContract) => row.user_permissions.join(', ') || 'None'
+        },
+        {
+            key: "min_delay",
+            header: "min_delay",
+            render: (row: TimelockContract) => row.min_delay
+        },
+        {
+            key: 'created_at',
+            header: 'Added At',
+            render: (row: TimelockContract) => formatDate(row.created_at)
         },
         {
             key: 'operations',
@@ -149,9 +160,9 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
                         >
                             Import Existing Contract
                         </button>
-                        <button 
+                        <button
                             type="button"
-                            onClick={handleCreateContract} 
+                            onClick={handleCreateContract}
                             className="ml-2.5 bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors text-sm cursor-pointer"
                         >
                             Create New Contract
