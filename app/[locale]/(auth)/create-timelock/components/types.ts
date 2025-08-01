@@ -29,7 +29,6 @@ export interface CreateTimelockFormProps {
   isLoading: boolean;
 }
 
-
 /**
  * Props for RadioButtonOption component
  */
@@ -66,7 +65,7 @@ export interface FirstTimeTimelockIntroProps {
 /**
  * Supported contract standard types
  */
-export type ContractStandard = 'compound' | 'openzeppelin';
+export type ContractStandard = "compound" | "openzeppelin";
 
 /**
  * Props for ContractStandardSelection component
@@ -103,4 +102,79 @@ export interface CreationDetails {
 export interface ParameterDisplayRowProps {
   label: string;
   children: ReactNode;
+}
+
+/**
+ * Deployment result from useDeployTimelock hook
+ */
+export interface DeploymentResult {
+  contractAddress: string | null;
+  transactionHash: string | null;
+}
+
+/**
+ * Compound timelock deployment parameters
+ */
+export interface CompoundTimelockParams {
+  minDelay: number;
+  admin: `0x${string}`;
+}
+
+/**
+ * OpenZeppelin timelock deployment parameters
+ */
+export interface OpenZeppelinTimelockParams {
+  minDelay: number;
+  proposers: `0x${string}`[];
+  executors: `0x${string}`[];
+  admin: `0x${string}`;
+}
+
+/**
+ * API request body for creating timelock record
+ */
+export interface CreateTimelockRequestBody {
+  chain_id: number;
+  chain_name: string;
+  min_delay: number;
+  remark: string;
+  standard: ContractStandard;
+  tx_hash: string;
+  contract_address: string;
+  admin?: string;
+  proposers?: string[];
+  executors?: string[];
+  cancellers?: string[];
+}
+
+/**
+ * Dialog details state for confirmation dialog
+ */
+export interface DialogDetailsState {
+  chainName: string;
+  chainIcon: ReactNode;
+  timelockAddress: string;
+  initiatingAddress: string;
+  transactionHash: string;
+}
+
+/**
+ * Form state for create timelock page
+ */
+export interface CreateTimelockFormState {
+  selectedChain: number;
+  selectedStandard: ContractStandard;
+  minDelay: string;
+  proposers: string;
+  executors: string;
+  admin: string;
+}
+
+/**
+ * Standard option configuration for radio buttons
+ */
+export interface StandardOptionConfig {
+  value: ContractStandard;
+  labelKey: string;
+  descriptionKey: string;
 }

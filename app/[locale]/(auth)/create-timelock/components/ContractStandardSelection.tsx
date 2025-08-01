@@ -1,34 +1,32 @@
-import React from 'react';
-import { useTranslations } from 'next-intl';
-import RadioButtonOption from './RadioButtonOption';
-import type { ContractStandard, ContractStandardSelectionProps } from './types';
+import React, { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import RadioButtonOption from "./RadioButtonOption";
+import type { ContractStandard, ContractStandardSelectionProps, StandardOptionConfig } from "./types";
 
-const STANDARD_OPTIONS = [
+const STANDARD_OPTIONS: StandardOptionConfig[] = [
   {
-    value: 'compound' as const,
-    labelKey: 'compoundStandardLabel',
-    descriptionKey: 'compoundStandardDescription'
+    value: "compound",
+    labelKey: "compoundStandardLabel",
+    descriptionKey: "compoundStandardDescription",
   },
   {
-    value: 'openzeppelin' as const,
-    labelKey: 'openzeppelinStandardLabel',
-    descriptionKey: 'openzeppelinStandardDescription'
-  }
+    value: "openzeppelin",
+    labelKey: "openzeppelinStandardLabel",
+    descriptionKey: "openzeppelinStandardDescription",
+  },
 ] as const;
 
-const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({
-  selectedStandard,
-  onStandardChange,
-}) => {
-  const t = useTranslations('CreateTimelock');
+const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard, onStandardChange }) => {
+  const t = useTranslations("CreateTimelock");
+
+  // Memoize standard options to prevent unnecessary re-renders
+  const standardOptions = useMemo(() => STANDARD_OPTIONS, []);
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {t('selectContractStandard')}
-      </label>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{t("selectContractStandard")}</label>
       <div className="space-y-4">
-        {STANDARD_OPTIONS.map((option) => (
+        {standardOptions.map((option) => (
           <RadioButtonOption
             key={option.value}
             id={`${option.value}-standard`}
@@ -37,7 +35,7 @@ const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({
             label={t(option.labelKey)}
             description={t(option.descriptionKey)}
             checked={selectedStandard === option.value}
-            onChange={() => onStandardChange(option.value as ContractStandard)}
+            onChange={() => onStandardChange(option.value)}
           />
         ))}
       </div>

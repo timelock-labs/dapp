@@ -1,18 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import SectionHeader from '@/components/ui/SectionHeader';
-import SelectInput from '@/components/ui/SelectInput';
-import TextInput from '@/components/ui/TextInput';
-import { Button } from '@/components/ui/button';
-import ContractStandardSelection from './ContractStandardSelection';
-import { useAuthStore } from '@/store/userStore';
-import type { 
-  CreateTimelockFormProps, 
-  ChainOption,
-  ContractStandard 
-} from './types';
+import React, { useEffect, useMemo, useCallback } from "react";
+import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
+import SelectInput from "@/components/ui/SelectInput";
+import TextInput from "@/components/ui/TextInput";
+import { Button } from "@/components/ui/button";
+import ContractStandardSelection from "./ContractStandardSelection";
+import { useAuthStore } from "@/store/userStore";
+import type { CreateTimelockFormProps, ChainOption, ContractStandard } from "./types";
 
-const DEFAULT_CHAIN_LOGO = '/default-chain-logo.png';
+const DEFAULT_CHAIN_LOGO = "/default-chain-logo.png";
 
 export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   selectedChain,
@@ -28,9 +24,9 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   admin,
   onAdminChange,
   onDeploy,
-  isLoading
+  isLoading,
 }) => {
-  const t = useTranslations('CreateTimelock');
+  const t = useTranslations("CreateTimelock");
   const { chains, fetchChains } = useAuthStore();
 
   // Fetch chains on mount if not already loaded
@@ -48,98 +44,68 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
         label: chain.display_name,
         logo: chain.logo_url || DEFAULT_CHAIN_LOGO,
       })),
-    [chains]
+    [chains],
   );
 
   // Handle chain selection change
-  const handleChainChange = (value: string) => {
-    onChainChange(Number(value));
-  };
+  const handleChainChange = useCallback(
+    (value: string) => {
+      onChainChange(Number(value));
+    },
+    [onChainChange],
+  );
 
   // Format the selected chain value for the SelectInput
   const selectedChainValue = selectedChain.toString();
 
   // Handle text input changes
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     return value;
-  };
+  }, []);
 
   // Handle number input changes
-  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     return value;
-  };
+  }, []);
+
+  // Memoize selected chain logo
+  const selectedChainLogo = useMemo(() => chainOptions.find((option) => option.value === selectedChainValue)?.logo, [chainOptions, selectedChainValue]);
 
   return (
     <div className="bg-white p-6 rounded-lg border-b border-gray-200">
-      <SectionHeader
-        title={t('createTimelock')}
-        description={t("createTimelockDescription")}
-      />
+      <SectionHeader title={t("createTimelock")} description={t("createTimelockDescription")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6">
         {/* Select Chain */}
         <div className="md:col-start-2 min-w-[548px]">
-          <SelectInput
-            label={t("selectChain")}
-            value={selectedChain.toString()}
-            onChange={(value) => onChainChange(parseInt(value))}
-            options={chainOptions}
-            logo={chainOptions.find(option => option.value === selectedChain.toString())?.logo}
-            placeholder={t("selectChainPlaceholder")}
-          />
+          <SelectInput label={t("selectChain")} value={selectedChainValue} onChange={handleChainChange} options={chainOptions} logo={selectedChainLogo} placeholder={t("selectChainPlaceholder")} />
         </div>
 
         {/* Contract Standard Selection */}
         <div className="md:col-start-2">
-          <ContractStandardSelection
-            selectedStandard={selectedStandard}
-            onStandardChange={onStandardChange}
-          />
+          <ContractStandardSelection selectedStandard={selectedStandard} onStandardChange={onStandardChange} />
         </div>
 
         {/* minDelay Input */}
         <div className="md:col-start-2 min-w-[548px]">
-          <TextInput
-            label={t('minDelay')}
-            value={minDelay}
-            onChange={(e) => onMinDelayChange(handleNumberChange(e))}
-            placeholder={t('minDelayPlaceholder')}
-            type="number"
-            min="0"
-            step="1"
-          />
+          <TextInput label={t("minDelay")} value={minDelay} onChange={(e) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
         </div>
 
         {/* OpenZeppelin specific fields */}
-        {selectedStandard === 'openzeppelin' && (
+        {selectedStandard === "openzeppelin" && (
           <>
             <div className="md:col-start-2 min-w-[548px]">
-              <TextInput
-                label={t('proposers')}
-                value={proposers}
-                onChange={(e) => onProposersChange(handleTextChange(e))}
-                placeholder={t('proposersPlaceholder')}
-              />
+              <TextInput label={t("proposers")} value={proposers} onChange={(e) => onProposersChange(handleTextChange(e))} placeholder={t("proposersPlaceholder")} />
             </div>
 
             <div className="md:col-start-2 min-w-[548px]">
-              <TextInput
-                label={t('executors')}
-                value={executors}
-                onChange={(e) => onExecutorsChange(handleTextChange(e))}
-                placeholder={t('executorsPlaceholder')}
-              />
+              <TextInput label={t("executors")} value={executors} onChange={(e) => onExecutorsChange(handleTextChange(e))} placeholder={t("executorsPlaceholder")} />
             </div>
 
             <div className="md:col-start-2 min-w-[548px]">
-              <TextInput
-                label={t('admin')}
-                value={admin}
-                onChange={(e) => onAdminChange(handleTextChange(e))}
-                placeholder={t('adminPlaceholder')}
-              />
+              <TextInput label={t("admin")} value={admin} onChange={(e) => onAdminChange(handleTextChange(e))} placeholder={t("adminPlaceholder")} />
             </div>
           </>
         )}
@@ -150,7 +116,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
           onClick={onDeploy}
           disabled={isLoading}
           className="w-full sm:w-auto bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label={isLoading ? t('deploying') : t('deployContract')}
+          aria-label={isLoading ? t("deploying") : t("deployContract")}
         >
           {isLoading ? (
             <span className="flex items-center">
@@ -158,10 +124,10 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {t('deploying')}
+              {t("deploying")}
             </span>
           ) : (
-            t('deployContract')
+            t("deployContract")
           )}
         </Button>
       </div>
