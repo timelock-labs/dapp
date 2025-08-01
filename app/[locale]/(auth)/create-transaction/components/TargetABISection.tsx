@@ -141,7 +141,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
                   key={index}
                   label={`${input.name || `Argument ${index + 1}`} (${input.type})`}
                   value={argumentValues[index] || ""}
-                  onChange={(value) => onArgumentChange(index, value)}
+                  onChange={(value: string) => onArgumentChange(index, value)}
                   placeholder={`Enter ${input.type} value`}
                 />
               ))}

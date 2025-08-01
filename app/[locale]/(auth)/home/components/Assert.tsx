@@ -6,7 +6,7 @@ import TotalAssetValue from './TotalAssetValue';
 import AssetList from './AssetList';
 import PendingTransactions from './PendingTransactions';
 
-interface Asset {
+export interface Asset {
   balance: string;
   balance_wei: string;
   chain_display_name: string;

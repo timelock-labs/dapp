@@ -86,7 +86,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
         {/* minDelay Input */}
         <div className="md:col-start-2 min-w-[548px]">
-          <TextInput label={t("minDelay")} value={minDelay} onChange={(e) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
+          <TextInput label={t("minDelay")} value={minDelay} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onMinDelayChange(handleNumberChange(e))} placeholder={t("minDelayPlaceholder")} type="number" min="0" step="1" />
         </div>
       </div>
 

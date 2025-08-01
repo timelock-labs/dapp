@@ -30,7 +30,7 @@ const EmailNotificationPage: React.FC = () => {
   } = useNotificationApi();
 
   // Fetch email notifications
-  const fetchEmailNotifications = async () => {
+  const fetchEmailNotifications = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await getEmailNotifications({ page: 1, page_size: 50 });
@@ -41,11 +41,11 @@ const EmailNotificationPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getEmailNotifications, t]);
 
   useEffect(() => {
     fetchEmailNotifications();
-  }, []);
+  }, [fetchEmailNotifications]);
 
   const handleDeleteMailbox = (id: number, email: string) => {
     setDeleteConfirmDialog({ isOpen: true, email, id });

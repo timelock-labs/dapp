@@ -49,21 +49,25 @@ const TransactionEncoderPage: React.FC = () => {
       const timestamp = Math.floor(now.getTime() / 1000);
       setTimeValue(timestamp);
     }
-  }, []);
+  }, [timeValue]);
 
   useEffect(() => {
     setTimelockCalldata("");
     if (targetCalldata) {
       try {
         const iface = new Interface([`function ${timelockMethod}`]);
-        const calldata = iface.encodeFunctionData(timelockMethod.split("(")[0], [target, value, description, targetCalldata, timeValue]);
+        const functionName = timelockMethod.split("(")[0];
+        if (!functionName) {
+          throw new Error("Invalid timelock method");
+        }
+        const calldata = iface.encodeFunctionData(functionName, [target, value, description, targetCalldata, String(timeValue)]);
         setTimelockCalldata(calldata);
       } catch (err) {
         setTargetCallData("");
         console.error("Failed to encode calldata:", err);
       }
     }
-  }, [targetCalldata, value, timelockMethod, timeValue, description]);
+  }, [targetCalldata, value, timelockMethod, timeValue, description, target]);
 
 
   useEffect(() => {
@@ -71,14 +75,18 @@ const TransactionEncoderPage: React.FC = () => {
     if (functionValue && argumentValues.length > 0) {
       try {
         const iface = new Interface([`function ${functionValue}`]);
-        const calldata = iface.encodeFunctionData(functionValue.split("(")[0], argumentValues);
+        const functionName = functionValue.split("(")[0];
+        if (!functionName) {
+          throw new Error("Invalid function value");
+        }
+        const calldata = iface.encodeFunctionData(functionName, argumentValues);
         setTargetCallData(calldata);
       } catch (err) {
         setTargetCallData("");
         console.error("Failed to encode calldata:", err);
       }
     }
-  }, [functionValue, JSON.stringify(argumentValues)]);
+  }, [functionValue, argumentValues]);
 
   // Preview State
   const [previewContent, setPreviewContent] = useState("");
@@ -126,7 +134,7 @@ const TransactionEncoderPage: React.FC = () => {
         timelockCalldata
       }
     ));
-  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description, timelockCalldata]);
+  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description, timelockCalldata, selectedMailbox, targetCalldata, timelockMethod]);
 
   const handleSendTransaction = async () => {
     if (!address) {
@@ -163,7 +171,7 @@ const TransactionEncoderPage: React.FC = () => {
         chain_id: chainId,
         chain_name: chainName || "Unknown",
         description: description || `Transaction to ${target}`,
-        eta: parseInt(timeValue) || 0,
+        eta: parseInt(String(timeValue)) || 0,
         function_sig: functionValue,
         operation_id: `${Date.now()}-${address}`, // Generate unique operation ID
         target: target,
@@ -181,9 +189,9 @@ const TransactionEncoderPage: React.FC = () => {
 
       // Navigate to transaction details or list
       router.push("/transactions");
-    } catch (error: unknown) {
+    } catch (error) {
       console.error("Failed to create transaction:", error);
-      toast.error(error.message || "Failed to create transaction");
+      toast.error((error as Error).message || "Failed to create transaction");
     } finally {
       setIsSubmitting(false);
     }

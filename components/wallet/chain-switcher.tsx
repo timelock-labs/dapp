@@ -21,7 +21,7 @@ export function ChainSwitcher() {
   const connectionStatus = useActiveWalletConnectionStatus()
   const isConnected = connectionStatus === "connected"
   const { chains, fetchChains, _hasHydrated, login } = useAuthStore()
-  const { data: switchChainResponse, request: switchChainRequest, isLoading: isSwitchingChain, error: switchChainError } = useApi();
+  const { data: switchChainResponse, isLoading: isSwitchingChain } = useApi();
   const hasFetchedChains = useRef(false);
 
   const [currentChain, setCurrentChain] = useState(() => {
@@ -49,7 +49,7 @@ export function ChainSwitcher() {
       hasFetchedChains.current = true;
       fetchChains()
     }
-  }, [fetchChains, _hasHydrated])
+  }, [fetchChains, _hasHydrated, chains])
 
   useEffect(() => {
     if (switchChainResponse && switchChainResponse.success) {
@@ -91,14 +91,14 @@ export function ChainSwitcher() {
       // 1. Switch chain in wallet
       try {
         await switchChain(chainObject);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // If the chain is not configured, try to add it
-        if (error?.name?.includes('ChainNotConfigured')) {
+        if (error instanceof Error && error.name.includes('ChainNotConfigured')) {
           const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;
 
-          if (chainToAdd && typeof window !== 'undefined' && (window as any).ethereum) {
+          if (chainToAdd && typeof window !== 'undefined' && (window as Window & typeof globalThis & { ethereum?: { request: (args: { method: string; params?: Record<string, unknown>[] | undefined; }) => Promise<unknown>; } }).ethereum) {
             try {
-              await (window as any).ethereum.request({
+              await (window as Window & typeof globalThis & { ethereum?: { request: (args: { method: string; params?: Record<string, unknown>[] | undefined; }) => Promise<unknown>; } }).ethereum.request({
                 method: 'wallet_addEthereumChain',
                 params: [
                   {

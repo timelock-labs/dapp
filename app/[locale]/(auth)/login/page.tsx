@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Logo from '@/components/layout/Logo';
 import { ConnectWallet } from '@/components/wallet/connect-wallet';
 import { useActiveWalletConnectionStatus, useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
@@ -19,14 +19,7 @@ const TimeLockerSplitPage = () => {
   const login = useAuthStore((state) => state.login);
   const router = useRouter();
 
-  useEffect(() => {
-    console.log('TimeLockerSplitPage: useEffect triggered');
-    console.log('TimeLockerSplitPage: isConnected =', isConnected);
-    console.log('TimeLockerSplitPage: address =', address);
-    handleUserSignature();
-  }, [isConnected, address]);
-
-  const handleUserSignature = async () => {
+  const handleUserSignature = useCallback(async () => {
     if (isConnected && address) {
       const message = 'welcome to TimeLocker!';
       try {
@@ -47,7 +40,14 @@ const TimeLockerSplitPage = () => {
       } 
     }
  
-  };
+  }, [isConnected, address, signMessage, chainId, walletConnect]);
+
+  useEffect(() => {
+    console.log('TimeLockerSplitPage: useEffect triggered');
+    console.log('TimeLockerSplitPage: isConnected =', isConnected);
+    console.log('TimeLockerSplitPage: address =', address);
+    handleUserSignature();
+  }, [isConnected, address, handleUserSignature]);
 
   useEffect(() => {
     if (apiResponse && apiResponse.success) {

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import SelectInput from "@/components/ui/SelectInput";
 import TextInput from "@/components/ui/TextInput";
@@ -48,7 +48,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
-  const [currentTimelockDetails] = useState<Record<string, unknown> | null>(null);
+  const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
 
   const { id: chainId } = useActiveWalletChain() || {};
   const switchChain = useSwitchActiveWalletChain();
@@ -92,44 +92,44 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }));
   }, [allTimelocks]);
 
-  const handleTimelockChange = async (value: string) => {
-    onTimelockTypeChange(value);
-    const selectedTimelock = timelockOptions.find((option) => option.value === value);
-    if (selectedTimelock) {
-      onTimelockAddressChange(selectedTimelock.address);
+  const handleTimelockChange = useCallback(
+    async (value: string) => {
+      onTimelockTypeChange(value);
+      const selectedTimelock = timelockOptions.find((option) => option.value === value);
+      if (selectedTimelock) {
+        onTimelockAddressChange(selectedTimelock.address);
 
-      const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
-      if (fullTimelock && fullTimelock.standard && accessToken) {
-        setIsLoadingDetails(true);
+        const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
+        if (fullTimelock && fullTimelock.standard && accessToken) {
+          setIsLoadingDetails(true);
 
-        try {
-          await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          // setCurrentTimelockDetails(timelocks.data);
-        } catch (error) {
-          console.error("Failed to fetch timelock details:", error);
-        } finally {
-          setIsLoadingDetails(false);
+          try {
+            await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            });
+          } catch (error) {
+            console.error("Failed to fetch timelock details:", error);
+          } finally {
+            setIsLoadingDetails(false);
+          }
         }
       }
-    }
-  };
+    },
+    [allTimelocks, accessToken, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions],
+  );
 
   useEffect(() => {
-    if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
-      onTimelockDetailsChange(timelockDetailResponse.data);
+    if (timelockDetailResponse && timelockDetailResponse.success) {
+      setCurrentTimelockDetails(timelockDetailResponse.data);
+      if (onTimelockDetailsChange) {
+        onTimelockDetailsChange(timelockDetailResponse.data);
+      }
     }
   }, [timelockDetailResponse, onTimelockDetailsChange]);
-
-  useEffect(() => {
-    if (currentTimelockDetails?.chain_id) handleTimelockMethodChange();
-  }, [JSON.stringify(currentTimelockDetails)]);
 
   const handleTimelockMethodChange = useCallback(() => {
     // 修复 currentTimelockDetails 可能为 null 的问题
@@ -139,7 +139,11 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         console.log("Switched to chain:", currentTimelockDetails.chain_id);
       });
     }
-  });
+  }, [chainId, currentTimelockDetails, switchChain]);
+
+  useEffect(() => {
+    if (currentTimelockDetails?.chain_id) handleTimelockMethodChange();
+  }, [currentTimelockDetails, handleTimelockMethodChange]);
 
   const timelockMethodOptions = useMemo(() => {
     if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
@@ -169,7 +173,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   }, [timelockType, allTimelocks]);
 
   useEffect(() => {
-    if (currentTimelockDetails?.chain_id && parseInt(currentTimelockDetails.chain_id as string) !== chainId) {
+    const currentChainId = currentTimelockDetails?.chain_id;
+    if (currentChainId && parseInt(currentChainId as string) !== chainId) {
       handleTimelockChange("");
       handleTimelockMethodChange();
     }
@@ -248,7 +253,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
                     }
                   }}
                 />
-                <TextInput label="" value={timeValue} onChange={onTimeChange} placeholder={t("encodingTransaction.timePlaceholder") || "Time (seconds)"} />
+                <TextInput label="" value={String(timeValue)} onChange={(e: string) => onTimeChange(Number(e))} placeholder={t("encodingTransaction.timePlaceholder") || "Time (seconds)"} />
               </div>
             </div>
           </div>

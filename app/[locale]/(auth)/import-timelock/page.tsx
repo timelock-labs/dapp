@@ -128,7 +128,7 @@ const ImportTimelockPage: React.FC = () => {
         setIsModalOpen(false);
     };
 
-    const handleConfirmParams = async (_abiContent?: string) => {
+    const handleConfirmParams = async () => {
         if (!detectedParameters || !detectedParameters.isValid) {
             toast.error('Invalid timelock parameters');
             return;

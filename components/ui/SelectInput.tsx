@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import type { BaseComponentProps, ValueCallback, SelectOption } from '@/types';
 
 interface SelectInputProps extends BaseComponentProps {
@@ -41,9 +42,11 @@ const SelectInput: React.FC<SelectInputProps> = ({
             Padding (especially pr-10) is adjusted to make space for the custom arrow. */}
         <div className="flex items-center">
           {logo && (
-            <img
+            <Image
               src={logo}
               alt="Logo"
+              width={24}
+              height={24}
               className="h-6 w-6 mr-2"
             />
           )}

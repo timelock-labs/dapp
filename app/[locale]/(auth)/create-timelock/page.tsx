@@ -14,6 +14,7 @@ import ConfirmCreationDialog from "./components/ConfirmCreationDialog";
 import PageLayout from "@/components/layout/PageLayout";
 import { getChainObject } from "@/utils/chainUtils";
 import type { CreateTimelockFormState, DialogDetailsState, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams } from "./components/types";
+import type { ContractStandard } from "@/types/common";
 
 const CreateTimelockPage: React.FC = () => {
 
@@ -70,7 +71,7 @@ const CreateTimelockPage: React.FC = () => {
     [switchChain],
   );
 
-  const handleStandardChange = useCallback((standard: "compound") => {
+  const handleStandardChange = useCallback((standard: ContractStandard) => {
     setFormState((prev) => ({ ...prev, selectedStandard: standard }));
   }, []);
 

@@ -300,7 +300,7 @@ export function withErrorBoundary<P extends object>(
  * Hook for manually triggering error boundary
  */
 export function useErrorHandler() {
-  return (error: Error, _errorInfo?: Partial<ErrorInfo>) => {
+  return (error: Error) => {
     // This will be caught by the nearest error boundary
     throw error;
   };

@@ -33,7 +33,7 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
     console.log("ABI:", abi);
     // Here you would typically send data to a backend or update global state
     if (name.trim() && abi.trim()) {
-      onAddABI(name, abi);
+      onAddABI(name, "", abi);
       setName("");
       setAbi("");
       onClose(); // Close the dialog after saving
