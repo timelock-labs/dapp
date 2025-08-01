@@ -7,7 +7,7 @@ import { useAbiApi } from "@/hooks/useAbiApi";
 import { toast } from "sonner";
 import type { TargetABISectionProps } from "./types";
 
-const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, timeValue, onTimeChange, argumentValues, onArgumentChange }) => {
+const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, argumentValues, onArgumentChange }) => {
   const t = useTranslations("CreateTransaction");
   const [isAddABIOpen, setIsAddABIOpen] = useState(false);
   const { abiList, isLoading, addAbi } = useAbiApi();
@@ -123,7 +123,6 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <SelectInput label={t("targetABI.function")} value={functionValue} onChange={onFunctionChange} options={functionOptions} placeholder={t("targetABI.selectFunction")} />
-          <TextInput label={t("targetABI.time")} value={timeValue} onChange={onTimeChange} placeholder="Time (seconds)" />
         </div>
 
         {/* Dynamic function arguments */}

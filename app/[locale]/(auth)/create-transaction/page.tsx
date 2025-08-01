@@ -13,6 +13,8 @@ import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } fr
 
 import { useAuthStore } from "@/store/userStore";
 import { toast } from "sonner";
+import { Interface } from "ethers/lib/utils";
+
 const TransactionEncoderPage: React.FC = () => {
   const router = useRouter();
   const t = useTranslations("CreateTransaction");
@@ -35,6 +37,38 @@ const TransactionEncoderPage: React.FC = () => {
   const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [targetCalldata, setTargetCallData] = useState("");
+
+  const [timelockCalldata, setTimelockCalldata] = useState("");
+
+  useEffect(() => {
+    setTimelockCalldata("");
+    if (targetCalldata) {
+      try {
+        const iface = new Interface([`function ${timelockMethod}`]);
+        const calldata = iface.encodeFunctionData(timelockMethod.split("(")[0], [target, value, "", targetCalldata, timeValue]);
+        setTimelockCalldata(calldata);
+      } catch (err) {
+        setTargetCallData("");
+        console.error("Failed to encode calldata:", err);
+      }
+    }
+  }, [targetCalldata, value, timelockMethod, timeValue]);
+
+
+  useEffect(() => {
+    setTargetCallData(""); // Reset calldata when function or arguments change
+    if (functionValue && argumentValues.length > 0) {
+      try {
+        const iface = new Interface([`function ${functionValue}`]);
+        const calldata = iface.encodeFunctionData(functionValue.split("(")[0], argumentValues);
+        setTargetCallData(calldata);
+      } catch (err) {
+        setTargetCallData("");
+        console.error("Failed to encode calldata:", err);
+      }
+    }
+  }, [functionValue, JSON.stringify(argumentValues)]);
 
   // Preview State
   const [previewContent, setPreviewContent] = useState("");
@@ -67,7 +101,7 @@ const TransactionEncoderPage: React.FC = () => {
       const chainName = selectedTimelock?.chain_name || "Not selected";
 
       const argsDisplay = argumentValues.length > 0 ? argumentValues.map((arg, index) => `arg${index + 1}: ${arg || "N/A"}`).join("\n") : "No arguments";
-      
+
 
 
       return `chain: ${chainName}
@@ -111,9 +145,9 @@ ${JSON.stringify(argumentValues)}}
       setIsSubmitting(true);
 
       const txResult = await sendTransaction({
-        timelockAddress,
-        toAddress: target,
-        calldata: "0x",
+        // timelockAddress,
+        toAddress: timelockAddress,
+        calldata: timelockCalldata,
         value: value || "0", // Default to '0' if not specified
       });
 
@@ -155,6 +189,7 @@ ${JSON.stringify(argumentValues)}}
           <div className="flex justify-between gap-32">
             <div className="w-1/2 w-max-[550px]">
               <EncodingTransactionForm
+                targetCalldata={targetCalldata}
                 timelockType={timelockType}
                 onTimelockTypeChange={setTimelockType}
                 timelockMethod={timelockMethod}
@@ -191,9 +226,9 @@ ${JSON.stringify(argumentValues)}}
               </div>
             </div>
           </div>
-          const { allTimelocks } = useAuthStore();
+          {/* const { allTimelocks } = useAuthStore(); */}
 
-{/* // Form States
+          {/* // Form States
 const [timelockType, setTimelockType] = useState("");
 const [timelockMethod, setTimelockMethod] = useState("");
 const [timelockAddress, setTimelockAddress] = useState("");
@@ -209,21 +244,24 @@ const [isSubmitting, setIsSubmitting] = useState(false);
 
 // Preview State
 const [previewContent, setPreviewContent] = useState(""); */}
-          <p> timelockType: {JSON.stringify(timelockType)}</p>
-          <p> timelockMethod: {JSON.stringify(timelockMethod)}</p>
-          <p> timelockAddress: {JSON.stringify(timelockAddress)}</p>
-          <p> target: {JSON.stringify(target)}</p>
-          <p> value: {JSON.stringify(value)}</p>
-          <p> abiValue: {JSON.stringify(abiValue)}</p>
-          <p> functionValue: {JSON.stringify(functionValue)}</p>
-          <p> timeValue: {JSON.stringify(timeValue)}</p>
-          <p> argumentValues: {JSON.stringify(argumentValues)}</p>
-          <p> selectedMailbox: {JSON.stringify(selectedMailbox)}</p>
-          <p> description: {JSON.stringify(description)}</p>
-          <p> isSubmitting: {JSON.stringify(isSubmitting)}</p>
-          <p> previewContent: {JSON.stringify(previewContent)}</p>
+          <div className="w-1/2 mt-8 p-4 bg-gray-50 rounded-lg overflow-x-auto word-break-all">
+            <p> timelockType: {JSON.stringify(timelockType)}</p>
+            <p> timelockMethod: {JSON.stringify(timelockMethod)}</p>
+            <p> timelockAddress: {JSON.stringify(timelockAddress)}</p>
+            <p> target: {JSON.stringify(target)}</p>
+            <p> value: {JSON.stringify(value)}</p>
+            <p> abiValue: {JSON.stringify(abiValue)}</p>
+            <p> functionValue: {JSON.stringify(functionValue)}</p>
+            <p> timeValue: {JSON.stringify(timeValue)}</p>
+            <p> argumentValues: {JSON.stringify(argumentValues)}</p>
+            <p> selectedMailbox: {JSON.stringify(selectedMailbox)}</p>
+            <p> description: {JSON.stringify(description)}</p>
+            <p> isSubmitting: {JSON.stringify(isSubmitting)}</p>
+            <p> previewContent: {JSON.stringify(previewContent)}</p>
+            <p>allTimelocks:{JSON.stringify(allTimelocks)}</p>
 
-        
+            <p>timelockCalldata:{timelockCalldata}</p>
+          </div>
 
           {/* Submit button container */}
         </div>

@@ -10,10 +10,14 @@ import { useApi } from "@/hooks/useApi";
 import QuestionIcon from "@/public/QuestionIcon.svg";
 import { useActiveWalletChain, useSwitchActiveWalletChain } from "thirdweb/react";
 import TimelockCompundABI from "@/components/abi/TimelockCompound.json";
-import TimelockOpenZeppelinABI from "@/components/abi/TimelockOpenZeppelin.json";
 import type { EncodingTransactionFormProps } from "./types";
+import { getChainObject } from "@/utils/chainUtils";
+import TextAreaInput from "@/components/ui/TextAreaInput";
+
+
 
 const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
+  targetCalldata,
   timelockType,
   onTimelockTypeChange,
   timelockMethod,
@@ -106,9 +110,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
           // setCurrentTimelockDetails(timelocks.data);
 
-          setCurrentTimelockDetails({
-            chain_id: 97,
-          });
 
           alert(`Fetched Timelock Details: ${JSON.stringify(timelocks)}`);
         } catch (error) {
@@ -119,6 +120,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
       }
     }
   };
+
+
 
   useEffect(() => {
     if (timelockDetailResponse && timelockDetailResponse.success && onTimelockDetailsChange) {
@@ -132,14 +135,14 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
   const handleTimelockMethodChange = () => {
     // 修复 currentTimelockDetails 可能为 null 的问题
-    if (currentTimelockDetails && currentTimelockDetails.chain_id && currentTimelockDetails.chain_id !== chainId) {
-      switchChain(Number(currentTimelockDetails.chain_id))
+    if (currentTimelockDetails && currentTimelockDetails.chain_id && Number(currentTimelockDetails.chain_id) !== chainId) {
+      alert(`Switching chain to: ${currentTimelockDetails.chain_id}`);
+
+      const chainObject = getChainObject(Number(currentTimelockDetails.chain_id));
+      switchChain(chainObject)
         .then(() => {
           console.log("Switched to chain:", currentTimelockDetails.chain_id);
         })
-        .catch((error) => {
-          console.error("Failed to switch chain:", error);
-        });
     }
   };
 
@@ -149,6 +152,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     }
 
     const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
+
     if (!selectedTimelock || !selectedTimelock.standard) {
       return [];
     }
@@ -156,17 +160,16 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     if (selectedTimelock.standard === "compound") {
       // 从 ABI 读取所有 function 名称作为 options
       const functions = TimelockCompundABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure");
-      return functions.map((fn) => ({
-        value: fn.name ?? "",
-        label: fn.name ?? "",
-      }));
-    } else if (selectedTimelock.standard === "openzeppelin") {
-      // 从 ABI 读取所有 function 名称作为 options
-      const functions = TimelockOpenZeppelinABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure" && item.name !== "grantRole" && item.name !== "revokeRole" && item.name !== "renounceRole" && item.name !== "updateDelay");
-      return functions.map((fn) => ({
-        value: fn.name ?? "",
-        label: fn.name ?? "",
-      }));
+      return functions.map((fn) => {
+        const inputTypes = (fn.inputs || [])
+          .map((input) => input.type)
+          .join(",");
+        const signature = `${fn.name}(${inputTypes})`;
+        return {
+          value: signature,
+          label: signature,
+        };
+      });
     }
 
     return [];
@@ -183,49 +186,88 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
     <div className="bg-white pt-6 flex flex-col gap-8 items-start">
       <SectionHeader title={t("encodingTransaction.title")} description={t("encodingTransaction.description")} icon={<Image src={QuestionIcon} alt="Question Icon" width={15} height={15} />} />
       <div className="flex flex-col space-y-4 w-full">
-        <div className="grid grid-cols-1 gap-4">
-          <SelectInput
-            label={t("encodingTransaction.selectTimelock")}
-            value={timelockType}
-            onChange={handleTimelockChange}
-            options={timelockOptions}
-            placeholder={
-              isLoadingDetails
-                ? t("encodingTransaction.loadingTimelockDetails")
-                : allTimelocks.length === 0
-                  ? t("encodingTransaction.noTimelocksAvailable")
-                  : t("encodingTransaction.selectTimelockPlaceholder")
-            }
-          />
-
-          <SelectInput
-            label={t("encodingTransaction.selectTimelockMethod")}
-            value={timelockMethod}
-            onChange={onTimelockMethodChange}
-            options={timelockMethodOptions}
-            placeholder={timelockType ? t("encodingTransaction.selectTimelockMethodPlaceholder") : t("encodingTransaction.selectTimelockFirstPlaceholder")}
-          />
+        <div className="flex flex-row gap-4 border border-blue-200 rounded-lg p-4" id="timelock-selection">
+          <div className="flex-1">
+            <SelectInput
+              label={t("encodingTransaction.selectTimelock")}
+              value={timelockType}
+              onChange={handleTimelockChange}
+              options={timelockOptions}
+              placeholder={
+                isLoadingDetails
+                  ? t("encodingTransaction.loadingTimelockDetails")
+                  : allTimelocks.length === 0
+                    ? t("encodingTransaction.noTimelocksAvailable")
+                    : t("encodingTransaction.selectTimelockPlaceholder")
+              }
+            />
+          </div>
+          <div className="flex-1">
+            <SelectInput
+              label={t("encodingTransaction.selectTimelockMethod")}
+              value={timelockMethod}
+              onChange={onTimelockMethodChange}
+              options={timelockMethodOptions}
+              placeholder={
+                timelockType
+                  ? t("encodingTransaction.selectTimelockMethodPlaceholder")
+                  : t("encodingTransaction.selectTimelockFirstPlaceholder")
+              }
+            />
+          </div>
         </div>
 
-        <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
-        <TextInput label={t("encodingTransaction.value")} value={value} onChange={handleValueChange} placeholder="Value" error={validationErrors.value} />
-        {/* <TextInput
-        label={t('encodingTransaction.formDescription')}
-        value={description}
-        onChange={onDescriptionChange}
-        placeholder={t('encodingTransaction.descriptionPlaceholder')}
-      /> */}
+        <div id="transaction-details" className="border border-green-200 rounded-lg p-4 mt-2">
 
-        <TargetABISection
-          abiValue={abiValue}
-          onAbiChange={onAbiChange}
-          functionValue={functionValue}
-          onFunctionChange={onFunctionChange}
-          timeValue={timeValue}
-          onTimeChange={onTimeChange}
-          argumentValues={argumentValues}
-          onArgumentChange={onArgumentChange}
-        />
+
+          <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
+          <TextInput label={t("encodingTransaction.value")} defaultValue={0} value={value} onChange={handleValueChange} placeholder="Value" />
+          <TextAreaInput
+            label={t("encodingTransaction.calldata")}
+            value={targetCalldata}
+            onChange={() => { }}
+            placeholder={t("encodingTransaction.calldataPlaceholder")}
+            disabled={true}
+            rows={3}
+          />
+
+          <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("targetABI.time")}
+              </label>
+              <div className="flex gap-4 items-center">
+                <input
+                  type="datetime-local"
+                  className="max-w-[200px] border border-gray-300 rounded px-3 h-[34px]  focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  onChange={e => {
+                    const date = new Date(e.target.value);
+                    if (!isNaN(date.getTime())) {
+                      onTimeChange(Math.floor(date.getTime() / 1000).toString());
+                    }
+                  }}
+                />
+                <TextInput
+                  label=""
+                  value={timeValue}
+                  onChange={onTimeChange}
+                  placeholder={t("encodingTransaction.timePlaceholder") || "Time (seconds)"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="target-abi-section" className="border border-purple-200 rounded-lg p-4 mt-2">
+          <TargetABISection
+            abiValue={abiValue}
+            onAbiChange={onAbiChange}
+            functionValue={functionValue}
+            onFunctionChange={onFunctionChange}
+            argumentValues={argumentValues}
+            onArgumentChange={onArgumentChange}
+          />
+        </div>
       </div>
     </div>
   );

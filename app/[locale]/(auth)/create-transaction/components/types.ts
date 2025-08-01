@@ -2,6 +2,7 @@
 
 // EncodingTransactionForm 组件 Props
 export interface EncodingTransactionFormProps {
+  targetCalldata: string;
   timelockType: string;
   onTimelockTypeChange: (value: string) => void;
   timelockMethod: string;
@@ -30,8 +31,6 @@ export interface TargetABISectionProps {
   onAbiChange: (value: string) => void;
   functionValue: string;
   onFunctionChange: (value: string) => void;
-  timeValue: string;
-  onTimeChange: (value: string) => void;
   argumentValues: string[];
   onArgumentChange: (index: number, value: string) => void;
   timelockMethodParameters?: Array<{ name: string; type: string }>;

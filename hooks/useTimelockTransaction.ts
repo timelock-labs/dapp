@@ -18,23 +18,18 @@ interface TransactionResult {
 }
 
 interface SendTransactionParams {
-  timelockAddress: Address;
   toAddress: Address;
   calldata: string;
   value?: string; // Optional, can be undefined if not needed
 }
 
 export const useTimelockTransaction = () => {
-  // const { address: accountAddress, sendTransaction: sendTx } = useActiveAccount()!;
   const { account: accountAddress, sendTransaction: sendTx } = useWeb3React();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const sendTransaction = async ({ timelockAddress, toAddress,calldata,value = 0 }:any)  => {
-
-
-    alert(`Sending transaction to ${timelockAddress} with calldata: ${calldata}`);
+  const sendTransaction = async ({  toAddress,calldata,value }:any)  => {
 
     if (!accountAddress) {
       const err = new Error("Please connect your wallet first.");
@@ -50,9 +45,9 @@ export const useTimelockTransaction = () => {
       
 
       const tx = await sendTx({
-        to: timelockAddress,
+        to: toAddress,
         data: calldata,
-        value: ethers.BigNumber.from(value),
+        value: ethers.BigNumber.from(value).toString(),
       });
 
       const hash = tx.transactionHash;
