@@ -16,17 +16,17 @@ import { getChainObject } from "@/utils/chainUtils";
 import type { CreateTimelockFormState, DialogDetailsState, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams } from "./components/types";
 
 const CreateTimelockPage: React.FC = () => {
-  // Form States
+
   const [formState, setFormState] = useState<CreateTimelockFormState>({
-    selectedChain: 1, // Default value for demo
+    selectedChain: 1,
     selectedStandard: "compound",
-    minDelay: "259200", // Default value for 3 days (in seconds)
+    minDelay: "259200",
     proposers: "",
     executors: "",
     admin: "",
   });
 
-  // Dialog state
+
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [dialogDetails, setDialogDetails] = useState<DialogDetailsState>({
     chainName: "",
@@ -36,7 +36,7 @@ const CreateTimelockPage: React.FC = () => {
     transactionHash: "",
   });
 
-  // Hooks
+
   const { id: chainId } = useActiveWalletChain() || {};
   const switchChain = useSwitchActiveWalletChain();
   const { request: createTimelockApiCall } = useApi();
@@ -47,10 +47,10 @@ const CreateTimelockPage: React.FC = () => {
   const params = useParams();
   const locale = params.locale;
 
-  // Memoized values
+
   const selectedChainData = useMemo(() => chains.find((chain) => chain.chain_id === formState.selectedChain), [chains, formState.selectedChain]);
 
-  // Form handlers
+
   const handleChainChange = useCallback(
     (newChainId: number) => {
       if (!newChainId) {
@@ -242,11 +242,9 @@ const CreateTimelockPage: React.FC = () => {
           />
         </div>
 
-        {/* Confirmation Dialog (rendered conditionally) */}
         <ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={handleConfirmDialogClose} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
       </div>
     </PageLayout>
   );
 };
-
 export default CreateTimelockPage;
