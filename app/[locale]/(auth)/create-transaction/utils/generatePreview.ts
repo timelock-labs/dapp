@@ -78,18 +78,17 @@
             `Wallet:            ${address || "Not connected"}`,
             `Timelock Address:  ${timelockAddress || "Not selected"}`,
             `Timelock Method:   ${timelockMethod || "Not selected"}`,
-            `Target:            ${target || "Not specified"}`,
             `Value:             ${value || "0"}`,
-            "------------------------------------------------------------",
-            `Calldata:          ${calldataDisplay}`,
-            `ETA (Time):        ${etaDisplay}`,
-            `Function:          ${functionValue || "Not selected"}`,
             "-------------------------------------------------------------",
+            `Target:            ${target || "Not specified"}`,
+            `Function:          ${functionValue || "Not selected"}`,
             "Arguments:",
             argsDisplay,
+            `Calldata:          ${calldataDisplay}`,
             "-------------------------------------------------------------",
             `Description:       ${description || "No description"}`,
             `Mailboxes:         ${mailboxesDisplay}`,
+            `ETA (Time):        ${etaDisplay}`,
             "============================================================="
         ].join("\n");
     };
