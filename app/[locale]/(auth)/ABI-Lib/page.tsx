@@ -242,6 +242,7 @@ ${viewAbiResponse.data.abi_content}`);
                 onDelete={() => handleDeleteABI(row)}
                 onView={() => handleViewABI(row)}
                 t={t}
+                isShared={row.is_shared}
               />
             </div>
           </>
@@ -270,7 +271,6 @@ ${viewAbiResponse.data.abi_content}`);
             data={abis}
             showPagination={false} // Image does not show pagination for this table
             itemsPerPage={5} // Max 5 items visible in image
-
           />
         </div>
       </div>
