@@ -81,7 +81,7 @@ export interface Chain {
 /**
  * Chain API response
  */
-export interface ChainApiResponse extends ApiResponse<Chain> {}
+// export interface ChainApiResponse extends ApiResponse<Chain> {}
 
 /**
  * Timelock contract data

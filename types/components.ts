@@ -14,7 +14,7 @@ import type {
   VoidCallback,
   ValueCallback
 } from './common';
-import type { DeploymentResult } from './blockchain';
+// import type { DeploymentResult } from './blockchain';
 
 /**
  * Button component variants
