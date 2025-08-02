@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ChevronDown, Network } from 'lucide-react'
 import { useAuthStore } from '@/store/userStore';
 import { useEffect, useRef,useState } from 'react'
@@ -66,7 +67,13 @@ export function ChainSwitcher() {
   }, [switchChainResponse, login]);
 
   if (!_hasHydrated) {
-    return <div>Loading chains...</div>; // Or a loading spinner
+    return (
+      <Button variant="outline" size="sm" disabled className="h-9">
+        <Skeleton className="h-4 w-4 rounded-full mr-1" />
+        <Skeleton className="h-4 w-20 hidden sm:inline-block" />
+        <ChevronDown className="ml-2 h-3 w-3 text-gray-400" />
+      </Button>
+    );
   }
 
   if (!isConnected) {

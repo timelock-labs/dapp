@@ -1,14 +1,18 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useTranslations } from 'next-intl';
 import PageLayout from "@/components/layout/PageLayout";
 import AddTimelockContractSection from "./components/AddTimelockContractSection";
 import TimelockContractTable from "./components/TimelockContractTable";
+import TableSkeleton from "@/components/ui/TableSkeleton";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from "@/store/userStore";
 import type { TimelockContract } from "@/store/schema";
 
 const Timelocks: React.FC = () => {
+    const t = useTranslations('TimelockTable');
     const { data: timelockListResponse, request: fetchTimelockList, isLoading, error } = useApi();
     const { allTimelocks, setAllTimelocks } = useAuthStore();
 
@@ -38,17 +42,23 @@ const Timelocks: React.FC = () => {
     }, [timelockListResponse, setAllTimelocks]);
 
     if (isLoading) {
-        return <PageLayout title="Timelock">Loading...</PageLayout>;
+        return (
+            <PageLayout title={t('title')}>
+                <div className="bg-white">
+                    <div className="mx-auto">
+                        <TableSkeleton rows={5} columns={7} showHeader={true} />
+                    </div>
+                </div>
+            </PageLayout>
+        );
     }
 
-    if (error) {
-        return <PageLayout title="Timelock">Error: {error.message}</PageLayout>;
-    }
+
 
     const hasTimelocks = allTimelocks.length > 0;
 
     return (
-        <PageLayout title="Timelock" >
+        <PageLayout title={t('title')}>
             {hasTimelocks ? <TimelockContractTable data={allTimelocks} onDataUpdate={refetchTimelocks} /> : <AddTimelockContractSection />}
         </PageLayout>
     )
