@@ -1,21 +1,95 @@
-import { 
-  ethereum, sepolia, 
-  polygon, bsc, bscTestnet,
-  optimism, avalanche,
-  base, arbitrum } from "thirdweb/chains";
-import type { Chain, ChainApiResponse, ChainIdMapping } from '@/types';
+import {
+  ethereum,
+  sepolia,
+  polygon,
+  bsc,
+  bscTestnet,
+  optimism,
+  avalanche,
+  base,
+  arbitrum,
+  gnosis,
+  linea,
+  zkSync,
+  scroll,
+  celo,
+  defineChain,
+} from 'thirdweb/chains';
+import type { Chain, ChainIdMapping } from '@/types';
+
+// Define custom chains not available in thirdweb/chains
+const monadTestnet = defineChain({
+  id: 10143,
+  name: 'Monad Testnet',
+  nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
+  rpc: 'https://testnet-rpc.monad.xyz',
+});
+
+const ronin = defineChain({
+  id: 2020,
+  name: 'Ronin',
+  nativeCurrency: { name: 'RON', symbol: 'RON', decimals: 18 },
+  rpc: 'https://ronin.drpc.org',
+});
+
+const mantle = defineChain({
+  id: 5000,
+  name: 'Mantle',
+  nativeCurrency: { name: 'MNT', symbol: 'MNT', decimals: 18 },
+  rpc: 'https://rpc.mantle.xyz',
+});
+
+const unichain = defineChain({
+  id: 130,
+  name: 'Unichain',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpc: 'https://rpc.unichain.org',
+});
+
+const ink = defineChain({
+  id: 57073,
+  name: 'Ink',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpc: 'https://rpc-gel.inkonchain.com',
+});
+
+const berachain = defineChain({
+  id: 80094,
+  name: 'Berachain',
+  nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 },
+  rpc: 'https://rpc.berachain.com',
+});
+
+const worldChain = defineChain({
+  id: 480,
+  name: 'World Chain',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpc: 'https://worldchain-mainnet.g.alchemy.com/public',
+});
 
 // Map chain IDs to thirdweb chain objects
 export const CHAIN_ID_TO_CHAIN: ChainIdMapping = {
   1: ethereum,
-  11155111: sepolia,
-  137: polygon,
-  43114: avalanche,
+  10: optimism,
   56: bsc,
   97: bscTestnet,
-  42161: arbitrum,
-  10: optimism,
+  100: gnosis,
+  130: unichain,
+  137: polygon,
+  324: zkSync,
+  480: worldChain,
+  534352: scroll,
+  2020: ronin,
+  5000: mantle,
   8453: base,
+  10143: monadTestnet,
+  11155111: sepolia,
+  42161: arbitrum,
+  42220: celo,
+  43114: avalanche,
+  57073: ink,
+  59144: linea,
+  80094: berachain,
 } as const;
 
 /**
@@ -95,7 +169,7 @@ export class ChainUtils {
   static getDisplayName(chains: Chain[], chainId: number | string): string {
     const chain = ChainUtils.getChainFromLocal(chains, chainId);
     if (!chain) return 'Unsupport Chain';
-    
+
     const name = chain.display_name || chain.chain_name;
     return chain.is_testnet ? `${name} (Testnet)` : name;
   }
