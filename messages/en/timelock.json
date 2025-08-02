@@ -73,6 +73,28 @@
     "addTimelock": "Add Timelock",
     "addTimelockDescription": "Add your timelock contract address for management."
   },
+  "TimelockTable": {
+    "title": "Timelock Contracts",
+    "description": "Manage your existing Timelock contracts.",
+    "importExistingContract": "Import Existing Contract",
+    "createNewContract": "Create New Contract",
+    "chain": "Chain",
+    "name": "Name",
+    "timelock": "Timelock",
+    "owner": "Owner",
+    "userPermissions": "User Permissions",
+    "minDelay": "Min Delay",
+    "addedAt": "Added At",
+    "operations": "Operations",
+    "none": "None",
+    "deleteTitle": "Delete Timelock Contract",
+    "deleteDescription": "Are you sure you want to delete the timelock contract \"{name}\"? This action cannot be undone.",
+    "deleteConfirm": "Delete",
+    "deleteCancel": "Cancel",
+    "deleteSuccess": "Contract deleted successfully",
+    "deleteError": "Failed to delete contract: {message}",
+    "unknown": "Unknown"
+  },
   "chains": {
     "ethereum": "Ethereum",
     "bsc": "BSC",

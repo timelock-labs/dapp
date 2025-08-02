@@ -73,6 +73,28 @@
     "addTimelock": "添加时间锁",
     "addTimelockDescription": "选择以下两种方式添加 Timelock 合约"
   },
+  "TimelockTable": {
+    "title": "时间锁合约",
+    "description": "管理您现有的时间锁合约。",
+    "importExistingContract": "导入现有合约",
+    "createNewContract": "创建新合约",
+    "chain": "链",
+    "name": "名称",
+    "timelock": "时间锁",
+    "owner": "所有者",
+    "userPermissions": "用户权限",
+    "minDelay": "最小延迟",
+    "addedAt": "添加时间",
+    "operations": "操作",
+    "none": "无",
+    "deleteTitle": "删除时间锁合约",
+    "deleteDescription": "您确定要删除时间锁合约 \"{name}\" 吗？此操作无法撤销。",
+    "deleteConfirm": "删除",
+    "deleteCancel": "取消",
+    "deleteSuccess": "合约删除成功",
+    "deleteError": "删除合约失败：{message}",
+    "unknown": "未知"
+  },
   "chains": {
     "ethereum": "以太坊",
     "bsc": "币安智能链",
