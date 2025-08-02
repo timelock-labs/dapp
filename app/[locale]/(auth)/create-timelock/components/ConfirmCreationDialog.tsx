@@ -1,17 +1,26 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import type { ConfirmCreationDialogProps } from "./types";
-import ParameterDisplayRow from "./ParameterDisplayRow";
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import type { ConfirmCreationDialogProps } from './types';
+import ParameterDisplayRow from './ParameterDisplayRow';
 
-const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {
+const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  creationDetails,
+}) => {
+  const t = useTranslations('ConfirmCreationDialog');
   const dialogRef = useRef<HTMLDivElement>(null);
-  const [remark, setRemark] = useState("");
+  const [remark, setRemark] = useState('');
+  const [remarkError, setRemarkError] = useState('');
 
-  // Reset remark when dialog opens
+  // Reset remark and error when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setRemark("");
+      setRemark('');
+      setRemarkError('');
     }
   }, [isOpen]);
 
@@ -20,12 +29,12 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
     if (!isOpen) return; // Only add listener if dialog is open
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
 
     // Focus the dialog content when it opens for accessibility
     if (dialogRef.current) {
@@ -33,63 +42,103 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen, onClose]); // Re-run effect if isOpen or onClose changes
+
+  // Handle form submission with validation
+  const handleConfirm = () => {
+    if (!remark.trim()) {
+      setRemarkError(t('contractRemarkRequired'));
+      return;
+    }
+    setRemarkError('');
+    onConfirm(remark);
+  };
+
+  // Handle remark input change
+  const handleRemarkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRemark(e.target.value);
+    if (remarkError && e.target.value.trim()) {
+      setRemarkError('');
+    }
+  };
 
   // If dialog is not open, don't render anything
   if (!isOpen) return null;
 
-  const dialogTitleId = "confirm-creation-dialog-title"; // Unique ID for the dialog title
+  const dialogTitleId = 'confirm-creation-dialog-title'; // Unique ID for the dialog title
 
   return (
     // Dialog Overlay (Backdrop)
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
       {/* Dialog Content */}
       <div
         ref={dialogRef} // Attach ref for focus management
-        role="dialog" // ARIA role for dialog
-        aria-modal="true" // Indicates that the dialog blocks content behind it
+        role='dialog' // ARIA role for dialog
+        aria-modal='true' // Indicates that the dialog blocks content behind it
         aria-labelledby={dialogTitleId} // Links the dialog to its title for screen readers
         tabIndex={-1} // Makes the dialog content focusable
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4 relative outline-none" // outline-none removes focus outline
+        className='bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4 relative outline-none' // outline-none removes focus outline
       >
         {/* Dialog Title */}
-        <h2 id={dialogTitleId} className="text-xl font-semibold text-gray-900 mb-6">
-          请检查参数
+        <h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
+          {t('title')}
         </h2>
 
         {/* Parameter Display Fields */}
-        <ParameterDisplayRow label="所在链">
+        <ParameterDisplayRow label={t('chainLabel')}>
           {/* {creationDetails.chainIcon} */}
-          <span className="ml-2">{creationDetails.chainName}</span>
+          <span className='ml-2'>{creationDetails.chainName}</span>
         </ParameterDisplayRow>
 
-        <ParameterDisplayRow label="Timelock地址">{creationDetails.timelockAddress}</ParameterDisplayRow>
+        <ParameterDisplayRow label={t('timelockAddressLabel')}>
+          {creationDetails.timelockAddress}
+        </ParameterDisplayRow>
 
-        <ParameterDisplayRow label="发起地址">{creationDetails.initiatingAddress}</ParameterDisplayRow>
+        <ParameterDisplayRow label={t('initiatingAddressLabel')}>
+          {creationDetails.initiatingAddress}
+        </ParameterDisplayRow>
 
-        <ParameterDisplayRow label="交易Hash">{creationDetails.transactionHash}</ParameterDisplayRow>
+        <ParameterDisplayRow label={t('transactionHashLabel')}>
+          {creationDetails.transactionHash}
+        </ParameterDisplayRow>
 
         {/* Contract Remarks Input Field */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">合约备注</label>
+        <div className='mb-4'>
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
+            {t('contractRemarkLabel')} <span className='text-red-500'>*</span>
+          </label>
           <input
-            type="text"
-            className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm bg-white text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            placeholder="请输入合约备注信息（可选）"
+            type='text'
+            className={`mt-1 block w-full px-3 py-2 rounded-md border shadow-sm bg-white text-gray-900 focus:ring-1 ${
+              remarkError
+                ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+            }`}
+            placeholder={t('contractRemarkPlaceholder')}
             value={remark}
-            onChange={(e) => setRemark(e.target.value)}
+            onChange={handleRemarkChange}
+            required
           />
+          {remarkError && <p className='mt-1 text-sm text-red-600'>{remarkError}</p>}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end space-x-3 mt-6">
-          <button type="button" onClick={onClose} className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors">
-            Cancel
+        <div className='flex justify-end space-x-3 mt-6'>
+          <button
+            type='button'
+            onClick={onClose}
+            className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'
+          >
+            {t('cancel')}
           </button>
-          <button type="button" onClick={() => onConfirm(remark)} className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors">
-            确认添加
+          <button
+            type='button'
+            onClick={handleConfirm}
+            className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'
+          >
+            {t('confirmAdd')}
           </button>
         </div>
       </div>

@@ -34,6 +34,18 @@
     "openzeppelinStandardLabel": "OpenZeppelin Standard Timelock Contract",
     "openzeppelinStandardDescription": "Advanced features for growing businesses"
   },
+  "ConfirmCreationDialog": {
+    "title": "Please Check Parameters",
+    "chainLabel": "Chain",
+    "timelockAddressLabel": "Timelock Address",
+    "initiatingAddressLabel": "Initiating Address",
+    "transactionHashLabel": "Transaction Hash",
+    "contractRemarkLabel": "Contract Remark",
+    "contractRemarkPlaceholder": "Please enter contract remark",
+    "contractRemarkRequired": "Contract remark is required",
+    "cancel": "Cancel",
+    "confirmAdd": "Confirm Add"
+  },
   "Timelocks": {
     "title": "Timelocks",
     "managedTimelocks": "Add Timelock Contract",

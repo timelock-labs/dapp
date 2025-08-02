@@ -34,6 +34,18 @@
     "openzeppelinStandardLabel": "OpenZeppelin 标准 Timelock 合约",
     "openzeppelinStandardDescription": "适合成长型企业的高级功能"
   },
+  "ConfirmCreationDialog": {
+    "title": "请检查参数",
+    "chainLabel": "所在链",
+    "timelockAddressLabel": "Timelock地址",
+    "initiatingAddressLabel": "发起地址",
+    "transactionHashLabel": "交易Hash",
+    "contractRemarkLabel": "合约备注",
+    "contractRemarkPlaceholder": "请输入合约备注信息",
+    "contractRemarkRequired": "合约备注为必填项",
+    "cancel": "取消",
+    "confirmAdd": "确认添加"
+  },
   "Timelocks": {
     "title": "时间锁",
     "managedTimelocks": "管理的时间锁",
