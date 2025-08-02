@@ -152,6 +152,7 @@ export const useTimelockApi = () => {
       const data = await response.json();
       return data;
     } catch (error) {
+      console.error(error);
       throw new Error('Failed to fetch timelock list');
     }
   }, []);

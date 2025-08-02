@@ -25,15 +25,13 @@ import { useTranslations } from 'next-intl';
 // import type { BaseComponentProps } from '@/types';
 
 
-// interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {}
-
 /**
  * Application sidebar component with navigation and user menu
  * 
  * @param props - AppSidebar component props
  * @returns JSX.Element
  */
-export function AppSidebar({ ...props }: AppSidebarProps) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations();
   const sidebarData = {
     navMain: [

@@ -244,6 +244,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
               <div className="flex gap-4 items-center">
                 <input
                   type="datetime-local"
+                  aria-label={`Transaction execution time ${timeZone()}`}
                   value={toLocalDateTimeString(new Date(timeValue * 1000))}
                   className="max-w-[200px] border border-gray-300 rounded px-3 h-[34px]  focus:outline-none focus:ring-2 focus:ring-blue-200"
                   onChange={(e) => {
