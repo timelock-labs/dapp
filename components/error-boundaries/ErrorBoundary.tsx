@@ -5,49 +5,10 @@
 
 'use client';
 
-// React imports
-import React, { Component, ReactNode } from 'react';
-
-// Internal components
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
-// Type imports
+import React, { Component } from 'react';
 import type { ErrorInfo } from 'react';
-
-/**
- * Error boundary state
- */
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  errorInfo: ErrorInfo | null;
-  errorId: string | null;
-}
-
-/**
- * Error boundary props
- */
-interface ErrorBoundaryProps {
-  /** Child components to wrap */
-  children: ReactNode;
-  /** Fallback component to render on error */
-  fallback?: (error: Error, errorInfo: ErrorInfo, retry: () => void) => ReactNode;
-  /** Custom error handler */
-  onError?: (error: Error, errorInfo: ErrorInfo, errorId: string) => void;
-  /** Whether to show error details in development */
-  showErrorDetails?: boolean;
-  /** Custom error message */
-  errorMessage?: string;
-  /** Whether to show retry button */
-  showRetry?: boolean;
-  /** Custom retry handler */
-  onRetry?: () => void;
-  /** Error boundary level (for logging) */
-  level?: 'page' | 'section' | 'component';
-  /** Component name (for logging) */
-  componentName?: string;
-}
+import { DefaultErrorFallback } from './DefaultErrorFallback';
+import type { ErrorBoundaryProps, ErrorBoundaryState } from './types';
 
 /**
  * Default error fallback component
@@ -304,4 +265,123 @@ export function useErrorHandler() {
     // This will be caught by the nearest error boundary
     throw error;
   };
+}/**
+
+ * Comprehensive error boundary component
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  private retryTimeoutId: NodeJS.Timeout | null = null;
+
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      errorId: null,
+    };
+  }
+
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    return {
+      hasError: true,
+      error,
+      errorId,
+    };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    const { onError, level = 'component', componentName } = this.props;
+    const { errorId } = this.state;
+
+    this.setState({ errorInfo });
+
+    // Log error
+    console.error(`[ErrorBoundary:${level}${componentName ? `:${componentName}` : ''}]`, {
+      error,
+      errorInfo,
+      errorId,
+    });
+
+    // Call custom error handler
+    if (onError && errorId) {
+      try {
+        onError(error, errorInfo, errorId);
+      } catch (handlerError) {
+        console.error('Error in custom error handler:', handlerError);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.retryTimeoutId) {
+      clearTimeout(this.retryTimeoutId);
+    }
+  }
+
+  handleRetry = () => {
+    const { onRetry } = this.props;
+
+    // Clear any existing timeout
+    if (this.retryTimeoutId) {
+      clearTimeout(this.retryTimeoutId);
+    }
+
+    // Call custom retry handler
+    if (onRetry) {
+      try {
+        onRetry();
+      } catch (retryError) {
+        console.error('Error in custom retry handler:', retryError);
+      }
+    }
+
+    // Reset error state
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      errorId: null,
+    });
+  };
+
+  render() {
+    const { hasError, error, errorInfo } = this.state;
+    const {
+      children,
+      fallback,
+      showErrorDetails = process.env.NODE_ENV === 'development',
+      errorMessage,
+      showRetry = true,
+    } = this.props;
+
+    if (hasError && error && errorInfo) {
+      // Use custom fallback if provided
+      if (fallback) {
+        try {
+          return fallback(error, errorInfo, this.handleRetry);
+        } catch (fallbackError) {
+          console.error('Error in custom fallback component:', fallbackError);
+          // Fall through to default fallback
+        }
+      }
+
+      // Use default fallback
+      return (
+        <DefaultErrorFallback
+          error={error}
+          errorInfo={errorInfo}
+          retry={this.handleRetry}
+          showErrorDetails={showErrorDetails}
+          errorMessage={errorMessage}
+          showRetry={showRetry}
+        />
+      );
+    }
+
+    return children;
+  }
 }
