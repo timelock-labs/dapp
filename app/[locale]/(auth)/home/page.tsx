@@ -4,25 +4,25 @@ import React from 'react';
 import Assert from './components/Assert';
 import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
-import { useAssetsApi } from '@/hooks/useAssetsApi';
-import type { Asset } from './components/Assert';
+import { useTimelockApi } from '@/hooks/useTimelockApi';
 
 export default function Home() {
   const connectionStatus = useActiveWalletConnectionStatus();
   const isConnected = connectionStatus === "connected";
 
-  const { data: assetsData, isLoading, error, hasAssets } = useAssetsApi();
+  const { useTimelockList } = useTimelockApi();
+  const { data: timelockData, isLoading, error } = useTimelockList({ status: 'active' });
+  
+  console.log(timelockData, 'timelockData');
+  const hasTimelocks = !!(timelockData && timelockData.total > 0);
 
   if (!isConnected) {
     return <CreateProtocol />;
   }
 
-  if (isLoading || hasAssets === null) {
-    return <div>Loading assets...</div>;
-  }
 
-  if (hasAssets) {
-    return <Assert assetsResponse={{ data: { assets: assetsData?.assets as Asset[] || [], total_usd_value: 0 }, success: true }} isLoading={isLoading} error={error} />;
+  if (hasTimelocks) {
+    return <Assert />;
   } else {
     return <CreateProtocol />;
   }

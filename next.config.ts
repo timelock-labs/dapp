@@ -29,6 +29,14 @@ const nextConfig = {
         protocol: 'https' as const,
         hostname: 'pbs.twimg.com',
       },
+      {
+        protocol: 'https' as const,
+        hostname: 'logos.covalenthq.com',
+      },
+      {
+        protocol: 'https' as const,
+        hostname: 'www.datocms-assets.com',
+      },
     ],
   },
 };
