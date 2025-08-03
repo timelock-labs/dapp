@@ -1,23 +1,24 @@
-'use client'
+'use client';
 
-import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
-import { createWallet } from "thirdweb/wallets";
-import { memo } from 'react'
+import { createThirdwebClient } from 'thirdweb';
+import { ConnectButton } from 'thirdweb/react';
+import { createWallet } from 'thirdweb/wallets';
+import { memo } from 'react';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
 
 const client = createThirdwebClient({
-  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "....",
+  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || '....',
 });
 
 const wallets = [
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet"),
-  createWallet("com.okex.wallet"),
-  createWallet("global.safe"),
-  createWallet("com.safepal"),
+  createWallet('io.metamask'),
+  createWallet('com.coinbase.wallet'),
+  createWallet('com.okex.wallet'),
+  createWallet('global.safe'),
+  createWallet('com.safepal'),
 ];
 
 interface ConnectWalletProps extends BaseComponentProps {
@@ -28,9 +29,40 @@ interface ConnectWalletProps extends BaseComponentProps {
   onDisconnect?: VoidCallback;
 }
 
+// 样式常量，便于维护和自定义
+const WALLET_STYLES = {
+  button: {
+    base: {
+      backgroundColor: '#000000',
+      color: '#ffffff',
+      border: 'none',
+      borderRadius: '0.375rem',
+      fontWeight: '500',
+      transition: 'background-color 0.2s ease',
+      cursor: 'pointer',
+    },
+    hover: {
+      backgroundColor: '#374151',
+    },
+    fullWidth: {
+      height: '48px',
+      width: '100%',
+    },
+    header: {
+      height: '36px',
+      width: '115px',
+    },
+  },
+  connected: {
+    hideFirstChild: { display: 'none' },
+    hideLastSpan: { display: 'none' },
+    centerText: { textAlign: 'center' as const },
+  },
+} as const;
+
 /**
  * Connect wallet component with thirdweb integration
- * 
+ *
  * @param props - ConnectWallet component props
  * @returns JSX.Element
  */
@@ -39,72 +71,106 @@ export const ConnectWallet = memo(function ConnectWallet({
   headerStyle,
   onConnect,
   onDisconnect,
-  className
+  className,
 }: ConnectWalletProps) {
-  const logout = useAuthStore((state) => state.logout);
+  const logout = useAuthStore(state => state.logout);
   const router = useRouter();
 
+  const wrapperClass = cn('connect-wallet-container', fullWidth ? 'w-full' : 'w-auto', className);
+
   return (
-    <div className={`connect-wallet-wrapper ${fullWidth ? "w-full" : "header-btn"} ${className ?? ''}`}>
+    <div className={wrapperClass}>
       <ConnectButton
         client={client}
-        connectModal={{ 
-          size: "compact",
-          ...(headerStyle && { title: "连接钱包" })
+        connectModal={{
+          size: 'compact',
+          ...(headerStyle && { title: '连接钱包' }),
         }}
         wallets={wallets}
-        theme="dark"
+        theme='dark'
         onConnect={() => {
-          console.log("Wallet connected");
+          console.log('Wallet connected');
           onConnect?.();
         }}
         onDisconnect={() => {
-          console.log("Wallet disconnected");
+          console.log('Wallet disconnected');
           logout();
           router.push('/login');
           onDisconnect?.();
         }}
       />
       <style jsx global>{`
-        /* 连接前的按钮样式 */
-        .connect-wallet-wrapper [data-testid="connect-button"],
-        .connect-wallet-wrapper button[data-theme] {
-          background-color: #000000 !important;
-          color: #ffffff !important;
-          border: none !important;
-          border-radius: 0.375rem !important;
-          font-weight: 500 !important;
-          transition: background-color 0.2s ease !important;
-          cursor: pointer !important;
-          height: 48px !important;
-        }
-        
-        .connect-wallet-wrapper [data-testid="connect-button"]:hover,
-        .connect-wallet-wrapper button[data-theme]:hover {
-          background-color: #374151 !important;
+        /* 连接按钮基础样式 */
+        .connect-wallet-container [data-testid='connect-button'],
+        .connect-wallet-container button[data-theme] {
+          background-color: ${WALLET_STYLES.button.base.backgroundColor} !important;
+          color: ${WALLET_STYLES.button.base.color} !important;
+          border: ${WALLET_STYLES.button.base.border} !important;
+          border-radius: ${WALLET_STYLES.button.base.borderRadius} !important;
+          font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
+          transition: ${WALLET_STYLES.button.base.transition} !important;
+          cursor: ${WALLET_STYLES.button.base.cursor} !important;
+          ${fullWidth
+            ? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+            : `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
         }
 
-        .connect-wallet-wrapper>.tw-connect-wallet,
-        .connect-wallet-wrapper>.tw-connected-wallet {
+        /* 悬停效果 */
+        .connect-wallet-container [data-testid='connect-button']:hover,
+        .connect-wallet-container button[data-theme]:hover {
+          background-color: ${WALLET_STYLES.button.hover.backgroundColor} !important;
+        }
+
+        /* 已连接按钮样式 - 根据实际DOM结构 */
+        .connect-wallet-container .tw-connected-wallet {
+          background-color: ${WALLET_STYLES.button.base.backgroundColor} !important;
+          color: ${WALLET_STYLES.button.base.color} !important;
+          border: ${WALLET_STYLES.button.base.border} !important;
+          border-radius: ${WALLET_STYLES.button.base.borderRadius} !important;
+          font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
+          transition: ${WALLET_STYLES.button.base.transition} !important;
+          cursor: ${WALLET_STYLES.button.base.cursor} !important;
+          ${fullWidth
+            ? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+            : `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
+          box-sizing: border-box !important;
+        }
+
+        /* 已连接按钮悬停效果 */
+        .connect-wallet-container .tw-connected-wallet:hover {
+          background-color: ${WALLET_STYLES.button.hover.backgroundColor} !important;
+        }
+
+        /* 隐藏头像 */
+        .connect-wallet-container .tw-connected-wallet > div:first-child {
+          display: none !important;
+        }
+
+        /* 隐藏余额信息 */
+        .connect-wallet-container .tw-connected-wallet .tw-connected-wallet__balance {
+          display: none !important;
+        }
+
+        /* 地址容器居中 */
+        .connect-wallet-container .tw-connected-wallet > div:last-child {
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
           width: 100% !important;
         }
-        .connect-wallet-wrapper>.tw-connected-wallet > div:first-child {
-          display: none !important;
-        }
-        .connect-wallet-wrapper>.tw-connected-wallet > div:last-child > span:last-child {
-          display: none !important;
+
+        /* 地址文本居中 */
+        .connect-wallet-container .tw-connected-wallet__address {
+          text-align: center !important;
+          width: 100% !important;
         }
 
-        .connect-wallet-wrapper>.tw-connected-wallet > div:last-child > span:first-child > span {
+        .connect-wallet-container .tw-connected-wallet__address span {
+          display: block !important;
           text-align: center !important;
-        }
-          
-        .header-btn >.tw-connected-wallet {
-          height: 36px !important;
-          width: 115px !important;
+          width: 100% !important;
         }
       `}</style>
     </div>
-  )
-}) 
-
+  );
+});

@@ -57,12 +57,12 @@ export default function PageLayout({
               </Breadcrumb>
             </div>
 
-            <div className="flex items-center gap-3 ml-auto pr-4">
+            <div className="flex items-center gap-3 ml-auto pr-6">
               <ChainSwitcher />
               <ConnectWallet icon={true} headerStyle={true}  />
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-8">
+          <div className="flex flex-1 flex-col gap-4 p-6">
             {children}
           </div>
         </SidebarInset>
