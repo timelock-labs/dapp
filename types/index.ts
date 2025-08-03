@@ -114,6 +114,8 @@ export type {
   ConfirmCreationDialogProps,
   CreateTimelockFormProps,
   CreateTimelockFormState,
+  DeploymentResult,
+  CompoundTimelockParams,
   EncodingTransactionFormProps,
   TargetABISectionProps,
   MailboxSelectionProps,

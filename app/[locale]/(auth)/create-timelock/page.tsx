@@ -29,6 +29,7 @@ const CreateTimelockPage: React.FC = () => {
     selectedChain: 1,
     selectedStandard: 'compound',
     minDelay: '259200',
+    owner: '', // 将在钱包连接后设置为钱包地址
   });
 
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
@@ -86,6 +87,10 @@ const CreateTimelockPage: React.FC = () => {
     setFormState(prev => ({ ...prev, minDelay }));
   }, []);
 
+  const handleOwnerChange = useCallback((owner: string) => {
+    setFormState(prev => ({ ...prev, owner }));
+  }, []);
+
   // Deployment handlers
   const handleCreate = useCallback(async () => {
     if (!accessToken || !walletAddress) {
@@ -108,7 +113,7 @@ const CreateTimelockPage: React.FC = () => {
       if (formState.selectedStandard === 'compound') {
         const params: CompoundTimelockParams = {
           minDelay: parseInt(formState.minDelay),
-          admin: walletAddress as `0x${string}`,
+          admin: (formState.owner || walletAddress) as `0x${string}`,
         };
         const result: DeploymentResult = await deployCompoundTimelock(params);
         deployedContractAddress = result.contractAddress;
@@ -145,7 +150,7 @@ const CreateTimelockPage: React.FC = () => {
       }
 
       const body: CreateTimelockRequestBody = {
-        admin: walletAddress as `0x${string}`,
+        admin: (formState.owner || walletAddress) as `0x${string}`,
         chain_id: formState.selectedChain,
         chain_name: dialogDetails.chainName,
         min_delay: parseInt(formState.minDelay),
@@ -174,6 +179,7 @@ const CreateTimelockPage: React.FC = () => {
             selectedChain: 1,
             selectedStandard: 'compound',
             minDelay: '259200',
+            owner: walletAddress || '',
           });
           // Redirect to timelocks page
           router.push(`/${locale}/timelocks`);
@@ -200,6 +206,13 @@ const CreateTimelockPage: React.FC = () => {
     }
   }, [chainId]);
 
+  // Effect to set default owner when wallet connects
+  useEffect(() => {
+    if (walletAddress && (!formState.owner || formState.owner === '')) {
+      setFormState(prev => ({ ...prev, owner: walletAddress }));
+    }
+  }, [walletAddress, formState.owner]);
+
   return (
     <PageLayout title={t('createTimelock')}>
       <div className='bg-white p-8'>
@@ -212,6 +225,8 @@ const CreateTimelockPage: React.FC = () => {
             onStandardChange={handleStandardChange}
             minDelay={formState.minDelay}
             onMinDelayChange={handleMinDelayChange}
+            owner={formState.owner || ''}
+            onOwnerChange={handleOwnerChange}
             onDeploy={handleCreate}
             isLoading={isLoading}
           />

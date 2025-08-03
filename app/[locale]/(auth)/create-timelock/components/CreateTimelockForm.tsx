@@ -25,6 +25,8 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
   onStandardChange,
   minDelay,
   onMinDelayChange,
+  owner = '',
+  onOwnerChange,
   onDeploy,
   isLoading,
 }) => {
@@ -120,6 +122,17 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
               )}
             </div>
           </div>
+        </div>
+
+        {/* Owner Input */}
+        <div className='md:col-start-2 min-w-[548px]'>
+          <TextInput
+            label={t('admin')}
+            value={owner}
+            onChange={onOwnerChange || (() => {})}
+            placeholder={t('adminPlaceholder')}
+            type='text'
+          />
         </div>
       </div>
 

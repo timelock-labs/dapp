@@ -10,3 +10,20 @@ export type {
   ButtonProps, 
   InputProps 
 } from './components/ui';
+
+// Timelock component types
+export type {
+  ChainOption,
+  StandardOption,
+  StandardOptionConfig,
+  CreateTimelockFormState,
+  CreateTimelockFormProps,
+  ContractStandardSelectionProps,
+  RadioButtonOptionProps,
+  CreationDetails,
+  DialogDetailsState,
+  ConfirmCreationDialogProps,
+  ParameterDisplayRowProps,
+  DeploymentResult,
+  CompoundTimelockParams
+} from './components/timelock';

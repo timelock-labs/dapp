@@ -115,7 +115,7 @@ export function useContractDeployment() {
         throw error;
       }
     }, {
-      loading: 'Deploying contract... Please confirm in your wallet.',
+      loading: 'Deploying timelock contract... Please confirm in your wallet.',
       success: 'Contract deployed successfully!',
     });
   }, [requireConnection, signer, execute, handleError]);
