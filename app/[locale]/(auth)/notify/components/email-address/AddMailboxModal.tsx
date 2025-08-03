@@ -1,5 +1,5 @@
 // components/email-address/AddEmailAddressForm.tsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput';         // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
@@ -35,7 +35,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
   const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [isLoadingTimelocks, setIsLoadingTimelocks] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
@@ -45,55 +44,53 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     resendVerificationCode
   } = useNotificationApi();
 
-  const { getTimelockList } = useTimelockApi();
+  const { useTimelockList } = useTimelockApi();
+  
+  // Only fetch when modal is open
+  const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(
+    isOpen ? { status: 'active' } : undefined
+  );
 
-  const fetchTimelocks = useCallback(async () => {
-    setIsLoadingTimelocks(true);
-    try {
-      const response = await getTimelockList({ status: 'active' });
-      if (response.success && response.data) {
-        const timelockPermissions: Permission[] = [];
-        
-        // Add Compound timelocks
-        if (response.data.compound_timelocks) {
-          response.data.compound_timelocks.forEach((timelock: TimelockData) => {
-            timelockPermissions.push({
-              id: timelock.contract_address,
-              label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
-              subLabel: timelock.contract_address,
-              icon: <span className="text-yellow-500 text-base">🪙</span>
-            });
-          });
-        }
-
-        // Add OpenZeppelin timelocks
-        if (response.data.openzeppelin_timelocks) {
-          response.data.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
-            timelockPermissions.push({
-              id: timelock.contract_address,
-              label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
-              subLabel: timelock.contract_address,
-              icon: <span className="text-blue-500 text-base">🔷</span>
-            });
-          });
-        }
-
-        setPermissions(timelockPermissions);
-      }
-    } catch (error) {
-      console.error('Failed to fetch timelines:', error);
-      toast.error(t('fetchTimelockListError'));
-    } finally {
-      setIsLoadingTimelocks(false);
-    }
-  }, [getTimelockList, t]);
-
-  // Fetch timelock list when modal opens
+  // Process timelock data when it changes
   useEffect(() => {
-    if (isOpen) {
-      fetchTimelocks();
+    if (timelockData) {
+      const timelockPermissions: Permission[] = [];
+      
+      // Add Compound timelocks
+      if (timelockData.compound_timelocks) {
+        timelockData.compound_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className="text-yellow-500 text-base">🪙</span>
+          });
+        });
+      }
+
+      // Add OpenZeppelin timelocks
+      if (timelockData.openzeppelin_timelocks) {
+        timelockData.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className="text-blue-500 text-base">🔷</span>
+          });
+        });
+      }
+
+      setPermissions(timelockPermissions);
     }
-  }, [isOpen, fetchTimelocks]);
+  }, [timelockData]);
+
+  // Handle timelock error
+  useEffect(() => {
+    if (timelockError) {
+      console.error('Failed to fetch timelines:', timelockError);
+      toast.error(t('fetchTimelockListError'));
+    }
+  }, [timelockError, t]);
 
   // Debounce email verification
   useEffect(() => {

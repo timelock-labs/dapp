@@ -136,27 +136,6 @@ export const useTimelockApi = () => {
     return acceptCompoundAdminMutation.mutate({ id });
   }, [acceptCompoundAdminMutation]);
 
-  // Function to fetch timelock list (for imperative usage)
-  const getTimelockList = useCallback(async (params?: {
-    standard?: ContractStandard;
-    status?: 'active' | 'inactive';
-  }) => {
-    const queryString = params ? new URLSearchParams(
-      Object.entries(params).filter(([, value]) => value !== undefined) as [string, string][]
-    ).toString() : '';
-    
-    const endpoint = `/api/v1/timelock/list${queryString ? `?${queryString}` : ''}`;
-    
-    try {
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to fetch timelock list');
-    }
-  }, []);
-
   return {
     // Hooks for queries
     useTimelockList,
@@ -170,9 +149,6 @@ export const useTimelockApi = () => {
     getCompoundAdminPermissions,
     setCompoundPendingAdmin,
     acceptCompoundAdmin,
-    
-    // Fetch methods
-    getTimelockList,
     
     // Mutation states
     importTimelockState: {

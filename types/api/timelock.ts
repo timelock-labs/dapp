@@ -9,6 +9,15 @@ import type { ApiResponse } from './base';
  * Timelock contract data
  */
 export interface TimelockContract {
+  compound_timelocks: TimelockContractItem[];
+  openzeppelin_timelocks: TimelockContractItem[];
+  total: number;
+}
+
+/**
+ * Timelock contract data
+ */
+export interface TimelockContractItem {
   id: number;
   chain_name: string;
   contract_address: Address;
@@ -24,7 +33,6 @@ export interface TimelockContract {
   // Compound specific fields
   pending_admin?: Address;
 }
-
 /**
  * Timelock parameters for import/validation
  */

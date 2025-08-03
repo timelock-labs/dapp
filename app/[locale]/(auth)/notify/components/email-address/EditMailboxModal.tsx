@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TextInput from '@/components/ui/TextInput';
 import ListeningPermissions from './ListeningPermissions';
@@ -40,51 +40,55 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
     initialData?.timelock_contracts || []
   );
   const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [isLoadingTimelocks, setIsLoadingTimelocks] = useState(false);
 
   const { updateEmailNotification } = useNotificationApi();
-  const { getTimelockList } = useTimelockApi();
+  const { useTimelockList } = useTimelockApi();
+  
+  // Only fetch when modal is open
+  const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(
+    isOpen ? { status: 'active' } : undefined
+  );
 
-  const fetchTimelocks = useCallback(async () => {
-    setIsLoadingTimelocks(true);
-    try {
-      const response = await getTimelockList({ status: 'active' });
-      if (response.success && response.data) {
-        const timelockPermissions: Permission[] = [];
+  // Process timelock data when it changes
+  useEffect(() => {
+    if (timelockData) {
+      const timelockPermissions: Permission[] = [];
 
-        // Add Compound timelocks
-        if (response.data.compound_timelocks) {
-          response.data.compound_timelocks.forEach((timelock: TimelockData) => {
-            timelockPermissions.push({
-              id: timelock.contract_address,
-              label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
-              subLabel: timelock.contract_address,
-              icon: <span className='text-yellow-500 text-base'>🪙</span>,
-            });
+      // Add Compound timelocks
+      if (timelockData.compound_timelocks) {
+        timelockData.compound_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className='text-yellow-500 text-base'>🪙</span>,
           });
-        }
-
-        // Add OpenZeppelin timelocks
-        if (response.data.openzeppelin_timelocks) {
-          response.data.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
-            timelockPermissions.push({
-              id: timelock.contract_address,
-              label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
-              subLabel: timelock.contract_address,
-              icon: <span className='text-blue-500 text-base'>🔷</span>,
-            });
-          });
-        }
-
-        setPermissions(timelockPermissions);
+        });
       }
-    } catch (error) {
-      console.error('Failed to fetch timelocks:', error);
-      toast.error(t('fetchTimelockListError'));
-    } finally {
-      setIsLoadingTimelocks(false);
+
+      // Add OpenZeppelin timelocks
+      if (timelockData.openzeppelin_timelocks) {
+        timelockData.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className='text-blue-500 text-base'>🔷</span>,
+          });
+        });
+      }
+
+      setPermissions(timelockPermissions);
     }
-  }, [getTimelockList, t]);
+  }, [timelockData]);
+
+  // Handle timelock error
+  useEffect(() => {
+    if (timelockError) {
+      console.error('Failed to fetch timelocks:', timelockError);
+      toast.error(t('fetchTimelockListError'));
+    }
+  }, [timelockError, t]);
 
   useEffect(() => {
     if (initialData) {
@@ -92,13 +96,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
       setSelectedPermissions(initialData.timelock_contracts);
     }
   }, [initialData]);
-
-  // Fetch timelock list when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      fetchTimelocks();
-    }
-  }, [isOpen, fetchTimelocks]);
 
   const handlePermissionChange = (id: string, checked: boolean) => {
     setSelectedPermissions(prev =>
