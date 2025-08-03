@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
 import { Button } from '@/components/ui/button';
 import ContractStandardSelection from './ContractStandardSelection';
 import { useAuthStore } from '@/store/userStore';
+import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
 import type { CreateTimelockFormProps, ChainOption } from '@/types';
 
 const DEFAULT_CHAIN_LOGO = '/default-chain-logo.png';
@@ -28,6 +30,8 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 }) => {
   const t = useTranslations('CreateTimelock');
   const { chains, fetchChains } = useAuthStore();
+  const params = useParams();
+  const locale = params.locale as string;
 
   // Fetch chains on mount if not already loaded
   useEffect(() => {
@@ -64,6 +68,12 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
     [chainOptions, selectedChainValue]
   );
 
+  // Format the time display
+  const formattedTime = useMemo(() => {
+    const seconds = parseInt(minDelay) || 0;
+    return formatSecondsToLocalizedTime(seconds, locale === 'zh' ? 'zh' : 'en');
+  }, [minDelay, locale]);
+
   return (
     <div className='bg-white p-6 rounded-lg border-b border-gray-200'>
       <SectionHeader title={t('createTimelock')} description={t('createTimelockDescription')} />
@@ -91,15 +101,25 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
         {/* minDelay Input */}
         <div className='md:col-start-2 min-w-[548px]'>
-          <TextInput
-            label={t('minDelay')}
-            value={minDelay}
-            onChange={onMinDelayChange}
-            placeholder={t('minDelayPlaceholder')}
-            type='number'
-            min='0'
-            step='1'
-          />
+          <div className='mb-4'>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>{t('minDelay')}</label>
+            <div className='flex items-center gap-3'>
+              <input
+                type='number'
+                className='mt-1 block flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 bg-white'
+                placeholder={t('minDelayPlaceholder')}
+                value={minDelay}
+                onChange={(e) => onMinDelayChange(e.target.value)}
+                min='0'
+                step='1'
+              />
+              {minDelay && parseInt(minDelay) > 0 && (
+                <div className='text-sm text-gray-600 whitespace-nowrap'>
+                  ≈ {formattedTime}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
