@@ -41,7 +41,11 @@ export const zodMiddleware = <T extends object, A extends object>(
 
     // Always call the original set function to update the state, regardless of validation success
     // In production, you might only want to update the state if validation succeeds
-    set(nextState, replace);
+    if (replace === true) {
+      set(nextState, true);
+    } else {
+      set(nextState, false);
+    }
   };
 
   return config(newSet, get, api);
