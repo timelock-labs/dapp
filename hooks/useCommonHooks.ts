@@ -22,6 +22,7 @@ export {
 // Browser utilities
 export { 
   useClipboard, 
+  useClickOutside,
   useMediaQuery, 
   useWindowSize, 
   useDocumentTitle 

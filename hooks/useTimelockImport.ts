@@ -106,7 +106,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 
       // Try Compound timelock first
       try {
-        const compoundValidation = await validateContract(contractAddress, TIMELOCK_ABIS.compound);
+        const compoundValidation = await validateContract(contractAddress, [...TIMELOCK_ABIS.compound]);
         if (compoundValidation.isValid) {
           return 'compound';
         }
@@ -116,7 +116,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 
       // Try OpenZeppelin timelock (when implemented)
       try {
-        const ozValidation = await validateContract(contractAddress, TIMELOCK_ABIS.openzeppelin);
+        const ozValidation = await validateContract(contractAddress, [...TIMELOCK_ABIS.openzeppelin]);
         if (ozValidation.isValid) {
           return 'openzeppelin';
         }
@@ -143,7 +143,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
       throw new Error('Provider not available');
     }
 
-    const contract = new ethers.Contract(contractAddress, TIMELOCK_ABIS.compound, provider);
+    const contract = new ethers.Contract(contractAddress, [...TIMELOCK_ABIS.compound], provider);
     const controller = createController();
 
     try {

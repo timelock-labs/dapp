@@ -26,7 +26,10 @@ export type {
 export type { 
   Transaction, 
   TransactionListResponse, 
-  TransactionStats 
+  TransactionStats,
+  CreateTransactionRequest,
+  TransactionListFilters,
+  PendingTransactionFilters 
 } from './api/transaction';
 
 // Partner types
@@ -37,3 +40,23 @@ export type { ABIItem, ABIListResponse } from './api/abi';
 
 // Assets types
 export type { Asset, AssetsData, UseAssetsApiReturn } from './api/assets';
+
+// Notification types
+export type { 
+  EmailNotification,
+  EmailNotificationListResponse,
+  EmailLog,
+  CreateEmailNotificationRequest,
+  UpdateEmailNotificationRequest,
+  VerifyEmailRequest,
+  ResendCodeRequest,
+  EmergencyReplyRequest,
+  EmailNotificationFilters
+} from './api/notification';
+
+// Sponsors types
+export type { 
+  Sponsor,
+  SponsorsData,
+  SponsorsApiResponse
+} from './api/sponsors';

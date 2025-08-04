@@ -67,7 +67,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
       return fn();
     }
 
-    const cached = cacheRef.current.get(key);
+    const cached = cacheRef.current.get(key) as { data: T; timestamp: number } | undefined;
     const now = Date.now();
 
     if (cached && (now - cached.timestamp) < ttl) {
@@ -75,7 +75,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
     }
 
     return fn().then(result => {
-      cacheRef.current.set(key, { data: result, timestamp: now });
+      cacheRef.current.set(key, { data: result as unknown, timestamp: now });
       return result;
     });
   }, [enableCaching]);
@@ -104,15 +104,14 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
       }
 
       return withCache('network-info', async () => {
-        const network = await withTimeout(provider.getNetwork());
-        const gasPrice = await withTimeout(provider.getGasPrice());
-        const blockNumber = await withTimeout(provider.getBlockNumber());
+        const network = await withTimeout(provider.getNetwork()) as { chainId: number; name: string; };
 
         return {
           chainId: network.chainId,
           name: network.name,
-          gasPrice: gasPrice.toString(),
-          blockNumber,
+          symbol: 'ETH', // Default to ETH, could be enhanced to detect native token
+          decimals: 18, // Default to 18 decimals for ETH-compatible chains
+          rpcUrl: provider.connection?.url || '', // Get RPC URL if available
           isTestnet: [1, 3, 4, 5, 42, 11155111].includes(network.chainId) === false,
         };
       });
@@ -133,7 +132,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
       }
 
       return withCache(`eth-balance-${address}`, async () => {
-        const balance = await withTimeout(provider.getBalance(address));
+        const balance = await withTimeout(provider.getBalance(address)) as ethers.BigNumber;
         return ethers.utils.formatEther(balance);
       }, 30000); // 30 second TTL for balance
     });
@@ -176,12 +175,22 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
           withTimeout(tokenContract.name()),
         ]);
 
+        const balanceTyped = balance as ethers.BigNumber;
+        const decimalsTyped = decimals as number;
+        const symbolTyped = symbol as string;
+        const nameTyped = name as string;
+
+        const formattedBalance = ethers.utils.formatUnits(balanceTyped, decimalsTyped);
+
         return {
-          address: tokenAddress,
-          balance: ethers.utils.formatUnits(balance, decimals),
-          decimals,
-          symbol,
-          name,
+          token: {
+            address: tokenAddress,
+            symbol: symbolTyped,
+            name: nameTyped,
+            decimals: decimalsTyped,
+          },
+          balance: balanceTyped.toString(),
+          formattedBalance,
         };
       }, 30000); // 30 second TTL
     });
@@ -219,12 +228,17 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
           withTimeout(tokenContract.totalSupply()),
         ]);
 
+        const nameTyped = name as string;
+        const symbolTyped = symbol as string;
+        const decimalsTyped = decimals as number;
+        const totalSupplyTyped = totalSupply as ethers.BigNumber;
+
         return {
           address: tokenAddress,
-          name,
-          symbol,
-          decimals,
-          totalSupply: ethers.utils.formatUnits(totalSupply, decimals),
+          name: nameTyped,
+          symbol: symbolTyped,
+          decimals: decimalsTyped,
+          totalSupply: ethers.utils.formatUnits(totalSupplyTyped, decimalsTyped),
         };
       });
     });
@@ -250,14 +264,18 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
         withTimeout(provider.getFeeData()).catch(() => null), // EIP-1559 support
       ]);
 
-      const estimatedCost = gasLimit.mul(gasPrice);
+      const gasLimitTyped = gasLimit as ethers.BigNumber;
+      const gasPriceTyped = gasPrice as ethers.BigNumber;
+      const feeDataTyped = feeData as { maxFeePerGas?: ethers.BigNumber; maxPriorityFeePerGas?: ethers.BigNumber } | null;
+
+      const estimatedCost = gasLimitTyped.mul(gasPriceTyped);
 
       return {
-        gasLimit: gasLimit.toString(),
-        gasPrice: gasPrice.toString(),
+        gasLimit: gasLimitTyped.toString(),
+        gasPrice: gasPriceTyped.toString(),
         estimatedCost: ethers.utils.formatEther(estimatedCost),
-        maxFeePerGas: feeData?.maxFeePerGas?.toString(),
-        maxPriorityFeePerGas: feeData?.maxPriorityFeePerGas?.toString(),
+        maxFeePerGas: feeDataTyped?.maxFeePerGas?.toString(),
+        maxPriorityFeePerGas: feeDataTyped?.maxPriorityFeePerGas?.toString(),
       };
     });
   }, [provider, execute, withTimeout]);

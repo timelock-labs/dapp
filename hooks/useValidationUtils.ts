@@ -302,27 +302,39 @@ export function useZodSchemas() {
         patternMessage?: string;
       } = {}
     ) => {
-      let schema = z.string();
-
       if (options.required) {
-        schema = schema.min(1, ValidationMessages.required("Field"));
+        let schema = z.string().min(1, ValidationMessages.required("Field"));
+        
+        if (options.minLength) {
+          schema = schema.min(options.minLength, ValidationMessages.tooShort("Field", options.minLength));
+        }
+        
+        if (options.maxLength) {
+          schema = schema.max(options.maxLength, ValidationMessages.tooLong("Field", options.maxLength));
+        }
+        
+        if (options.pattern) {
+          return schema.refine((value) => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid("Field"));
+        }
+        
+        return schema;
       } else {
-        schema = schema.optional();
+        let baseSchema = z.string();
+        
+        if (options.minLength) {
+          baseSchema = baseSchema.min(options.minLength, ValidationMessages.tooShort("Field", options.minLength));
+        }
+        
+        if (options.maxLength) {
+          baseSchema = baseSchema.max(options.maxLength, ValidationMessages.tooLong("Field", options.maxLength));
+        }
+        
+        if (options.pattern) {
+          return baseSchema.refine((value) => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid("Field")).optional();
+        }
+        
+        return baseSchema.optional();
       }
-
-      if (options.minLength) {
-        schema = schema.min(options.minLength, ValidationMessages.tooShort("Field", options.minLength));
-      }
-
-      if (options.maxLength) {
-        schema = schema.max(options.maxLength, ValidationMessages.tooLong("Field", options.maxLength));
-      }
-
-      if (options.pattern) {
-        schema = schema.refine((value) => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid("Field"));
-      }
-
-      return schema;
     },
     []
   );
@@ -337,29 +349,47 @@ export function useZodSchemas() {
         integer?: boolean;
       } = {}
     ) => {
-      let schema = z.number();
+      if (options.required) {
+        let schema = z.number();
 
-      if (options.min !== undefined) {
-        schema = schema.min(options.min, `Value must be at least ${options.min}`);
+        if (options.min !== undefined) {
+          schema = schema.min(options.min, `Value must be at least ${options.min}`);
+        }
+
+        if (options.max !== undefined) {
+          schema = schema.max(options.max, `Value must be no more than ${options.max}`);
+        }
+
+        if (options.positive) {
+          schema = schema.positive(ValidationMessages.positive);
+        }
+
+        if (options.integer) {
+          schema = schema.int("Value must be an integer");
+        }
+
+        return schema;
+      } else {
+        let baseSchema = z.number();
+
+        if (options.min !== undefined) {
+          baseSchema = baseSchema.min(options.min, `Value must be at least ${options.min}`);
+        }
+
+        if (options.max !== undefined) {
+          baseSchema = baseSchema.max(options.max, `Value must be no more than ${options.max}`);
+        }
+
+        if (options.positive) {
+          baseSchema = baseSchema.positive(ValidationMessages.positive);
+        }
+
+        if (options.integer) {
+          baseSchema = baseSchema.int("Value must be an integer");
+        }
+
+        return baseSchema.optional();
       }
-
-      if (options.max !== undefined) {
-        schema = schema.max(options.max, `Value must be no more than ${options.max}`);
-      }
-
-      if (options.positive) {
-        schema = schema.positive(ValidationMessages.positive);
-      }
-
-      if (options.integer) {
-        schema = schema.int("Value must be an integer");
-      }
-
-      if (!options.required) {
-        schema = schema.optional();
-      }
-
-      return schema;
     },
     []
   );

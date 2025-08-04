@@ -153,8 +153,8 @@ const EmailNotificationPage: React.FC = () => {
           {mailboxes.map((mailbox) => (
             <MailboxCard
               key={mailbox.id}
-              id={mailbox.id}
-              name={mailbox.email_remark}
+              id={parseInt(mailbox.id)}
+              name={mailbox.email_remark || ''}
               email={mailbox.email}
               onDelete={handleDeleteMailbox}
               onEdit={handleEditMailbox}

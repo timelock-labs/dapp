@@ -22,14 +22,13 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
   const handleEditClick = () => {
     // Create a minimal EmailNotification object for editing
     const mailboxData: EmailNotification = {
-      id,
+      id: id.toString(),
       email,
       email_remark: name,
+      timelock_contracts: [],
+      verified: true,
       created_at: '',
-      updated_at: '',
-      is_active: true,
-      is_verified: true,
-      timelock_contracts: []
+      updated_at: ''
     };
     onEdit(mailboxData);
   };

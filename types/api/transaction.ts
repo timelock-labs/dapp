@@ -56,3 +56,45 @@ export interface TransactionStats {
   queued_count: number;
   total_count: number;
 }
+
+/**
+ * Create transaction request
+ */
+export interface CreateTransactionRequest {
+  chain_id: number;
+  chain_name: string;
+  timelock_address: Address;
+  timelock_standard: ContractStandard;
+  target: Address;
+  value: string;
+  function_sig: string;
+  tx_data: string;
+  description: string;
+  eta: number;
+  operation_id: string;
+  tx_hash: Hash;
+}
+
+/**
+ * Transaction list filters
+ */
+export interface TransactionListFilters {
+  chain_id?: number;
+  timelock_address?: Address;
+  status?: TransactionStatus;
+  search?: string;
+  page?: number;
+  page_size?: number;
+  [key: string]: string | number | boolean | undefined;
+}
+
+/**
+ * Pending transaction filters
+ */
+export interface PendingTransactionFilters {
+  chain_id?: number;
+  timelock_address?: Address;
+  page?: number;
+  page_size?: number;
+  [key: string]: string | number | boolean | undefined;
+}

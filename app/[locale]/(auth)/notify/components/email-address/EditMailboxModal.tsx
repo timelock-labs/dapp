@@ -92,7 +92,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 
   useEffect(() => {
     if (initialData) {
-      setEmailRemark(initialData.email_remark);
+      setEmailRemark(initialData.email_remark || '');
       setSelectedPermissions(initialData.timelock_contracts);
     }
   }, [initialData]);

@@ -43,6 +43,12 @@ export interface TimelockParameters {
   minDelay: number;
   admin?: Address;
   pendingAdmin?: Address;
+  // Compound specific fields
+  gracePeriod?: number;
+  minimumDelay?: number;
+  maximumDelay?: number;
+  // Error field for validation failures
+  error?: string;
 }
 
 /**

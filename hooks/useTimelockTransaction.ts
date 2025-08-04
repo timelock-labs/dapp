@@ -156,13 +156,13 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
         }
       }
 
-      // Prepare transaction parameters
-      const txParams: SendTransactionParams = {
+      // Prepare transaction parameters  
+      const txParams = {
         to: params.toAddress,
         data: params.calldata,
         value: params.value,
-        gasLimit: params.gasLimit || defaultGasLimit || gasEstimation?.gasLimit,
-        gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,
+        gasLimit: params.gasLimit || defaultGasLimit || (gasEstimation?.gasLimit ? parseInt(gasEstimation.gasLimit) : undefined),
+        gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,  
       };
 
       try {
@@ -177,7 +177,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 
         // Update toast with transaction hash
         if (showToasts && toastId) {
-          createToastNotification.loading(
+          createToastNotification.success(
             `Transaction sent: ${result.transactionHash.slice(0, 10)}...`,
             toastId
           );

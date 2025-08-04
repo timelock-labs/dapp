@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useMediaQuery } from './useCommonHooks';
 
 /**
@@ -25,19 +25,19 @@ interface MobileDetectionConfig {
 
 /**
  * Hook for detecting mobile devices with customizable breakpoints
- * 
+ *
  * @param config Optional configuration for mobile detection
  * @returns Boolean indicating if the current viewport is mobile
  */
 export function useIsMobile(config: MobileDetectionConfig = {}): boolean {
-  const { breakpoint = MOBILE_BREAKPOINT, serverSafe = true } = config;
-  const [isMobile, setIsMobile] = useState<boolean>(serverSafe ? false : undefined);
+  const { breakpoint = MOBILE_BREAKPOINT } = config;
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
-    
+
     const handleChange = () => {
       setIsMobile(window.innerWidth < breakpoint);
     };
@@ -58,7 +58,7 @@ export function useIsMobile(config: MobileDetectionConfig = {}): boolean {
 
 /**
  * Hook for detecting tablet devices
- * 
+ *
  * @returns Boolean indicating if the current viewport is tablet size
  */
 export function useIsTablet(): boolean {
@@ -67,7 +67,7 @@ export function useIsTablet(): boolean {
 
 /**
  * Hook for detecting desktop devices
- * 
+ *
  * @returns Boolean indicating if the current viewport is desktop size
  */
 export function useIsDesktop(): boolean {
@@ -76,7 +76,7 @@ export function useIsDesktop(): boolean {
 
 /**
  * Hook for getting current device type
- * 
+ *
  * @returns Object containing device type information
  */
 export function useDeviceType() {
@@ -94,15 +94,11 @@ export function useDeviceType() {
 
 /**
  * Hook for responsive values based on device type
- * 
+ *
  * @param values Object containing values for different device types
  * @returns Value for the current device type
  */
-export function useResponsiveValue<T>(values: {
-  mobile: T;
-  tablet?: T;
-  desktop: T;
-}): T {
+export function useResponsiveValue<T>(values: { mobile: T; tablet?: T; desktop: T }): T {
   const { isMobile, isTablet } = useDeviceType();
 
   if (isMobile) return values.mobile;
@@ -112,7 +108,7 @@ export function useResponsiveValue<T>(values: {
 
 /**
  * Hook for touch device detection
- * 
+ *
  * @returns Boolean indicating if the device supports touch
  */
 export function useIsTouchDevice(): boolean {

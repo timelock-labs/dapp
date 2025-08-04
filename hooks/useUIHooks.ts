@@ -16,8 +16,11 @@ import type { VoidCallback, ValueCallback } from '@/types';
  * @returns Object with modal state and control methods
  */
 export function useModal(initialOpen = false) {
-  const { value: isOpen, setTrue: open, setFalse: close, toggle } = useToggle(initialOpen);
+  const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
   const [data, setData] = useState<any>(null);
+
+  const open = setTrue;
+  const close = setFalse;
 
   const openWithData = useCallback((modalData?: any) => {
     setData(modalData || null);
@@ -47,8 +50,11 @@ export function useModal(initialOpen = false) {
  * @returns Object with dropdown state and control methods
  */
 export function useDropdown(initialOpen = false) {
-  const { value: isOpen, setTrue: open, setFalse: close, toggle } = useToggle(initialOpen);
+  const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
   const ref = useRef<HTMLDivElement>(null);
+  
+  const open = setTrue;
+  const close = setFalse;
 
   useClickOutside(ref, close);
 
@@ -68,7 +74,10 @@ export function useDropdown(initialOpen = false) {
  * @returns Object with accordion state and control methods
  */
 export function useAccordion(initialExpanded = false) {
-  const { value: isExpanded, toggle, setTrue: expand, setFalse: collapse } = useToggle(initialExpanded);
+  const [isExpanded, toggle, setTrue, setFalse] = useToggle(initialExpanded);
+  
+  const expand = setTrue;
+  const collapse = setFalse;
 
   return {
     isExpanded,
@@ -98,14 +107,24 @@ export function useTabs<T extends string>(initialTab: T, tabs: T[]) {
 
   const nextTab = useCallback(() => {
     const currentIndex = tabs.indexOf(activeTab);
-    const nextIndex = (currentIndex + 1) % tabs.length;
-    setActiveTab(tabs[nextIndex]);
+    if (currentIndex !== -1 && tabs.length > 0) {
+      const nextIndex = (currentIndex + 1) % tabs.length;
+      const nextTab = tabs[nextIndex];
+      if (nextTab) {
+        setActiveTab(nextTab);
+      }
+    }
   }, [activeTab, tabs]);
 
   const prevTab = useCallback(() => {
     const currentIndex = tabs.indexOf(activeTab);
-    const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
-    setActiveTab(tabs[prevIndex]);
+    if (currentIndex !== -1 && tabs.length > 0) {
+      const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+      const prevTab = tabs[prevIndex];
+      if (prevTab) {
+        setActiveTab(prevTab);
+      }
+    }
   }, [activeTab, tabs]);
 
   return {

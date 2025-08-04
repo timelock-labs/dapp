@@ -10,7 +10,7 @@ import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import * as XLSX from 'xlsx';
-import type { Transaction, BaseComponentProps } from '@/types';
+import type { Transaction, BaseComponentProps, TransactionStatus } from '@/types';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -65,7 +65,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
       const response = await getTransactionList({
         page: 1,
         page_size: 10,
-        status: activeTab === 'all' ? undefined : activeTab,
+        status: activeTab === 'all' ? undefined : activeTab as TransactionStatus,
         // Add search functionality if needed
       });
       
