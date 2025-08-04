@@ -50,7 +50,7 @@ const WALLET_STYLES = {
     },
     header: {
       height: '36px',
-      width: '115px',
+      width: '139px',
     },
   },
   connected: {
@@ -141,9 +141,38 @@ export const ConnectWallet = memo(function ConnectWallet({
           background-color: ${WALLET_STYLES.button.hover.backgroundColor} !important;
         }
 
-        /* 隐藏头像 */
-        .connect-wallet-container .tw-connected-wallet > div:first-child {
+        /* 隐藏头像 - 仅在全宽模式下 */
+        .connect-wallet-container.w-full .tw-connected-wallet > div:first-child {
           display: none !important;
+        }
+
+        /* 为 w-auto 模式添加钱包图标 */
+        .connect-wallet-container.w-auto .tw-connected-wallet > div:first-child {
+          display: none !important;
+        }
+
+        .connect-wallet-container.w-auto .tw-connected-wallet {
+          position: relative !important;
+        }
+
+        .connect-wallet-container.w-auto .tw-connected-wallet::before {
+          content: '' !important;
+          position: absolute !important;
+          left: 12px !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          width: 16px !important;
+          height: 16px !important;
+          background-image: url('/wallet-user.png') !important;
+          background-size: contain !important;
+          background-repeat: no-repeat !important;
+          background-position: center !important;
+        }
+
+        /* 为 w-auto 模式的地址文本添加左边距以避免与图标重叠 */
+        .connect-wallet-container.w-auto .tw-connected-wallet__address {
+          padding-left: 28px !important;
+          padding-right: 8px !important;
         }
 
         /* 隐藏余额信息 */
@@ -163,14 +192,16 @@ export const ConnectWallet = memo(function ConnectWallet({
         .connect-wallet-container .tw-connected-wallet__address {
           text-align: center !important;
           width: 100% !important;
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
         }
 
         .connect-wallet-container .tw-connected-wallet__address span {
           display: block !important;
           text-align: center !important;
           width: 100% !important;
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
         }
       `}</style>
     </div>
