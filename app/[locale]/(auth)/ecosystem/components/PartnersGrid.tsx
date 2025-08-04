@@ -4,14 +4,7 @@ import FeatureCard from '@/components/ui/FeatureCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-
-interface Partner {
-  id: number;
-  name: string;
-  description: string;
-  logo_url: string;
-  link: string;
-}
+import type { Partner } from '@/types/api';
 
 interface PartnersGridProps {
   sponsors: Partner[];

@@ -248,6 +248,7 @@ export function useStandardizedAsync<T = unknown>(config: AsyncOperationConfig =
         abort();
       };
     }
+    return undefined;
   }, [abort, abortOnUnmount]);
 
   return {
@@ -322,13 +323,20 @@ export function useConcurrentAsync(config: AsyncOperationConfig = {}) {
         operationsRef.current.set(`seq-${i}`, controller);
 
         try {
-          const result = await operations[i]();
+          const operation = operations[i];
+          if (!operation) {
+            throw new Error(`Operation at index ${i} is undefined`);
+          }
+          const result = await operation();
           results.push(result);
         } catch (error) {
           // Abort remaining operations
           for (const [key, ctrl] of operationsRef.current.entries()) {
-            if (key.startsWith('seq-') && parseInt(key.split('-')[1]) > i) {
-              ctrl.abort();
+            if (key.startsWith('seq-')) {
+              const indexStr = key.split('-')[1];
+              if (indexStr && parseInt(indexStr) > i) {
+                ctrl.abort();
+              }
             }
           }
           throw error;

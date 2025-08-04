@@ -1,6 +1,5 @@
 'use client';
 
-import { createThirdwebClient } from 'thirdweb';
 import { ConnectButton } from 'thirdweb/react';
 import { createWallet } from 'thirdweb/wallets';
 import { memo } from 'react';
@@ -8,10 +7,7 @@ import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
-
-const client = createThirdwebClient({
-  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || '....',
-});
+import { client, supportedChains } from '@/lib/thirdweb';
 
 const wallets = [
   createWallet('io.metamask'),
@@ -82,6 +78,7 @@ export const ConnectWallet = memo(function ConnectWallet({
     <div className={wrapperClass}>
       <ConnectButton
         client={client}
+        chains={supportedChains}
         connectModal={{
           size: 'compact',
           ...(headerStyle && { title: '连接钱包' }),

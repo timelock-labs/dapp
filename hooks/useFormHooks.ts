@@ -338,7 +338,7 @@ export function useMultiStepForm(totalSteps: number, initialStep = 0) {
  * @param options Configuration options
  * @returns Persistence utilities
  */
-export function useFormPersistence<T>(
+export function useFormPersistence<T extends Record<string, any>>(
   formKey: string,
   values: T,
   options: {

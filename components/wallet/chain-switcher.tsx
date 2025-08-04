@@ -103,9 +103,10 @@ export function ChainSwitcher() {
         if (error instanceof Error && error.name.includes('ChainNotConfigured')) {
           const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;
 
-          if (chainToAdd && typeof window !== 'undefined' && (window as Window & typeof globalThis & { ethereum?: { request: (args: { method: string; params?: Record<string, unknown>[] | undefined; }) => Promise<unknown>; } }).ethereum) {
+          const windowWithEthereum = window as Window & typeof globalThis & { ethereum?: { request: (args: { method: string; params?: Record<string, unknown>[] | undefined; }) => Promise<unknown>; } };
+          if (chainToAdd && typeof window !== 'undefined' && windowWithEthereum.ethereum) {
             try {
-              await (window as Window & typeof globalThis & { ethereum?: { request: (args: { method: string; params?: Record<string, unknown>[] | undefined; }) => Promise<unknown>; } }).ethereum.request({
+              await windowWithEthereum.ethereum.request({
                 method: 'wallet_addEthereumChain',
                 params: [
                   {

@@ -169,7 +169,8 @@ const ImportTimelockPage: React.FC = () => {
                 clearParameters();
                 handleCloseModal();
             } else {
-                throw new Error(response.error?.message || 'Failed to import timelock');
+                const errorMessage = response.error instanceof Error ? response.error.message : 'Failed to import timelock';
+                throw new Error(errorMessage);
             }
         } catch (error) {
             console.error('Import failed:', error);

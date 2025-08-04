@@ -15,7 +15,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
 import type {
   CreateTimelockFormState,
-  DialogDetailsState,
+  CreationDetails,
   CreateTimelockRequestBody,
   DeploymentResult,
   CompoundTimelockParams,
@@ -33,7 +33,7 @@ const CreateTimelockPage: React.FC = () => {
   });
 
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [dialogDetails, setDialogDetails] = useState<DialogDetailsState>({
+  const [dialogDetails, setDialogDetails] = useState<CreationDetails>({
     chainName: '',
     chainIcon: <Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />,
     timelockAddress: '',

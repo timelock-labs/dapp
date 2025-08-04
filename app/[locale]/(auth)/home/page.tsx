@@ -46,7 +46,6 @@ export default function Home() {
   const {
     data: timelockData,
     isLoading,
-    error,
   } = useTimelockList({
     status: 'active',
     enabled: isConnected, // 只有连接钱包后才请求数据

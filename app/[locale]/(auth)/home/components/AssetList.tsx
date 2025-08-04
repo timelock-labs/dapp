@@ -5,13 +5,13 @@ import AnimatedAssetValue from './AnimatedAssetValue';
 import AnimatedAmountValue from './AnimatedAmountValue';
 
 export interface Asset {
-  contract_decimals: number;
-  contract_name: string;
-  contract_ticker_symbol: string;
+  contract_decimals: number | null;
+  contract_name: string | null;
+  contract_ticker_symbol: string | null;
   contract_address: string;
   supports_erc: string[] | null;
   logo_url: string;
-  contract_display_name: string;
+  contract_display_name: string | null;
   logo_urls: {
     token_logo_url: string;
     protocol_logo_url: string | null;

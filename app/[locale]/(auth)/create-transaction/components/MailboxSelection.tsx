@@ -27,7 +27,7 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
     if (checked) {
       onMailboxChange([...selectedMailbox, value]);
     } else {
-      onMailboxChange(selectedMailbox.filter((item) => item !== value));
+      onMailboxChange(selectedMailbox.filter((item: string) => item !== value));
     }
   };
 

@@ -18,8 +18,10 @@ export interface ChainOption {
  */
 export interface StandardOption {
   value: ContractStandard;
-  label: string;
-  description: string;
+  label?: string;
+  labelKey?: string;
+  description?: string;
+  descriptionKey?: string;
 }
 
 /**
@@ -70,6 +72,8 @@ export interface ContractStandardSelectionProps extends BaseComponentProps {
  * Radio button option props
  */
 export interface RadioButtonOptionProps extends BaseComponentProps {
+  id?: string;
+  name?: string;
   value: string;
   label: string;
   description?: string;
@@ -109,7 +113,7 @@ export interface ConfirmCreationDialogProps extends BaseComponentProps {
  */
 export interface ParameterDisplayRowProps extends BaseComponentProps {
   label: string;
-  value: string | React.ReactNode;
+  value?: string | React.ReactNode;
   copyable?: boolean;
 }
 

@@ -238,9 +238,12 @@ export function useContractValidation() {
         // Example: try to call a function that should exist
         const functionNames = Object.keys(contract.functions);
         if (functionNames.length > 0) {
-          const firstFunction = contract.functions[functionNames[0]];
-          if (firstFunction) {
-            await firstFunction();
+          const firstFunctionName = functionNames[0];
+          if (firstFunctionName) {
+            const firstFunction = contract.functions[firstFunctionName];
+            if (firstFunction) {
+              await firstFunction();
+            }
           }
         }
         

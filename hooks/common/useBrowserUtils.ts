@@ -125,5 +125,6 @@ export function useDocumentTitle(title: string) {
         document.title = previousTitle;
       };
     }
+    return undefined;
   }, [title]);
 }

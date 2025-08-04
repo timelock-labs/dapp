@@ -33,8 +33,8 @@ const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ s
             id={`${option.value}-standard`}
             name="contractStandard"
             value={option.value}
-            label={t(option.labelKey)}
-            description={t(option.descriptionKey)}
+            label={t(option.labelKey || option.label || '')}
+            description={t(option.descriptionKey || option.description || '')}
             checked={selectedStandard === option.value}
             onChange={() => onStandardChange(option.value)}
           />

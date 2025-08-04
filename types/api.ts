@@ -14,7 +14,8 @@ export type { Chain } from './api/chain';
 
 // Timelock types
 export type { 
-  TimelockContract, 
+  TimelockContract,
+  TimelockContractItem,
   TimelockParameters, 
   ImportTimelockRequest, 
   CreateTimelockRequestBody, 
@@ -27,3 +28,12 @@ export type {
   TransactionListResponse, 
   TransactionStats 
 } from './api/transaction';
+
+// Partner types
+export type { Partner } from './api/partner';
+
+// ABI types
+export type { ABIItem, ABIListResponse } from './api/abi';
+
+// Assets types
+export type { Asset, AssetsData, UseAssetsApiReturn } from './api/assets';

@@ -126,6 +126,99 @@ export interface ABIFormData {
 }
 
 /**
+ * ABI row data structure
+ */
+export interface ABIRow {
+  id: number;
+  name: string;
+  description: string;
+  abi_content: string;
+  created_at: string;
+  is_shared: boolean;
+}
+
+/**
+ * ABI content structure for viewing
+ */
+export interface ABIContent {
+  name: string;
+  description: string;
+  abi_content: string;
+}
+
+/**
+ * Props for AddABIForm component
+ */
+export interface AddABIFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAddABI: (name: string, description: string, abi_content: string) => void;
+}
+
+/**
+ * Props for ViewABIForm component
+ */
+export interface ViewABIFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  viewAbiContent: ABIContent;
+}
+
+/**
+ * Props for EncodingTransactionForm component
+ */
+export interface EncodingTransactionFormProps {
+  targetCalldata: string;
+  timelockType: any;
+  onTimelockTypeChange: (value: any) => void;
+  timelockMethod: any;
+  onTimelockMethodChange: (value: any) => void;
+  target: string;
+  onTargetChange: (value: string) => void;
+  value: string;
+  onValueChange: (value: string) => void;
+  abiValue: any;
+  onAbiChange: (value: any) => void;
+  functionValue: any;
+  onFunctionChange: (value: any) => void;
+  timeValue: any;
+  onTimeChange: (value: any) => void;
+  argumentValues: any;
+  onArgumentChange: (index: number, value: any) => void;
+  description: string;
+  onDescriptionChange: (value: string) => void;
+  onTimelockAddressChange: (value: string) => void;
+  onTimelockDetailsChange?: (value: any) => void;
+}
+
+/**
+ * Props for TargetABISection component
+ */
+export interface TargetABISectionProps {
+  abiValue: any;
+  onAbiChange: (value: any) => void;
+  functionValue: any;
+  onFunctionChange: (value: any) => void;
+  argumentValues: any;
+  onArgumentChange: (index: number, value: any) => void;
+}
+
+/**
+ * Props for MailboxSelection component
+ */
+export interface MailboxSelectionProps {
+  selectedMailbox: any;
+  onMailboxChange: (value: any) => void;
+}
+
+/**
+ * Props for EncodingPreview component
+ */
+export interface EncodingPreviewProps {
+  previewContent: string | null;
+}
+
+/**
  * Profile form data
  */
 export interface ProfileFormData {

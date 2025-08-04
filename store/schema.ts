@@ -52,5 +52,6 @@ export const AppStateSchema = z.object({
 });
 
 // Export inferred types (these should match the centralized types)
-export type { User, Chain, TimelockContract };
+export type { User, Chain };
+export type TimelockContractItem = z.infer<typeof TimelockContractSchema>;
 export type AppState = z.infer<typeof AppStateSchema>;

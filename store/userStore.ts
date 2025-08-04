@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AppStateSchema, type AppState, type User, type TimelockContract } from './schema';
+import { AppStateSchema, type AppState, type User, type TimelockContractItem } from './schema';
 import { zodMiddleware } from './zodMiddleware';
 
 // 定义 Store 的 actions (方法)
@@ -11,7 +11,7 @@ type AppActions = {
   refreshAccessToken: () => Promise<void>;
   // 模拟一个错误的 action
   loginWithInvalidData: () => void;
-  setAllTimelocks: (timelocks: TimelockContract[]) => void;
+  setAllTimelocks: (timelocks: TimelockContractItem[]) => void;
 };
 
 // 创建 store，并包裹 zodMiddleware

@@ -30,7 +30,7 @@ const TimeLockerSplitPage = () => {
     if (isConnected && address) {
       const message = 'welcome to TimeLocker!';
       try {
-        const signature = await signMessage({ message: message, chainId: chainId });
+        const signature = await signMessage!({ message: message, chainId: chainId });
         console.log('Message:', message);
         console.log('Signature:', signature);
         await walletConnect('/api/v1/auth/wallet-connect', {

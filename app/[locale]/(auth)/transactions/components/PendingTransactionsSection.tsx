@@ -105,8 +105,7 @@ const PendingTransactionsSection: React.FC = () => {
       const executeTxHash = `0x${Math.random().toString(16).substring(2, 66)}`;
       
       await executeTransaction(id, {
-        execute_tx_hash: executeTxHash,
-        id: id
+        execute_tx_hash: executeTxHash
       });
       toast.success(t('executeSuccess'));
       await fetchPendingTransactions(); // Refresh data

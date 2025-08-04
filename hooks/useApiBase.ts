@@ -172,6 +172,17 @@ export function useApiBase<T = unknown>(
 }
 
 /**
+ * Paginated API response type
+ */
+interface PaginatedApiResponse<T> {
+  items: T[];
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
+}
+
+/**
  * Hook for making paginated API requests
  */
 export function usePaginatedApi<T = unknown>(
@@ -198,7 +209,7 @@ export function usePaginatedApi<T = unknown>(
     refetch: baseRefetch,
     reset: baseReset,
     isInitialized
-  } = useApiBase(buildUrl(), {
+  } = useApiBase<PaginatedApiResponse<T>>(buildUrl(), {
     ...options,
     autoFetch: true,
   });

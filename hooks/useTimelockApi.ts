@@ -51,6 +51,7 @@ export const useTimelockApi = () => {
   const useTimelockList = (params?: {
     standard?: ContractStandard;
     status?: 'active' | 'inactive';
+    enabled?: boolean;
   }) => {
     const queryString = params ? new URLSearchParams(
       Object.entries(params).filter(([, value]) => value !== undefined) as [string, string][]
@@ -58,7 +59,7 @@ export const useTimelockApi = () => {
     
     const endpoint = `/api/v1/timelock/list${queryString ? `?${queryString}` : ''}`;
     
-    return useApiBase<TimelockContract[]>(endpoint, {
+    return useApiBase<TimelockContract>(endpoint, {
       autoFetch: true,
       defaultErrorMessage: 'Failed to fetch timelock list'
     });
@@ -95,11 +96,21 @@ export const useTimelockApi = () => {
 
   // Convenience methods that wrap the mutations
   const importTimelock = useCallback(async (data: ImportTimelockRequest) => {
-    return importTimelockMutation.mutate(data);
+    try {
+      const result = await importTimelockMutation.mutate(data);
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error };
+    }
   }, [importTimelockMutation]);
 
   const createTimelock = useCallback(async (data: ImportTimelockRequest) => {
-    return createTimelockMutation.mutate(data);
+    try {
+      const result = await createTimelockMutation.mutate(data);
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error };
+    }
   }, [createTimelockMutation]);
 
   const updateTimelockRemark = useCallback(async (

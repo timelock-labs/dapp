@@ -11,11 +11,11 @@ import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { Network } from 'lucide-react';
-import type { TimelockContract, BaseComponentProps, VoidCallback } from '@/types';
+import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
-  data: TimelockContract[];
+  data: TimelockContractItem[];
   onDataUpdate?: VoidCallback;
 }
 
@@ -58,7 +58,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     router.push(`/${locale}/create-timelock`);
   };
 
-  const handleDeleteContract = async (contract: TimelockContract) => {
+  const handleDeleteContract = async (contract: TimelockContractItem) => {
     const standard = contract.standard || 'compound'; // 默认使用 compound 标准
     await deleteContract(`/api/v1/timelock/${standard}/${contract.id}`, {
       method: 'DELETE',
@@ -85,7 +85,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     {
       key: 'chain',
       header: t('chain'),
-      render: (row: TimelockContract) => {
+      render: (row: TimelockContractItem) => {
         // 尝试通过 chain_name 找到对应的链
         const chain = chains?.find(
           c => c.chain_name === row.chain_name || c.display_name === row.chain_name
@@ -118,7 +118,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     {
       key: 'name',
       header: t('name'),
-      render: (row: TimelockContract) => (
+      render: (row: TimelockContractItem) => (
         <span
           className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(
             row.status
@@ -135,27 +135,27 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     {
       key: 'admin',
       header: t('owner'),
-      render: (row: TimelockContract) => row.admin,
+      render: (row: TimelockContractItem) => row.admin,
     },
     {
       key: 'user_permissions',
       header: t('userPermissions'),
-      render: (row: TimelockContract) => (row as unknown).user_permissions?.join(', ') || t('none'),
+      render: (row: TimelockContractItem) => (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions?.join(', ') || t('none'),
     },
     {
       key: 'min_delay',
       header: t('minDelay'),
-      render: (row: TimelockContract) => (row as unknown).min_delay,
+      render: (row: TimelockContractItem) => (row as TimelockContractItem & { min_delay?: number }).min_delay,
     },
     {
       key: 'created_at',
       header: t('addedAt'),
-      render: (row: TimelockContract) => formatDate(row.created_at),
+      render: (row: TimelockContractItem) => formatDate(row.created_at),
     },
     {
       key: 'operations',
       header: t('operations'),
-      render: (row: TimelockContract) => (
+      render: (row: TimelockContractItem) => (
         <div className='flex items-center justify-center'>
           <DeleteButton
             onDelete={() => handleDeleteContract(row)}
@@ -195,7 +195,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
             </button>
           </div>
         </div>
-        <TableComponent<TimelockContract>
+        <TableComponent<TimelockContractItem>
           columns={columns}
           data={data}
           showPagination={true}

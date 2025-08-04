@@ -112,7 +112,7 @@ export const createDebouncedCallback = <T extends (...args: any[]) => any>(
   callback: T,
   delay: number
 ): T => {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   return useCallback((...args: Parameters<T>) => {
     if (timeoutRef.current) {
@@ -133,7 +133,7 @@ export const createThrottledCallback = <T extends (...args: any[]) => any>(
   delay: number
 ): T => {
   const lastCallRef = useRef<number>(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   return useCallback((...args: Parameters<T>) => {
     const now = Date.now();
@@ -271,7 +271,7 @@ export const useLoadingTimeout = (
   timeoutMs = 30000,
   onTimeout?: VoidCallback
 ) => {
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (isLoading) {
