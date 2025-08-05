@@ -1,40 +1,180 @@
 // components/email-address/AddEmailAddressForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
-import TextInput from '@/components/ui/TextInput';         // Adjust path
+import TextInput from '@/components/ui/TextInput'; // Adjust path
 import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
+import { useNotificationApi } from '@/hooks/useNotificationApi';
+import { useTimelockApi } from '@/hooks/useTimelockApi';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+
+interface Permission {
+  id: string;
+  label: string;
+  subLabel: string;
+  icon: React.ReactNode;
+}
+
+interface TimelockData {
+  contract_address: string;
+  remark?: string;
+  chain_name: string;
+}
 
 interface AddMailboxModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (address: string, name: string) => void;
+  onSuccess: () => void; // Callback to trigger re-fetch in parent
 }
 
-const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const t = useTranslations('Notify.addMailbox');
   const [emailAddress, setEmailAddress] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
-  // Dummy data for permissions
-  // Consider moving this to props or fetching if it's dynamic
-  const dummyPermissions = [
-    { id: 'perm1', label: 'Timelock1 (备注名称)', subLabel: '0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714', icon: <span className="text-yellow-500 text-base">🪙</span> },
-    { id: 'perm2', label: 'Timelock2 (备注名称)', subLabel: '0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714', icon: <span className="text-yellow-500 text-base">🪙</span> },
-    { id: 'perm3', label: 'Timelock3 (备注名称)', subLabel: '0x6d5ad1592ed9d6d1df9b93c793ab759573ed6714', icon: <span className="text-blue-500 text-base">🔷</span> },
-  ];
+  const { createEmailNotification, verifyEmail, resendVerificationCode } = useNotificationApi();
+
+  const { useTimelockList } = useTimelockApi();
+
+  // Only fetch when modal is open
+  const {
+    data: timelockData,
+    isLoading: isLoadingTimelocks,
+    error: timelockError,
+  } = useTimelockList(isOpen ? { status: 'active' } : undefined);
+
+  // Process timelock data when it changes
+  useEffect(() => {
+    if (timelockData) {
+      const timelockPermissions: Permission[] = [];
+
+      // Add Compound timelocks
+      if (timelockData.compound_timelocks) {
+        timelockData.compound_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className='text-yellow-500 text-base'>🪙</span>,
+          });
+        });
+      }
+
+      // Add OpenZeppelin timelocks
+      if (timelockData.openzeppelin_timelocks) {
+        timelockData.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
+          timelockPermissions.push({
+            id: timelock.contract_address,
+            label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
+            subLabel: timelock.contract_address,
+            icon: <span className='text-blue-500 text-base'>🔷</span>,
+          });
+        });
+      }
+
+      setPermissions(timelockPermissions);
+    }
+  }, [timelockData]);
+
+  // Handle timelock error
+  useEffect(() => {
+    if (timelockError) {
+      console.error('Failed to fetch timelines:', timelockError);
+      toast.error(t('fetchTimelockListError'));
+    }
+  }, [timelockError, t]);
+
+  // Debounce email verification
+  useEffect(() => {
+    if (verificationCode.length === 6 && emailAddress) {
+      const handler = setTimeout(async () => {
+        try {
+          await verifyEmail({
+            email: emailAddress,
+            verification_code: verificationCode,
+          });
+          setIsEmailVerified(true);
+          toast.success(t('emailVerificationSuccess'));
+        } catch (error) {
+          console.error('Email verification failed:', error);
+          setIsEmailVerified(false);
+          toast.error(
+            t('emailVerificationError', {
+              message: error instanceof Error ? error.message : t('unknownError'),
+            })
+          );
+        }
+      }, 500); // 500ms debounce time
+
+      return () => {
+        clearTimeout(handler);
+      };
+    } else {
+      setIsEmailVerified(false);
+      return undefined;
+    }
+  }, [verificationCode, emailAddress, verifyEmail, t]);
+
+  const handleVerificationCodeChange = (code: string) => {
+    setVerificationCode(code);
+    setIsEmailVerified(false); // Reset verification status on code change
+  };
 
   const handlePermissionChange = (id: string, checked: boolean) => {
-    setSelectedPermissions((prev) =>
-      checked ? [...prev, id] : prev.filter((permId) => permId !== id)
+    setSelectedPermissions(prev =>
+      checked ? [...prev, id] : prev.filter(permId => permId !== id)
     );
   };
 
-  const handleSendCode = () => {
-    alert('发送验证码 button clicked!');
-    console.log('Sending code to:', emailAddress);
-    // Implement sending verification code logic
+  const handleSendCode = async () => {
+    if (!emailAddress || !emailRemark) {
+      toast.error(t('emailAndRemarkRequired'));
+      return;
+    }
+
+    try {
+      if (!isEmailNotificationCreated) {
+        // First time - try to create email notification
+        try {
+          await createEmailNotification({
+            email: emailAddress,
+            email_remark: emailRemark,
+            timelock_contracts: selectedPermissions,
+          });
+          setIsEmailNotificationCreated(true);
+          toast.success(t('verificationCodeSent'));
+        } catch {
+          // Failed to send verification code: Error: API request failed with status 409
+          // // If email already exists, switch to resend mode and send code
+          // if (createError.includes('API request failed with status 409')) {
+          //   setIsEmailNotificationCreated(true);
+          //   await resendVerificationCode({ email: emailAddress });
+          //   toast.success(t('verificationCodeResent'));
+          // } else {
+          //   throw createError; // Re-throw other errors
+          // }
+        }
+      } else {
+        // Subsequent times - resend verification code
+        await resendVerificationCode({ email: emailAddress });
+        toast.success(t('verificationCodeResent'));
+      }
+      // Reset verification status when new code is sent
+      setIsEmailVerified(false);
+    } catch (error) {
+      console.error('Failed to send verification code:', error);
+      toast.error(
+        t('addMailboxError', {
+          message: error instanceof Error ? error.message : t('unknownError'),
+        })
+      );
+    }
   };
 
   const handleCancel = () => {
@@ -44,20 +184,36 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
     setEmailRemark('');
     setSelectedPermissions([]);
     setVerificationCode('');
+    setIsEmailVerified(false);
+    setIsEmailNotificationCreated(false);
   };
 
-  const handleSave = () => {
-    // Basic validation (optional, can be more robust)
-    if (!emailAddress || !emailRemark) {
-      alert('邮箱地址和备注不能为空！');
+  const handleSave = async () => {
+    if (!isEmailVerified) {
+      toast.error(t('pleaseVerifyEmailFirst'));
       return;
     }
-    onConfirm(emailAddress, emailRemark); // Call the onConfirm prop with email and remark
-    // Optionally reset form state after successful save, or let onClose handle it
-    setEmailAddress('');
-    setEmailRemark('');
-    setSelectedPermissions([]);
-    setVerificationCode('');
+
+    try {
+      // Email notification was already created in handleSendCode, just need to confirm verification
+      toast.success(t('mailboxAddedSuccessfully'));
+      onSuccess();
+      onClose();
+      // Reset form state
+      setEmailAddress('');
+      setEmailRemark('');
+      setSelectedPermissions([]);
+      setVerificationCode('');
+      setIsEmailVerified(false);
+      setIsEmailNotificationCreated(false);
+    } catch (error) {
+      console.error('Failed to save mailbox:', error);
+      toast.error(
+        t('saveMailboxError', {
+          message: error instanceof Error ? error.message : t('unknownError'),
+        })
+      );
+    }
   };
 
   if (!isOpen) {
@@ -66,64 +222,88 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onCo
 
   return (
     // Modal Overlay
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 ">
+    <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 '>
       {/* Modal Content */}
       <div
-        className="bg-white  rounded-lg shadow-xl border border-gray-200 flex flex-col"
+        className='bg-white  rounded-lg shadow-xl border border-gray-200 flex flex-col'
         style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }} // Added maxHeight and overflowY
       >
         <div className='p-6'>
- {/* Header Section */}
-        <SectionHeader
-          title="添加邮箱地址"
-          description="输入您的全名或您想使用的显示名称。" // Updated description to Chinese
-        />
+          {/* Header Section */}
+          <SectionHeader title={t('title')} description={t('description')} />
 
-        {/* Email Address Input */}
-        <TextInput
-          label="邮箱地址"
-          value={emailAddress}
-          onChange={setEmailAddress}
-          placeholder="target" 
-        />
+          {/* Email Address Input */}
+          <TextInput
+            label={t('emailAddress')}
+            value={emailAddress}
+            onChange={setEmailAddress}
+            placeholder={t('emailPlaceholder')}
+          />
 
-        {/* Email Remark Input */}
-        <TextInput
-          label="邮箱备注"
-          value={emailRemark}
-          onChange={setEmailRemark}
-          placeholder="target" 
-        />
+          {/* Email Remark Input */}
+          <TextInput
+            label={t('emailRemark')}
+            value={emailRemark}
+            onChange={setEmailRemark}
+            placeholder={t('remarkPlaceholder')}
+          />
 
-        {/* Listening Permissions Section */}
-        <ListeningPermissions
-          permissions={dummyPermissions}
-          selectedPermissions={selectedPermissions}
-          onPermissionChange={handlePermissionChange}
-        />
+          {/* Listening Permissions Section */}
+          <ListeningPermissions
+            permissions={permissions}
+            selectedPermissions={selectedPermissions}
+            onPermissionChange={handlePermissionChange}
+            isLoading={isLoadingTimelocks}
+          />
 
-        {/* Verification Code Input Section */}
-        <VerificationCodeInput
-          onSendCode={handleSendCode}
-          onCodeChange={setVerificationCode}
-          codeLength={6}
-        />
+          {/* Verification Code Input Section */}
+          <VerificationCodeInput
+            email={emailAddress}
+            onSendCode={handleSendCode}
+            onCodeChange={handleVerificationCodeChange}
+            codeLength={6}
+            buttonText={!isEmailNotificationCreated ? t('sendCode') : t('resendCode')}
+            disabledText={!isEmailNotificationCreated ? t('adding') : t('resending')}
+            isFirstTime={!isEmailNotificationCreated}
+          />
 
+          {/* Verification Status Indicator */}
+          {verificationCode.length === 6 && (
+            <div
+              className={`mb-4 p-3 rounded-md ${
+                isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+              }`}
+            >
+              {isEmailVerified ? (
+                <div className='flex items-center'>
+                  <span className='text-green-500 mr-2'>✓</span>
+                  {t('verificationSuccess')}
+                </div>
+              ) : (
+                <div className='flex items-center'>
+                  <span className='text-red-500 mr-2'>✗</span>
+                  {t('verificationCodeIncorrect')}
+                </div>
+              )}
+            </div>
+          )}
         </div>
-       
+
         {/* Buttons */}
-        <div className="flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200">
+        <div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
           <button
+            type='button'
             onClick={handleCancel}
-            className="bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
+            className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'
           >
-            取消 {/* Updated to Chinese */}
+            {t('cancel')}
           </button>
           <button
+            type='button'
             onClick={handleSave}
-            className="bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors"
+            className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'
           >
-            保存 {/* Updated to Chinese */}
+            {t('save')}
           </button>
         </div>
       </div>

@@ -1,14 +1,12 @@
 'use client';
 
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import React from 'react';
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { AppSidebar } from '@/components/nav/app-sidebar'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -17,53 +15,37 @@ import {
 } from '@/components/ui/sidebar'
 import { ChainSwitcher } from '@/components/wallet/chain-switcher'
 import { ConnectWallet } from '@/components/wallet/connect-wallet'
+import type { BaseComponentProps } from '@/types';
 import "@/app/globals.css";
 
-// Font definitions can remain if used by this component specifically,
-// but their application to the body tag should be in the root layout.
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+interface PageLayoutProps extends BaseComponentProps {
+  title: string;
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// This metadata might not apply as expected if PageLayout is used as a regular component
-export const metadata: Metadata = {
-  title: "Timelock UI",
-  description: "Timelock Management Interface",
-};
-
+/**
+ * Main page layout component with sidebar navigation and header
+ * 
+ * @param props - PageLayout component props
+ * @returns JSX.Element
+ */
 export default function PageLayout({
   title,
   children,
-  // params: { locale }
-}: Readonly<{
-  title: string,
-  children?: React.ReactNode;
-  params?: { locale: string };
-}>) {
-  // Removed: const messages = getMessages();
-  // If this component needs translations for its own text, use useTranslations()
-  // e.g., const t = useTranslations('PageLayoutNamespace');
+  className
+}: PageLayoutProps) {
 
   return (
-    // Removed <html> and <body> tags
-    // Removed NextIntlClientProvider
-    // Removed Web3Provider wrapper
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <div className={className}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
+      >
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <header className="flex h-[72px] shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b border-gray-200">
             <div className="flex items-center gap-2 px-4">
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
@@ -75,16 +57,17 @@ export default function PageLayout({
               </Breadcrumb>
             </div>
 
-            <div className="flex items-center gap-3 ml-auto pr-4">
+            <div className="flex items-center gap-3 ml-auto pr-6">
               <ChainSwitcher />
-              <ConnectWallet icon={true} />
+              <ConnectWallet icon={true} headerStyle={true}  />
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="flex flex-1 flex-col gap-4 p-6">
             {children}
           </div>
         </SidebarInset>
       </SidebarProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }

@@ -36,3 +36,95 @@ pnpm dev
 # or
 bun dev
 ```
+
+## API and State Management
+
+This project centralizes API requests and authentication state management using custom hooks and Zustand stores.
+
+### `useApi` Hook for Backend Requests
+
+All backend requests should utilize the `useApi` hook located in `hooks/useApi.ts`. This hook provides a consistent way to make API calls, handling loading states, errors, and responses. It returns an object containing `data`, `request` (the function to trigger the API call), `isLoading`, and `error`.
+
+**Usage Example (from `app/[locale]/(auth)/login/page.tsx`):**
+
+```typescript
+import { useApi } from '@/hooks/useApi';
+import { useAuthStore } from '@/store/userStore';
+
+// ... inside your component
+
+const { data: apiResponse, request: walletConnect, isLoading, error } = useApi();
+const login = useAuthStore((state) => state.login);
+
+useEffect(() => {
+  // Example of making an API call using the 'request' function from useApi
+  if (isConnected && address && chain) {
+    const message = 'welcome to TimeLocker!';
+    signMessageAsync({ message }).then(async (signature) => {
+      walletConnect('/api/v1/auth/wallet-connect', {
+        method: 'POST',
+        body: {
+          wallet_address: address,
+          signature: signature,
+          message: message,
+          chain_id: chain.id,
+        },
+      });
+    });
+  }
+}, [isConnected, address, chain, signMessageAsync, walletConnect]);
+
+useEffect(() => {
+  // Example of handling API response and updating global state
+  if (apiResponse && apiResponse.success) {
+    login({
+      user: apiResponse.data.user,
+      accessToken: apiResponse.data.access_token,
+      refreshToken: apiResponse.data.refresh_token,
+      expiresAt: apiResponse.data.expires_at,
+    });
+    router.push('/home');
+  }
+}, [apiResponse, login, router]);
+
+useEffect(() => {
+  // Example of handling API errors
+  if (error) {
+    console.error('Backend connection failed:', error);
+  }
+}, [error]);
+```
+
+### `useAuthStore` for Authentication State
+
+The `useAuthStore` (defined in `store/userStore.ts`) is a Zustand store responsible for managing the application's authentication state, including `accessToken`, `refreshToken`, user information, and authentication status. It also handles the persistence of tokens in cookies.
+
+**Key features:**
+*   **`login(data)`:** Sets user, access token, refresh token, and expiry, and persists tokens in cookies.
+*   **`logout()`:** Clears authentication state and removes tokens from cookies.
+*   **`refreshAccessToken()`:** Handles refreshing the access token using the refresh token.
+
+**Usage Example (from `app/[locale]/(auth)/login/page.tsx`):**
+
+```typescript
+import { useAuthStore } from '@/store/userStore';
+
+// ... inside your component
+
+const login = useAuthStore((state) => state.login);
+
+// Call login after successful authentication API response
+useEffect(() => {
+  if (apiResponse && apiResponse.success) {
+    login({
+      user: apiResponse.data.user,
+      accessToken: apiResponse.data.access_token,
+      refreshToken: apiResponse.data.refresh_token,
+      expiresAt: apiResponse.data.expires_at,
+    });
+    // ... redirect or other actions
+  }
+}, [apiResponse, login]);
+```
+
+By following these patterns, we ensure a consistent and maintainable approach to API interactions and authentication state across the application.

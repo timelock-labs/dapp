@@ -1,20 +1,28 @@
 import React from 'react';
+import type { BaseComponentProps } from '@/types';
 
-interface FeatureCardProps {
+interface FeatureCardProps extends BaseComponentProps {
   title: string;
   description: string;
-  icon?: React.ReactNode; // icon can be a string (emoji) or a JSX element
+  icon?: React.ReactNode;
+  link?: string;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon }) => {
+/**
+ * Feature card component with title, description, icon and optional link
+ * 
+ * @param props - FeatureCard component props
+ * @returns JSX.Element
+ */
+const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, link, className }) => {
   return (
-    <div className="bg-white p-6 rounded-lg  border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer">
+    <div className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer shadow-xs ${className || ''}`}>
       <div className="flex justify-between items-center w-full mb-4">
         {/* Placeholder for icon, replace with actual icon components if available */}
         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
           {icon || 'Icon'} {/* Fallback text if no icon prop */}
         </div>
-        <a href="#" className="text-gray-400 hover:text-blue-500">
+        <a href={link} className="text-gray-400 hover:text-blue-500">
           <svg
             className="w-5 h-5"
             fill="none"

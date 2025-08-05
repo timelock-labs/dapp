@@ -1,9 +1,7 @@
 'use client'
 
-import { WagmiProvider } from 'wagmi'
+import { ThirdwebProvider } from "thirdweb/react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ConnectKitProvider } from 'connectkit'
-import { config } from '@/lib/web3-config'
 import { ReactNode } from 'react'
 
 const queryClient = new QueryClient()
@@ -14,12 +12,10 @@ interface Web3ProviderProps {
 
 export function Web3Provider({ children }: Web3ProviderProps) {
   return (
-    <WagmiProvider config={config}>
+    <ThirdwebProvider>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider theme="auto">
-          {children}
-        </ConnectKitProvider>
+        {children}
       </QueryClientProvider>
-    </WagmiProvider>
+    </ThirdwebProvider>
   )
-} 
+}

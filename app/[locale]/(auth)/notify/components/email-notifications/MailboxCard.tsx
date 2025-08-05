@@ -1,16 +1,36 @@
-// components/email-notifications/MailboxCard.tsx
 import React from 'react';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import DeleteButton from '@/components/ui/DeleteButton';
+import { EmailNotification } from '@/hooks/useNotificationApi';
+import { useTranslations } from 'next-intl';
 
 interface MailboxCardProps {
-  id: string;
+  id: number;
   name: string;
   email: string;
-  onDelete: (id: string) => void;
+  onDelete: (id: number, email: string) => void;
+  onEdit: (mailbox: EmailNotification) => void;
 }
 
-const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete }) => {
+const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, onEdit }) => {
+  const t = useTranslations('Notify.mailboxCard');
+
   const handleDeleteClick = () => {
-    onDelete(id);
+    onDelete(id, email);
+  };
+
+  const handleEditClick = () => {
+    // Create a minimal EmailNotification object for editing
+    const mailboxData: EmailNotification = {
+      id: id.toString(),
+      email,
+      email_remark: name,
+      timelock_contracts: [],
+      verified: true,
+      created_at: '',
+      updated_at: ''
+    };
+    onEdit(mailboxData);
   };
 
   return (
@@ -22,17 +42,27 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete }) 
         <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
         <p className="text-sm text-gray-500">{email}</p>
       </div>
-      {/* Delete Button */}
-      <div className="pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] ">
+      {/* Delete and Edit Buttons */}
+      <div className="pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] space-x-2">
         <button
-          onClick={handleDeleteClick}
-          className="w-[85px] h-[32px] text-center inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          onClick={handleEditClick}
+          className="w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
         >
-          <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 110-2h4a1 1 0 110 2H8a1 1 0 01-1-1z" clipRule="evenodd"></path>
-          </svg>
-          <span>Delete</span>
+          <span className="flex items-center gap-2 text-[#0A0A0A]">
+            <PencilIcon className="w-4 h-4" />
+            {t('edit')}
+          </span>
         </button>
+        <DeleteButton
+          onDelete={handleDeleteClick}
+          title="Are you sure you want to delete?"
+          // description={t('deleteConfirmDescription')}
+          confirmText={t('delete')}
+          cancelText={"Cancel"}
+          variant="default"
+          size="md"
+          className="w-[85px] h-[32px] border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 transition-colors flex items-center justify-center"
+        />
       </div>
     </div>
   );

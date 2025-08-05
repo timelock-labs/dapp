@@ -3,45 +3,55 @@
 import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
 import TimelockOptionCard from './TimelockOptionCard'; // Assuming TimelockOptionCard is in components/
+import { useRouter, useParams } from 'next/navigation';
+import create_bg_img from '../images/create_bg.png'; // Adjust the path as necessary
+import import_bg_img from '../images/import_bg.png'; // Adjust the path as necessary
+import { useTranslations } from 'next-intl';
 
 const AddTimelockContractSection: React.FC = () => {
+  const t = useTranslations('Timelocks'); // Assuming translations are set up for Timelock
+  const router = useRouter();
+  const params = useParams();
+  const locale = params.locale;
+
   const handleCreateContract = () => {
-    console.log('Create Timelock Contract option clicked');
-    // Here you would navigate to a page or open a modal for creating a contract
+    router.push(`/${locale}/create-timelock`);
   };
 
   const handleImportContract = () => {
-    console.log('Import existing Timelock Contract option clicked');
-    // Here you would navigate to a page or open a modal for importing a contract
+    router.push(`/${locale}/import-timelock`);
   };
 
   return (
-    <div className="p-8 bg-white "> {/* Wrapper with a light gray background */}
-      <div className="max-w-6xl mx-auto"> {/* Max width container to center content */}
+    <div className="bg-white "> {/* Wrapper with a light gray background */}
+      <div className="mx-auto"> {/* Max width container to center content */}
         {/* Section Header */}
         <SectionHeader
-          title="添加Timelock 合约"
-          description="Manage or upgrade your plan."
+          title={t("addTimelock")}
+          description={t("addTimelockDescription")}
         />
 
         {/* Two option cards in a responsive grid layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {/* Black Card: Create Timelock Contract */}
           <TimelockOptionCard
-            title="创建 Timelock 合约"
-            description="This is a card description."
+            title={t("create_title")}
+            description={t("create_des")}
             bgColor="bg-black"
             textColor="text-white"
+            bgImage={create_bg_img.src} // Background image for the black card
             onClick={handleCreateContract}
           />
 
           {/* White Card: Import existing Timelock Contract */}
           <TimelockOptionCard
-            title="导入现有 Timelock 合约"
-            description="This is a card description."
+
+            title={t("import_title")}
+            description={t("import_des")}
             bgColor="bg-white"
             textColor="text-gray-900"
             borderColor="border-gray-200" // Explicit border for visibility on white background
+            bgImage={import_bg_img.src} // Background image for the white card
             onClick={handleImportContract}
           />
         </div>

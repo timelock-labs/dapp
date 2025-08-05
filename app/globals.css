@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -121,3 +122,16 @@
   }
 }
 
+
+
+@font-face {
+  font-family: 'Righteous';
+  src: url('/righteous-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.logo-font {
+  font-family: 'Righteous'!important;
+}

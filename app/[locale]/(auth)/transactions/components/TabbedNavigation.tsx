@@ -14,7 +14,7 @@ interface TabbedNavigationProps {
 
 const TabbedNavigation: React.FC<TabbedNavigationProps> = ({ tabs, activeTab, onTabChange }) => {
   return (
-    <div className="flex w-[293px] h-9 rounded-lg p-1 bg-[#F5F5F5] justify-between ">
+    <div className="flex h-9 rounded-lg p-1 bg-[#F5F5F5] justify-between ">
       {tabs.map((tab) => (
         <button
           key={tab.id}
