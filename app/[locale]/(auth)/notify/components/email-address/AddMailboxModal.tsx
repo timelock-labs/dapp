@@ -32,7 +32,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const t = useTranslations('Notify.addMailbox');
   const [emailAddress, setEmailAddress] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState('');
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -126,12 +125,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     setIsEmailVerified(false); // Reset verification status on code change
   };
 
-  const handlePermissionChange = (id: string, checked: boolean) => {
-    setSelectedPermissions(prev =>
-      checked ? [...prev, id] : prev.filter(permId => permId !== id)
-    );
-  };
-
   const handleSendCode = async () => {
     if (!emailAddress || !emailRemark) {
       toast.error(t('emailAndRemarkRequired'));
@@ -146,6 +139,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             email: emailAddress,
             email_remark: emailRemark,
           });
+
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
         } catch {
@@ -181,7 +175,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
     // Reset form state
     setEmailAddress('');
     setEmailRemark('');
-    setSelectedPermissions([]);
     setVerificationCode('');
     setIsEmailVerified(false);
     setIsEmailNotificationCreated(false);
@@ -201,7 +194,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       // Reset form state
       setEmailAddress('');
       setEmailRemark('');
-      setSelectedPermissions([]);
       setVerificationCode('');
       setIsEmailVerified(false);
       setIsEmailNotificationCreated(false);
@@ -245,14 +237,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
             value={emailRemark}
             onChange={setEmailRemark}
             placeholder={t('remarkPlaceholder')}
-          />
-
-          {/* Listening Permissions Section */}
-          <ListeningPermissions
-            permissions={permissions}
-            selectedPermissions={selectedPermissions}
-            onPermissionChange={handlePermissionChange}
-            isLoading={isLoadingTimelocks}
           />
 
           {/* Verification Code Input Section */}

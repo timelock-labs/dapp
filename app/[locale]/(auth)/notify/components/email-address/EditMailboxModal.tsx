@@ -36,9 +36,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 }) => {
   const t = useTranslations('Notify.editMailbox');
   const [emailRemark, setEmailRemark] = useState(initialData?.email_remark || '');
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
-    initialData?.timelock_contracts || []
-  );
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const { updateEmailNotification } = useNotificationApi();
@@ -93,21 +90,14 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   useEffect(() => {
     if (initialData) {
       setEmailRemark(initialData.email_remark || '');
-      setSelectedPermissions(initialData.timelock_contracts);
     }
   }, [initialData]);
 
-  const handlePermissionChange = (id: string, checked: boolean) => {
-    setSelectedPermissions(prev =>
-      checked ? [...prev, id] : prev.filter(permId => permId !== id)
-    );
-  };
 
   const handleCancel = () => {
     onClose();
     // Reset form state on cancel
     setEmailRemark(initialData?.email_remark || '');
-    setSelectedPermissions(initialData?.timelock_contracts || []);
   };
 
   const handleSave = async () => {
@@ -124,7 +114,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
     try {
       await updateEmailNotification(initialData.email, {
         email_remark: emailRemark,
-        timelock_contracts: selectedPermissions,
       });
 
       toast.success(t('updateSuccess'));
@@ -164,14 +153,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
             value={emailRemark}
             onChange={setEmailRemark}
             placeholder=''
-          />
-
-          {/* Listening Permissions Section */}
-          <ListeningPermissions
-            permissions={permissions}
-            selectedPermissions={selectedPermissions}
-            onPermissionChange={handlePermissionChange}
-            isLoading={isLoadingTimelocks}
           />
         </div>
 
