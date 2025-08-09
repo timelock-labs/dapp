@@ -40,7 +40,7 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[558px] h-[470px] overflow-hidden">
+      <DialogContent className="w-[558px] overflow-hidden">
         {/* Added overflow-hidden */}
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
@@ -57,7 +57,7 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
             <Label htmlFor="abiDescription">{t("descriptionLabel")}</Label>
             <Input id="abiDescription" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("descriptionLabel")} />
           </div>
-          <ABITextarea id="abiContent" label={t("contentLabel")} value={abi} onChange={setAbi} placeholder={t("contentLabel")} rows={5} />
+          <ABITextarea id="abiContent" label={t("contentLabel")} value={abi} onChange={setAbi} placeholder={t("contentLabel")} rows={5} /> 
         </div>
         <DialogFooter>
           <DialogClose asChild>
