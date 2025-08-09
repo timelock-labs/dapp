@@ -1,5 +1,5 @@
 // components/CheckParametersDialog.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 
 // Define interface for the data this dialog will display
@@ -47,8 +47,15 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({
     };
   }, [isOpen, onClose]); // Re-run effect if isOpen or onClose changes
 
+  useEffect(() => {
+    // Reset ABI content when dialog opens
+    setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
+  }, []);
+
   // If dialog is not open, don't render anything
   if (!isOpen) return null;
+
+
 
   const handleConfirm = () => {
     onConfirm(abiContent);

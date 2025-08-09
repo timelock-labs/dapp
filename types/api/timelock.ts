@@ -51,18 +51,24 @@ export interface TimelockParameters {
   error?: string;
 }
 
+// {
+//   "chain_id": 0,
+//   "contract_address": "string",
+//   "is_imported": true,
+//   "remark": "string",
+//   "standard": "compound",
+//   "user_address": "string"
+// }
+
 /**
  * Import timelock request
  */
 export interface ImportTimelockRequest {
   chain_id: number;
-  chain_name: string;
-  contract_address: Address;
-  standard: ContractStandard;
-  min_delay: number;
   remark: string;
-  admin?: Address;
-  pending_admin?: Address;
+  standard: ContractStandard;
+  contract_address: Address;
+  is_imported: boolean; // Indicates if this is an imported contract
 }
 
 /**
@@ -70,13 +76,10 @@ export interface ImportTimelockRequest {
  */
 export interface CreateTimelockRequestBody {
   chain_id: number;
-  chain_name: string;
-  min_delay: number;
   remark: string;
   standard: ContractStandard;
-  tx_hash: Hash;
   contract_address: Address;
-  admin?: Address;
+  is_imported: boolean; // Indicates if this is an imported contract
 }
 
 /**

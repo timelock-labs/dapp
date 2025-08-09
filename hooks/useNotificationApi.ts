@@ -40,7 +40,7 @@ export const useNotificationApi = () => {
   // Query hooks
   const useEmailNotifications = (filters: EmailNotificationFilters = {}) => {
     return useFilteredApi<EmailNotificationListResponse, EmailNotificationFilters>(
-      '/api/v1/email-notifications',
+      '/api/v1/emails',
       { page: 1, page_size: 10, ...filters },
       { autoFetch: true, defaultErrorMessage: 'Failed to fetch email notifications' }
     );
@@ -48,21 +48,21 @@ export const useNotificationApi = () => {
 
   const useEmailLogs = (filters: EmailNotificationFilters = {}) => {
     return useFilteredApi<EmailLog[], EmailNotificationFilters>(
-      '/api/v1/email-notifications/logs',
+      '/api/v1/emails/logs',
       { page: 1, page_size: 10, ...filters },
       { autoFetch: true, defaultErrorMessage: 'Failed to fetch email logs' }
     );
   };
 
   const useVerifiedEmails = () => {
-    return useApiBase<EmailNotification[]>('/api/v1/email-notifications/verified-emails', {
+    return useApiBase<EmailNotification[]>('/api/v1/emails/verified-emails', {
       autoFetch: true,
       defaultErrorMessage: 'Failed to fetch verified emails'
     });
   };
 
   const useEmailNotificationByEmail = (email: string) => {
-    return useApiBase<EmailNotification>(`/api/v1/email-notifications/${encodeURIComponent(email)}`, {
+    return useApiBase<EmailNotification>(`/api/v1/emails/${encodeURIComponent(email)}`, {
       autoFetch: true,
       defaultErrorMessage: 'Failed to fetch email notification details'
     });
@@ -70,7 +70,7 @@ export const useNotificationApi = () => {
 
   // Mutations
   const createEmailNotificationMutation = useApiMutation<EmailNotification, CreateEmailNotificationRequest>(
-    '/api/v1/email-notifications',
+    '/api/v1/emails',
     'POST',
     { defaultErrorMessage: 'Failed to create email notification' }
   );
@@ -79,25 +79,25 @@ export const useNotificationApi = () => {
     email: string;
     data: UpdateEmailNotificationRequest;
   }>(
-    (variables) => `/api/v1/email-notifications/${encodeURIComponent(variables.email)}`,
+    (variables) => `/api/v1/emails/${encodeURIComponent(variables.email)}`,
     'PUT',
     { defaultErrorMessage: 'Failed to update email notification' }
   );
 
   const deleteEmailNotificationMutation = useApiMutation<string, { email: string }>(
-    (variables) => `/api/v1/email-notifications/${encodeURIComponent(variables.email)}`,
+    (variables) => `/api/v1/emails/${encodeURIComponent(variables.email)}`,
     'DELETE',
     { defaultErrorMessage: 'Failed to delete email notification' }
   );
 
   const verifyEmailMutation = useApiMutation<string, VerifyEmailRequest>(
-    '/api/v1/email-notifications/verify',
+    '/api/v1/emails/verify',
     'POST',
     { defaultErrorMessage: 'Failed to verify email' }
   );
 
   const resendVerificationCodeMutation = useApiMutation<string, ResendCodeRequest>(
-    '/api/v1/email-notifications/resend-code',
+    '/api/v1/emails/resend-code',
     'POST',
     { defaultErrorMessage: 'Failed to resend verification code' }
   );
@@ -107,7 +107,7 @@ export const useNotificationApi = () => {
     replied_at: string;
     success: boolean;
   }, EmergencyReplyRequest>(
-    '/api/v1/email-notifications',
+    '/api/v1/emails',
     'POST',
     { defaultErrorMessage: 'Failed to handle emergency reply' }
   );
@@ -157,8 +157,8 @@ export const useNotificationApi = () => {
       }
       
       const url = queryParams.toString() 
-        ? `/api/v1/email-notifications?${queryParams.toString()}`
-        : '/api/v1/email-notifications';
+        ? `/api/v1/emails?${queryParams.toString()}`
+        : '/api/v1/emails';
         
       const response = await request(url, { method: 'GET' });
       return response.data;
@@ -179,8 +179,8 @@ export const useNotificationApi = () => {
       }
       
       const url = queryParams.toString() 
-        ? `/api/v1/email-notifications/logs?${queryParams.toString()}`
-        : '/api/v1/email-notifications/logs';
+        ? `/api/v1/emails/logs?${queryParams.toString()}`
+        : '/api/v1/emails/logs';
         
       const response = await request(url, { method: 'GET' });
       return response.data;
@@ -191,7 +191,7 @@ export const useNotificationApi = () => {
 
   const getVerifiedEmails = useCallback(async (): Promise<EmailNotification[]> => {
     try {
-      const response = await request('/api/v1/email-notifications/verified-emails', { method: 'GET' });
+      const response = await request('/api/v1/emails/verified-emails', { method: 'GET' });
       return response.data;
     } catch (error) {
       throw error;
@@ -200,7 +200,7 @@ export const useNotificationApi = () => {
 
   const getEmailNotificationByEmail = useCallback(async (email: string): Promise<EmailNotification> => {
     try {
-      const response = await request(`/api/v1/email-notifications/${encodeURIComponent(email)}`, { method: 'GET' });
+      const response = await request(`/api/v1/emails/${encodeURIComponent(email)}`, { method: 'GET' });
       return response.data;
     } catch (error) {
       throw error;

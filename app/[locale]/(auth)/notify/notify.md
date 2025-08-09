@@ -1,6 +1,6 @@
 # 获取用户的邮件通知配置列表
 
-/api/v1/email-notifications
+/api/v1/emails
 
 #### Parameters
 
@@ -43,7 +43,7 @@ page_size: integer
 
 # 为用户添加邮件通知配置
 
-/api/v1/email-notifications
+/api/v1/emails
 
 #### Parameters
 
@@ -84,7 +84,7 @@ page_size: integer
 
 # 处理应急邮件的回复确认
 
-/api/v1/email-notifications    post
+/api/v1/emails    post
 
 #### Parameters
 
@@ -110,7 +110,7 @@ token: string
 
 # 获取用户相关的邮件发送记录
 
-/api/v1/email-notifications/logs
+/api/v1/emails/logs
 
 #### Parameters
 
@@ -149,7 +149,7 @@ page_size: integer
 
 # 重新发送邮箱验证码
 
-/api/v1/email-notifications/resend-code post
+/api/v1/emails/resend-code post
 
 #### Parameters
 
@@ -175,7 +175,7 @@ page_size: integer
 
 # 获取用户的已验证邮箱列表
 
-/api/v1/email-notifications/verified-emails
+/api/v1/emails/verified-emails
 
 #### Responses
 
@@ -206,7 +206,7 @@ page_size: integer
 
 # 使用验证码验证邮箱地址
 
-/api/v1/email-notifications/verify   post
+/api/v1/emails/verify   post
 
 #### Parameters
 
@@ -233,7 +233,7 @@ page_size: integer
 
 # 根据邮箱地址获取特定的邮件通知配置详情
 
-/api/v1/email-notifications/{email}
+/api/v1/emails/{email}
 
 #### Parameters
 
@@ -266,7 +266,7 @@ page_size: integer
 
 # 更新邮件通知配置
 
-/api/v1/email-notifications/{email}    put
+/api/v1/emails/{email}    put
 
 #### Parameters
 
@@ -308,7 +308,7 @@ page_size: integer
 
 # 邮件通知配置 删除 
 
-/api/v1/email-notifications/{email}    delete
+/api/v1/emails/{email}    delete
 
 #### Parameters
 

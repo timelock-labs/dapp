@@ -150,20 +150,17 @@ const CreateTimelockPage: React.FC = () => {
       }
 
       const body: CreateTimelockRequestBody = {
-        admin: (formState.owner || walletAddress) as `0x${string}`,
         chain_id: formState.selectedChain,
-        chain_name: dialogDetails.chainName,
-        min_delay: parseInt(formState.minDelay),
         remark: remarkFromDialog || '',
         standard: formState.selectedStandard,
-        tx_hash: dialogDetails.transactionHash,
         contract_address: dialogDetails.timelockAddress,
+        is_imported: false, // Always false for new timelocks
       };
 
       try {
         console.log('Creating timelock record with body:', body);
 
-        const apiResponse = await createTimelockApiCall('/api/v1/timelock/create', {
+        const apiResponse = await createTimelockApiCall('/api/v1/timelock/create-or-import', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${accessToken}`,

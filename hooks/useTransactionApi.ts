@@ -23,81 +23,69 @@ export type { Transaction, CreateTransactionRequest };
 export const useTransactionApi = () => {
   const { request } = useApi();
 
-  // Mutations
-  const createTransactionMutation = useApiMutation<Transaction, CreateTransactionRequest>(
-    '/api/v1/transaction/create',
-    'POST',
-    { defaultErrorMessage: 'Failed to create transaction' }
-  );
-
   const cancelTransactionMutation = useApiMutation<void, { id: number }>(
-    (variables) => `/api/v1/transaction/${variables.id}/cancel`,
+    (variables) => `/api/v1/flows/${variables.id}/cancel`,
     'POST',
-    { defaultErrorMessage: 'Failed to cancel transaction' }
+    { defaultErrorMessage: 'Failed to cancel flows' }
   );
 
   const executeTransactionMutation = useApiMutation<void, {
     id: number;
     execute_tx_hash: string;
   }>(
-    (variables) => `/api/v1/transaction/${variables.id}/execute`,
+    (variables) => `/api/v1/flows/${variables.id}/execute`,
     'POST',
-    { defaultErrorMessage: 'Failed to execute transaction' }
+    { defaultErrorMessage: 'Failed to execute flows' }
   );
 
   const markTransactionFailedMutation = useApiMutation<void, {
     id: number;
     reason: string;
   }>(
-    (variables) => `/api/v1/transaction/${variables.id}/mark-failed`,
+    (variables) => `/api/v1/flows/${variables.id}/mark-failed`,
     'POST',
-    { defaultErrorMessage: 'Failed to mark transaction as failed' }
+    { defaultErrorMessage: 'Failed to mark flows as failed' }
   );
 
   const retrySubmitTransactionMutation = useApiMutation<void, {
     id: number;
     tx_hash: string;
   }>(
-    (variables) => `/api/v1/transaction/${variables.id}/retry-submit`,
+    (variables) => `/api/v1/flows/${variables.id}/retry-submit`,
     'POST',
-    { defaultErrorMessage: 'Failed to retry transaction submission' }
+    { defaultErrorMessage: 'Failed to retry flows submission' }
   );
 
   // Query hooks
   const useTransactionList = (filters: Omit<TransactionListFilters, 'page' | 'page_size'> = {}) => {
     return useFilteredApi<TransactionListResponse, TransactionListFilters>(
-      '/api/v1/transaction/list',
+      '/api/v1/flows/user',
       { page: 1, page_size: 10, ...filters },
-      { autoFetch: true, defaultErrorMessage: 'Failed to fetch transaction list' }
+      { autoFetch: true, defaultErrorMessage: 'Failed to fetch flows list' }
     );
   };
 
   const usePendingTransactions = (filters: Omit<PendingTransactionFilters, 'page' | 'page_size'> = {}) => {
     return useFilteredApi<TransactionListResponse, PendingTransactionFilters>(
-      '/api/v1/transaction/pending',
+      '/api/v1/flows/ready',
       { page: 1, page_size: 10, ...filters },
       { autoFetch: true, defaultErrorMessage: 'Failed to fetch pending transactions' }
     );
   };
 
   const useTransactionStats = () => {
-    return useApiBase<TransactionStats>('/api/v1/transaction/stats', {
+    return useApiBase<TransactionStats>('/api/v1/flows/stats', {
       autoFetch: true,
-      defaultErrorMessage: 'Failed to fetch transaction statistics'
+      defaultErrorMessage: 'Failed to fetch flows statistics'
     });
   };
 
   const useTransactionById = (id: number) => {
-    return useApiBase<Transaction>(`/api/v1/transaction/${id}`, {
+    return useApiBase<Transaction>(`/api/v1/flows/${id}`, {
       autoFetch: true,
-      defaultErrorMessage: 'Failed to fetch transaction details'
+      defaultErrorMessage: 'Failed to fetch flows details'
     });
   };
-
-  // Convenience methods that wrap the mutations
-  const createTransaction = useCallback(async (data: CreateTransactionRequest) => {
-    return createTransactionMutation.mutate(data);
-  }, [createTransactionMutation]);
 
   const cancelTransaction = useCallback(async (id: number) => {
     return cancelTransactionMutation.mutate({ id });
@@ -129,8 +117,8 @@ export const useTransactionApi = () => {
       });
       
       const url = queryParams.toString() 
-        ? `/api/v1/transaction/list?${queryParams.toString()}`
-        : '/api/v1/transaction/list';
+        ? `/api/v1/flows/user?${queryParams.toString()}`
+        : '/api/v1/flows/user';
         
       const response = await request(url, { method: 'GET' });
       return response.data;
@@ -149,8 +137,8 @@ export const useTransactionApi = () => {
       });
       
       const url = queryParams.toString() 
-        ? `/api/v1/transaction/pending?${queryParams.toString()}`
-        : '/api/v1/transaction/pending';
+        ? `/api/v1/flows/ready?${queryParams.toString()}`
+        : '/api/v1/flows/ready';
         
       const response = await request(url, { method: 'GET' });
       return response.data;
@@ -161,7 +149,7 @@ export const useTransactionApi = () => {
 
   const getTransactionStats = useCallback(async (): Promise<TransactionStats> => {
     try {
-      const response = await request('/api/v1/transaction/stats', { method: 'GET' });
+      const response = await request('/api/v1/flows/stats', { method: 'GET' });
       return response.data;
     } catch (error) {
       throw error;
@@ -170,7 +158,7 @@ export const useTransactionApi = () => {
 
   const getTransactionById = useCallback(async (id: number): Promise<Transaction> => {
     try {
-      const response = await request(`/api/v1/transaction/${id}`, { method: 'GET' });
+      const response = await request(`/api/v1/flows/${id}`, { method: 'GET' });
       return response.data;
     } catch (error) {
       throw error;
@@ -185,7 +173,6 @@ export const useTransactionApi = () => {
     useTransactionById,
     
     // Mutation methods
-    createTransaction,
     cancelTransaction,
     executeTransaction,
     markTransactionFailed,
@@ -197,12 +184,6 @@ export const useTransactionApi = () => {
     getTransactionStats,
     getTransactionById,
     
-    // Mutation states
-    createTransactionState: {
-      data: createTransactionMutation.data,
-      error: createTransactionMutation.error,
-      isLoading: createTransactionMutation.isLoading,
-    },
     cancelTransactionState: {
       data: cancelTransactionMutation.data,
       error: cancelTransactionMutation.error,

@@ -17,13 +17,13 @@ export const useTimelockApi = () => {
 
   // Mutations
   const importTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>(
-    '/api/v1/timelock/import',
+    '/api/v1/timelock/create-or-import',
     'POST',
     { defaultErrorMessage: 'Failed to import timelock contract' }
   );
 
   const createTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>(
-    '/api/v1/timelock/create',
+    '/api/v1/timelock/create-or-import',
     'POST',
     { defaultErrorMessage: 'Failed to create timelock contract' }
   );

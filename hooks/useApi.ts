@@ -24,7 +24,6 @@ export function useApi(): UseApiReturn {
       ...options.headers,
     };
 
-    // Add Authorization header for all requests except the login endpoint
     if (url !== '/api/v1/auth/wallet-connect' && accessToken) {
       headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -41,6 +40,12 @@ export function useApi(): UseApiReturn {
         setData(response.data);
         return response.data;
       } catch (error: any) {
+        alert(
+          'Error:\n' +
+          `URL: ${fullUrl}\n` +
+          `Headers: ${JSON.stringify(headers, null, 2)}\n` +
+          `Body: ${JSON.stringify(options.body, null, 2)}`
+        ); // Debugging line
         console.log(error.response?.data, 'errorData');
         throw error;
       }

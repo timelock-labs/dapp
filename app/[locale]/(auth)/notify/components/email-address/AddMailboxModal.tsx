@@ -145,7 +145,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           await createEmailNotification({
             email: emailAddress,
             email_remark: emailRemark,
-            timelock_contracts: selectedPermissions,
           });
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));

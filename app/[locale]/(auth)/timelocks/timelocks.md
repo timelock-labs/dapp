@@ -90,7 +90,7 @@ id： integer      Compound timelock合约的数据库ID
 
 创建新的timelock合约记录。支持Compound和OpenZeppelin两种标准。前端需要提供合约的详细信息，包括链ID、合约地址、标准类型、创建交易哈希以及相关的治理参数。(Compound标准需要提供admin, pendingAdmin需要为空; OpenZeppelin标准需要提供proposers, executors, cancellers, admin需要为全0地址, proposers就是cancellers)
 
-/api/v1/timelock/create   post
+/api/v1/timelock/create-or-import   post
 
 #### Parameters
 

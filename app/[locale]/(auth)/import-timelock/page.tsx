@@ -12,6 +12,7 @@ import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport
 import { useTimelockApi } from '@/hooks/useTimelockApi';
 import { ChainUtils } from '@/utils/chainUtils';
 import { toast } from 'sonner';
+import { ImportTimelockFormData, ImportTimelockRequest } from '@/types';
 
 const ImportTimelockPage: React.FC = () => {
     // State for form fields
@@ -138,23 +139,13 @@ const ImportTimelockPage: React.FC = () => {
             const chainId = parseInt(selectedChain);
             const chainName = ChainUtils.getChainName(chains, chainId);
             
-            const importData = {
+            const importData:ImportTimelockRequest = {
                 chain_id: chainId,
-                chain_name: chainName,
                 contract_address: contractAddress,
                 standard: detectedParameters.standard!,
-                min_delay: detectedParameters.minDelay,
                 remark: remarks || 'Imported Timelock',
+                is_imported: true, // Always true for imported contracts
             };
-
-            // Add standard-specific parameters
-            if (detectedParameters.standard === 'compound') {
-                Object.assign(importData, {
-                    admin: detectedParameters.admin,
-                    pending_admin: detectedParameters.pendingAdmin || '',
-                });
-
-            }
 
             const response = await importTimelock(importData);
             
