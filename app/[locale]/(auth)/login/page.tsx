@@ -7,7 +7,6 @@ import { ConnectWallet } from '@/components/wallet/connect-wallet';
 import {
   useActiveWalletConnectionStatus,
   useActiveAccount,
-  useActiveWalletChain,
 } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
@@ -17,7 +16,6 @@ const TimeLockerSplitPage = () => {
   const t = useTranslations('walletLogin');
   const [currentSection, setCurrentSection] = useState(0); // 0: first section, 1: second section
   const { address, signMessage } = useActiveAccount() || {};
-  const { id: chainId } = useActiveWalletChain() || {};
 
   const connectionStatus = useActiveWalletConnectionStatus();
   console.log('TimeLockerSplitPage: connectionStatus =', connectionStatus);
@@ -30,7 +28,7 @@ const TimeLockerSplitPage = () => {
     if (isConnected && address) {
       const message = 'welcome to TimeLocker!';
       try {
-        const signature = await signMessage!({ message: message, chainId: chainId });
+        const signature = await signMessage!({ message: message });
         console.log('Message:', message);
         console.log('Signature:', signature);
         await walletConnect('/api/v1/auth/wallet-connect', {
@@ -39,14 +37,13 @@ const TimeLockerSplitPage = () => {
             wallet_address: address,
             signature: signature,
             message: message,
-            chain_id: chainId,
           },
         });
       } catch (error) {
         console.error('Error signing message:', error);
       }
     }
-  }, [isConnected, address, signMessage, chainId, walletConnect]);
+  }, [isConnected, address, signMessage, walletConnect]);
 
   useEffect(() => {
     console.log('TimeLockerSplitPage: useEffect triggered');

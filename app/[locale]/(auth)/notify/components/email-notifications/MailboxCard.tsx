@@ -10,9 +10,29 @@ interface MailboxCardProps {
   email: string;
   onDelete: (id: number, email: string) => void;
   onEdit: (mailbox: EmailNotification) => void;
+  email_remark?: string;
+  timelock_contracts: string[];
+  verified: boolean;
+  created_at: string;
+  updated_at: string;
+  verification_code?: string;
+  verification_expires_at?: string;
 }
 
-const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, onEdit }) => {
+const MailboxCard: React.FC<MailboxCardProps> = ({
+  id,
+  name,
+  email,
+  onDelete,
+  onEdit,
+  email_remark,
+  timelock_contracts,
+  verified,
+  created_at,
+  updated_at,
+  verification_code,
+  verification_expires_at,
+}) => {
   const t = useTranslations('Notify.mailboxCard');
 
   const handleDeleteClick = () => {
@@ -20,7 +40,6 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
   };
 
   const handleEditClick = () => {
-    // Create a minimal EmailNotification object for editing
     const mailboxData: EmailNotification = {
       id: id.toString(),
       email,
@@ -34,15 +53,21 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
   };
 
   return (
-    // Card
-    <div className="bg-white  rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-[162px]">
-     
-      {/* Name and Email */}
-      <div className='p-6  h-[98px]' >
+    <div className="bg-white rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-auto">
+      <div className='p-6'>
         <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
-        <p className="text-sm text-gray-500">{email}</p>
+        <p className="text-sm text-gray-500 mb-2">{email}</p>
+        <div className="text-xs text-gray-700 space-y-1">
+          <div><strong>ID:</strong> {id}</div>
+          <div><strong>Email Remark:</strong> {email_remark ?? '-'}</div>
+          <div><strong>Timelock Contracts:</strong> {timelock_contracts && timelock_contracts.length > 0 ? timelock_contracts.join(', ') : '-'}</div>
+          <div><strong>Verified:</strong> {verified ? 'Yes' : 'No'}</div>
+          <div><strong>Created At:</strong> {created_at || '-'}</div>
+          <div><strong>Updated At:</strong> {updated_at || '-'}</div>
+          <div><strong>Verification Code:</strong> {verification_code ?? '-'}</div>
+          <div><strong>Verification Expires At:</strong> {verification_expires_at ?? '-'}</div>
+        </div>
       </div>
-      {/* Delete and Edit Buttons */}
       <div className="pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] space-x-2">
         <button
           onClick={handleEditClick}
@@ -56,7 +81,6 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, name, email, onDelete, on
         <DeleteButton
           onDelete={handleDeleteClick}
           title="Are you sure you want to delete?"
-          // description={t('deleteConfirmDescription')}
           confirmText={t('delete')}
           cancelText={"Cancel"}
           variant="default"

@@ -35,7 +35,7 @@ const EmailNotificationPage: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await getEmailNotifications({ page: 1, page_size: 50 });
-      setMailboxes(response.items || []);
+      setMailboxes(response?.emails || []);
     } catch (error) {
       console.error('Failed to fetch email notifications:', error);
       toast.error(t('fetchEmailListError', { message: error instanceof Error ? error.message : 'Unknown error' }));
@@ -54,7 +54,7 @@ const EmailNotificationPage: React.FC = () => {
 
   const confirmDeleteMailbox = async () => {
     try {
-      await deleteEmailNotification(deleteConfirmDialog.email);
+      await deleteEmailNotification(deleteConfirmDialog.id);
       toast.success(t('deleteMailboxSuccess'));
       await fetchEmailNotifications(); // Refresh data
     } catch (error) {
@@ -152,12 +152,20 @@ const EmailNotificationPage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {mailboxes.map((mailbox) => (
             <MailboxCard
+
               key={mailbox.id}
               id={parseInt(mailbox.id)}
               name={mailbox.email_remark || ''}
               email={mailbox.email}
               onDelete={handleDeleteMailbox}
               onEdit={handleEditMailbox}
+              email_remark={mailbox.email_remark}
+              timelock_contracts={mailbox.timelock_contracts || []}
+              verified={mailbox.verified}
+              created_at={mailbox.created_at}
+              updated_at={mailbox.updated_at}
+              verification_code={mailbox.verification_code}
+              verification_expires_at={mailbox.verification_expires_at}
             />
           ))}
           {/* Add Mailbox Card */}

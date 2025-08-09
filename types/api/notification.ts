@@ -23,7 +23,8 @@ export interface EmailNotification {
  * Email notification list response
  */
 export interface EmailNotificationListResponse extends PaginationResponse {
-  items: EmailNotification[];
+  emails: EmailNotification[];
+  total: number;
 }
 
 /**

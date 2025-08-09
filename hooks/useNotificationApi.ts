@@ -84,8 +84,8 @@ export const useNotificationApi = () => {
     { defaultErrorMessage: 'Failed to update email notification' }
   );
 
-  const deleteEmailNotificationMutation = useApiMutation<string, { email: string }>(
-    (variables) => `/api/v1/emails/${encodeURIComponent(variables.email)}`,
+  const deleteEmailNotificationMutation = useApiMutation<string, { id: string }>(
+    (variables) => `/api/v1/emails/${variables.id}`,
     'DELETE',
     { defaultErrorMessage: 'Failed to delete email notification' }
   );
@@ -128,8 +128,8 @@ export const useNotificationApi = () => {
     return updateEmailNotificationMutation.mutate({ email, data });
   }, [updateEmailNotificationMutation]);
 
-  const deleteEmailNotification = useCallback(async (email: string) => {
-    return deleteEmailNotificationMutation.mutate({ email });
+  const deleteEmailNotification = useCallback(async (id: string) => {
+    return deleteEmailNotificationMutation.mutate({ id });
   }, [deleteEmailNotificationMutation]);
 
   const verifyEmail = useCallback(async (data: VerifyEmailRequest) => {
@@ -161,10 +161,11 @@ export const useNotificationApi = () => {
         : '/api/v1/emails';
         
       const response = await request(url, { method: 'GET' });
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }
+    
   }, [request]);
 
   const getEmailLogs = useCallback(async (filters?: EmailNotificationFilters): Promise<EmailLog[]> => {
