@@ -27,7 +27,6 @@ export type {
   Transaction, 
   TransactionListResponse, 
   TransactionStats,
-  CreateTransactionRequest,
   TransactionListFilters,
   PendingTransactionFilters 
 } from './api/transaction';

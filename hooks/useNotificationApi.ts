@@ -96,8 +96,8 @@ export const useNotificationApi = () => {
     { defaultErrorMessage: 'Failed to verify email' }
   );
 
-  const resendVerificationCodeMutation = useApiMutation<string, ResendCodeRequest>(
-    '/api/v1/emails/resend-code',
+  const sendVerificationCodeMutation = useApiMutation<string, ResendCodeRequest>(
+    '/api/v1/emails/send-verification',
     'POST',
     { defaultErrorMessage: 'Failed to resend verification code' }
   );
@@ -136,9 +136,9 @@ export const useNotificationApi = () => {
     return verifyEmailMutation.mutate(data);
   }, [verifyEmailMutation]);
 
-  const resendVerificationCode = useCallback(async (data: ResendCodeRequest) => {
-    return resendVerificationCodeMutation.mutate(data);
-  }, [resendVerificationCodeMutation]);
+  const sendVerificationCode = useCallback(async (data: ResendCodeRequest) => {
+    return sendVerificationCodeMutation.mutate(data);
+  }, [sendVerificationCodeMutation]);
 
   const handleEmergencyReply = useCallback(async (data: EmergencyReplyRequest) => {
     return handleEmergencyReplyMutation.mutate(data);
@@ -161,7 +161,7 @@ export const useNotificationApi = () => {
         : '/api/v1/emails';
         
       const response = await request(url, { method: 'GET' });
-      return response;
+      return response.data;
     } catch (error) {
       throw error;
     }
@@ -220,7 +220,7 @@ export const useNotificationApi = () => {
     updateEmailNotification,
     deleteEmailNotification,
     verifyEmail,
-    resendVerificationCode,
+    sendVerificationCode,
     handleEmergencyReply,
     
     // Legacy methods (for backward compatibility)

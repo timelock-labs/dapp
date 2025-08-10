@@ -8,17 +8,16 @@ import EncodingPreview from "./components/EncodingPreview";
 import MailboxSelection from "./components/MailboxSelection";
 import { useTranslations } from "next-intl";
 import { useTimelockTransaction } from "@/hooks/useTimelockTransaction";
-import { useTransactionApi, CreateTransactionRequest } from "@/hooks/useTransactionApi";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 
 import { useAuthStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { Interface } from "ethers/lib/utils";
 import generatePreview from "./utils/generatePreview";
+import { ethers } from "ethers";
 const TransactionEncoderPage: React.FC = () => {
   const router = useRouter();
   const t = useTranslations("CreateTransaction");
-  const { createTransaction } = useTransactionApi();
   const { sendTransaction } = useTimelockTransaction();
   const { address } = useActiveAccount() || {};
   const { id: chainId, name: chainName } = useActiveWalletChain() || {};
@@ -35,7 +34,6 @@ const TransactionEncoderPage: React.FC = () => {
   const [timeValue, setTimeValue] = useState(0);
   const [argumentValues, setArgumentValues] = useState<string[]>([]);
   const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
-  const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [targetCalldata, setTargetCallData] = useState("");
 
@@ -60,26 +58,36 @@ const TransactionEncoderPage: React.FC = () => {
         if (!functionName) {
           throw new Error("Invalid timelock method");
         }
-        const calldata = iface.encodeFunctionData(functionName, [target, value, description, targetCalldata, String(timeValue)]);
+        const calldata = iface.encodeFunctionData(functionName, [target, value, functionValue, targetCalldata, String(timeValue)]);
         setTimelockCalldata(calldata);
       } catch (err) {
         setTargetCallData("");
         console.error("Failed to encode calldata:", err);
       }
     }
-  }, [targetCalldata, value, timelockMethod, timeValue, description, target]);
+  }, [targetCalldata, value, timelockMethod, timeValue, functionValue, target]);
 
 
   useEffect(() => {
     setTargetCallData(""); // Reset calldata when function or arguments change
-    if (functionValue && argumentValues.length > 0) {
+    if (!!functionValue && argumentValues.length > 0) {
       try {
-        const iface = new Interface([`function ${functionValue}`]);
-        const functionName = functionValue.split("(")[0];
-        if (!functionName) {
-          throw new Error("Invalid function value");
-        }
-        const calldata = iface.encodeFunctionData(functionName, argumentValues);
+        const types = functionValue
+          .match(/\(([^)]*)\)/)?.[1]
+          .split(",")
+          .map((type) => type.trim())
+          .filter((type) => type.length > 0);
+
+        const calldata = ethers.utils.defaultAbiCoder.encode(
+          types || [],
+          argumentValues.map((arg, idx) =>
+            types && types[idx] === "address"
+              ? arg
+              : arg.startsWith("0x")
+              ? arg
+              : ethers.utils.parseEther(arg)
+          )
+        );
         setTargetCallData(calldata);
       } catch (err) {
         setTargetCallData("");
@@ -130,11 +138,10 @@ const TransactionEncoderPage: React.FC = () => {
         timelockMethod,
         target,
         value,
-        description,
         timelockCalldata
       }
     ));
-  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, description, timelockCalldata, selectedMailbox, targetCalldata, timelockMethod]);
+  }, [target, value, timeValue, functionValue, argumentValues, address, timelockAddress, abiValue, timelockType, allTimelocks, timelockCalldata, selectedMailbox, targetCalldata, timelockMethod]);
 
   const handleSendTransaction = async () => {
     if (!address) {
@@ -153,8 +160,6 @@ const TransactionEncoderPage: React.FC = () => {
       toast.error("Please fill in all required fields");
       return;
     }
-    const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
-    const timelockStandard = selectedTimelock?.standard as "compound" | "openzeppelin";
 
     try {
       setIsSubmitting(true);
@@ -166,26 +171,7 @@ const TransactionEncoderPage: React.FC = () => {
         value: value || "0", // Default to '0' if not specified
       });
 
-      // Prepare transaction data
-      const transactionData: CreateTransactionRequest = {
-        chain_id: chainId,
-        chain_name: chainName || "Unknown",
-        description: description || `Transaction to ${target}`,
-        eta: parseInt(String(timeValue)) || 0,
-        function_sig: functionValue,
-        operation_id: `${Date.now()}-${address}`, // Generate unique operation ID
-        target: target,
-        timelock_address: timelockAddress,
-        timelock_standard: timelockStandard!,
-        tx_data: abiValue || "0x",
-        tx_hash: txResult.transactionHash, // Will be set when transaction is submitted to blockchain
-        value: value || "0",
-      };
-      console.log(transactionData, "transactionData");
-      const result = await createTransaction(transactionData);
-
       toast.success("Transaction created successfully!");
-      console.log("Transaction created:", result);
 
       // Navigate to transaction details or list
       router.push("/transactions");
@@ -222,8 +208,6 @@ const TransactionEncoderPage: React.FC = () => {
                 onTimeChange={setTimeValue}
                 argumentValues={argumentValues}
                 onArgumentChange={handleArgumentChange}
-                description={description}
-                onDescriptionChange={setDescription}
               />
             </div>
             <div className="flex flex-col gap-4 w-1/2">
@@ -241,26 +225,6 @@ const TransactionEncoderPage: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* <div className="w-1/2 mt-8 p-4 bg-gray-50 rounded-lg overflow-x-auto word-break-all">
-            <p> timelockType: {JSON.stringify(timelockType)}</p>
-            <p> timelockMethod: {JSON.stringify(timelockMethod)}</p>
-            <p> timelockAddress: {JSON.stringify(timelockAddress)}</p>
-            <p> target: {JSON.stringify(target)}</p>
-            <p> value: {JSON.stringify(value)}</p>
-            <p> abiValue: {JSON.stringify(abiValue)}</p>
-            <p> functionValue: {JSON.stringify(functionValue)}</p>
-            <p> timeValue: {JSON.stringify(timeValue)}</p>
-            <p> argumentValues: {JSON.stringify(argumentValues)}</p>
-            <p> selectedMailbox: {JSON.stringify(selectedMailbox)}</p>
-            <p> description: {JSON.stringify(description)}</p>
-            <p> isSubmitting: {JSON.stringify(isSubmitting)}</p>
-            <p> previewContent: {JSON.stringify(previewContent)}</p>
-            <p>allTimelocks:{JSON.stringify(allTimelocks)}</p>
-
-            <p>timelockCalldata:{timelockCalldata}</p>
-          </div> */}
-
           {/* Submit button container */}
         </div>
       </div>

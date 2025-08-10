@@ -48,18 +48,15 @@ const PendingTransactionsSection: React.FC = () => {
   const [pendingTxs, setPendingTxs] = useState<PendingTxRow[]>([]);
   const [, setIsLoading] = useState(false);
   const accessToken = useAuthStore((state) => state.accessToken);
-  
+
   const {
     getPendingTransactions,
-    cancelTransaction,
-    executeTransaction,
-    retrySubmitTransaction
   } = useTransactionApi();
 
   // Fetch pending transactions
   const fetchPendingTransactions = useCallback(async () => {
     if (!accessToken) return;
-    
+
     setIsLoading(true);
     try {
       const response = await getPendingTransactions({
@@ -67,13 +64,13 @@ const PendingTransactionsSection: React.FC = () => {
         page_size: 10,
         // Add search functionality if needed
       });
-      
+
       const transformedData: PendingTxRow[] = (response?.transactions || []).map((tx: Transaction) => ({
         ...tx,
         chainIcon: <div className="w-4 h-4 bg-gray-300 rounded-full" />, // Placeholder icon
         operations: null, // Will be rendered by column render function
       }));
-      
+
       setPendingTxs(transformedData);
     } catch (error) {
       console.error('Failed to fetch pending transactions:', error);
@@ -89,7 +86,6 @@ const PendingTransactionsSection: React.FC = () => {
 
   const handleCancel = async (id: number) => {
     try {
-      await cancelTransaction(id);
       toast.success(t('cancelSuccess'));
       await fetchPendingTransactions(); // Refresh data
     } catch (error) {
@@ -100,13 +96,7 @@ const PendingTransactionsSection: React.FC = () => {
 
   const handleExecute = async (id: number) => {
     try {
-      // For now, we'll use a placeholder transaction hash
-      // In a real implementation, this would come from the blockchain interaction
-      const executeTxHash = `0x${Math.random().toString(16).substring(2, 66)}`;
-      
-      await executeTransaction(id, {
-        execute_tx_hash: executeTxHash
-      });
+
       toast.success(t('executeSuccess'));
       await fetchPendingTransactions(); // Refresh data
     } catch (error) {
@@ -117,11 +107,7 @@ const PendingTransactionsSection: React.FC = () => {
 
   const handleRetrySubmit = async (id: number) => {
     try {
-      // For now, we'll use a placeholder transaction hash
-      // In a real implementation, this would come from the blockchain interaction
-      const newTxHash = `0x${Math.random().toString(16).substring(2, 66)}`;
-      
-      await retrySubmitTransaction(id, newTxHash);
+
       toast.success(t('retrySubmitSuccess'));
       await fetchPendingTransactions(); // Refresh data
     } catch (error) {
@@ -130,7 +116,7 @@ const PendingTransactionsSection: React.FC = () => {
     }
   };
 
-  
+
 
   const columns = [
     {
@@ -143,8 +129,8 @@ const PendingTransactionsSection: React.FC = () => {
         </div>
       ),
     },
-    { 
-      key: 'description', 
+    {
+      key: 'description',
       header: t('description'),
       render: (row: PendingTxRow) => (
         <span className="max-w-xs truncate" title={row.description}>
@@ -152,8 +138,8 @@ const PendingTransactionsSection: React.FC = () => {
         </span>
       )
     },
-    { 
-      key: 'timelock_address', 
+    {
+      key: 'timelock_address',
       header: t('timelockAddress'),
       render: (row: PendingTxRow) => (
         <span className="font-mono text-sm" title={row.timelock_address}>
@@ -161,8 +147,8 @@ const PendingTransactionsSection: React.FC = () => {
         </span>
       )
     },
-    { 
-      key: 'tx_hash', 
+    {
+      key: 'tx_hash',
       header: t('txHash'),
       render: (row: PendingTxRow) => (
         <span className="font-mono text-sm" title={row.tx_hash}>
@@ -199,7 +185,7 @@ const PendingTransactionsSection: React.FC = () => {
               onClick={() => handleCancel(row.id)}
               className="text-red-500 hover:text-red-700 p-1 rounded-md hover:bg-red-100 transition-colors"
             >
-            Cancel
+              Cancel
             </button>
           )}
           {row.can_execute && (

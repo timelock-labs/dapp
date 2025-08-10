@@ -23,21 +23,26 @@ export const ChainSchema = z.object({
   updated_at: z.string(),
 });
 
+
+
 export const TimelockContractSchema = z.object({
   id: z.number(),
+  creator_address: z.string(),
+  chain_id: z.number(),
   chain_name: z.string(),
   contract_address: z.string(),
-  admin: z.string().optional(),
-  created_at: z.string(),
+  delay: z.number(),
+  admin: z.string(),
+  pending_admin: z.string().nullable(),
+  grace_period: z.number(),
+  minimum_delay: z.number(),
+  maximum_delay: z.number(),
   remark: z.string(),
   status: z.string(),
-  standard: z.enum(['compound', 'openzeppelin']),
-  // OpenZeppelin specific fields
-  proposers: z.string().optional(),
-  executors: z.string().optional(),
-  cancellers: z.string().optional(),
-  // Compound specific fields
-  pending_admin: z.string().optional(),
+  is_imported: z.boolean(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  user_permissions: z.array(z.string()),
 });
 
 export const AppStateSchema = z.object({

@@ -48,7 +48,8 @@ export function useApi(): UseApiReturn {
           'Error:\n' +
           `URL: ${fullUrl}\n` +
           `Headers: ${JSON.stringify(headers, null, 2)}\n` +
-          `Body: ${JSON.stringify(options.body, null, 2)}`
+          `Body: ${JSON.stringify(options.body, null, 2)}\n` +
+          `Error: ${error.message}`
         ); // Debugging line
         console.log(error.response?.data, 'errorData');
         throw error;

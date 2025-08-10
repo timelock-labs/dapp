@@ -38,8 +38,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   onTimeChange,
   argumentValues,
   onArgumentChange,
-  description,
-  onDescriptionChange,
   onTimelockAddressChange,
   onTimelockDetailsChange,
 }) => {
@@ -100,16 +98,20 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         onTimelockAddressChange(selectedTimelock.address);
 
         const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
-        if (fullTimelock && fullTimelock.standard && accessToken) {
+        if (fullTimelock && accessToken) {
           setIsLoadingDetails(true);
-
           try {
-            await fetchTimelockDetail(`/api/v1/timelock/detail/${fullTimelock.standard}/${fullTimelock.id}`, {
+            await fetchTimelockDetail("/api/v1/timelock/detail", {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json",
               },
+              body: JSON.stringify({
+                chain_id: fullTimelock.chain_id,
+                contract_address: fullTimelock.contract_address,
+                standard: "compound",
+              }),
             });
           } catch (error) {
             console.error("Failed to fetch timelock details:", error);
@@ -152,22 +154,20 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
     const selectedTimelock = allTimelocks.find((tl) => tl.id.toString() === timelockType);
 
-    if (!selectedTimelock || !selectedTimelock.standard) {
+    if (!selectedTimelock) {
       return [];
     }
 
-    if (selectedTimelock.standard === "compound") {
-      // 从 ABI 读取所有 function 名称作为 options
-      const functions = TimelockCompundABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure");
-      return functions.map((fn) => {
-        const inputTypes = (fn.inputs || []).map((input) => input.type).join(",");
-        const signature = `${fn.name}(${inputTypes})`;
-        return {
-          value: signature,
-          label: signature,
-        };
-      });
-    }
+    // 从 ABI 读取所有 function 名称作为 options
+    const functions = TimelockCompundABI.filter((item) => item.type === "function" && item.stateMutability !== "view" && item.stateMutability !== "pure");
+    return functions.map((fn) => {
+      const inputTypes = (fn.inputs || []).map((input) => input.type).join(",");
+      const signature = `${fn.name}(${inputTypes})`;
+      return {
+        value: signature,
+        label: signature,
+      };
+    });
 
     return [];
   }, [timelockType, allTimelocks]);
@@ -214,8 +214,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
                 isLoadingDetails
                   ? t("encodingTransaction.loadingTimelockDetails")
                   : allTimelocks.length === 0
-                  ? t("encodingTransaction.noTimelocksAvailable")
-                  : t("encodingTransaction.selectTimelockPlaceholder")
+                    ? t("encodingTransaction.noTimelocksAvailable")
+                    : t("encodingTransaction.selectTimelockPlaceholder")
               }
             />
           </div>
@@ -233,8 +233,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         <div id="transaction-details" className="border border-gray-300 rounded-lg p-4 mt-2">
           <TextInput label={t("encodingTransaction.target")} value={target} onChange={handleTargetChange} placeholder="Target" error={validationErrors.target} />
           <TextInput label={t("encodingTransaction.value")} defaultValue={0} value={value} onChange={handleValueChange} placeholder="Value" />
-          <TextInput label={t("encodingTransaction.description")} value={description} onChange={onDescriptionChange} placeholder={t("encodingTransaction.descriptionPlaceholder")}></TextInput>
-          <TextAreaInput label={t("encodingTransaction.calldata")} value={targetCalldata} onChange={() => {}} placeholder={t("encodingTransaction.calldataPlaceholder")} disabled={true} rows={3} />
+          <TextAreaInput label={t("encodingTransaction.calldata")} value={targetCalldata} onChange={() => { }} placeholder={t("encodingTransaction.calldataPlaceholder")} disabled={true} rows={3} />
 
           <div className="flex flex-col md:flex-row gap-4 items-end">
             <div className="flex-1">

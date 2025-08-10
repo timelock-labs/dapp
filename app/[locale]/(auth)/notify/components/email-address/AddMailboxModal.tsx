@@ -33,11 +33,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const [emailAddress, setEmailAddress] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
-  const { createEmailNotification, verifyEmail, resendVerificationCode } = useNotificationApi();
+  const { createEmailNotification, verifyEmail, sendVerificationCode } = useNotificationApi();
 
   const { useTimelockList } = useTimelockApi();
 
@@ -76,8 +75,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           });
         });
       }
-
-      setPermissions(timelockPermissions);
     }
   }, [timelockData]);
 
@@ -135,10 +132,11 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       if (!isEmailNotificationCreated) {
         // First time - try to create email notification
         try {
-          await createEmailNotification({
-            email: emailAddress,
-            email_remark: emailRemark,
-          });
+                      await sendVerificationCode({ email: emailAddress });
+          // await createEmailNotification({
+          //   email: emailAddress,
+          //   email_remark: emailRemark,
+          // });
 
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
@@ -147,7 +145,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           // // If email already exists, switch to resend mode and send code
           // if (createError.includes('API request failed with status 409')) {
           //   setIsEmailNotificationCreated(true);
-          //   await resendVerificationCode({ email: emailAddress });
+
           //   toast.success(t('verificationCodeResent'));
           // } else {
           //   throw createError; // Re-throw other errors
@@ -155,7 +153,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
         }
       } else {
         // Subsequent times - resend verification code
-        await resendVerificationCode({ email: emailAddress });
+        await sendVerificationCode({ email: emailAddress });
         toast.success(t('verificationCodeResent'));
       }
       // Reset verification status when new code is sent

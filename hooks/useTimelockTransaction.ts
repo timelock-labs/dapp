@@ -19,6 +19,7 @@ import type {
   SendTransactionParams,
   TransactionResult
 } from '@/types';
+import { send } from 'process';
 
 /**
  * Configuration for timelock transaction operations
@@ -230,36 +231,6 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
     showToasts,
   ]);
 
-  /**
-   * Send multiple transactions in sequence
-   */
-  const sendBatchTransactions = useCallback(async (
-    transactions: TimelockTransactionParams[]
-  ): Promise<TransactionResult[]> => {
-    const results: TransactionResult[] = [];
-    
-    for (const tx of transactions) {
-      try {
-        const result = await sendTransaction(tx);
-        results.push(result);
-      } catch (error) {
-        // Stop on first failure and throw with context
-        throw new Error(`Batch transaction failed at index ${results.length}: ${createErrorMessage(error)}`);
-      }
-    }
-    
-    return results;
-  }, [sendTransaction]);
-
-  /**
-   * Cancel pending transaction (if supported by wallet)
-   */
-  const cancelTransaction = useCallback(async (transactionHash: Hash) => {
-    // This would require wallet-specific implementation
-    // For now, just throw an error indicating it's not supported
-    throw new Error('Transaction cancellation not yet supported');
-  }, []);
-
   // Memoize loading state
   const isLoading = useMemo(() => 
     isSending || isExecuting || isEstimatingGas,
@@ -272,9 +243,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
   return {
     // Transaction methods
     sendTransaction,
-    sendBatchTransactions,
-    cancelTransaction,
-    
+  
     // Utility methods
     estimateTransactionGas,
     validateTransactionParams,

@@ -47,7 +47,6 @@ export type {
   Transaction,
   TransactionListResponse,
   TransactionStats,
-  CreateTransactionRequest,
   TransactionListFilters,
   PendingTransactionFilters,
   Partner,

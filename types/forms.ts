@@ -185,8 +185,6 @@ export interface EncodingTransactionFormProps {
   onTimeChange: (value: any) => void;
   argumentValues: any;
   onArgumentChange: (index: number, value: any) => void;
-  description: string;
-  onDescriptionChange: (value: string) => void;
   onTimelockAddressChange: (value: string) => void;
   onTimelockDetailsChange?: (value: any) => void;
 }
@@ -281,7 +279,6 @@ export interface ValidationSchemas {
   login: z.ZodSchema<LoginFormData>;
   createTimelock: z.ZodSchema<CreateTimelockFormData>;
   importTimelock: z.ZodSchema<ImportTimelockFormData>;
-  createTransaction: z.ZodSchema<CreateTransactionFormData>;
   emailNotification: z.ZodSchema<EmailNotificationFormData>;
   abi: z.ZodSchema<ABIFormData>;
   profile: z.ZodSchema<ProfileFormData>;
