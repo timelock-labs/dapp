@@ -13,22 +13,22 @@ export type { User, AuthState } from './api/user';
 export type { Chain } from './api/chain';
 
 // Timelock types
-export type { 
+export type {
   TimelockContract,
   TimelockContractItem,
-  TimelockParameters, 
-  ImportTimelockRequest, 
-  CreateTimelockRequestBody, 
-  TimelockApiResponse 
+  TimelockParameters,
+  ImportTimelockRequest,
+  CreateTimelockRequestBody,
+  TimelockApiResponse,
 } from './api/timelock';
 
 // Transaction types
-export type { 
-  Transaction, 
-  TransactionListResponse, 
+export type {
+  Transaction,
+  TransactionListResponse,
   TransactionStats,
   TransactionListFilters,
-  PendingTransactionFilters 
+  PendingTransactionFilters,
 } from './api/transaction';
 
 // Partner types
@@ -41,7 +41,7 @@ export type { ABIItem, ABIListResponse } from './api/abi';
 export type { Asset, AssetsData, UseAssetsApiReturn } from './api/assets';
 
 // Notification types
-export type { 
+export type {
   EmailNotification,
   EmailNotificationListResponse,
   EmailLog,
@@ -50,12 +50,8 @@ export type {
   VerifyEmailRequest,
   ResendCodeRequest,
   EmergencyReplyRequest,
-  EmailNotificationFilters
+  EmailNotificationFilters,
 } from './api/notification';
 
 // Sponsors types
-export type { 
-  Sponsor,
-  SponsorsData,
-  SponsorsApiResponse
-} from './api/sponsors';
+export type { Sponsor, SponsorsData, SponsorsApiResponse } from './api/sponsors';

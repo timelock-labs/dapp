@@ -10,7 +10,7 @@ interface NewButtonProps extends BaseComponentProps {
 
 /**
  * New button component with add icon
- * 
+ *
  * @param props - NewButton component props
  * @returns JSX.Element
  */

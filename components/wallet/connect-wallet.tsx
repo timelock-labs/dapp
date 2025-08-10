@@ -189,16 +189,34 @@ export const ConnectWallet = memo(function ConnectWallet({
         .connect-wallet-container .tw-connected-wallet__address {
           text-align: center !important;
           width: 100% !important;
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-            Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            Roboto,
+            'Helvetica Neue',
+            Arial,
+            'Noto Sans',
+            sans-serif !important;
         }
 
         .connect-wallet-container .tw-connected-wallet__address span {
           display: block !important;
           text-align: center !important;
           width: 100% !important;
-          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-            Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            Roboto,
+            'Helvetica Neue',
+            Arial,
+            'Noto Sans',
+            sans-serif !important;
         }
       `}</style>
     </div>

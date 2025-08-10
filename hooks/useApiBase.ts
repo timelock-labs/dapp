@@ -8,12 +8,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useApi } from './useApi';
 import { useAuthStore } from '@/store/userStore';
-import type { 
-  ApiRequestOptions, 
+import type {
+  ApiRequestOptions,
   HttpMethod,
   AsyncResult,
   PaginationParams,
-  FilterParams
+  FilterParams,
 } from '@/types';
 
 /**
@@ -50,13 +50,13 @@ export function useApiBase<T = unknown>(
   options: ApiHookConfig = {}
 ): UseApiBaseReturn<T> {
   const { request } = useApi();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  
+  const accessToken = useAuthStore(state => state.accessToken);
+
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   const hasFetched = useRef(false);
   const abortController = useRef<AbortController | null>(null);
 
@@ -120,7 +120,15 @@ export function useApiBase<T = unknown>(
       setIsInitialized(true);
       abortController.current = null;
     }
-  }, [endpoint, request, createHeaders, requestOptions, requiresAuth, accessToken, defaultErrorMessage]);
+  }, [
+    endpoint,
+    request,
+    createHeaders,
+    requestOptions,
+    requiresAuth,
+    accessToken,
+    defaultErrorMessage,
+  ]);
 
   /**
    * Refetch data manually
@@ -139,7 +147,7 @@ export function useApiBase<T = unknown>(
     setIsLoading(false);
     setIsInitialized(false);
     hasFetched.current = false;
-    
+
     if (abortController.current) {
       abortController.current.abort();
       abortController.current = null;
@@ -208,7 +216,7 @@ export function usePaginatedApi<T = unknown>(
     isLoading,
     refetch: baseRefetch,
     reset: baseReset,
-    isInitialized
+    isInitialized,
   } = useApiBase<PaginatedApiResponse<T>>(buildUrl(), {
     ...options,
     autoFetch: true,
@@ -222,7 +230,7 @@ export function usePaginatedApi<T = unknown>(
       } else {
         setAllData(prev => [...prev, ...(data.items ?? [])]);
       }
-      
+
       setTotalCount(data.total ?? 0);
       setHasMore((data.page ?? 0) < (data.total_pages ?? 0));
     }
@@ -230,7 +238,7 @@ export function usePaginatedApi<T = unknown>(
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoading) return;
-    
+
     setParams(prev => ({ ...prev, page: prev.page + 1 }));
   }, [hasMore, isLoading]);
 
@@ -276,7 +284,7 @@ export function useFilteredApi<T = unknown, F extends FilterParams = FilterParam
 
   const buildUrl = useCallback(() => {
     const searchParams = new URLSearchParams();
-    
+
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
         searchParams.append(key, String(value));
@@ -293,7 +301,7 @@ export function useFilteredApi<T = unknown, F extends FilterParams = FilterParam
     isLoading,
     refetch,
     reset: baseReset,
-    isInitialized
+    isInitialized,
   } = useApiBase<T>(buildUrl(), {
     ...options,
     autoFetch: true,
@@ -334,8 +342,8 @@ export function useApiMutation<TData = unknown, TVariables = unknown>(
   options: ApiHookConfig = {}
 ) {
   const { request } = useApi();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  
+  const accessToken = useAuthStore(state => state.accessToken);
+
   const [data, setData] = useState<TData | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -359,38 +367,50 @@ export function useApiMutation<TData = unknown, TVariables = unknown>(
     return headers;
   }, [accessToken, requiresAuth, requestOptions.headers]);
 
-  const mutate = useCallback(async (variables?: TVariables): Promise<TData> => {
-    if (requiresAuth && !accessToken) {
-      throw new Error('Authentication required');
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const url = typeof endpoint === 'function' ? endpoint(variables as TVariables) : endpoint;
-      
-      const response = await request(url, {
-        method,
-        headers: createHeaders(),
-        body: variables,
-        ...requestOptions,
-      });
-
-      if (response?.success) {
-        setData(response.data);
-        return response.data;
-      } else {
-        throw new Error(response?.error?.message ?? defaultErrorMessage);
+  const mutate = useCallback(
+    async (variables?: TVariables): Promise<TData> => {
+      if (requiresAuth && !accessToken) {
+        throw new Error('Authentication required');
       }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(defaultErrorMessage);
-      setError(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [endpoint, method, request, createHeaders, requiresAuth, accessToken, defaultErrorMessage, requestOptions]);
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const url = typeof endpoint === 'function' ? endpoint(variables as TVariables) : endpoint;
+
+        const response = await request(url, {
+          method,
+          headers: createHeaders(),
+          body: variables,
+          ...requestOptions,
+        });
+
+        if (response?.success) {
+          setData(response.data);
+          return response.data;
+        } else {
+          throw new Error(response?.error?.message ?? defaultErrorMessage);
+        }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(defaultErrorMessage);
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      endpoint,
+      method,
+      request,
+      createHeaders,
+      requiresAuth,
+      accessToken,
+      defaultErrorMessage,
+      requestOptions,
+    ]
+  );
 
   const reset = useCallback(() => {
     setData(null);

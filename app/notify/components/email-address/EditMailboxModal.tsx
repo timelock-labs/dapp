@@ -38,11 +38,13 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   const [emailRemark, setEmailRemark] = useState(initialData?.remark || '');
   const { updateEmailNotification } = useNotificationApi();
   const { useTimelockList } = useTimelockApi();
-  
+
   // Only fetch when modal is open
-  const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(
-    isOpen ? { status: 'active' } : undefined
-  );
+  const {
+    data: timelockData,
+    isLoading: isLoadingTimelocks,
+    error: timelockError,
+  } = useTimelockList(isOpen ? { status: 'active' } : undefined);
 
   // Process timelock data when it changes
   useEffect(() => {
@@ -76,7 +78,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
       setEmailRemark(initialData.remark || '');
     }
   }, [initialData]);
-
 
   const handleCancel = () => {
     onClose();

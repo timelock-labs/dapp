@@ -109,7 +109,6 @@ export type {
   ParameterDisplayRowProps,
   ContractStandardSelectionProps,
   CreationDetails,
-
   ConfirmCreationDialogProps,
   CreateTimelockFormProps,
   CreateTimelockFormState,

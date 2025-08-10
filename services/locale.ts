@@ -1,4 +1,4 @@
-import {Locale} from '@/i18n/config';
+import { Locale } from '@/i18n/config';
 
 // next-intl 中间件通常会查找名为 'NEXT_LOCALE' 的 cookie。
 // 如果您在中间件中配置了不同的名称，请在此处更新。

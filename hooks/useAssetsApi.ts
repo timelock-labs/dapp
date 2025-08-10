@@ -6,17 +6,14 @@ import type { AssetsData, UseAssetsApiReturn } from '@/types';
 
 /**
  * Hook for assets API operations using standardized patterns
- * 
+ *
  * @returns Object containing assets data and utilities
  */
 export function useAssetsApi(): UseAssetsApiReturn {
-  const { data, error, isLoading, refetch } = useApiBase<AssetsData>(
-    '/api/v1/assets',
-    {
-      autoFetch: true,
-      defaultErrorMessage: 'Failed to fetch assets'
-    }
-  );
+  const { data, error, isLoading, refetch } = useApiBase<AssetsData>('/api/v1/assets', {
+    autoFetch: true,
+    defaultErrorMessage: 'Failed to fetch assets',
+  });
 
   // Compute derived state
   const hasAssets = useMemo(() => {

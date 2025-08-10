@@ -5,13 +5,7 @@
 /**
  * Button component variants
  */
-export type ButtonVariant = 
-  | 'default' 
-  | 'destructive' 
-  | 'outline' 
-  | 'secondary' 
-  | 'ghost' 
-  | 'link';
+export type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 
 /**
  * Button component sizes
@@ -21,7 +15,7 @@ export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon';
 /**
  * Button component props
  */
-export interface ButtonProps extends React.ComponentProps<"button"> {
+export interface ButtonProps extends React.ComponentProps<'button'> {
   className?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -31,13 +25,13 @@ export interface ButtonProps extends React.ComponentProps<"button"> {
 /**
  * Input component props
  */
-export interface InputProps extends React.ComponentProps<"input"> {
+export interface InputProps extends React.ComponentProps<'input'> {
   className?: string;
 }
 
 /**
  * Card component props
  */
-export interface CardProps extends React.ComponentProps<"div"> {
+export interface CardProps extends React.ComponentProps<'div'> {
   className?: string;
 }

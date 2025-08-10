@@ -27,42 +27,27 @@ const WEB3_ERROR_PATTERNS = {
     message: 'Transaction was rejected by user',
     severity: 'warning' as const,
   },
-  
+
   // Insufficient funds errors
   INSUFFICIENT_FUNDS: {
-    patterns: [
-      /insufficient funds/i,
-      /insufficient balance/i,
-      /not enough/i,
-      /exceeds balance/i,
-    ],
+    patterns: [/insufficient funds/i, /insufficient balance/i, /not enough/i, /exceeds balance/i],
     message: 'Insufficient funds for this transaction',
     severity: 'error' as const,
   },
-  
+
   // Gas-related errors
   GAS_LIMIT: {
-    patterns: [
-      /gas limit/i,
-      /out of gas/i,
-      /gas required exceeds/i,
-      /intrinsic gas too low/i,
-    ],
+    patterns: [/gas limit/i, /out of gas/i, /gas required exceeds/i, /intrinsic gas too low/i],
     message: 'Transaction failed due to gas limit. Try increasing the gas limit.',
     severity: 'error' as const,
   },
-  
+
   GAS_PRICE: {
-    patterns: [
-      /gas price/i,
-      /max fee per gas/i,
-      /max priority fee/i,
-      /gas too low/i,
-    ],
+    patterns: [/gas price/i, /max fee per gas/i, /max priority fee/i, /gas too low/i],
     message: 'Gas price too low. Try increasing the gas price.',
     severity: 'error' as const,
   },
-  
+
   // Network errors
   NETWORK_ERROR: {
     patterns: [
@@ -75,62 +60,38 @@ const WEB3_ERROR_PATTERNS = {
     message: 'Network error. Please check your connection and try again.',
     severity: 'error' as const,
   },
-  
+
   // Contract errors
   CONTRACT_REVERT: {
-    patterns: [
-      /execution reverted/i,
-      /revert/i,
-      /contract call failed/i,
-      /transaction failed/i,
-    ],
+    patterns: [/execution reverted/i, /revert/i, /contract call failed/i, /transaction failed/i],
     message: 'Transaction was reverted by the contract',
     severity: 'error' as const,
   },
-  
+
   // Nonce errors
   NONCE_ERROR: {
-    patterns: [
-      /nonce/i,
-      /transaction nonce is too low/i,
-      /already known/i,
-    ],
+    patterns: [/nonce/i, /transaction nonce is too low/i, /already known/i],
     message: 'Transaction nonce error. Please try again.',
     severity: 'error' as const,
   },
-  
+
   // Wallet connection errors
   WALLET_NOT_CONNECTED: {
-    patterns: [
-      /wallet not connected/i,
-      /no account/i,
-      /connect wallet/i,
-      /no provider/i,
-    ],
+    patterns: [/wallet not connected/i, /no account/i, /connect wallet/i, /no provider/i],
     message: 'Please connect your wallet first',
     severity: 'warning' as const,
   },
-  
+
   // Chain errors
   WRONG_CHAIN: {
-    patterns: [
-      /wrong chain/i,
-      /unsupported chain/i,
-      /switch network/i,
-      /chain not supported/i,
-    ],
+    patterns: [/wrong chain/i, /unsupported chain/i, /switch network/i, /chain not supported/i],
     message: 'Please switch to the correct network',
     severity: 'warning' as const,
   },
-  
+
   // Permission errors
   PERMISSION_DENIED: {
-    patterns: [
-      /permission denied/i,
-      /unauthorized/i,
-      /access denied/i,
-      /not allowed/i,
-    ],
+    patterns: [/permission denied/i, /unauthorized/i, /access denied/i, /not allowed/i],
     message: 'Permission denied for this operation',
     severity: 'error' as const,
   },
@@ -168,144 +129,157 @@ interface ParsedWeb3Error {
 
 /**
  * Hook for handling Web3 errors with standardized patterns
- * 
+ *
  * @param config Optional configuration for error handling
  * @returns Object containing error handling utilities
  */
 export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
-  const { 
-    showToasts = true, 
-    logErrors = true, 
-    customMessages = {} 
-  } = config;
+  const { showToasts = true, logErrors = true, customMessages = {} } = config;
 
   /**
    * Parse Web3 error and extract meaningful information
    */
-  const parseError = useCallback((error: unknown): ParsedWeb3Error => {
-    const errorMessage = createErrorMessage(error);
-    
-    // Check against known error patterns
-    for (const [type, errorConfig] of Object.entries(WEB3_ERROR_PATTERNS)) {
-      const isMatch = errorConfig.patterns.some(pattern => 
-        pattern.test(errorMessage)
-      );
-      
-      if (isMatch) {
-        const customMessage = customMessages[type];
-        const message = customMessage || errorConfig.message;
-        
-        return {
-          originalError: error,
-          type: type as keyof typeof WEB3_ERROR_PATTERNS,
-          message,
-          severity: errorConfig.severity,
-          isRetryable: getRetryability(type as keyof typeof WEB3_ERROR_PATTERNS),
-          suggestions: getSuggestions(type as keyof typeof WEB3_ERROR_PATTERNS),
-        };
+  const parseError = useCallback(
+    (error: unknown): ParsedWeb3Error => {
+      const errorMessage = createErrorMessage(error);
+
+      // Check against known error patterns
+      for (const [type, errorConfig] of Object.entries(WEB3_ERROR_PATTERNS)) {
+        const isMatch = errorConfig.patterns.some(pattern => pattern.test(errorMessage));
+
+        if (isMatch) {
+          const customMessage = customMessages[type];
+          const message = customMessage || errorConfig.message;
+
+          return {
+            originalError: error,
+            type: type as keyof typeof WEB3_ERROR_PATTERNS,
+            message,
+            severity: errorConfig.severity,
+            isRetryable: getRetryability(type as keyof typeof WEB3_ERROR_PATTERNS),
+            suggestions: getSuggestions(type as keyof typeof WEB3_ERROR_PATTERNS),
+          };
+        }
       }
-    }
-    
-    // Unknown error
-    return {
-      originalError: error,
-      type: 'UNKNOWN',
-      message: errorMessage,
-      severity: 'error',
-      isRetryable: false,
-    };
-  }, [customMessages]);
+
+      // Unknown error
+      return {
+        originalError: error,
+        type: 'UNKNOWN',
+        message: errorMessage,
+        severity: 'error',
+        isRetryable: false,
+      };
+    },
+    [customMessages]
+  );
 
   /**
    * Handle Web3 error with appropriate user feedback
    */
-  const handleError = useCallback((error: unknown, context?: string): ParsedWeb3Error => {
-    const parsedError = parseError(error);
-    
-    // Log error if enabled
-    if (logErrors) {
-      console.error(`Web3 Error${context ? ` (${context})` : ''}:`, {
-        type: parsedError.type,
-        message: parsedError.message,
-        originalError: parsedError.originalError,
-      });
-    }
-    
-    // Show toast notification if enabled
-    if (showToasts) {
-      const toastMessage = context 
-        ? `${context}: ${parsedError.message}`
-        : parsedError.message;
-        
-      if (parsedError.severity === 'error') {
-        createToastNotification.error(toastMessage);
-      } else if (parsedError.severity === 'warning') {
-        createToastNotification.error(toastMessage); // Use error toast for warnings too
+  const handleError = useCallback(
+    (error: unknown, context?: string): ParsedWeb3Error => {
+      const parsedError = parseError(error);
+
+      // Log error if enabled
+      if (logErrors) {
+        console.error(`Web3 Error${context ? ` (${context})` : ''}:`, {
+          type: parsedError.type,
+          message: parsedError.message,
+          originalError: parsedError.originalError,
+        });
       }
-    }
-    
-    return parsedError;
-  }, [parseError, logErrors, showToasts]);
+
+      // Show toast notification if enabled
+      if (showToasts) {
+        const toastMessage = context ? `${context}: ${parsedError.message}` : parsedError.message;
+
+        if (parsedError.severity === 'error') {
+          createToastNotification.error(toastMessage);
+        } else if (parsedError.severity === 'warning') {
+          createToastNotification.error(toastMessage); // Use error toast for warnings too
+        }
+      }
+
+      return parsedError;
+    },
+    [parseError, logErrors, showToasts]
+  );
 
   /**
    * Create error handler for async operations
    */
-  const createErrorHandler = useCallback((context: string) => {
-    return (error: unknown) => handleError(error, context);
-  }, [handleError]);
+  const createErrorHandler = useCallback(
+    (context: string) => {
+      return (error: unknown) => handleError(error, context);
+    },
+    [handleError]
+  );
 
   /**
    * Wrap async function with error handling
    */
-  const withErrorHandling = useCallback(<T>(
-    asyncFn: () => Promise<T>,
-    context?: string
-  ): Promise<T> => {
-    return asyncFn().catch(error => {
-      const parsedError = handleError(error, context);
-      throw new Error(parsedError.message);
-    });
-  }, [handleError]);
+  const withErrorHandling = useCallback(
+    <T>(asyncFn: () => Promise<T>, context?: string): Promise<T> => {
+      return asyncFn().catch(error => {
+        const parsedError = handleError(error, context);
+        throw new Error(parsedError.message);
+      });
+    },
+    [handleError]
+  );
 
   /**
    * Check if error is retryable
    */
-  const isRetryableError = useCallback((error: unknown): boolean => {
-    const parsedError = parseError(error);
-    return parsedError.isRetryable;
-  }, [parseError]);
+  const isRetryableError = useCallback(
+    (error: unknown): boolean => {
+      const parsedError = parseError(error);
+      return parsedError.isRetryable;
+    },
+    [parseError]
+  );
 
   /**
    * Get error suggestions
    */
-  const getErrorSuggestions = useCallback((error: unknown): string[] => {
-    const parsedError = parseError(error);
-    return parsedError.suggestions || [];
-  }, [parseError]);
+  const getErrorSuggestions = useCallback(
+    (error: unknown): string[] => {
+      const parsedError = parseError(error);
+      return parsedError.suggestions || [];
+    },
+    [parseError]
+  );
 
   /**
    * Format error for display
    */
-  const formatErrorForDisplay = useCallback((error: unknown): string => {
-    const parsedError = parseError(error);
-    return parsedError.message;
-  }, [parseError]);
+  const formatErrorForDisplay = useCallback(
+    (error: unknown): string => {
+      const parsedError = parseError(error);
+      return parsedError.message;
+    },
+    [parseError]
+  );
 
   // Memoize error type checkers
-  const errorCheckers = useMemo(() => ({
-    isUserRejection: (error: unknown) => parseError(error).type === 'USER_REJECTED',
-    isInsufficientFunds: (error: unknown) => parseError(error).type === 'INSUFFICIENT_FUNDS',
-    isGasError: (error: unknown) => {
-      const type = parseError(error).type;
-      return type === 'GAS_LIMIT' || type === 'GAS_PRICE';
-    },
-    isNetworkError: (error: unknown) => parseError(error).type === 'NETWORK_ERROR',
-    isContractError: (error: unknown) => parseError(error).type === 'CONTRACT_REVERT',
-    isWalletError: (error: unknown) => {
-      const type = parseError(error).type;
-      return type === 'WALLET_NOT_CONNECTED' || type === 'WRONG_CHAIN';
-    },
-  }), [parseError]);
+  const errorCheckers = useMemo(
+    () => ({
+      isUserRejection: (error: unknown) => parseError(error).type === 'USER_REJECTED',
+      isInsufficientFunds: (error: unknown) => parseError(error).type === 'INSUFFICIENT_FUNDS',
+      isGasError: (error: unknown) => {
+        const type = parseError(error).type;
+        return type === 'GAS_LIMIT' || type === 'GAS_PRICE';
+      },
+      isNetworkError: (error: unknown) => parseError(error).type === 'NETWORK_ERROR',
+      isContractError: (error: unknown) => parseError(error).type === 'CONTRACT_REVERT',
+      isWalletError: (error: unknown) => {
+        const type = parseError(error).type;
+        return type === 'WALLET_NOT_CONNECTED' || type === 'WRONG_CHAIN';
+      },
+    }),
+    [parseError]
+  );
 
   return {
     // Core error handling
@@ -313,12 +287,12 @@ export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
     handleError,
     createErrorHandler,
     withErrorHandling,
-    
+
     // Error analysis
     isRetryableError,
     getErrorSuggestions,
     formatErrorForDisplay,
-    
+
     // Error type checkers
     ...errorCheckers,
   };
@@ -333,7 +307,7 @@ function getRetryability(errorType: keyof typeof WEB3_ERROR_PATTERNS): boolean {
     'GAS_PRICE',
     'NONCE_ERROR',
   ];
-  
+
   return retryableErrors.includes(errorType);
 }
 
@@ -371,23 +345,11 @@ function getSuggestions(errorType: keyof typeof WEB3_ERROR_PATTERNS): string[] {
       'Verify your transaction parameters',
       'Contact the contract developer',
     ],
-    NONCE_ERROR: [
-      'Try the transaction again',
-      'Reset your wallet if the issue persists',
-    ],
-    WALLET_NOT_CONNECTED: [
-      'Connect your wallet',
-      'Refresh the page and try again',
-    ],
-    WRONG_CHAIN: [
-      'Switch to the correct network',
-      'Check the required network in your wallet',
-    ],
-    PERMISSION_DENIED: [
-      'Check your wallet permissions',
-      'Make sure you have the required access',
-    ],
+    NONCE_ERROR: ['Try the transaction again', 'Reset your wallet if the issue persists'],
+    WALLET_NOT_CONNECTED: ['Connect your wallet', 'Refresh the page and try again'],
+    WRONG_CHAIN: ['Switch to the correct network', 'Check the required network in your wallet'],
+    PERMISSION_DENIED: ['Check your wallet permissions', 'Make sure you have the required access'],
   };
-  
+
   return suggestions[errorType] || [];
 }

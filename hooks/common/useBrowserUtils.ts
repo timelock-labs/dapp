@@ -23,10 +23,10 @@ export function useClipboard() {
       await navigator.clipboard.writeText(text);
       setCopiedText(text);
       setIsCopied(true);
-      
+
       // Reset copied state after 2 seconds
       setTimeout(() => setIsCopied(false), 2000);
-      
+
       return true;
     } catch (error) {
       console.warn('Copy failed:', error);

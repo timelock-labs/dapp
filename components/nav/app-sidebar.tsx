@@ -1,33 +1,23 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import {
-  Clock,
-  Frame,
-  ListTodo,
-  BellDot,
-  FileCode,
-  Shield,
-  Box,
-  House
-} from "lucide-react"
-import { NavMain } from '@/components/nav/nav-main'
-import { NavUser } from '@/components/nav/nav-user'
+import * as React from 'react';
+import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House } from 'lucide-react';
+import { NavMain } from '@/components/nav/nav-main';
+import { NavUser } from '@/components/nav/nav-user';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from '@/components/ui/sidebar'
-import LanguageSwitcher from "../LanguageSwitcher"
+} from '@/components/ui/sidebar';
+import LanguageSwitcher from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 // import type { BaseComponentProps } from '@/types';
 
-
 /**
  * Application sidebar component with navigation and user menu
- * 
+ *
  * @param props - AppSidebar component props
  * @returns JSX.Element
  */
@@ -37,75 +27,75 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: [
       {
         title: t('sidebar.nav.home'),
-        url: "home",
+        url: 'home',
         icon: House,
       },
       {
         title: t('sidebar.nav.transactions'),
-        url: "transactions",
+        url: 'transactions',
         icon: ListTodo,
       },
       {
         title: t('sidebar.nav.timelock_contracts'),
-        url: "timelocks",
+        url: 'timelocks',
         icon: Clock,
       },
       {
         title: t('sidebar.nav.abi_library'),
-        url: "abi-lib",
+        url: 'abi-lib',
         icon: FileCode,
       },
       {
         title: t('sidebar.nav.notifications'),
-        url: "notify",
+        url: 'notify',
         icon: BellDot,
       },
       {
         title: t('sidebar.nav.ecosystem'),
-        url: "ecosystem",
+        url: 'ecosystem',
         icon: Box,
       },
     ],
     projects: [
       {
         name: t('sidebar.projects.multisig_wallet'),
-        url: "#",
+        url: '#',
         icon: Shield,
       },
       {
         name: t('sidebar.projects.token_vesting'),
-        url: "#",
+        url: '#',
         icon: Clock,
       },
       {
         name: t('sidebar.projects.governance'),
-        url: "#",
+        url: '#',
         icon: Frame,
       },
     ],
-  }
+  };
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-
-        <div className="logo-font font-xl font-bold text-xl">{t('sidebar.logo')}</div>
+        <div className='logo-font font-xl font-bold text-xl'>{t('sidebar.logo')}</div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={sidebarData.navMain} />
       </SidebarContent>
-      <div className="flex flex-col gap-8 justify-center items-center">
+      <div className='flex flex-col gap-8 justify-center items-center'>
         <LanguageSwitcher />
         <SidebarFooter>
-          <NavUser user={{
-            name: "support@timelock.com",
-            email: "support@timelock.com",
-            avatar: "/avatars/shadcn.jpg"
-          }} />
+          <NavUser
+            user={{
+              name: 'support@timelock.com',
+              email: 'support@timelock.com',
+              avatar: '/avatars/shadcn.jpg',
+            }}
+          />
         </SidebarFooter>
       </div>
       <SidebarRail />
     </Sidebar>
-
-  )
+  );
 }

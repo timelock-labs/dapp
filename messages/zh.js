@@ -12,7 +12,7 @@ import wallet from './zh/wallet.json';
 export default {
   // common 模块直接包含键值对，需要包装在 common 命名空间中
   common,
-  
+
   // 其他模块已经有正确的命名空间结构，直接展开
   ...auth,
   ...navigation,
@@ -21,5 +21,5 @@ export default {
   ...abi,
   ...notification,
   ...home,
-  ...wallet
+  ...wallet,
 };

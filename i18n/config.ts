@@ -2,7 +2,7 @@
 export const locales = ['en', 'zh', 'de'] as const;
 
 // 从区域设置列表推断出 Locale 类型
-export type Locale = typeof locales[number];
+export type Locale = (typeof locales)[number];
 
 // 设置默认区域设置
 export const defaultLocale: Locale = 'en';

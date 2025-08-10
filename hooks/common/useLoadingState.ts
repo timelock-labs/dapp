@@ -28,19 +28,22 @@ export function useLoadingState(initialLoading = false): LoadingState & {
     setError(null);
   }, []);
 
-  const withLoading = useCallback(async <T>(asyncFn: AsyncCallback<T>): Promise<T> => {
-    setLoading(true);
-    try {
-      const result = await asyncFn();
-      return result;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error occurred');
-      setError(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setLoading]);
+  const withLoading = useCallback(
+    async <T>(asyncFn: AsyncCallback<T>): Promise<T> => {
+      setLoading(true);
+      try {
+        const result = await asyncFn();
+        return result;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Unknown error occurred');
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setLoading]
+  );
 
   return {
     isLoading,

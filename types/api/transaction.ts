@@ -2,7 +2,14 @@
  * Transaction-related API types
  */
 
-import type { Address, Hash, Timestamp, TransactionStatus, ContractStandard, PaginationResponse } from '../common';
+import type {
+  Address,
+  Hash,
+  Timestamp,
+  TransactionStatus,
+  ContractStandard,
+  PaginationResponse,
+} from '../common';
 
 /**
  * Transaction data

@@ -4,12 +4,12 @@
  */
 
 // UI component types
-export type { 
-  ButtonVariant, 
-  ButtonSize, 
-  ButtonProps, 
+export type {
+  ButtonVariant,
+  ButtonSize,
+  ButtonProps,
   InputProps,
-  CardProps
+  CardProps,
 } from './components/ui';
 
 // Timelock component types
@@ -22,9 +22,8 @@ export type {
   ContractStandardSelectionProps,
   RadioButtonOptionProps,
   CreationDetails,
-
   ConfirmCreationDialogProps,
   ParameterDisplayRowProps,
   DeploymentResult,
-  CompoundTimelockParams
+  CompoundTimelockParams,
 } from './components/timelock';

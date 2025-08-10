@@ -12,12 +12,12 @@ import { useAsyncOperation } from './useCommonHooks';
 import { createErrorMessage, createToastNotification } from './useHookUtils';
 
 // Type imports
-import type { 
-  Address, 
+import type {
+  Address,
   GasEstimation,
-  Hash, 
+  Hash,
   SendTransactionParams,
-  TransactionResult
+  TransactionResult,
 } from '@/types';
 import { send } from 'process';
 
@@ -56,7 +56,7 @@ interface TimelockTransactionParams {
 /**
  * Hook for managing timelock transactions with enhanced error handling and user feedback
  * Provides optimized transaction sending with proper validation and state management
- * 
+ *
  * @param config Optional configuration for transaction behavior
  * @returns Object containing transaction methods and state
  */
@@ -70,7 +70,12 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
   } = config;
 
   const { requireConnection, isConnected } = useWalletConnection();
-  const { sendTransaction: sendTx, isLoading: isSending, error: sendError, reset: resetSender } = useTransactionSender();
+  const {
+    sendTransaction: sendTx,
+    isLoading: isSending,
+    error: sendError,
+    reset: resetSender,
+  } = useTransactionSender();
   const { estimateGas } = useGasEstimation();
 
   // Async operation for gas estimation
@@ -116,124 +121,131 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
   /**
    * Estimate gas for a transaction
    */
-  const estimateTransactionGas = useCallback(async (
-    params: TimelockTransactionParams
-  ): Promise<GasEstimation> => {
-    return executeWithGasEstimation(async () => {
-      const gasEstimation = await estimateGas({
-        to: params.toAddress,
-        data: params.calldata,
-        value: params.value?.toString(),
-      });
+  const estimateTransactionGas = useCallback(
+    async (params: TimelockTransactionParams): Promise<GasEstimation> => {
+      return executeWithGasEstimation(async () => {
+        const gasEstimation = await estimateGas({
+          to: params.toAddress,
+          data: params.calldata,
+          value: params.value?.toString(),
+        });
 
-      return gasEstimation;
-    });
-  }, [estimateGas, executeWithGasEstimation]);
+        return gasEstimation;
+      });
+    },
+    [estimateGas, executeWithGasEstimation]
+  );
 
   /**
    * Send a timelock transaction with comprehensive error handling
    */
-  const sendTransaction = useCallback(async (
-    params: TimelockTransactionParams
-  ): Promise<TransactionResult> => {
-    return executeTransaction(async () => {
-      // Ensure wallet is connected
-      requireConnection();
+  const sendTransaction = useCallback(
+    async (params: TimelockTransactionParams): Promise<TransactionResult> => {
+      return executeTransaction(async () => {
+        // Ensure wallet is connected
+        requireConnection();
 
-      // Validate parameters
-      const validationErrors = validateTransactionParams(params);
-      if (validationErrors.length > 0) {
-        throw new Error(`Invalid parameters: ${validationErrors.join(', ')}`);
-      }
-
-      let gasEstimation: GasEstimation | undefined;
-
-      // Estimate gas if enabled
-      if (shouldEstimateGas) {
-        try {
-          gasEstimation = await estimateTransactionGas(params);
-        } catch (error) {
-          console.warn('Gas estimation failed, proceeding without estimation:', error);
-        }
-      }
-
-      // Prepare transaction parameters  
-      const txParams = {
-        to: params.toAddress,
-        data: params.calldata,
-        value: params.value,
-        gasLimit: params.gasLimit || defaultGasLimit || (gasEstimation?.gasLimit ? parseInt(gasEstimation.gasLimit) : undefined),
-        gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,  
-      };
-
-      try {
-        // Show loading toast if enabled
-        let toastId: string | number | undefined;
-        if (showToasts) {
-          toastId = createToastNotification.loading('Please confirm transaction in your wallet...');
+        // Validate parameters
+        const validationErrors = validateTransactionParams(params);
+        if (validationErrors.length > 0) {
+          throw new Error(`Invalid parameters: ${validationErrors.join(', ')}`);
         }
 
-        // Send the transaction
-        const result = await sendTx(txParams);
+        let gasEstimation: GasEstimation | undefined;
 
-        // Update toast with transaction hash
-        if (showToasts && toastId) {
-          createToastNotification.success(
-            `Transaction sent: ${result.transactionHash.slice(0, 10)}...`,
-            toastId
-          );
+        // Estimate gas if enabled
+        if (shouldEstimateGas) {
+          try {
+            gasEstimation = await estimateTransactionGas(params);
+          } catch (error) {
+            console.warn('Gas estimation failed, proceeding without estimation:', error);
+          }
         }
 
-        // Wait for confirmation if enabled
-        if (waitForConfirmation) {
-          // Note: This would require additional implementation to wait for confirmation
-          // For now, we just return the transaction hash
-        }
-
-        // Show success toast
-        if (showToasts && toastId) {
-          createToastNotification.success('Transaction confirmed!', toastId);
-        }
-
-        return {
-          ...result,
-          gasEstimation,
+        // Prepare transaction parameters
+        const txParams = {
+          to: params.toAddress,
+          data: params.calldata,
+          value: params.value,
+          gasLimit:
+            params.gasLimit ||
+            defaultGasLimit ||
+            (gasEstimation?.gasLimit ? parseInt(gasEstimation.gasLimit) : undefined),
+          gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,
         };
-      } catch (error) {
-        const message = createErrorMessage(error, 'Transaction failed');
-        
-        // Handle specific error cases
-        if (message.includes('user rejected') || message.includes('denied')) {
-          throw new Error('Transaction was rejected by user');
-        }
-        
-        if (message.includes('insufficient funds')) {
-          throw new Error('Insufficient funds for transaction');
-        }
-        
-        if (message.includes('gas')) {
-          throw new Error('Transaction failed due to gas issues. Try increasing gas limit.');
-        }
 
-        throw new Error(message);
-      }
-    });
-  }, [
-    executeTransaction,
-    requireConnection,
-    validateTransactionParams,
-    shouldEstimateGas,
-    estimateTransactionGas,
-    sendTx,
-    defaultGasLimit,
-    defaultGasPrice,
-    waitForConfirmation,
-    showToasts,
-  ]);
+        try {
+          // Show loading toast if enabled
+          let toastId: string | number | undefined;
+          if (showToasts) {
+            toastId = createToastNotification.loading(
+              'Please confirm transaction in your wallet...'
+            );
+          }
+
+          // Send the transaction
+          const result = await sendTx(txParams);
+
+          // Update toast with transaction hash
+          if (showToasts && toastId) {
+            createToastNotification.success(
+              `Transaction sent: ${result.transactionHash.slice(0, 10)}...`,
+              toastId
+            );
+          }
+
+          // Wait for confirmation if enabled
+          if (waitForConfirmation) {
+            // Note: This would require additional implementation to wait for confirmation
+            // For now, we just return the transaction hash
+          }
+
+          // Show success toast
+          if (showToasts && toastId) {
+            createToastNotification.success('Transaction confirmed!', toastId);
+          }
+
+          return {
+            ...result,
+            gasEstimation,
+          };
+        } catch (error) {
+          const message = createErrorMessage(error, 'Transaction failed');
+
+          // Handle specific error cases
+          if (message.includes('user rejected') || message.includes('denied')) {
+            throw new Error('Transaction was rejected by user');
+          }
+
+          if (message.includes('insufficient funds')) {
+            throw new Error('Insufficient funds for transaction');
+          }
+
+          if (message.includes('gas')) {
+            throw new Error('Transaction failed due to gas issues. Try increasing gas limit.');
+          }
+
+          throw new Error(message);
+        }
+      });
+    },
+    [
+      executeTransaction,
+      requireConnection,
+      validateTransactionParams,
+      shouldEstimateGas,
+      estimateTransactionGas,
+      sendTx,
+      defaultGasLimit,
+      defaultGasPrice,
+      waitForConfirmation,
+      showToasts,
+    ]
+  );
 
   // Memoize loading state
-  const isLoading = useMemo(() => 
-    isSending || isExecuting || isEstimatingGas,
+  const isLoading = useMemo(
+    () => isSending || isExecuting || isEstimatingGas,
     [isSending, isExecuting, isEstimatingGas]
   );
 
@@ -243,11 +255,11 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
   return {
     // Transaction methods
     sendTransaction,
-  
+
     // Utility methods
     estimateTransactionGas,
     validateTransactionParams,
-    
+
     // State
     isLoading,
     isSending,
@@ -255,7 +267,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
     isExecuting,
     error,
     isConnected,
-    
+
     // Actions
     reset: resetSender,
   };

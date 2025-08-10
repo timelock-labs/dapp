@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import React, { useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
@@ -19,16 +19,16 @@ interface DeleteButtonProps extends BaseComponentProps {
 
 /**
  * Delete button component with confirmation popover
- * 
+ *
  * @param props - DeleteButton component props
  * @returns JSX.Element
  */
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   onDelete,
-  title = "Delete Item",
-  description = "Are you sure you want to delete this item? This action cannot be undone.",
-  confirmText = "Delete",
-  cancelText = "Cancel",
+  title = 'Delete Item',
+  description = 'Are you sure you want to delete this item? This action cannot be undone.',
+  confirmText = 'Delete',
+  cancelText = 'Cancel',
   variant = 'default',
   size = 'md',
   className = '',
@@ -67,42 +67,35 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
     }
   };
 
-  const triggerClasses = variant === 'destructive' 
-    ? 'text-red-600 hover:text-red-700 hover:bg-red-50' 
-    : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100';
+  const triggerClasses =
+    variant === 'destructive'
+      ? 'text-red-600 hover:text-red-700 hover:bg-red-50'
+      : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100';
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <button
-          type="button"
+          type='button'
           disabled={disabled}
           className={`${getSizeClasses()} ${triggerClasses} rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
-          aria-label="Delete"
-          title="Delete"
+          aria-label='Delete'
+          title='Delete'
         >
           <TrashIcon className={getIconSize()} />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="end">
-        <div className="space-y-4">
+      <PopoverContent className='w-80 p-4' align='end'>
+        <div className='space-y-4'>
           <div>
-            <h4 className="font-medium text-gray-900">{title}</h4>
-            <p className="text-sm text-gray-600 mt-1">{description}</p>
+            <h4 className='font-medium text-gray-900'>{title}</h4>
+            <p className='text-sm text-gray-600 mt-1'>{description}</p>
           </div>
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCancel}
-            >
+          <div className='flex justify-end space-x-2'>
+            <Button variant='outline' size='sm' onClick={handleCancel}>
               {cancelText}
             </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleDelete}
-            >
+            <Button variant='destructive' size='sm' onClick={handleDelete}>
               {confirmText}
             </Button>
           </div>

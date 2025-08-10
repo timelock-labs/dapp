@@ -136,8 +136,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
-        } catch {
-        }
+        } catch {}
       } else {
         // Subsequent times - resend verification code
         await sendVerificationCode({ email: emailAddress });
@@ -238,8 +237,9 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           {/* Verification Status Indicator */}
           {verificationCode.length === 6 && (
             <div
-              className={`mb-4 p-3 rounded-md ${isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-                }`}
+              className={`mb-4 p-3 rounded-md ${
+                isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+              }`}
             >
               {isEmailVerified ? (
                 <div className='flex items-center'>

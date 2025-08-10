@@ -17,14 +17,7 @@ import { createErrorMessage, useAbortController } from './useHookUtils';
 import { useWeb3React } from './useWeb3React';
 
 // Type imports
-import type { 
-  Address, 
-  GasEstimation,
-  Hash, 
-  NetworkInfo, 
-  TokenBalance,
-  TokenInfo
-} from '@/types';
+import type { Address, GasEstimation, Hash, NetworkInfo, TokenBalance, TokenInfo } from '@/types';
 
 /**
  * Configuration for Web3 utilities
@@ -40,7 +33,7 @@ interface Web3UtilsConfig {
 
 /**
  * Hook for Web3 utility functions with enhanced error handling and caching
- * 
+ *
  * @param config Optional configuration for Web3 utilities
  * @returns Object containing Web3 utility methods
  */
@@ -58,41 +51,44 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
   /**
    * Get cached result or execute function
    */
-  const withCache = useCallback(<T>(
-    key: string,
-    fn: () => Promise<T>,
-    ttl = 60000 // 1 minute default TTL
-  ): Promise<T> => {
-    if (!enableCaching) {
-      return fn();
-    }
+  const withCache = useCallback(
+    <T>(
+      key: string,
+      fn: () => Promise<T>,
+      ttl = 60000 // 1 minute default TTL
+    ): Promise<T> => {
+      if (!enableCaching) {
+        return fn();
+      }
 
-    const cached = cacheRef.current.get(key) as { data: T; timestamp: number } | undefined;
-    const now = Date.now();
+      const cached = cacheRef.current.get(key) as { data: T; timestamp: number } | undefined;
+      const now = Date.now();
 
-    if (cached && (now - cached.timestamp) < ttl) {
-      return Promise.resolve(cached.data);
-    }
+      if (cached && now - cached.timestamp < ttl) {
+        return Promise.resolve(cached.data);
+      }
 
-    return fn().then(result => {
-      cacheRef.current.set(key, { data: result as unknown, timestamp: now });
-      return result;
-    });
-  }, [enableCaching]);
+      return fn().then(result => {
+        cacheRef.current.set(key, { data: result as unknown, timestamp: now });
+        return result;
+      });
+    },
+    [enableCaching]
+  );
 
   /**
    * Create timeout promise for Web3 calls
    */
-  const withTimeout = useCallback(<T>(
-    promise: Promise<T>,
-    timeoutMs = timeout
-  ): Promise<T> => {
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Operation timeout')), timeoutMs);
-    });
+  const withTimeout = useCallback(
+    <T>(promise: Promise<T>, timeoutMs = timeout): Promise<T> => {
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Operation timeout')), timeoutMs);
+      });
 
-    return Promise.race([promise, timeoutPromise]);
-  }, [timeout]);
+      return Promise.race([promise, timeoutPromise]);
+    },
+    [timeout]
+  );
 
   /**
    * Get network information
@@ -104,7 +100,10 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
       }
 
       return withCache('network-info', async () => {
-        const network = await withTimeout(provider.getNetwork()) as { chainId: number; name: string; };
+        const network = (await withTimeout(provider.getNetwork())) as {
+          chainId: number;
+          name: string;
+        };
 
         return {
           chainId: network.chainId,
@@ -121,205 +120,228 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
   /**
    * Get ETH balance for an address
    */
-  const getEthBalance = useCallback(async (address: Address): Promise<string> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const getEthBalance = useCallback(
+    async (address: Address): Promise<string> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!ethers.utils.isAddress(address)) {
-        throw new Error('Invalid address');
-      }
+        if (!ethers.utils.isAddress(address)) {
+          throw new Error('Invalid address');
+        }
 
-      return withCache(`eth-balance-${address}`, async () => {
-        const balance = await withTimeout(provider.getBalance(address)) as ethers.BigNumber;
-        return ethers.utils.formatEther(balance);
-      }, 30000); // 30 second TTL for balance
-    });
-  }, [provider, execute, withCache, withTimeout]);
+        return withCache(
+          `eth-balance-${address}`,
+          async () => {
+            const balance = (await withTimeout(provider.getBalance(address))) as ethers.BigNumber;
+            return ethers.utils.formatEther(balance);
+          },
+          30000
+        ); // 30 second TTL for balance
+      });
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Get token balance for an address
    */
-  const getTokenBalance = useCallback(async (
-    tokenAddress: Address,
-    holderAddress: Address
-  ): Promise<TokenBalance> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const getTokenBalance = useCallback(
+    async (tokenAddress: Address, holderAddress: Address): Promise<TokenBalance> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!ethers.utils.isAddress(tokenAddress) || !ethers.utils.isAddress(holderAddress)) {
-        throw new Error('Invalid address');
-      }
+        if (!ethers.utils.isAddress(tokenAddress) || !ethers.utils.isAddress(holderAddress)) {
+          throw new Error('Invalid address');
+        }
 
-      const cacheKey = `token-balance-${tokenAddress}-${holderAddress}`;
-      
-      return withCache(cacheKey, async () => {
-        const tokenContract = new ethers.Contract(
-          tokenAddress,
-          [
-            'function balanceOf(address) view returns (uint256)',
-            'function decimals() view returns (uint8)',
-            'function symbol() view returns (string)',
-            'function name() view returns (string)',
-          ],
-          provider
-        );
+        const cacheKey = `token-balance-${tokenAddress}-${holderAddress}`;
 
-        const [balance, decimals, symbol, name] = await Promise.all([
-          withTimeout(tokenContract.balanceOf(holderAddress)),
-          withTimeout(tokenContract.decimals()),
-          withTimeout(tokenContract.symbol()),
-          withTimeout(tokenContract.name()),
-        ]);
+        return withCache(
+          cacheKey,
+          async () => {
+            const tokenContract = new ethers.Contract(
+              tokenAddress,
+              [
+                'function balanceOf(address) view returns (uint256)',
+                'function decimals() view returns (uint8)',
+                'function symbol() view returns (string)',
+                'function name() view returns (string)',
+              ],
+              provider
+            );
 
-        const balanceTyped = balance as ethers.BigNumber;
-        const decimalsTyped = decimals as number;
-        const symbolTyped = symbol as string;
-        const nameTyped = name as string;
+            const [balance, decimals, symbol, name] = await Promise.all([
+              withTimeout(tokenContract.balanceOf(holderAddress)),
+              withTimeout(tokenContract.decimals()),
+              withTimeout(tokenContract.symbol()),
+              withTimeout(tokenContract.name()),
+            ]);
 
-        const formattedBalance = ethers.utils.formatUnits(balanceTyped, decimalsTyped);
+            const balanceTyped = balance as ethers.BigNumber;
+            const decimalsTyped = decimals as number;
+            const symbolTyped = symbol as string;
+            const nameTyped = name as string;
 
-        return {
-          token: {
-            address: tokenAddress,
-            symbol: symbolTyped,
-            name: nameTyped,
-            decimals: decimalsTyped,
+            const formattedBalance = ethers.utils.formatUnits(balanceTyped, decimalsTyped);
+
+            return {
+              token: {
+                address: tokenAddress,
+                symbol: symbolTyped,
+                name: nameTyped,
+                decimals: decimalsTyped,
+              },
+              balance: balanceTyped.toString(),
+              formattedBalance,
+            };
           },
-          balance: balanceTyped.toString(),
-          formattedBalance,
-        };
-      }, 30000); // 30 second TTL
-    });
-  }, [provider, execute, withCache, withTimeout]);
+          30000
+        ); // 30 second TTL
+      });
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Get token information
    */
-  const getTokenInfo = useCallback(async (tokenAddress: Address): Promise<TokenInfo> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const getTokenInfo = useCallback(
+    async (tokenAddress: Address): Promise<TokenInfo> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!ethers.utils.isAddress(tokenAddress)) {
-        throw new Error('Invalid token address');
-      }
+        if (!ethers.utils.isAddress(tokenAddress)) {
+          throw new Error('Invalid token address');
+        }
 
-      return withCache(`token-info-${tokenAddress}`, async () => {
-        const tokenContract = new ethers.Contract(
-          tokenAddress,
-          [
-            'function name() view returns (string)',
-            'function symbol() view returns (string)',
-            'function decimals() view returns (uint8)',
-            'function totalSupply() view returns (uint256)',
-          ],
-          provider
-        );
+        return withCache(`token-info-${tokenAddress}`, async () => {
+          const tokenContract = new ethers.Contract(
+            tokenAddress,
+            [
+              'function name() view returns (string)',
+              'function symbol() view returns (string)',
+              'function decimals() view returns (uint8)',
+              'function totalSupply() view returns (uint256)',
+            ],
+            provider
+          );
 
-        const [name, symbol, decimals, totalSupply] = await Promise.all([
-          withTimeout(tokenContract.name()),
-          withTimeout(tokenContract.symbol()),
-          withTimeout(tokenContract.decimals()),
-          withTimeout(tokenContract.totalSupply()),
-        ]);
+          const [name, symbol, decimals, totalSupply] = await Promise.all([
+            withTimeout(tokenContract.name()),
+            withTimeout(tokenContract.symbol()),
+            withTimeout(tokenContract.decimals()),
+            withTimeout(tokenContract.totalSupply()),
+          ]);
 
-        const nameTyped = name as string;
-        const symbolTyped = symbol as string;
-        const decimalsTyped = decimals as number;
-        const totalSupplyTyped = totalSupply as ethers.BigNumber;
+          const nameTyped = name as string;
+          const symbolTyped = symbol as string;
+          const decimalsTyped = decimals as number;
+          const totalSupplyTyped = totalSupply as ethers.BigNumber;
 
-        return {
-          address: tokenAddress,
-          name: nameTyped,
-          symbol: symbolTyped,
-          decimals: decimalsTyped,
-          totalSupply: ethers.utils.formatUnits(totalSupplyTyped, decimalsTyped),
-        };
+          return {
+            address: tokenAddress,
+            name: nameTyped,
+            symbol: symbolTyped,
+            decimals: decimalsTyped,
+            totalSupply: ethers.utils.formatUnits(totalSupplyTyped, decimalsTyped),
+          };
+        });
       });
-    });
-  }, [provider, execute, withCache, withTimeout]);
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Estimate gas for a transaction
    */
-  const estimateGas = useCallback(async (transaction: {
-    to: Address;
-    data?: string;
-    value?: string;
-    from?: Address;
-  }): Promise<GasEstimation> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const estimateGas = useCallback(
+    async (transaction: {
+      to: Address;
+      data?: string;
+      value?: string;
+      from?: Address;
+    }): Promise<GasEstimation> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      const [gasLimit, gasPrice, feeData] = await Promise.all([
-        withTimeout(provider.estimateGas(transaction)),
-        withTimeout(provider.getGasPrice()),
-        withTimeout(provider.getFeeData()).catch(() => null), // EIP-1559 support
-      ]);
+        const [gasLimit, gasPrice, feeData] = await Promise.all([
+          withTimeout(provider.estimateGas(transaction)),
+          withTimeout(provider.getGasPrice()),
+          withTimeout(provider.getFeeData()).catch(() => null), // EIP-1559 support
+        ]);
 
-      const gasLimitTyped = gasLimit as ethers.BigNumber;
-      const gasPriceTyped = gasPrice as ethers.BigNumber;
-      const feeDataTyped = feeData as { maxFeePerGas?: ethers.BigNumber; maxPriorityFeePerGas?: ethers.BigNumber } | null;
+        const gasLimitTyped = gasLimit as ethers.BigNumber;
+        const gasPriceTyped = gasPrice as ethers.BigNumber;
+        const feeDataTyped = feeData as {
+          maxFeePerGas?: ethers.BigNumber;
+          maxPriorityFeePerGas?: ethers.BigNumber;
+        } | null;
 
-      const estimatedCost = gasLimitTyped.mul(gasPriceTyped);
+        const estimatedCost = gasLimitTyped.mul(gasPriceTyped);
 
-      return {
-        gasLimit: gasLimitTyped.toString(),
-        gasPrice: gasPriceTyped.toString(),
-        estimatedCost: ethers.utils.formatEther(estimatedCost),
-        maxFeePerGas: feeDataTyped?.maxFeePerGas?.toString(),
-        maxPriorityFeePerGas: feeDataTyped?.maxPriorityFeePerGas?.toString(),
-      };
-    });
-  }, [provider, execute, withTimeout]);
+        return {
+          gasLimit: gasLimitTyped.toString(),
+          gasPrice: gasPriceTyped.toString(),
+          estimatedCost: ethers.utils.formatEther(estimatedCost),
+          maxFeePerGas: feeDataTyped?.maxFeePerGas?.toString(),
+          maxPriorityFeePerGas: feeDataTyped?.maxPriorityFeePerGas?.toString(),
+        };
+      });
+    },
+    [provider, execute, withTimeout]
+  );
 
   /**
    * Get transaction receipt
    */
-  const getTransactionReceipt = useCallback(async (hash: Hash) => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const getTransactionReceipt = useCallback(
+    async (hash: Hash) => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!hash.match(/^0x[a-fA-F0-9]{64}$/)) {
-        throw new Error('Invalid transaction hash');
-      }
+        if (!hash.match(/^0x[a-fA-F0-9]{64}$/)) {
+          throw new Error('Invalid transaction hash');
+        }
 
-      return withTimeout(provider.getTransactionReceipt(hash));
-    });
-  }, [provider, execute, withTimeout]);
+        return withTimeout(provider.getTransactionReceipt(hash));
+      });
+    },
+    [provider, execute, withTimeout]
+  );
 
   /**
    * Wait for transaction confirmation
    */
-  const waitForTransaction = useCallback(async (
-    hash: Hash,
-    confirmations = 1,
-    timeoutMs = 300000 // 5 minutes
-  ) => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const waitForTransaction = useCallback(
+    async (
+      hash: Hash,
+      confirmations = 1,
+      timeoutMs = 300000 // 5 minutes
+    ) => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!hash.match(/^0x[a-fA-F0-9]{64}$/)) {
-        throw new Error('Invalid transaction hash');
-      }
+        if (!hash.match(/^0x[a-fA-F0-9]{64}$/)) {
+          throw new Error('Invalid transaction hash');
+        }
 
-      return withTimeout(
-        provider.waitForTransaction(hash, confirmations),
-        timeoutMs
-      );
-    });
-  }, [provider, execute, withTimeout]);
+        return withTimeout(provider.waitForTransaction(hash, confirmations), timeoutMs);
+      });
+    },
+    [provider, execute, withTimeout]
+  );
 
   /**
    * Get current block number
@@ -330,68 +352,85 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
         throw new Error('Provider not available');
       }
 
-      return withCache('block-number', async () => {
-        return withTimeout(provider.getBlockNumber());
-      }, 10000); // 10 second TTL
+      return withCache(
+        'block-number',
+        async () => {
+          return withTimeout(provider.getBlockNumber());
+        },
+        10000
+      ); // 10 second TTL
     });
   }, [provider, execute, withCache, withTimeout]);
 
   /**
    * Get block information
    */
-  const getBlock = useCallback(async (blockNumber?: number) => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const getBlock = useCallback(
+    async (blockNumber?: number) => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      const blockTag = blockNumber || 'latest';
-      const cacheKey = `block-${blockTag}`;
+        const blockTag = blockNumber || 'latest';
+        const cacheKey = `block-${blockTag}`;
 
-      return withCache(cacheKey, async () => {
-        return withTimeout(provider.getBlock(blockTag));
-      }, blockNumber ? 60000 : 10000); // Cache specific blocks longer
-    });
-  }, [provider, execute, withCache, withTimeout]);
+        return withCache(
+          cacheKey,
+          async () => {
+            return withTimeout(provider.getBlock(blockTag));
+          },
+          blockNumber ? 60000 : 10000
+        ); // Cache specific blocks longer
+      });
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Resolve ENS name to address
    */
-  const resolveENS = useCallback(async (ensName: string): Promise<Address | null> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const resolveENS = useCallback(
+    async (ensName: string): Promise<Address | null> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!ensName.endsWith('.eth')) {
-        throw new Error('Invalid ENS name');
-      }
+        if (!ensName.endsWith('.eth')) {
+          throw new Error('Invalid ENS name');
+        }
 
-      return withCache(`ens-${ensName}`, async () => {
-        const address = await withTimeout(provider.resolveName(ensName));
-        return address as Address | null;
+        return withCache(`ens-${ensName}`, async () => {
+          const address = await withTimeout(provider.resolveName(ensName));
+          return address as Address | null;
+        });
       });
-    });
-  }, [provider, execute, withCache, withTimeout]);
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Reverse resolve address to ENS name
    */
-  const reverseResolveENS = useCallback(async (address: Address): Promise<string | null> => {
-    return execute(async () => {
-      if (!provider) {
-        throw new Error('Provider not available');
-      }
+  const reverseResolveENS = useCallback(
+    async (address: Address): Promise<string | null> => {
+      return execute(async () => {
+        if (!provider) {
+          throw new Error('Provider not available');
+        }
 
-      if (!ethers.utils.isAddress(address)) {
-        throw new Error('Invalid address');
-      }
+        if (!ethers.utils.isAddress(address)) {
+          throw new Error('Invalid address');
+        }
 
-      return withCache(`reverse-ens-${address}`, async () => {
-        return withTimeout(provider.lookupAddress(address));
+        return withCache(`reverse-ens-${address}`, async () => {
+          return withTimeout(provider.lookupAddress(address));
+        });
       });
-    });
-  }, [provider, execute, withCache, withTimeout]);
+    },
+    [provider, execute, withCache, withTimeout]
+  );
 
   /**
    * Format address for display
@@ -400,7 +439,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
     if (!address || !ethers.utils.isAddress(address)) {
       return '';
     }
-    
+
     return `${address.slice(0, length + 2)}...${address.slice(-4)}`;
   }, []);
 
@@ -418,7 +457,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
     if (!ethers.utils.isAddress(address)) {
       throw new Error('Invalid address');
     }
-    
+
     return ethers.utils.getAddress(address) as Address;
   }, []);
 
@@ -457,44 +496,47 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
   }, []);
 
   // Memoize network information
-  const currentNetwork = useMemo(() => ({
-    chainId,
-    name: chainMetadata?.name,
-    isConnected: !!provider,
-  }), [chainId, chainMetadata?.name, provider]);
+  const currentNetwork = useMemo(
+    () => ({
+      chainId,
+      name: chainMetadata?.name,
+      isConnected: !!provider,
+    }),
+    [chainId, chainMetadata?.name, provider]
+  );
 
   return {
     // Network utilities
     getNetworkInfo,
     currentNetwork,
-    
+
     // Balance utilities
     getEthBalance,
     getTokenBalance,
     getTokenInfo,
-    
+
     // Transaction utilities
     estimateGas,
     getTransactionReceipt,
     waitForTransaction,
-    
+
     // Block utilities
     getBlockNumber,
     getBlock,
-    
+
     // ENS utilities
     resolveENS,
     reverseResolveENS,
-    
+
     // Address utilities
     formatAddress,
     isValidAddress,
     toChecksumAddress,
-    
+
     // Cache utilities
     clearCache,
     getCacheStats,
-    
+
     // Actions
     abort,
   };

@@ -19,7 +19,7 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   persist(
-    (set) => ({
+    set => ({
       // Non-persistent state
       isLoading: false,
       error: null,
@@ -30,19 +30,19 @@ export const useAppStore = create<AppState>()(
       },
 
       // Actions
-      setLoading: (isLoading) => set({ isLoading }),
-      setError: (error) => set({ error }),
-      setTheme: (theme) =>
-        set((state) => ({
+      setLoading: isLoading => set({ isLoading }),
+      setError: error => set({ error }),
+      setTheme: theme =>
+        set(state => ({
           userPreferences: { ...state.userPreferences, theme },
         })),
     }),
     {
       name: 'app-storage', // unique name
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
+      partialize: state => ({
         userPreferences: state.userPreferences,
       }),
-    },
-  ),
+    }
+  )
 );

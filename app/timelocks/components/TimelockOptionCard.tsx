@@ -33,10 +33,14 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
         cursor-pointer hover:shadow-lg transition-shadow duration-200 /* Hover effect */
       `}
       onClick={onClick}
-      style={{ backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: 'center' }} // Background image styling
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }} // Background image styling
     >
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-sm opacity-80">{description}</p> {/* Description with lower opacity */}
+      <h3 className='text-xl font-semibold mb-2'>{title}</h3>
+      <p className='text-sm opacity-80'>{description}</p> {/* Description with lower opacity */}
     </div>
   );
 };

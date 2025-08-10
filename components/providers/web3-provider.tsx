@@ -1,21 +1,19 @@
-'use client'
+'use client';
 
-import { ThirdwebProvider } from "thirdweb/react";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactNode } from 'react'
+import { ThirdwebProvider } from 'thirdweb/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 interface Web3ProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function Web3Provider({ children }: Web3ProviderProps) {
   return (
     <ThirdwebProvider>
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThirdwebProvider>
-  )
+  );
 }
