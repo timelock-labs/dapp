@@ -2,9 +2,9 @@ import React from 'react';
 import type { BaseComponentProps } from '@/types';
 
 interface SectionHeaderProps extends BaseComponentProps {
-  title: string;
-  description: string;
-  icon?: React.ReactNode;
+	title: string;
+	description: string;
+	icon?: React.ReactNode;
 }
 
 /**
@@ -14,15 +14,15 @@ interface SectionHeaderProps extends BaseComponentProps {
  * @returns JSX.Element
  */
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, icon, className }) => {
-  return (
-    <div className={`mb-4 ${className || ''}`}>
-      <h2 className='text-lg font-semibold text-gray-900 flex items-center space-x-2'>
-        <span>{title}</span>
-        {icon && <span>{icon}</span>}
-      </h2>
-      <p className='text-sm text-gray-500 pt-2'>{description}</p>
-    </div>
-  );
+	return (
+		<div className={`mb-4 ${className || ''}`}>
+			<h2 className='text-lg font-semibold text-gray-900 flex items-center space-x-2'>
+				<span>{title}</span>
+				{icon && <span>{icon}</span>}
+			</h2>
+			<p className='text-sm text-gray-500 pt-2'>{description}</p>
+		</div>
+	);
 };
 
 export default SectionHeader;

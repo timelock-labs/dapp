@@ -2,10 +2,10 @@ import React from 'react';
 import type { BaseComponentProps } from '@/types';
 
 interface FeatureCardProps extends BaseComponentProps {
-  title: string;
-  description: string;
-  icon?: React.ReactNode;
-  link?: string;
+	title: string;
+	description: string;
+	icon?: React.ReactNode;
+	link?: string;
 }
 
 /**
@@ -15,36 +15,33 @@ interface FeatureCardProps extends BaseComponentProps {
  * @returns JSX.Element
  */
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, link, className }) => {
-  return (
-    <div
-      className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer shadow-xs ${className || ''}`}
-    >
-      <div className='flex justify-between items-center w-full mb-4'>
-        {/* Placeholder for icon, replace with actual icon components if available */}
-        <div className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600'>
-          {icon || 'Icon'} {/* Fallback text if no icon prop */}
-        </div>
-        <a href={link} className='text-gray-400 hover:text-blue-500'>
-          <svg
-            className='w-5 h-5'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-            xmlns='http://www.w3.org/2000/svg'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
-            ></path>
-          </svg>
-        </a>
-      </div>
-      <h4 className='text-base font-semibold text-gray-800 mb-1'>{title}</h4>
-      <p className='text-gray-600 text-sm'>{description}</p>
-    </div>
-  );
+	return (
+		<div
+			className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer shadow-xs ${className || ''}`}>
+			<div className='flex justify-between items-center w-full mb-4'>
+				{/* Placeholder for icon, replace with actual icon components if available */}
+				<div className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600'>
+					{icon || 'Icon'} {/* Fallback text if no icon prop */}
+				</div>
+				<a href={link} className='text-gray-400 hover:text-blue-500'>
+					<svg
+						className='w-5 h-5'
+						fill='none'
+						stroke='currentColor'
+						viewBox='0 0 24 24'
+						xmlns='http://www.w3.org/2000/svg'>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							strokeWidth='2'
+							d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'></path>
+					</svg>
+				</a>
+			</div>
+			<h4 className='text-base font-semibold text-gray-800 mb-1'>{title}</h4>
+			<p className='text-gray-600 text-sm'>{description}</p>
+		</div>
+	);
 };
 
 export default FeatureCard;

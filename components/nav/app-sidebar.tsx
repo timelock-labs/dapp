@@ -5,11 +5,11 @@ import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House } from 'l
 import { NavMain } from '@/components/nav/nav-main';
 import { NavUser } from '@/components/nav/nav-user';
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
+	SidebarRail,
 } from '@/components/ui/sidebar';
 import LanguageSwitcher from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
@@ -22,80 +22,80 @@ import { useTranslations } from 'next-intl';
  * @returns JSX.Element
  */
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const t = useTranslations();
-  const sidebarData = {
-    navMain: [
-      {
-        title: t('sidebar.nav.home'),
-        url: 'home',
-        icon: House,
-      },
-      {
-        title: t('sidebar.nav.transactions'),
-        url: 'transactions',
-        icon: ListTodo,
-      },
-      {
-        title: t('sidebar.nav.timelock_contracts'),
-        url: 'timelocks',
-        icon: Clock,
-      },
-      {
-        title: t('sidebar.nav.abi_library'),
-        url: 'abi-lib',
-        icon: FileCode,
-      },
-      {
-        title: t('sidebar.nav.notifications'),
-        url: 'notify',
-        icon: BellDot,
-      },
-      {
-        title: t('sidebar.nav.ecosystem'),
-        url: 'ecosystem',
-        icon: Box,
-      },
-    ],
-    projects: [
-      {
-        name: t('sidebar.projects.multisig_wallet'),
-        url: '#',
-        icon: Shield,
-      },
-      {
-        name: t('sidebar.projects.token_vesting'),
-        url: '#',
-        icon: Clock,
-      },
-      {
-        name: t('sidebar.projects.governance'),
-        url: '#',
-        icon: Frame,
-      },
-    ],
-  };
+	const t = useTranslations();
+	const sidebarData = {
+		navMain: [
+			{
+				title: t('sidebar.nav.home'),
+				url: 'home',
+				icon: House,
+			},
+			{
+				title: t('sidebar.nav.transactions'),
+				url: 'transactions',
+				icon: ListTodo,
+			},
+			{
+				title: t('sidebar.nav.timelock_contracts'),
+				url: 'timelocks',
+				icon: Clock,
+			},
+			{
+				title: t('sidebar.nav.abi_library'),
+				url: 'abi-lib',
+				icon: FileCode,
+			},
+			{
+				title: t('sidebar.nav.notifications'),
+				url: 'notify',
+				icon: BellDot,
+			},
+			{
+				title: t('sidebar.nav.ecosystem'),
+				url: 'ecosystem',
+				icon: Box,
+			},
+		],
+		projects: [
+			{
+				name: t('sidebar.projects.multisig_wallet'),
+				url: '#',
+				icon: Shield,
+			},
+			{
+				name: t('sidebar.projects.token_vesting'),
+				url: '#',
+				icon: Clock,
+			},
+			{
+				name: t('sidebar.projects.governance'),
+				url: '#',
+				icon: Frame,
+			},
+		],
+	};
 
-  return (
-    <Sidebar collapsible='icon' {...props}>
-      <SidebarHeader>
-        <div className='logo-font font-xl font-bold text-xl'>{t('sidebar.logo')}</div>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={sidebarData.navMain} />
-      </SidebarContent>
-      <div className='flex flex-col gap-8 justify-center items-center'>
-        <LanguageSwitcher />
-        <SidebarFooter>
-          <NavUser
-            user={{
-              name: 'support@timelock.com',
-              email: 'support@timelock.com',
-              avatar: '/avatars/shadcn.jpg',
-            }}
-          />
-        </SidebarFooter>
-      </div>
-      <SidebarRail />
-    </Sidebar>
-  );
+	return (
+		<Sidebar collapsible='icon' {...props}>
+			<SidebarHeader>
+				<div className='logo-font font-xl font-bold text-xl'>{t('sidebar.logo')}</div>
+			</SidebarHeader>
+			<SidebarContent>
+				<NavMain items={sidebarData.navMain} />
+			</SidebarContent>
+			<div className='flex flex-col gap-8 justify-center items-center'>
+				<LanguageSwitcher />
+				<SidebarFooter>
+					<NavUser
+						user={{
+							name: 'support@timelock.com',
+							email: 'support@timelock.com',
+							avatar: '/avatars/shadcn.jpg',
+						}}
+					/>
+				</SidebarFooter>
+			</div>
+			<SidebarRail />
+		</Sidebar>
+	);
 }

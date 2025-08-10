@@ -17,10 +17,10 @@ const MOBILE_BREAKPOINT = 768;
  * Configuration for mobile detection
  */
 interface MobileDetectionConfig {
-  /** Custom breakpoint in pixels */
-  breakpoint?: number;
-  /** Whether to use server-side safe detection */
-  serverSafe?: boolean;
+	/** Custom breakpoint in pixels */
+	breakpoint?: number;
+	/** Whether to use server-side safe detection */
+	serverSafe?: boolean;
 }
 
 /**
@@ -30,30 +30,30 @@ interface MobileDetectionConfig {
  * @returns Boolean indicating if the current viewport is mobile
  */
 export function useIsMobile(config: MobileDetectionConfig = {}): boolean {
-  const { breakpoint = MOBILE_BREAKPOINT } = config;
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+	const { breakpoint = MOBILE_BREAKPOINT } = config;
+	const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
 
-    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+		const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
 
-    const handleChange = () => {
-      setIsMobile(window.innerWidth < breakpoint);
-    };
+		const handleChange = () => {
+			setIsMobile(window.innerWidth < breakpoint);
+		};
 
-    // Set initial value
-    handleChange();
+		// Set initial value
+		handleChange();
 
-    // Listen for changes
-    mediaQuery.addEventListener('change', handleChange);
+		// Listen for changes
+		mediaQuery.addEventListener('change', handleChange);
 
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, [breakpoint]);
+		return () => {
+			mediaQuery.removeEventListener('change', handleChange);
+		};
+	}, [breakpoint]);
 
-  return !!isMobile;
+	return !!isMobile;
 }
 
 /**
@@ -62,7 +62,7 @@ export function useIsMobile(config: MobileDetectionConfig = {}): boolean {
  * @returns Boolean indicating if the current viewport is tablet size
  */
 export function useIsTablet(): boolean {
-  return useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
+	return useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
 }
 
 /**
@@ -71,7 +71,7 @@ export function useIsTablet(): boolean {
  * @returns Boolean indicating if the current viewport is desktop size
  */
 export function useIsDesktop(): boolean {
-  return useMediaQuery('(min-width: 1024px)');
+	return useMediaQuery('(min-width: 1024px)');
 }
 
 /**
@@ -80,16 +80,19 @@ export function useIsDesktop(): boolean {
  * @returns Object containing device type information
  */
 export function useDeviceType() {
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  const isDesktop = useIsDesktop();
+	const isMobile = useIsMobile();
+	const isTablet = useIsTablet();
+	const isDesktop = useIsDesktop();
 
-  return {
-    isMobile,
-    isTablet,
-    isDesktop,
-    deviceType: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
-  };
+	return {
+		isMobile,
+		isTablet,
+		isDesktop,
+		deviceType:
+			isMobile ? 'mobile'
+			: isTablet ? 'tablet'
+			: 'desktop',
+	};
 }
 
 /**
@@ -99,11 +102,11 @@ export function useDeviceType() {
  * @returns Value for the current device type
  */
 export function useResponsiveValue<T>(values: { mobile: T; tablet?: T; desktop: T }): T {
-  const { isMobile, isTablet } = useDeviceType();
+	const { isMobile, isTablet } = useDeviceType();
 
-  if (isMobile) return values.mobile;
-  if (isTablet && values.tablet !== undefined) return values.tablet;
-  return values.desktop;
+	if (isMobile) return values.mobile;
+	if (isTablet && values.tablet !== undefined) return values.tablet;
+	return values.desktop;
 }
 
 /**
@@ -112,16 +115,16 @@ export function useResponsiveValue<T>(values: { mobile: T; tablet?: T; desktop: 
  * @returns Boolean indicating if the device supports touch
  */
 export function useIsTouchDevice(): boolean {
-  const [isTouch, setIsTouch] = useState(false);
+	const [isTouch, setIsTouch] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
 
-    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    setIsTouch(hasTouch);
-  }, []);
+		const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+		setIsTouch(hasTouch);
+	}, []);
 
-  return isTouch;
+	return isTouch;
 }
 
 // Re-export for backward compatibility

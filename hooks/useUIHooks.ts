@@ -16,34 +16,34 @@ import type { VoidCallback, ValueCallback } from '@/types';
  * @returns Object with modal state and control methods
  */
 export function useModal(initialOpen = false) {
-  const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
-  const [data, setData] = useState<any>(null);
+	const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
+	const [data, setData] = useState<any>(null);
 
-  const open = setTrue;
-  const close = setFalse;
+	const open = setTrue;
+	const close = setFalse;
 
-  const openWithData = useCallback(
-    (modalData?: any) => {
-      setData(modalData || null);
-      open();
-    },
-    [open]
-  );
+	const openWithData = useCallback(
+		(modalData?: any) => {
+			setData(modalData || null);
+			open();
+		},
+		[open]
+	);
 
-  const closeAndClear = useCallback(() => {
-    close();
-    setData(null);
-  }, [close]);
+	const closeAndClear = useCallback(() => {
+		close();
+		setData(null);
+	}, [close]);
 
-  return {
-    isOpen,
-    data,
-    open,
-    close,
-    toggle,
-    openWithData,
-    closeAndClear,
-  };
+	return {
+		isOpen,
+		data,
+		open,
+		close,
+		toggle,
+		openWithData,
+		closeAndClear,
+	};
 }
 
 /**
@@ -53,21 +53,21 @@ export function useModal(initialOpen = false) {
  * @returns Object with dropdown state and control methods
  */
 export function useDropdown(initialOpen = false) {
-  const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
-  const ref = useRef<HTMLDivElement>(null);
+	const [isOpen, toggle, setTrue, setFalse] = useToggle(initialOpen);
+	const ref = useRef<HTMLDivElement>(null);
 
-  const open = setTrue;
-  const close = setFalse;
+	const open = setTrue;
+	const close = setFalse;
 
-  useClickOutside(ref, close);
+	useClickOutside(ref, close);
 
-  return {
-    isOpen,
-    open,
-    close,
-    toggle,
-    ref,
-  };
+	return {
+		isOpen,
+		open,
+		close,
+		toggle,
+		ref,
+	};
 }
 
 /**
@@ -77,17 +77,17 @@ export function useDropdown(initialOpen = false) {
  * @returns Object with accordion state and control methods
  */
 export function useAccordion(initialExpanded = false) {
-  const [isExpanded, toggle, setTrue, setFalse] = useToggle(initialExpanded);
+	const [isExpanded, toggle, setTrue, setFalse] = useToggle(initialExpanded);
 
-  const expand = setTrue;
-  const collapse = setFalse;
+	const expand = setTrue;
+	const collapse = setFalse;
 
-  return {
-    isExpanded,
-    expand,
-    collapse,
-    toggle,
-  };
+	return {
+		isExpanded,
+		expand,
+		collapse,
+		toggle,
+	};
 }
 
 /**
@@ -98,49 +98,49 @@ export function useAccordion(initialExpanded = false) {
  * @returns Object with tabs state and control methods
  */
 export function useTabs<T extends string>(initialTab: T, tabs: T[]) {
-  const [activeTab, setActiveTab] = useState<T>(initialTab);
+	const [activeTab, setActiveTab] = useState<T>(initialTab);
 
-  const isActive = useCallback((tab: T) => activeTab === tab, [activeTab]);
+	const isActive = useCallback((tab: T) => activeTab === tab, [activeTab]);
 
-  const setTab = useCallback(
-    (tab: T) => {
-      if (tabs.includes(tab)) {
-        setActiveTab(tab);
-      }
-    },
-    [tabs]
-  );
+	const setTab = useCallback(
+		(tab: T) => {
+			if (tabs.includes(tab)) {
+				setActiveTab(tab);
+			}
+		},
+		[tabs]
+	);
 
-  const nextTab = useCallback(() => {
-    const currentIndex = tabs.indexOf(activeTab);
-    if (currentIndex !== -1 && tabs.length > 0) {
-      const nextIndex = (currentIndex + 1) % tabs.length;
-      const nextTab = tabs[nextIndex];
-      if (nextTab) {
-        setActiveTab(nextTab);
-      }
-    }
-  }, [activeTab, tabs]);
+	const nextTab = useCallback(() => {
+		const currentIndex = tabs.indexOf(activeTab);
+		if (currentIndex !== -1 && tabs.length > 0) {
+			const nextIndex = (currentIndex + 1) % tabs.length;
+			const nextTab = tabs[nextIndex];
+			if (nextTab) {
+				setActiveTab(nextTab);
+			}
+		}
+	}, [activeTab, tabs]);
 
-  const prevTab = useCallback(() => {
-    const currentIndex = tabs.indexOf(activeTab);
-    if (currentIndex !== -1 && tabs.length > 0) {
-      const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
-      const prevTab = tabs[prevIndex];
-      if (prevTab) {
-        setActiveTab(prevTab);
-      }
-    }
-  }, [activeTab, tabs]);
+	const prevTab = useCallback(() => {
+		const currentIndex = tabs.indexOf(activeTab);
+		if (currentIndex !== -1 && tabs.length > 0) {
+			const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+			const prevTab = tabs[prevIndex];
+			if (prevTab) {
+				setActiveTab(prevTab);
+			}
+		}
+	}, [activeTab, tabs]);
 
-  return {
-    activeTab,
-    setTab,
-    isActive,
-    nextTab,
-    prevTab,
-    tabs,
-  };
+	return {
+		activeTab,
+		setTab,
+		isActive,
+		nextTab,
+		prevTab,
+		tabs,
+	};
 }
 
 /**
@@ -151,65 +151,65 @@ export function useTabs<T extends string>(initialTab: T, tabs: T[]) {
  * @returns Object with stepper state and control methods
  */
 export function useStepper(totalSteps: number, initialStep = 0) {
-  const [currentStep, setCurrentStep] = useState(initialStep);
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+	const [currentStep, setCurrentStep] = useState(initialStep);
+	const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
-  const isFirstStep = currentStep === 0;
-  const isLastStep = currentStep === totalSteps - 1;
-  const progress = ((currentStep + 1) / totalSteps) * 100;
+	const isFirstStep = currentStep === 0;
+	const isLastStep = currentStep === totalSteps - 1;
+	const progress = ((currentStep + 1) / totalSteps) * 100;
 
-  const goToStep = useCallback(
-    (step: number) => {
-      if (step >= 0 && step < totalSteps) {
-        setCurrentStep(step);
-      }
-    },
-    [totalSteps]
-  );
+	const goToStep = useCallback(
+		(step: number) => {
+			if (step >= 0 && step < totalSteps) {
+				setCurrentStep(step);
+			}
+		},
+		[totalSteps]
+	);
 
-  const nextStep = useCallback(() => {
-    if (!isLastStep) {
-      setCompletedSteps(prev => new Set([...prev, currentStep]));
-      setCurrentStep(prev => prev + 1);
-    }
-  }, [isLastStep, currentStep]);
+	const nextStep = useCallback(() => {
+		if (!isLastStep) {
+			setCompletedSteps(prev => new Set([...prev, currentStep]));
+			setCurrentStep(prev => prev + 1);
+		}
+	}, [isLastStep, currentStep]);
 
-  const prevStep = useCallback(() => {
-    if (!isFirstStep) {
-      setCurrentStep(prev => prev - 1);
-    }
-  }, [isFirstStep]);
+	const prevStep = useCallback(() => {
+		if (!isFirstStep) {
+			setCurrentStep(prev => prev - 1);
+		}
+	}, [isFirstStep]);
 
-  const markStepCompleted = useCallback((step: number) => {
-    setCompletedSteps(prev => new Set([...prev, step]));
-  }, []);
+	const markStepCompleted = useCallback((step: number) => {
+		setCompletedSteps(prev => new Set([...prev, step]));
+	}, []);
 
-  const isStepCompleted = useCallback(
-    (step: number) => {
-      return completedSteps.has(step);
-    },
-    [completedSteps]
-  );
+	const isStepCompleted = useCallback(
+		(step: number) => {
+			return completedSteps.has(step);
+		},
+		[completedSteps]
+	);
 
-  const reset = useCallback(() => {
-    setCurrentStep(initialStep);
-    setCompletedSteps(new Set());
-  }, [initialStep]);
+	const reset = useCallback(() => {
+		setCurrentStep(initialStep);
+		setCompletedSteps(new Set());
+	}, [initialStep]);
 
-  return {
-    currentStep,
-    totalSteps,
-    isFirstStep,
-    isLastStep,
-    progress,
-    completedSteps: Array.from(completedSteps),
-    goToStep,
-    nextStep,
-    prevStep,
-    markStepCompleted,
-    isStepCompleted,
-    reset,
-  };
+	return {
+		currentStep,
+		totalSteps,
+		isFirstStep,
+		isLastStep,
+		progress,
+		completedSteps: Array.from(completedSteps),
+		goToStep,
+		nextStep,
+		prevStep,
+		markStepCompleted,
+		isStepCompleted,
+		reset,
+	};
 }
 
 /**
@@ -218,47 +218,51 @@ export function useStepper(totalSteps: number, initialStep = 0) {
  * @returns Object with toast state and control methods
  */
 export function useToast() {
-  const [toasts, setToasts] = useState<
-    Array<{
-      id: string;
-      message: string;
-      type: 'success' | 'error' | 'warning' | 'info';
-      duration?: number;
-    }>
-  >([]);
+	const [toasts, setToasts] = useState<
+		Array<{
+			id: string;
+			message: string;
+			type: 'success' | 'error' | 'warning' | 'info';
+			duration?: number;
+		}>
+	>([]);
 
-  const addToast = useCallback(
-    (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 5000) => {
-      const id = Math.random().toString(36).substr(2, 9);
-      const toast = { id, message, type, duration };
+	const addToast = useCallback(
+		(
+			message: string,
+			type: 'success' | 'error' | 'warning' | 'info' = 'info',
+			duration = 5000
+		) => {
+			const id = Math.random().toString(36).substr(2, 9);
+			const toast = { id, message, type, duration };
 
-      setToasts(prev => [...prev, toast]);
+			setToasts(prev => [...prev, toast]);
 
-      if (duration > 0) {
-        setTimeout(() => {
-          removeToast(id);
-        }, duration);
-      }
+			if (duration > 0) {
+				setTimeout(() => {
+					removeToast(id);
+				}, duration);
+			}
 
-      return id;
-    },
-    []
-  );
+			return id;
+		},
+		[]
+	);
 
-  const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
+	const removeToast = useCallback((id: string) => {
+		setToasts(prev => prev.filter(toast => toast.id !== id));
+	}, []);
 
-  const clearToasts = useCallback(() => {
-    setToasts([]);
-  }, []);
+	const clearToasts = useCallback(() => {
+		setToasts([]);
+	}, []);
 
-  return {
-    toasts,
-    addToast,
-    removeToast,
-    clearToasts,
-  };
+	return {
+		toasts,
+		addToast,
+		removeToast,
+		clearToasts,
+	};
 }
 
 /**
@@ -267,43 +271,43 @@ export function useToast() {
  * @returns Object with loading state and control methods
  */
 export function useLoadingStates() {
-  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+	const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
 
-  const setLoading = useCallback((key: string, isLoading: boolean) => {
-    setLoadingStates(prev => ({
-      ...prev,
-      [key]: isLoading,
-    }));
-  }, []);
+	const setLoading = useCallback((key: string, isLoading: boolean) => {
+		setLoadingStates(prev => ({
+			...prev,
+			[key]: isLoading,
+		}));
+	}, []);
 
-  const isLoading = useCallback(
-    (key: string) => {
-      return Boolean(loadingStates[key]);
-    },
-    [loadingStates]
-  );
+	const isLoading = useCallback(
+		(key: string) => {
+			return Boolean(loadingStates[key]);
+		},
+		[loadingStates]
+	);
 
-  const isAnyLoading = Object.values(loadingStates).some(Boolean);
+	const isAnyLoading = Object.values(loadingStates).some(Boolean);
 
-  const clearLoading = useCallback((key?: string) => {
-    if (key) {
-      setLoadingStates(prev => {
-        const newState = { ...prev };
-        delete newState[key];
-        return newState;
-      });
-    } else {
-      setLoadingStates({});
-    }
-  }, []);
+	const clearLoading = useCallback((key?: string) => {
+		if (key) {
+			setLoadingStates(prev => {
+				const newState = { ...prev };
+				delete newState[key];
+				return newState;
+			});
+		} else {
+			setLoadingStates({});
+		}
+	}, []);
 
-  return {
-    loadingStates,
-    setLoading,
-    isLoading,
-    isAnyLoading,
-    clearLoading,
-  };
+	return {
+		loadingStates,
+		setLoading,
+		isLoading,
+		isAnyLoading,
+		clearLoading,
+	};
 }
 
 /**
@@ -314,71 +318,71 @@ export function useLoadingStates() {
  * @returns Object with selection state and control methods
  */
 export function useSelection<T>(mode: 'single' | 'multiple' = 'single', initialSelected: T[] = []) {
-  const [selected, setSelected] = useState<T[]>(initialSelected);
+	const [selected, setSelected] = useState<T[]>(initialSelected);
 
-  const isSelected = useCallback(
-    (item: T) => {
-      return selected.includes(item);
-    },
-    [selected]
-  );
+	const isSelected = useCallback(
+		(item: T) => {
+			return selected.includes(item);
+		},
+		[selected]
+	);
 
-  const select = useCallback(
-    (item: T) => {
-      setSelected(prev => {
-        if (mode === 'single') {
-          return [item];
-        } else {
-          return prev.includes(item) ? prev : [...prev, item];
-        }
-      });
-    },
-    [mode]
-  );
+	const select = useCallback(
+		(item: T) => {
+			setSelected(prev => {
+				if (mode === 'single') {
+					return [item];
+				} else {
+					return prev.includes(item) ? prev : [...prev, item];
+				}
+			});
+		},
+		[mode]
+	);
 
-  const deselect = useCallback((item: T) => {
-    setSelected(prev => prev.filter(i => i !== item));
-  }, []);
+	const deselect = useCallback((item: T) => {
+		setSelected(prev => prev.filter(i => i !== item));
+	}, []);
 
-  const toggle = useCallback(
-    (item: T) => {
-      if (isSelected(item)) {
-        deselect(item);
-      } else {
-        select(item);
-      }
-    },
-    [isSelected, select, deselect]
-  );
+	const toggle = useCallback(
+		(item: T) => {
+			if (isSelected(item)) {
+				deselect(item);
+			} else {
+				select(item);
+			}
+		},
+		[isSelected, select, deselect]
+	);
 
-  const selectAll = useCallback(
-    (items: T[]) => {
-      if (mode === 'multiple') {
-        setSelected(items);
-      }
-    },
-    [mode]
-  );
+	const selectAll = useCallback(
+		(items: T[]) => {
+			if (mode === 'multiple') {
+				setSelected(items);
+			}
+		},
+		[mode]
+	);
 
-  const deselectAll = useCallback(() => {
-    setSelected([]);
-  }, []);
+	const deselectAll = useCallback(() => {
+		setSelected([]);
+	}, []);
 
-  const selectedCount = selected.length;
-  const hasSelection = selectedCount > 0;
+	const selectedCount = selected.length;
+	const hasSelection = selectedCount > 0;
 
-  return {
-    selected,
-    selectedCount,
-    hasSelection,
-    isSelected,
-    select,
-    deselect,
-    toggle,
-    selectAll,
-    deselectAll,
-    clear: deselectAll,
-  };
+	return {
+		selected,
+		selectedCount,
+		hasSelection,
+		isSelected,
+		select,
+		deselect,
+		toggle,
+		selectAll,
+		deselectAll,
+		clear: deselectAll,
+	};
 }
 
 /**
@@ -387,33 +391,33 @@ export function useSelection<T>(mode: 'single' | 'multiple' = 'single', initialS
  * @returns Object with drag and drop state and control methods
  */
 export function useDragAndDrop<T>() {
-  const [isDragging, setIsDragging] = useState(false);
-  const [draggedItem, setDraggedItem] = useState<T | null>(null);
-  const [dropTarget, setDropTarget] = useState<string | null>(null);
+	const [isDragging, setIsDragging] = useState(false);
+	const [draggedItem, setDraggedItem] = useState<T | null>(null);
+	const [dropTarget, setDropTarget] = useState<string | null>(null);
 
-  const startDrag = useCallback((item: T) => {
-    setIsDragging(true);
-    setDraggedItem(item);
-  }, []);
+	const startDrag = useCallback((item: T) => {
+		setIsDragging(true);
+		setDraggedItem(item);
+	}, []);
 
-  const endDrag = useCallback(() => {
-    setIsDragging(false);
-    setDraggedItem(null);
-    setDropTarget(null);
-  }, []);
+	const endDrag = useCallback(() => {
+		setIsDragging(false);
+		setDraggedItem(null);
+		setDropTarget(null);
+	}, []);
 
-  const setTarget = useCallback((target: string | null) => {
-    setDropTarget(target);
-  }, []);
+	const setTarget = useCallback((target: string | null) => {
+		setDropTarget(target);
+	}, []);
 
-  return {
-    isDragging,
-    draggedItem,
-    dropTarget,
-    startDrag,
-    endDrag,
-    setTarget,
-  };
+	return {
+		isDragging,
+		draggedItem,
+		dropTarget,
+		startDrag,
+		endDrag,
+		setTarget,
+	};
 }
 
 /**
@@ -423,55 +427,55 @@ export function useDragAndDrop<T>() {
  * @returns Ref to attach to the container element
  */
 export function useFocusTrap(isActive: boolean) {
-  const containerRef = useRef<HTMLElement>(null);
+	const containerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (!isActive || !containerRef.current) return;
+	useEffect(() => {
+		if (!isActive || !containerRef.current) return;
 
-    const container = containerRef.current;
-    const focusableElements = container.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+		const container = containerRef.current;
+		const focusableElements = container.querySelectorAll(
+			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+		);
 
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+		const firstElement = focusableElements[0] as HTMLElement;
+		const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+		const handleTabKey = (e: KeyboardEvent) => {
+			if (e.key !== 'Tab') return;
 
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
+			if (e.shiftKey) {
+				if (document.activeElement === firstElement) {
+					e.preventDefault();
+					lastElement?.focus();
+				}
+			} else {
+				if (document.activeElement === lastElement) {
+					e.preventDefault();
+					firstElement?.focus();
+				}
+			}
+		};
 
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        // This would typically close the modal/dropdown
-        // The parent component should handle this
-      }
-    };
+		const handleEscapeKey = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				// This would typically close the modal/dropdown
+				// The parent component should handle this
+			}
+		};
 
-    // Focus first element when trap becomes active
-    firstElement?.focus();
+		// Focus first element when trap becomes active
+		firstElement?.focus();
 
-    document.addEventListener('keydown', handleTabKey);
-    document.addEventListener('keydown', handleEscapeKey);
+		document.addEventListener('keydown', handleTabKey);
+		document.addEventListener('keydown', handleEscapeKey);
 
-    return () => {
-      document.removeEventListener('keydown', handleTabKey);
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isActive]);
+		return () => {
+			document.removeEventListener('keydown', handleTabKey);
+			document.removeEventListener('keydown', handleEscapeKey);
+		};
+	}, [isActive]);
 
-  return containerRef;
+	return containerRef;
 }
 
 /**
@@ -481,41 +485,41 @@ export function useFocusTrap(isActive: boolean) {
  * @returns Object with hover state and event handlers
  */
 export function useHover(delay = 0) {
-  const [isHovered, setIsHovered] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const [isHovered, setIsHovered] = useState(false);
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const onMouseEnter = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+	const onMouseEnter = useCallback(() => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
 
-    if (delay > 0) {
-      timeoutRef.current = setTimeout(() => {
-        setIsHovered(true);
-      }, delay);
-    } else {
-      setIsHovered(true);
-    }
-  }, [delay]);
+		if (delay > 0) {
+			timeoutRef.current = setTimeout(() => {
+				setIsHovered(true);
+			}, delay);
+		} else {
+			setIsHovered(true);
+		}
+	}, [delay]);
 
-  const onMouseLeave = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setIsHovered(false);
-  }, []);
+	const onMouseLeave = useCallback(() => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+		setIsHovered(false);
+	}, []);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+		};
+	}, []);
 
-  return {
-    isHovered,
-    onMouseEnter,
-    onMouseLeave,
-  };
+	return {
+		isHovered,
+		onMouseEnter,
+		onMouseLeave,
+	};
 }

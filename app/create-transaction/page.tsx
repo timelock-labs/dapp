@@ -16,241 +16,238 @@ import { Interface } from 'ethers/lib/utils';
 import generatePreview from './utils/generatePreview';
 import { ethers } from 'ethers';
 const TransactionEncoderPage: React.FC = () => {
-  const router = useRouter();
-  const t = useTranslations('CreateTransaction');
-  const { sendTransaction } = useTimelockTransaction();
-  const { address } = useActiveAccount() || {};
-  const { id: chainId, name: chainName } = useActiveWalletChain() || {};
-  const { allTimelocks } = useAuthStore();
+	const router = useRouter();
+	const t = useTranslations('CreateTransaction');
+	const { sendTransaction } = useTimelockTransaction();
+	const { address } = useActiveAccount() || {};
+	const { id: chainId, name: chainName } = useActiveWalletChain() || {};
+	const { allTimelocks } = useAuthStore();
 
-  // Form States
-  const [timelockType, setTimelockType] = useState('');
-  const [timelockMethod, setTimelockMethod] = useState('');
-  const [timelockAddress, setTimelockAddress] = useState('');
-  const [target, setTarget] = useState('');
-  const [value, setValue] = useState('');
-  const [abiValue, setAbiValue] = useState('');
-  const [functionValue, setFunctionValue] = useState('');
-  const [timeValue, setTimeValue] = useState(0);
-  const [argumentValues, setArgumentValues] = useState<string[]>([]);
-  const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [targetCalldata, setTargetCallData] = useState('');
+	// Form States
+	const [timelockType, setTimelockType] = useState('');
+	const [timelockMethod, setTimelockMethod] = useState('');
+	const [timelockAddress, setTimelockAddress] = useState('');
+	const [target, setTarget] = useState('');
+	const [value, setValue] = useState('');
+	const [abiValue, setAbiValue] = useState('');
+	const [functionValue, setFunctionValue] = useState('');
+	const [timeValue, setTimeValue] = useState(0);
+	const [argumentValues, setArgumentValues] = useState<string[]>([]);
+	const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [targetCalldata, setTargetCallData] = useState('');
 
-  const [timelockCalldata, setTimelockCalldata] = useState('');
+	const [timelockCalldata, setTimelockCalldata] = useState('');
 
-  useEffect(() => {
-    if (!timeValue) {
-      const now = new Date();
-      now.setDate(now.getDate() + 2);
-      now.setHours(14, 0, 0, 0);
-      const timestamp = Math.floor(now.getTime() / 1000);
-      setTimeValue(timestamp);
-    }
-  }, [timeValue]);
+	useEffect(() => {
+		if (!timeValue) {
+			const now = new Date();
+			now.setDate(now.getDate() + 2);
+			now.setHours(14, 0, 0, 0);
+			const timestamp = Math.floor(now.getTime() / 1000);
+			setTimeValue(timestamp);
+		}
+	}, [timeValue]);
 
-  useEffect(() => {
-    setTimelockCalldata('');
-    if (targetCalldata) {
-      try {
-        const iface = new Interface([`function ${timelockMethod}`]);
-        const functionName = timelockMethod.split('(')[0];
-        if (!functionName) {
-          throw new Error('Invalid timelock method');
-        }
-        const calldata = iface.encodeFunctionData(functionName, [
-          target,
-          value,
-          functionValue,
-          targetCalldata,
-          String(timeValue),
-        ]);
-        setTimelockCalldata(calldata);
-      } catch (err) {
-        setTargetCallData('');
-        console.error('Failed to encode calldata:', err);
-      }
-    }
-  }, [targetCalldata, value, timelockMethod, timeValue, functionValue, target]);
+	useEffect(() => {
+		setTimelockCalldata('');
+		if (targetCalldata) {
+			try {
+				const iface = new Interface([`function ${timelockMethod}`]);
+				const functionName = timelockMethod.split('(')[0];
+				if (!functionName) {
+					throw new Error('Invalid timelock method');
+				}
+				const calldata = iface.encodeFunctionData(functionName, [
+					target,
+					value,
+					functionValue,
+					targetCalldata,
+					String(timeValue),
+				]);
+				setTimelockCalldata(calldata);
+			} catch (err) {
+				setTargetCallData('');
+				console.error('Failed to encode calldata:', err);
+			}
+		}
+	}, [targetCalldata, value, timelockMethod, timeValue, functionValue, target]);
 
-  useEffect(() => {
-    setTargetCallData(''); // Reset calldata when function or arguments change
-    if (!!functionValue && argumentValues.length > 0) {
-      try {
-        const types = functionValue
-          .match(/\(([^)]*)\)/)?.[1]
-          .split(',')
-          .map(type => type.trim())
-          .filter(type => type.length > 0);
+	useEffect(() => {
+		setTargetCallData(''); // Reset calldata when function or arguments change
+		if (!!functionValue && argumentValues.length > 0) {
+			try {
+				const types = functionValue
+					.match(/\(([^)]*)\)/)?.[1]
+					.split(',')
+					.map(type => type.trim())
+					.filter(type => type.length > 0);
 
-        const calldata = ethers.utils.defaultAbiCoder.encode(
-          types || [],
-          argumentValues.map((arg, idx) =>
-            types && types[idx] === 'address'
-              ? arg
-              : arg.startsWith('0x')
-                ? arg
-                : ethers.utils.parseEther(arg)
-          )
-        );
-        setTargetCallData(calldata);
-      } catch (err) {
-        setTargetCallData('');
-        console.error('Failed to encode calldata:', err);
-      }
-    }
-  }, [functionValue, argumentValues]);
+				const calldata = ethers.utils.defaultAbiCoder.encode(
+					types || [],
+					argumentValues.map((arg, idx) =>
+						types && types[idx] === 'address' ? arg
+						: arg.startsWith('0x') ? arg
+						: ethers.utils.parseEther(arg)
+					)
+				);
+				setTargetCallData(calldata);
+			} catch (err) {
+				setTargetCallData('');
+				console.error('Failed to encode calldata:', err);
+			}
+		}
+	}, [functionValue, argumentValues]);
 
-  // Preview State
-  const [previewContent, setPreviewContent] = useState('');
+	// Preview State
+	const [previewContent, setPreviewContent] = useState('');
 
-  // Handle argument changes
-  const handleArgumentChange = (index: number, value: string) => {
-    const newArgumentValues = [...argumentValues];
-    newArgumentValues[index] = value;
-    setArgumentValues(newArgumentValues);
-  };
+	// Handle argument changes
+	const handleArgumentChange = (index: number, value: string) => {
+		const newArgumentValues = [...argumentValues];
+		newArgumentValues[index] = value;
+		setArgumentValues(newArgumentValues);
+	};
 
-  // Handle function changes and clear arguments
-  const handleFunctionChange = (value: string) => {
-    setFunctionValue(value);
-    setArgumentValues([]); // Clear all argument values when function changes
-  };
+	// Handle function changes and clear arguments
+	const handleFunctionChange = (value: string) => {
+		setFunctionValue(value);
+		setArgumentValues([]); // Clear all argument values when function changes
+	};
 
-  // Handle ABI changes and clear arguments and function
-  const handleAbiChange = (value: string) => {
-    setAbiValue(value);
-    setFunctionValue(''); // Clear selected function when ABI changes
-    setArgumentValues([]); // Clear all argument values when ABI changes
-  };
+	// Handle ABI changes and clear arguments and function
+	const handleAbiChange = (value: string) => {
+		setAbiValue(value);
+		setFunctionValue(''); // Clear selected function when ABI changes
+		setArgumentValues([]); // Clear all argument values when ABI changes
+	};
 
-  // Effect to update preview content whenever form fields change
-  useEffect(() => {
-    setPreviewContent(
-      generatePreview({
-        allTimelocks,
-        timelockType,
-        functionValue,
-        argumentValues,
-        selectedMailbox,
-        timeValue,
-        targetCalldata,
-        abiValue,
-        address,
-        timelockAddress,
-        timelockMethod,
-        target,
-        value,
-        timelockCalldata,
-      })
-    );
-  }, [
-    target,
-    value,
-    timeValue,
-    functionValue,
-    argumentValues,
-    address,
-    timelockAddress,
-    abiValue,
-    timelockType,
-    allTimelocks,
-    timelockCalldata,
-    selectedMailbox,
-    targetCalldata,
-    timelockMethod,
-  ]);
+	// Effect to update preview content whenever form fields change
+	useEffect(() => {
+		setPreviewContent(
+			generatePreview({
+				allTimelocks,
+				timelockType,
+				functionValue,
+				argumentValues,
+				selectedMailbox,
+				timeValue,
+				targetCalldata,
+				abiValue,
+				address,
+				timelockAddress,
+				timelockMethod,
+				target,
+				value,
+				timelockCalldata,
+			})
+		);
+	}, [
+		target,
+		value,
+		timeValue,
+		functionValue,
+		argumentValues,
+		address,
+		timelockAddress,
+		abiValue,
+		timelockType,
+		allTimelocks,
+		timelockCalldata,
+		selectedMailbox,
+		targetCalldata,
+		timelockMethod,
+	]);
 
-  const handleSendTransaction = async () => {
-    if (!address) {
-      toast.error('Please connect your wallet first');
-      return;
-    }
-    console.log(chainName, 'chainName');
+	const handleSendTransaction = async () => {
+		if (!address) {
+			toast.error('Please connect your wallet first');
+			return;
+		}
+		console.log(chainName, 'chainName');
 
-    if (!chainId) {
-      toast.error('Please select a network');
-      return;
-    }
+		if (!chainId) {
+			toast.error('Please select a network');
+			return;
+		}
 
-    // Validate required fields
-    if (!timelockAddress || !target || !functionValue || !timeValue) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
+		// Validate required fields
+		if (!timelockAddress || !target || !functionValue || !timeValue) {
+			toast.error('Please fill in all required fields');
+			return;
+		}
 
-    try {
-      setIsSubmitting(true);
+		try {
+			setIsSubmitting(true);
 
-      const txResult = await sendTransaction({
-        // timelockAddress,
-        toAddress: timelockAddress,
-        calldata: timelockCalldata,
-        value: value || '0', // Default to '0' if not specified
-      });
+			const txResult = await sendTransaction({
+				// timelockAddress,
+				toAddress: timelockAddress,
+				calldata: timelockCalldata,
+				value: value || '0', // Default to '0' if not specified
+			});
 
-      toast.success('Transaction created successfully!');
+			toast.success('Transaction created successfully!');
 
-      // Navigate to transaction details or list
-      router.push('/transactions');
-    } catch (error) {
-      console.error('Failed to create transaction:', error);
-      toast.error((error as Error).message || 'Failed to create transaction');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+			// Navigate to transaction details or list
+			router.push('/transactions');
+		} catch (error) {
+			console.error('Failed to create transaction:', error);
+			toast.error((error as Error).message || 'Failed to create transaction');
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-  return (
-    <PageLayout title={t('title')}>
-      <div className='min-h-screen bg-withe'>
-        <div className='mx-auto flex flex-col'>
-          <div className='flex justify-between gap-32'>
-            <div className='w-1/2 w-max-[550px]'>
-              <EncodingTransactionForm
-                targetCalldata={targetCalldata}
-                timelockType={timelockType}
-                onTimelockTypeChange={setTimelockType}
-                timelockMethod={timelockMethod}
-                onTimelockMethodChange={setTimelockMethod}
-                onTimelockAddressChange={setTimelockAddress}
-                target={target}
-                onTargetChange={setTarget}
-                value={value}
-                onValueChange={setValue}
-                abiValue={abiValue}
-                onAbiChange={handleAbiChange}
-                functionValue={functionValue}
-                onFunctionChange={handleFunctionChange}
-                timeValue={timeValue}
-                onTimeChange={setTimeValue}
-                argumentValues={argumentValues}
-                onArgumentChange={handleArgumentChange}
-              />
-            </div>
-            <div className='flex flex-col gap-4 w-1/2'>
-              <EncodingPreview previewContent={previewContent} />
-              <MailboxSelection
-                selectedMailbox={selectedMailbox}
-                onMailboxChange={setSelectedMailbox}
-              />
-              <div className='mt-auto flex justify-end'>
-                <button
-                  type='button'
-                  onClick={handleSendTransaction}
-                  disabled={isSubmitting}
-                  className='text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'
-                >
-                  {isSubmitting ? t('submitting') : t('sendTransactionButton')}
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* Submit button container */}
-        </div>
-      </div>
-    </PageLayout>
-  );
+	return (
+		<PageLayout title={t('title')}>
+			<div className='min-h-screen bg-withe'>
+				<div className='mx-auto flex flex-col'>
+					<div className='flex justify-between gap-32'>
+						<div className='w-1/2 w-max-[550px]'>
+							<EncodingTransactionForm
+								targetCalldata={targetCalldata}
+								timelockType={timelockType}
+								onTimelockTypeChange={setTimelockType}
+								timelockMethod={timelockMethod}
+								onTimelockMethodChange={setTimelockMethod}
+								onTimelockAddressChange={setTimelockAddress}
+								target={target}
+								onTargetChange={setTarget}
+								value={value}
+								onValueChange={setValue}
+								abiValue={abiValue}
+								onAbiChange={handleAbiChange}
+								functionValue={functionValue}
+								onFunctionChange={handleFunctionChange}
+								timeValue={timeValue}
+								onTimeChange={setTimeValue}
+								argumentValues={argumentValues}
+								onArgumentChange={handleArgumentChange}
+							/>
+						</div>
+						<div className='flex flex-col gap-4 w-1/2'>
+							<EncodingPreview previewContent={previewContent} />
+							<MailboxSelection
+								selectedMailbox={selectedMailbox}
+								onMailboxChange={setSelectedMailbox}
+							/>
+							<div className='mt-auto flex justify-end'>
+								<button
+									type='button'
+									onClick={handleSendTransaction}
+									disabled={isSubmitting}
+									className='text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
+									{isSubmitting ? t('submitting') : t('sendTransactionButton')}
+								</button>
+							</div>
+						</div>
+					</div>
+					{/* Submit button container */}
+				</div>
+			</div>
+		</PageLayout>
+	);
 };
 
 export default TransactionEncoderPage;

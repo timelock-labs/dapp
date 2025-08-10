@@ -15,11 +15,11 @@ export { useDebounce, usePrevious, useToggle, useCounter, useArray } from './com
 
 // Browser utilities
 export {
-  useClipboard,
-  useClickOutside,
-  useMediaQuery,
-  useWindowSize,
-  useDocumentTitle,
+	useClipboard,
+	useClickOutside,
+	useMediaQuery,
+	useWindowSize,
+	useDocumentTitle,
 } from './common/useBrowserUtils';
 
 // Timers
