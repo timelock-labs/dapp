@@ -6,7 +6,7 @@
 // // // 创建国际化中间件
 // const intlMiddleware = createMiddleware(routing);
 
-// // export default function middleware(request: NextRequest) {  
+// // export default function middleware(request: NextRequest) {
 // //   // 对于其他路径，使用国际化中间件
 // //   return intlMiddleware(request);
 // // }

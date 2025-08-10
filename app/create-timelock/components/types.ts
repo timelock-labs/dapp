@@ -12,7 +12,6 @@ export type {
   DeploymentResult,
   CompoundTimelockParams,
   CreateTimelockRequestBody,
-
   CreateTimelockFormState,
   StandardOptionConfig,
 } from '@/types';

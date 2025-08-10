@@ -16,7 +16,7 @@ const AnimatedAssetValue: React.FC<AnimatedAssetValueProps> = ({
   prefix = '',
   suffix = '',
   className = '',
-  fallback = '0.00'
+  fallback = '0.00',
 }) => {
   const countUpRef = useCountUp({
     end: value || 0,
@@ -29,7 +29,9 @@ const AnimatedAssetValue: React.FC<AnimatedAssetValueProps> = ({
 
   return (
     <span ref={countUpRef} className={className}>
-      {prefix}{fallback}{suffix}
+      {prefix}
+      {fallback}
+      {suffix}
     </span>
   );
 };

@@ -7,18 +7,13 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
-import type { 
-  VoidCallback, 
-  AsyncCallback, 
-  ApiRequestOptions,
-  HttpMethod 
-} from '@/types';
+import type { VoidCallback, AsyncCallback, ApiRequestOptions, HttpMethod } from '@/types';
 
 /**
  * Utility for creating consistent error messages
  */
 export const createErrorMessage = (
-  error: unknown, 
+  error: unknown,
   defaultMessage = 'An error occurred'
 ): string => {
   if (error instanceof Error) {
@@ -98,11 +93,11 @@ export const withErrorHandling = async <T>(
  */
 export const createToastNotification = {
   loading: (message: string) => toast.loading(message),
-  success: (message: string, id?: string | number) => 
+  success: (message: string, id?: string | number) =>
     id ? toast.success(message, { id }) : toast.success(message),
-  error: (message: string, id?: string | number) => 
+  error: (message: string, id?: string | number) =>
     id ? toast.error(message, { id }) : toast.error(message),
-  dismiss: (id?: string | number) => id ? toast.dismiss(id) : toast.dismiss(),
+  dismiss: (id?: string | number) => (id ? toast.dismiss(id) : toast.dismiss()),
 };
 
 /**
@@ -114,15 +109,18 @@ export const createDebouncedCallback = <T extends (...args: any[]) => any>(
 ): T => {
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  return useCallback((...args: Parameters<T>) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  return useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    timeoutRef.current = setTimeout(() => {
-      callback(...args);
-    }, delay);
-  }, [callback, delay]) as T;
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  ) as T;
 };
 
 /**
@@ -135,24 +133,27 @@ export const createThrottledCallback = <T extends (...args: any[]) => any>(
   const lastCallRef = useRef<number>(0);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  return useCallback((...args: Parameters<T>) => {
-    const now = Date.now();
-    const timeSinceLastCall = now - lastCallRef.current;
+  return useCallback(
+    (...args: Parameters<T>) => {
+      const now = Date.now();
+      const timeSinceLastCall = now - lastCallRef.current;
 
-    if (timeSinceLastCall >= delay) {
-      lastCallRef.current = now;
-      callback(...args);
-    } else {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        lastCallRef.current = Date.now();
+      if (timeSinceLastCall >= delay) {
+        lastCallRef.current = now;
         callback(...args);
-      }, delay - timeSinceLastCall);
-    }
-  }, [callback, delay]) as T;
+      } else {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+          lastCallRef.current = Date.now();
+          callback(...args);
+        }, delay - timeSinceLastCall);
+      }
+    },
+    [callback, delay]
+  ) as T;
 };
 
 /**
@@ -228,7 +229,7 @@ export const validateRequiredFields = <T extends Record<string, any>>(
   requiredFields: (keyof T)[]
 ): string[] => {
   const errors: string[] = [];
-  
+
   requiredFields.forEach(field => {
     const value = data[field];
     if (value == null || value === '') {
@@ -303,19 +304,19 @@ export const createRetryLogic = <T>(
 ): AsyncCallback<T> => {
   return async () => {
     let lastError: Error;
-    
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await asyncFn();
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        
+
         if (attempt < maxRetries) {
           await new Promise(resolve => setTimeout(resolve, retryDelay * (attempt + 1)));
         }
       }
     }
-    
+
     throw lastError!;
   };
 };
@@ -334,18 +335,18 @@ export const createOptimisticUpdate = <T>(
 /**
  * Utility for creating cache keys
  */
-export const createCacheKey = (
-  prefix: string,
-  params?: Record<string, any>
-): string => {
+export const createCacheKey = (prefix: string, params?: Record<string, any>): string => {
   if (!params) return prefix;
-  
+
   const sortedParams = Object.keys(params)
     .sort()
-    .reduce((acc, key) => {
-      acc[key] = params[key];
-      return acc;
-    }, {} as Record<string, any>);
+    .reduce(
+      (acc, key) => {
+        acc[key] = params[key];
+        return acc;
+      },
+      {} as Record<string, any>
+    );
 
   return `${prefix}:${JSON.stringify(sortedParams)}`;
 };
@@ -355,34 +356,32 @@ export const createCacheKey = (
  */
 export const deepEqual = (a: any, b: any): boolean => {
   if (a === b) return true;
-  
+
   if (a == null || b == null) return false;
-  
+
   if (typeof a !== typeof b) return false;
-  
+
   if (typeof a !== 'object') return false;
-  
+
   const keysA = Object.keys(a);
   const keysB = Object.keys(b);
-  
+
   if (keysA.length !== keysB.length) return false;
-  
+
   for (const key of keysA) {
     if (!keysB.includes(key)) return false;
     if (!deepEqual(a[key], b[key])) return false;
   }
-  
+
   return true;
 };
 
 /**
  * Utility for creating stable references
  */
-export const useStableCallback = <T extends (...args: any[]) => unknown>(
-  callback: T
-): T => {
+export const useStableCallback = <T extends (...args: any[]) => unknown>(callback: T): T => {
   const callbackRef = useRef<T>(callback);
-  
+
   useEffect(() => {
     callbackRef.current = callback;
   });

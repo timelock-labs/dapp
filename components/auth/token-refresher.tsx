@@ -21,7 +21,7 @@ export function TokenRefresher() {
       const expirationTime = new Date(expiresAt).getTime();
       const now = Date.now();
       // Refresh 1 minute before expiration
-      const timeUntilRefresh = expirationTime - now - 60 * 1000; 
+      const timeUntilRefresh = expirationTime - now - 60 * 1000;
 
       if (timeUntilRefresh > 0) {
         timerRef.current = setTimeout(() => {

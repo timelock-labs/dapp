@@ -1,17 +1,7 @@
 {
   "_meta": {
     "description": "中文国际化文件",
-    "modules": [
-      "common",
-      "auth", 
-      "navigation",
-      "timelock",
-      "transaction",
-      "abi",
-      "notification",
-      "home",
-      "wallet"
-    ],
+    "modules": ["common", "auth", "navigation", "timelock", "transaction", "abi", "notification", "home", "wallet"],
     "lastUpdated": "2025-08-02"
   }
 }

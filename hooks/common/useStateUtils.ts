@@ -31,11 +31,11 @@ export function useDebounce<T>(value: T, delay: number): T {
  */
 export function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T | undefined>(undefined);
-  
+
   useEffect(() => {
     ref.current = value;
   });
-  
+
   return ref.current;
 }
 
@@ -89,7 +89,7 @@ export function useArray<T>(initialArray: T[] = []) {
   }, []);
 
   const update = useCallback((index: number, newElement: T) => {
-    setArray(prev => prev.map((item, i) => i === index ? newElement : item));
+    setArray(prev => prev.map((item, i) => (i === index ? newElement : item)));
   }, []);
 
   const remove = useCallback((index: number) => {

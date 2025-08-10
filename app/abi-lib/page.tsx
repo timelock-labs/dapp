@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import AddABIForm from './components/AddABIForm'; // Import the new form component
 import ConfirmDialog from '@/components/ui/ConfirmDialog'; // Import the confirm dialog
 import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore'; 
+import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { formatDate } from '@/lib/utils';
 
@@ -40,16 +40,14 @@ const ABILibPage: React.FC = () => {
   const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
   const refreshAbiList = useCallback(() => {
-
-      fetchAbiList('/api/v1/abi/list', {
-        method: 'GET',
-      });
-
-  }, [ fetchAbiList]);
+    fetchAbiList('/api/v1/abi/list', {
+      method: 'GET',
+    });
+  }, [fetchAbiList]);
 
   useEffect(() => {
     refreshAbiList();
-  }, [ refreshAbiList]); // 添加 refreshAbiList 到依赖数组
+  }, [refreshAbiList]); // 添加 refreshAbiList 到依赖数组
 
   useEffect(() => {
     if (abiListResponse?.success === true) {
@@ -155,7 +153,7 @@ ${viewAbiResponse.data.abi_content}`);
     if (!abiToDelete) return;
 
     await deleteAbi(`/api/v1/abi/${abiToDelete.id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     });
 
     setIsDeleteDialogOpen(false);
@@ -311,8 +309,6 @@ ${viewAbiResponse.data.abi_content}`);
       </PageLayout>
     );
   }
-
-
 
   return (
     <PageLayout title={t('title')}>

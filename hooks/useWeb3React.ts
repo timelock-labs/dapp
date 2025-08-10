@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { ethers5Adapter } from 'thirdweb/adapters/ethers5';
 import {
   useActiveAccount,
   useActiveWalletChain,
   useActiveWalletConnectionStatus,
   useConnect,
   useEnsName,
-} from "thirdweb/react";
-import { createThirdwebClient } from "thirdweb";
+} from 'thirdweb/react';
+import { createThirdwebClient } from 'thirdweb';
 
 /**
  * Starting refactor useWeb3React to make it easy to replace for wagmi or thirdweb
@@ -44,8 +44,7 @@ export function useWeb3React(): {
   }) => Promise<any>;
 } {
   const client = createThirdwebClient({
-    clientId: "0e1974955be2e739c2b5fc550a3f6c0d",
-    
+    clientId: '0e1974955be2e739c2b5fc550a3f6c0d',
   });
 
   const activeAccount = useActiveAccount();
@@ -70,7 +69,7 @@ export function useWeb3React(): {
   }, [client, activeChain]);
 
   const signer = useQuery({
-    queryKey: ["GET_THIRD_WEB_SIGNER", activeChain, activeAccount],
+    queryKey: ['GET_THIRD_WEB_SIGNER', activeChain, activeAccount],
     queryFn: async () => {
       return ethers5Adapter.signer.toEthers({
         client: client,
@@ -84,40 +83,40 @@ export function useWeb3React(): {
   const signMessage = activeAccount
     ? activeAccount.signMessage
     : () => {
-      throw new Error("No account");
-    };
+        throw new Error('No account');
+      };
 
-    const sendTransaction = activeAccount
-      ? async ({
-          to,
-          data,
-          value,
-        }: {
-          to: string;
-          data?: string | undefined;
-          value?: string | number | bigint | undefined;
-        }) => {
-          // Ensure data is a hex string if provided
-          let hexData: `0x${string}` | undefined = undefined;
-          if (data !== undefined) {
-            hexData = data.startsWith("0x")
-              ? (data as `0x${string}`)
-              : (`0x${Buffer.from(data, "utf8").toString("hex")}` as `0x${string}`);
-          }
-          return activeAccount.sendTransaction({
-            to,
-            data: hexData,
-            value,
-          } as any);
+  const sendTransaction = activeAccount
+    ? async ({
+        to,
+        data,
+        value,
+      }: {
+        to: string;
+        data?: string | undefined;
+        value?: string | number | bigint | undefined;
+      }) => {
+        // Ensure data is a hex string if provided
+        let hexData: `0x${string}` | undefined = undefined;
+        if (data !== undefined) {
+          hexData = data.startsWith('0x')
+            ? (data as `0x${string}`)
+            : (`0x${Buffer.from(data, 'utf8').toString('hex')}` as `0x${string}`);
         }
-      : () => {
-          throw new Error("No account");
-        };
+        return activeAccount.sendTransaction({
+          to,
+          data: hexData,
+          value,
+        } as any);
+      }
+    : () => {
+        throw new Error('No account');
+      };
 
   return {
     activeAccount,
     account: activeAccount?.address,
-    isActive: status === "connected",
+    isActive: status === 'connected',
     chainId: activeChain?.id,
     chainMetadata: activeChain,
     provider,

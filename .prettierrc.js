@@ -3,24 +3,24 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
-  
+
   // Semicolons and quotes
   semi: true,
   singleQuote: true,
   quoteProps: 'as-needed',
-  
+
   // Trailing commas and spacing
   trailingComma: 'es5',
   bracketSpacing: true,
   bracketSameLine: false,
-  
+
   // Arrow functions and JSX
   arrowParens: 'avoid',
   jsxSingleQuote: true,
-  
+
   // Line endings
   endOfLine: 'lf',
-  
+
   // File-specific overrides
   overrides: [
     {
@@ -33,7 +33,7 @@ module.exports = {
     {
       files: '*.json',
       options: {
-        printWidth: 120,
+        printWidth: 180,
       },
     },
   ],

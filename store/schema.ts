@@ -23,8 +23,6 @@ export const ChainSchema = z.object({
   updated_at: z.string(),
 });
 
-
-
 export const TimelockContractSchema = z.object({
   id: z.number(),
   creator_address: z.string(),

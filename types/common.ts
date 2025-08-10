@@ -118,15 +118,15 @@ export type ContractStandard = 'compound' | 'openzeppelin';
 /**
  * Transaction status types
  */
-export type TransactionStatus = 
-  | 'submitting' 
-  | 'queued' 
-  | 'ready' 
-  | 'executing' 
-  | 'executed' 
-  | 'expired' 
-  | 'canceled' 
-  | 'failed' 
+export type TransactionStatus =
+  | 'submitting'
+  | 'queued'
+  | 'ready'
+  | 'executing'
+  | 'executed'
+  | 'expired'
+  | 'canceled'
+  | 'failed'
   | 'submit_failed';
 
 /**

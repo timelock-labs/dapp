@@ -16,11 +16,11 @@ import { useContractDeployment } from './useBlockchainHooks';
 import { createErrorMessage, validateRequiredFields } from './useHookUtils';
 
 // Type imports
-import type { 
-  CompoundTimelockParams, 
+import type {
+  CompoundTimelockParams,
   ContractStandard,
   DeploymentResult,
-  OpenZeppelinTimelockParams
+  OpenZeppelinTimelockParams,
 } from '@/types';
 
 /**
@@ -38,14 +38,14 @@ interface TimelockDeploymentConfig {
 /**
  * Hook for deploying timelock contracts using standardized blockchain patterns
  * Provides optimized deployment methods with proper error handling and validation
- * 
+ *
  * @param config Optional configuration for deployment behavior
  * @returns Object containing deployment methods and state
  */
 export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
   const { validateParams = true, gasLimit, gasPrice } = config;
   const { deployContract, isLoading, error, reset } = useContractDeployment();
-  
+
   // Separate async operation for parameter validation
   const { execute: executeWithValidation, isLoading: isValidating } = useAsyncOperation({
     loadingMessage: 'Validating deployment parameters...',
@@ -54,22 +54,26 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
   });
 
   // Memoize deployment options
-  const deploymentOptions = useMemo(() => ({
-    gasLimit,
-    gasPrice,
-  }), [gasLimit, gasPrice]);
+  const deploymentOptions = useMemo(
+    () => ({
+      gasLimit,
+      gasPrice,
+    }),
+    [gasLimit, gasPrice]
+  );
 
   /**
    * Validate Compound timelock parameters
    */
   const validateCompoundParams = useCallback((params: CompoundTimelockParams): string[] => {
     const errors = validateRequiredFields(params, ['admin', 'minDelay']);
-    
+
     if (params.minDelay < 0) {
       errors.push('Minimum delay must be non-negative');
     }
-    
-    if (params.minDelay > 30 * 24 * 60 * 60) { // 30 days in seconds
+
+    if (params.minDelay > 30 * 24 * 60 * 60) {
+      // 30 days in seconds
       errors.push('Minimum delay cannot exceed 30 days');
     }
 
@@ -79,71 +83,84 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
   /**
    * Deploy Compound timelock contract with validation and error handling
    */
-  const deployCompoundTimelock = useCallback(async (
-    params: CompoundTimelockParams
-  ): Promise<DeploymentResult> => {
-    return executeWithValidation(async () => {
-      // Validate parameters if enabled
-      if (validateParams) {
-        const validationErrors = validateCompoundParams(params);
-        if (validationErrors.length > 0) {
-          throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+  const deployCompoundTimelock = useCallback(
+    async (params: CompoundTimelockParams): Promise<DeploymentResult> => {
+      return executeWithValidation(async () => {
+        // Validate parameters if enabled
+        if (validateParams) {
+          const validationErrors = validateCompoundParams(params);
+          if (validationErrors.length > 0) {
+            throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+          }
         }
-      }
 
-      try {
-        // Deploy the contract
-        const result = await deployContract(
-          compoundTimelockAbi as ContractInterface,
-          compoundTimelockBytecode,
-          [params.admin, BigInt(params.minDelay)],
-          deploymentOptions
-        );
+        try {
+          // Deploy the contract
+          const result = await deployContract(
+            compoundTimelockAbi as ContractInterface,
+            compoundTimelockBytecode,
+            [params.admin, BigInt(params.minDelay)],
+            deploymentOptions
+          );
 
-        return {
-          ...result,
-          standard: 'compound' as ContractStandard,
-          parameters: params,
-        };
-      } catch (error) {
-        const message = createErrorMessage(error, 'Failed to deploy Compound timelock');
-        throw new Error(message);
-      }
-    });
-  }, [deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions]);
+          return {
+            ...result,
+            standard: 'compound' as ContractStandard,
+            parameters: params,
+          };
+        } catch (error) {
+          const message = createErrorMessage(error, 'Failed to deploy Compound timelock');
+          throw new Error(message);
+        }
+      });
+    },
+    [
+      deployContract,
+      executeWithValidation,
+      validateParams,
+      validateCompoundParams,
+      deploymentOptions,
+    ]
+  );
 
   /**
    * Deploy OpenZeppelin timelock contract (placeholder for future implementation)
    */
-  const deployOpenZeppelinTimelock = useCallback(async (
-    params: OpenZeppelinTimelockParams
-  ): Promise<DeploymentResult> => {
-    return executeWithValidation(async () => {
-      // TODO: Implement OpenZeppelin timelock deployment
-      // This is a placeholder for future implementation
-      throw new Error('OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.');
-    });
-  }, [executeWithValidation]);
+  const deployOpenZeppelinTimelock = useCallback(
+    async (params: OpenZeppelinTimelockParams): Promise<DeploymentResult> => {
+      return executeWithValidation(async () => {
+        // TODO: Implement OpenZeppelin timelock deployment
+        // This is a placeholder for future implementation
+        throw new Error(
+          'OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.'
+        );
+      });
+    },
+    [executeWithValidation]
+  );
 
   /**
    * Get deployment cost estimation
    */
-  const estimateDeploymentCost = useCallback(async (
-    standard: ContractStandard,
-    params: CompoundTimelockParams | OpenZeppelinTimelockParams
-  ) => {
-    if (standard === 'compound') {
-      // This would typically use gas estimation
-      // For now, return a placeholder
-      return {
-        gasLimit: gasLimit || 2000000,
-        gasPrice: gasPrice || '20000000000', // 20 gwei
-        estimatedCost: '0.04', // ETH
-      };
-    }
-    
-    throw new Error(`Cost estimation not available for ${standard} timelock`);
-  }, [gasLimit, gasPrice]);
+  const estimateDeploymentCost = useCallback(
+    async (
+      standard: ContractStandard,
+      params: CompoundTimelockParams | OpenZeppelinTimelockParams
+    ) => {
+      if (standard === 'compound') {
+        // This would typically use gas estimation
+        // For now, return a placeholder
+        return {
+          gasLimit: gasLimit || 2000000,
+          gasPrice: gasPrice || '20000000000', // 20 gwei
+          estimatedCost: '0.04', // ETH
+        };
+      }
+
+      throw new Error(`Cost estimation not available for ${standard} timelock`);
+    },
+    [gasLimit, gasPrice]
+  );
 
   /**
    * Check if deployment is supported for the given standard
@@ -156,17 +173,17 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
     // Deployment methods
     deployCompoundTimelock,
     deployOpenZeppelinTimelock,
-    
+
     // Utility methods
     estimateDeploymentCost,
     isDeploymentSupported,
     validateCompoundParams,
-    
+
     // State
     isLoading: isLoading || isValidating,
     isValidating,
     error,
-    
+
     // Actions
     reset,
   };

@@ -19,21 +19,19 @@ const PermissionCheckbox: React.FC<PermissionCheckboxProps> = ({
   onChange,
 }) => {
   return (
-    <label htmlFor={id} className="flex items-start cursor-pointer py-2">
+    <label htmlFor={id} className='flex items-start cursor-pointer py-2'>
       <input
-        type="checkbox"
+        type='checkbox'
         id={id}
         checked={checked}
-        onChange={(e) => onChange(id, e.target.checked)}
-        className="form-checkbox h-[16px] w-[16px] accent-black border-gray-300 rounded focus:ring-black-500 mt-1 mr-3 rounded-lg"
+        onChange={e => onChange(id, e.target.checked)}
+        className='form-checkbox h-[16px] w-[16px] accent-black border-gray-300 rounded focus:ring-black-500 mt-1 mr-3 rounded-lg'
       />
-      <div className="flex-grow">
-        <p className="text-gray-900 font-medium text-sm">{label}</p>
-        <p className="text-gray-500 text-xs">{subLabel}</p>
+      <div className='flex-grow'>
+        <p className='text-gray-900 font-medium text-sm'>{label}</p>
+        <p className='text-gray-500 text-xs'>{subLabel}</p>
       </div>
-      <div className="ml-4 flex-shrink-0">
-        {icon}
-      </div>
+      <div className='ml-4 flex-shrink-0'>{icon}</div>
     </label>
   );
 };

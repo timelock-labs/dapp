@@ -1,13 +1,9 @@
-"use client"
-import Link from "next/link"
+'use client';
+import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from 'lucide-react';
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarMenu,
@@ -16,7 +12,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 import type { BaseComponentProps } from '@/types';
 
 interface NavMainItem {
@@ -36,39 +32,36 @@ interface NavMainProps extends BaseComponentProps {
 
 /**
  * Main navigation component with collapsible menu items
- * 
+ *
  * @param props - NavMain component props
  * @returns JSX.Element
  */
-export function NavMain({
-  items,
-  className
-}: NavMainProps) {
+export function NavMain({ items, className }: NavMainProps) {
   const locale = useLocale();
-  
+
   return (
     <SidebarGroup className={className}>
       <SidebarMenu>
-        {items.map((item) => (
+        {items.map(item =>
           item.items ? (
             // If item has sub-items, use Collapsible
             <Collapsible
               key={item.title}
               asChild
               defaultOpen={item.isActive}
-              className="group/collapsible"
+              className='group/collapsible'
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip={item.title}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
+                    {item.items?.map(subItem => (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
                           <Link href={`/${subItem.url}`}>
@@ -92,8 +85,8 @@ export function NavMain({
               </SidebarMenuButton>
             </SidebarMenuItem>
           )
-        ))}
+        )}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

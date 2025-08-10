@@ -14,23 +14,27 @@ interface TextAreaInputProps extends BaseComponentProps {
 
 /**
  * Textarea input component with label and error handling
- * 
+ *
  * @param props - TextAreaInput component props
  * @returns JSX.Element
  */
-const TextAreaInput: React.FC<TextAreaInputProps> = ({ 
-  label, 
-  value, 
-  onChange, 
-  placeholder, 
+const TextAreaInput: React.FC<TextAreaInputProps> = ({
+  label,
+  value,
+  onChange,
+  placeholder,
   rows = 8,
   disabled = false,
   error,
-  className 
+  className,
 }) => {
   return (
-    <div className="mb-4">
-      <label className={`block text-sm font-medium mb-1 ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>{label}</label>
+    <div className='mb-4'>
+      <label
+        className={`block text-sm font-medium mb-1 ${disabled ? 'text-gray-400' : 'text-gray-700'}`}
+      >
+        {label}
+      </label>
       <textarea
         rows={rows}
         className={`
@@ -43,10 +47,10 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
         `}
         placeholder={placeholder || label}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         disabled={disabled}
       />
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className='mt-2 text-sm text-red-600'>{error}</p>}
     </div>
   );
 };

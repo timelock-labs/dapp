@@ -5,7 +5,12 @@ import { zodMiddleware } from './zodMiddleware';
 
 // 定义 Store 的 actions (方法)
 type AppActions = {
-  login: (data: { user: User; accessToken: string; refreshToken: string; expiresAt: string }) => void;
+  login: (data: {
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+    expiresAt: string;
+  }) => void;
   logout: () => void;
   fetchChains: () => Promise<void>;
   refreshAccessToken: () => Promise<void>;
@@ -24,21 +29,23 @@ export const useAuthStore = create<AppState & AppActions>()(
       (set, get) => ({
         user: null,
         isAuthenticated: false,
-        accessToken: document.cookie
-          .split('; ')
-          .find(row => row.startsWith('accessToken='))
-          ?.split('=')[1] || null,
-        refreshToken: document.cookie
-          .split('; ')
-          .find(row => row.startsWith('refreshToken='))
-          ?.split('=')[1] || null,
+        accessToken:
+          document.cookie
+            .split('; ')
+            .find(row => row.startsWith('accessToken='))
+            ?.split('=')[1] || null,
+        refreshToken:
+          document.cookie
+            .split('; ')
+            .find(row => row.startsWith('refreshToken='))
+            ?.split('=')[1] || null,
         expiresAt: null, // 初始化为 null，稍后会从 cookie 中获取
         // 初始化状态
         chains: [],
         allTimelocks: [],
         _hasHydrated: false,
 
-        login: (data) => {
+        login: data => {
           // 写入到 cookie
           document.cookie = `accessToken=${data.accessToken}; path=/`;
           document.cookie = `refreshToken=${data.refreshToken}; path=/`;
@@ -58,7 +65,14 @@ export const useAuthStore = create<AppState & AppActions>()(
           document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
           document.cookie = 'expiresAt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
           // The persist middleware will automatically clear the persisted state.
-          set({ user: null, isAuthenticated: false, accessToken: null, refreshToken: null, expiresAt: null, allTimelocks: [] });
+          set({
+            user: null,
+            isAuthenticated: false,
+            accessToken: null,
+            refreshToken: null,
+            expiresAt: null,
+            allTimelocks: [],
+          });
         },
         fetchChains: async () => {
           try {
@@ -125,14 +139,14 @@ export const useAuthStore = create<AppState & AppActions>()(
           // This action deliberately sets data that does not conform to the schema
           set({ user: { id: '123', name: 'x', email: 'bad-email' } });
         },
-        setAllTimelocks: (timelocks) => set({ allTimelocks: timelocks }),
+        setAllTimelocks: timelocks => set({ allTimelocks: timelocks }),
       })
     ),
     {
       name: 'auth-storage', // 使用唯一的键名以避免冲突
       storage: createJSONStorage(() => localStorage), // 按要求使用 localStorage
       // partialize 是必须的，它告诉 middleware 只持久化数据状态，而不是 action (方法)
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
         accessToken: state.accessToken,
@@ -142,7 +156,7 @@ export const useAuthStore = create<AppState & AppActions>()(
         allTimelocks: state.allTimelocks,
       }),
       // onRehydrateStorage 会在从 storage 恢复状态后执行
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => state => {
         if (state) {
           state.isAuthenticated = !!state.accessToken; // 确保认证状态在加载时是正确的
           state._hasHydrated = true; // 设置水合状态为 true

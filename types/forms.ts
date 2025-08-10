@@ -3,13 +3,13 @@
  */
 
 import type { z } from 'zod';
-import type { 
-  BaseComponentProps, 
-  ContractStandard, 
-  Address, 
+import type {
+  BaseComponentProps,
+  ContractStandard,
+  Address,
   Hash,
   ValueCallback,
-  VoidCallback 
+  VoidCallback,
 } from './common';
 
 /**

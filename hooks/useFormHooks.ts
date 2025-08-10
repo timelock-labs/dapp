@@ -7,13 +7,11 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { z } from 'zod';
-import type { 
-  UseFormReturn
-} from '@/types';
+import type { UseFormReturn } from '@/types';
 
 /**
  * Hook for managing form state with validation
- * 
+ *
  * @param initialValues Initial form values
  * @param validationSchema Optional Zod schema for validation
  * @returns Form state and control methods
@@ -29,18 +27,21 @@ export function useForm<T extends Record<string, unknown>>(
 
   const isValid = Object.keys(errors).length === 0;
 
-  const setValue = useCallback((field: keyof T, value: unknown) => {
-    setValues(prev => ({ ...prev, [field]: value }));
-    
-    // Clear error when value changes
-    if (errors[field as string]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field as string];
-        return newErrors;
-      });
-    }
-  }, [errors]);
+  const setValue = useCallback(
+    (field: keyof T, value: unknown) => {
+      setValues(prev => ({ ...prev, [field]: value }));
+
+      // Clear error when value changes
+      if (errors[field as string]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[field as string];
+          return newErrors;
+        });
+      }
+    },
+    [errors]
+  );
 
   const setError = useCallback((field: keyof T, error: string) => {
     setErrors(prev => ({ ...prev, [field as string]: error }));
@@ -79,39 +80,46 @@ export function useForm<T extends Record<string, unknown>>(
     }
   }, [values, validationSchema]);
 
-  const handleSubmit = useCallback((
-    onSubmit: (values: T) => void | Promise<void>
-  ) => {
-    return async (e?: React.FormEvent) => {
-      e?.preventDefault();
-      
-      setIsSubmitting(true);
-      
-      // Mark all fields as touched
-      const allTouched = Object.keys(values).reduce((acc, key) => {
-        acc[key] = true;
-        return acc;
-      }, {} as Record<string, boolean>);
-      setTouched(allTouched);
+  const handleSubmit = useCallback(
+    (onSubmit: (values: T) => void | Promise<void>) => {
+      return async (e?: React.FormEvent) => {
+        e?.preventDefault();
 
-      try {
-        if (validate()) {
-          await onSubmit(values);
+        setIsSubmitting(true);
+
+        // Mark all fields as touched
+        const allTouched = Object.keys(values).reduce(
+          (acc, key) => {
+            acc[key] = true;
+            return acc;
+          },
+          {} as Record<string, boolean>
+        );
+        setTouched(allTouched);
+
+        try {
+          if (validate()) {
+            await onSubmit(values);
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
+        } finally {
+          setIsSubmitting(false);
         }
-      } catch (error) {
-        console.error('Form submission error:', error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-  }, [values, validate]);
+      };
+    },
+    [values, validate]
+  );
 
-  const reset = useCallback((newValues?: Partial<T>) => {
-    setValues(newValues ? { ...initialValues, ...newValues } : initialValues);
-    setErrors({});
-    setTouched({});
-    setIsSubmitting(false);
-  }, [initialValues]);
+  const reset = useCallback(
+    (newValues?: Partial<T>) => {
+      setValues(newValues ? { ...initialValues, ...newValues } : initialValues);
+      setErrors({});
+      setTouched({});
+      setIsSubmitting(false);
+    },
+    [initialValues]
+  );
 
   return {
     values,
@@ -131,7 +139,7 @@ export function useForm<T extends Record<string, unknown>>(
 
 /**
  * Hook for managing field validation
- * 
+ *
  * @param validationFn Validation function
  * @param dependencies Dependencies that trigger revalidation
  * @returns Field validation utilities
@@ -143,21 +151,24 @@ export function useFieldValidation<T>(
   const [error, setError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
-  const validate = useCallback(async (value: T): Promise<boolean> => {
-    setIsValidating(true);
-    
-    try {
-      const errorMessage = validationFn(value);
-      setError(errorMessage);
-      return errorMessage === null;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Validation failed';
-      setError(errorMessage);
-      return false;
-    } finally {
-      setIsValidating(false);
-    }
-  }, [validationFn, ...dependencies]);
+  const validate = useCallback(
+    async (value: T): Promise<boolean> => {
+      setIsValidating(true);
+
+      try {
+        const errorMessage = validationFn(value);
+        setError(errorMessage);
+        return errorMessage === null;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Validation failed';
+        setError(errorMessage);
+        return false;
+      } finally {
+        setIsValidating(false);
+      }
+    },
+    [validationFn, ...dependencies]
+  );
 
   const clearError = useCallback(() => {
     setError(null);
@@ -174,42 +185,44 @@ export function useFieldValidation<T>(
 
 /**
  * Hook for managing form arrays (dynamic form fields)
- * 
+ *
  * @param initialItems Initial array items
  * @param createNewItem Function to create new item
  * @returns Array management utilities
  */
-export function useFormArray<T>(
-  initialItems: T[] = [],
-  createNewItem: () => T
-) {
+export function useFormArray<T>(initialItems: T[] = [], createNewItem: () => T) {
   const [items, setItems] = useState<T[]>(initialItems);
 
-  const append = useCallback((item?: T) => {
-    const newItem = item || createNewItem();
-    setItems(prev => [...prev, newItem]);
-  }, [createNewItem]);
+  const append = useCallback(
+    (item?: T) => {
+      const newItem = item || createNewItem();
+      setItems(prev => [...prev, newItem]);
+    },
+    [createNewItem]
+  );
 
-  const prepend = useCallback((item?: T) => {
-    const newItem = item || createNewItem();
-    setItems(prev => [newItem, ...prev]);
-  }, [createNewItem]);
+  const prepend = useCallback(
+    (item?: T) => {
+      const newItem = item || createNewItem();
+      setItems(prev => [newItem, ...prev]);
+    },
+    [createNewItem]
+  );
 
   const remove = useCallback((index: number) => {
     setItems(prev => prev.filter((_, i) => i !== index));
   }, []);
 
-  const insert = useCallback((index: number, item?: T) => {
-    const newItem = item || createNewItem();
-    setItems(prev => [
-      ...prev.slice(0, index),
-      newItem,
-      ...prev.slice(index)
-    ]);
-  }, [createNewItem]);
+  const insert = useCallback(
+    (index: number, item?: T) => {
+      const newItem = item || createNewItem();
+      setItems(prev => [...prev.slice(0, index), newItem, ...prev.slice(index)]);
+    },
+    [createNewItem]
+  );
 
   const update = useCallback((index: number, item: T) => {
-    setItems(prev => prev.map((existingItem, i) => i === index ? item : existingItem));
+    setItems(prev => prev.map((existingItem, i) => (i === index ? item : existingItem)));
   }, []);
 
   const move = useCallback((fromIndex: number, toIndex: number) => {
@@ -247,7 +260,7 @@ export function useFormArray<T>(
 
 /**
  * Hook for managing multi-step forms
- * 
+ *
  * @param totalSteps Total number of steps
  * @param initialStep Initial step (0-based)
  * @returns Step management utilities
@@ -262,11 +275,14 @@ export function useMultiStepForm(totalSteps: number, initialStep = 0) {
   const canGoNext = currentStep < totalSteps - 1;
   const canGoPrevious = currentStep > 0;
 
-  const goToStep = useCallback((step: number) => {
-    if (step >= 0 && step < totalSteps) {
-      setCurrentStep(step);
-    }
-  }, [totalSteps]);
+  const goToStep = useCallback(
+    (step: number) => {
+      if (step >= 0 && step < totalSteps) {
+        setCurrentStep(step);
+      }
+    },
+    [totalSteps]
+  );
 
   const nextStep = useCallback(() => {
     if (canGoNext) {
@@ -296,9 +312,12 @@ export function useMultiStepForm(totalSteps: number, initialStep = 0) {
     setStepData(prev => ({ ...prev, [step]: data }));
   }, []);
 
-  const getStepData = useCallback((step: number) => {
-    return stepData[step];
-  }, [stepData]);
+  const getStepData = useCallback(
+    (step: number) => {
+      return stepData[step];
+    },
+    [stepData]
+  );
 
   const reset = useCallback(() => {
     setCurrentStep(initialStep);
@@ -306,9 +325,12 @@ export function useMultiStepForm(totalSteps: number, initialStep = 0) {
     setStepData({});
   }, [initialStep]);
 
-  const isStepCompleted = useCallback((step: number) => {
-    return completedSteps.has(step);
-  }, [completedSteps]);
+  const isStepCompleted = useCallback(
+    (step: number) => {
+      return completedSteps.has(step);
+    },
+    [completedSteps]
+  );
 
   return {
     currentStep,
@@ -332,7 +354,7 @@ export function useMultiStepForm(totalSteps: number, initialStep = 0) {
 
 /**
  * Hook for managing form persistence to localStorage
- * 
+ *
  * @param formKey Unique key for the form
  * @param values Current form values
  * @param options Configuration options
@@ -351,30 +373,33 @@ export function useFormPersistence<T extends Record<string, any>>(
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Save form data to localStorage
-  const saveToStorage = useCallback((data: T) => {
-    try {
-      let dataToSave = { ...data };
-      
-      // Filter fields based on include/exclude options
-      if (include && include.length > 0) {
-        const filteredData = {} as T;
-        include.forEach(key => {
-          if (key in dataToSave) {
-            filteredData[key] = dataToSave[key];
-          }
-        });
-        dataToSave = filteredData;
-      } else if (exclude.length > 0) {
-        exclude.forEach(key => {
-          delete dataToSave[key];
-        });
-      }
+  const saveToStorage = useCallback(
+    (data: T) => {
+      try {
+        let dataToSave = { ...data };
 
-      localStorage.setItem(`form_${formKey}`, JSON.stringify(dataToSave));
-    } catch (error) {
-      console.warn('Failed to save form data to localStorage:', error);
-    }
-  }, [formKey, include, exclude]);
+        // Filter fields based on include/exclude options
+        if (include && include.length > 0) {
+          const filteredData = {} as T;
+          include.forEach(key => {
+            if (key in dataToSave) {
+              filteredData[key] = dataToSave[key];
+            }
+          });
+          dataToSave = filteredData;
+        } else if (exclude.length > 0) {
+          exclude.forEach(key => {
+            delete dataToSave[key];
+          });
+        }
+
+        localStorage.setItem(`form_${formKey}`, JSON.stringify(dataToSave));
+      } catch (error) {
+        console.warn('Failed to save form data to localStorage:', error);
+      }
+    },
+    [formKey, include, exclude]
+  );
 
   // Load form data from localStorage
   const loadFromStorage = useCallback((): Partial<T> | null => {

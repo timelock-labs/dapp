@@ -43,10 +43,7 @@ export default function Home() {
   const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
 
   const { useTimelockList } = useTimelockApi();
-  const {
-    data: timelockData,
-    isLoading,
-  } = useTimelockList({
+  const { data: timelockData, isLoading } = useTimelockList({
     status: 'active',
     enabled: isConnected, // 只有连接钱包后才请求数据
   });

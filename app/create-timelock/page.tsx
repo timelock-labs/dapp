@@ -44,7 +44,7 @@ const CreateTimelockPage: React.FC = () => {
   const { id: chainId } = useActiveWalletChain() || {};
   const switchChain = useSwitchActiveWalletChain();
   const { request: createTimelockApiCall } = useApi();
-  const {  chains } = useAuthStore();
+  const { chains } = useAuthStore();
   const { address: walletAddress } = useActiveAccount() || {};
   const { deployCompoundTimelock, isLoading } = useDeployTimelock();
   const router = useRouter();
@@ -129,7 +129,7 @@ const CreateTimelockPage: React.FC = () => {
       console.error('Deployment failed:', error);
       // The useDeployTimelock hook already handles toast messages for errors.
     }
-  }, [ walletAddress, formState, selectedChainData, deployCompoundTimelock]);
+  }, [walletAddress, formState, selectedChainData, deployCompoundTimelock]);
 
   const handleConfirmDialogClose = useCallback(() => {
     setIsConfirmDialogOpen(false);
@@ -137,7 +137,7 @@ const CreateTimelockPage: React.FC = () => {
 
   const handleConfirmDialogConfirm = useCallback(
     async (remarkFromDialog: string) => {
-      if ( !walletAddress) {
+      if (!walletAddress) {
         toast.error('Please connect your wallet.');
         return;
       }
@@ -182,7 +182,7 @@ const CreateTimelockPage: React.FC = () => {
         setIsConfirmDialogOpen(false);
       }
     },
-    [ walletAddress, formState, dialogDetails, createTimelockApiCall, router]
+    [walletAddress, formState, dialogDetails, createTimelockApiCall, router]
   );
 
   // Effect to sync chain ID

@@ -34,9 +34,12 @@ const ABITextarea: React.FC<ABITextareaProps> = ({
   const textareaClassName = `overflow-y-auto overflow-x-hidden resize-none min-h-[120px] max-h-[200px] whitespace-pre-wrap break-all w-full max-w-full box-border ${className}`;
 
   return (
-    <div className="space-y-2">
+    <div className='space-y-2'>
       {label && (
-        <Label htmlFor={id} className={required ? "after:content-['*'] after:text-red-500 after:ml-1" : ""}>
+        <Label
+          htmlFor={id}
+          className={required ? "after:content-['*'] after:text-red-500 after:ml-1" : ''}
+        >
           {label}
         </Label>
       )}

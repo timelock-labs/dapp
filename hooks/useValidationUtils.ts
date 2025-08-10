@@ -3,11 +3,11 @@
  * Provides reusable validation patterns and utilities
  */
 
-"use client";
+'use client';
 
-import { useCallback, useMemo } from "react";
-import { z } from "zod";
-import { ethers } from "ethers";
+import { useCallback, useMemo } from 'react';
+import { z } from 'zod';
+import { ethers } from 'ethers';
 
 /**
  * Common validation patterns
@@ -37,21 +37,22 @@ export const ValidationMessages = {
   invalid: (field: string) => `${field} is invalid`,
   tooShort: (field: string, min: number) => `${field} must be at least ${min} characters`,
   tooLong: (field: string, max: number) => `${field} must be no more than ${max} characters`,
-  email: "Please enter a valid email address",
-  url: "Please enter a valid URL",
+  email: 'Please enter a valid email address',
+  url: 'Please enter a valid URL',
   ethereum: {
-    address: "Please enter a valid Ethereum address",
-    hash: "Please enter a valid transaction hash",
-    privateKey: "Please enter a valid private key",
+    address: 'Please enter a valid Ethereum address',
+    hash: 'Please enter a valid transaction hash',
+    privateKey: 'Please enter a valid private key',
   },
   password: {
-    weak: "Password is too weak",
-    strong: "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character",
-    medium: "Password must contain at least 6 characters with letters and numbers",
+    weak: 'Password is too weak',
+    strong:
+      'Password must contain at least 8 characters, including uppercase, lowercase, number, and special character',
+    medium: 'Password must contain at least 6 characters with letters and numbers',
   },
-  phone: "Please enter a valid phone number",
-  numeric: "Please enter a valid number",
-  positive: "Value must be positive",
+  phone: 'Please enter a valid phone number',
+  numeric: 'Please enter a valid number',
+  positive: 'Value must be positive',
   range: (min: number, max: number) => `Value must be between ${min} and ${max}`,
 } as const;
 
@@ -62,7 +63,7 @@ export function useValidation() {
   // Basic validators
   const isRequired = useCallback((value: unknown): boolean => {
     if (value === null || value === undefined) return false;
-    if (typeof value === "string") return value.trim().length > 0;
+    if (typeof value === 'string') return value.trim().length > 0;
     if (Array.isArray(value)) return value.length > 0;
     return true;
   }, []);
@@ -138,12 +139,12 @@ export function useValidation() {
         custom?: (value: unknown) => boolean | string;
       }
     ): string | null => {
-      const stringValue = String(value || "");
+      const stringValue = String(value || '');
       const numericValue = Number(value);
 
       // Required check
       if (rules.required && !isRequired(value)) {
-        return ValidationMessages.required("Field");
+        return ValidationMessages.required('Field');
       }
 
       // Skip other validations if value is empty and not required
@@ -197,11 +198,11 @@ export function useValidation() {
 
       // Length validations
       if (rules.minLength && !hasMinLength(stringValue, rules.minLength)) {
-        return ValidationMessages.tooShort("Field", rules.minLength);
+        return ValidationMessages.tooShort('Field', rules.minLength);
       }
 
       if (rules.maxLength && !hasMaxLength(stringValue, rules.maxLength)) {
-        return ValidationMessages.tooLong("Field", rules.maxLength);
+        return ValidationMessages.tooLong('Field', rules.maxLength);
       }
 
       // Range validations
@@ -221,23 +222,37 @@ export function useValidation() {
 
       // Pattern validation
       if (rules.pattern && !rules.pattern.test(stringValue)) {
-        return ValidationMessages.invalid("Field");
+        return ValidationMessages.invalid('Field');
       }
 
       // Custom validation
       if (rules.custom) {
         const result = rules.custom(value);
-        if (typeof result === "string") {
+        if (typeof result === 'string') {
           return result;
         }
         if (result === false) {
-          return ValidationMessages.invalid("Field");
+          return ValidationMessages.invalid('Field');
         }
       }
 
       return null;
     },
-    [isRequired, isEmail, isUrl, isEthereumAddress, isEthereumHash, isStrongPassword, isMediumPassword, isPhone, isNumeric, isPositive, isInRange, hasMinLength, hasMaxLength]
+    [
+      isRequired,
+      isEmail,
+      isUrl,
+      isEthereumAddress,
+      isEthereumHash,
+      isStrongPassword,
+      isMediumPassword,
+      isPhone,
+      isNumeric,
+      isPositive,
+      isInRange,
+      hasMinLength,
+      hasMaxLength,
+    ]
   );
 
   return {
@@ -271,23 +286,52 @@ export function useZodSchemas() {
 
       url: z.string().url(ValidationMessages.url),
 
-      ethereumAddress: z.string().refine((value) => ethers.utils.isAddress(value), ValidationMessages.ethereum.address),
+      ethereumAddress: z
+        .string()
+        .refine(value => ethers.utils.isAddress(value), ValidationMessages.ethereum.address),
 
-      ethereumHash: z.string().refine((value) => ValidationPatterns.ethereum.hash.test(value), ValidationMessages.ethereum.hash),
+      ethereumHash: z
+        .string()
+        .refine(
+          value => ValidationPatterns.ethereum.hash.test(value),
+          ValidationMessages.ethereum.hash
+        ),
 
-      strongPassword: z.string().refine((value) => ValidationPatterns.password.strong.test(value), ValidationMessages.password.strong),
+      strongPassword: z
+        .string()
+        .refine(
+          value => ValidationPatterns.password.strong.test(value),
+          ValidationMessages.password.strong
+        ),
 
-      mediumPassword: z.string().refine((value) => ValidationPatterns.password.medium.test(value), ValidationMessages.password.medium),
+      mediumPassword: z
+        .string()
+        .refine(
+          value => ValidationPatterns.password.medium.test(value),
+          ValidationMessages.password.medium
+        ),
 
-      phone: z.string().refine((value) => ValidationPatterns.phone.test(value), ValidationMessages.phone),
+      phone: z
+        .string()
+        .refine(value => ValidationPatterns.phone.test(value), ValidationMessages.phone),
 
       positiveNumber: z.number().positive(ValidationMessages.positive),
 
-      nonEmptyString: z.string().min(1, ValidationMessages.required("Field")),
+      nonEmptyString: z.string().min(1, ValidationMessages.required('Field')),
 
-      slug: z.string().refine((value) => ValidationPatterns.slug.test(value), "Must be a valid slug (lowercase letters, numbers, and hyphens only)"),
+      slug: z
+        .string()
+        .refine(
+          value => ValidationPatterns.slug.test(value),
+          'Must be a valid slug (lowercase letters, numbers, and hyphens only)'
+        ),
 
-      alphanumeric: z.string().refine((value) => ValidationPatterns.alphanumeric.test(value), "Must contain only letters and numbers"),
+      alphanumeric: z
+        .string()
+        .refine(
+          value => ValidationPatterns.alphanumeric.test(value),
+          'Must contain only letters and numbers'
+        ),
     }),
     []
   );
@@ -303,36 +347,56 @@ export function useZodSchemas() {
       } = {}
     ) => {
       if (options.required) {
-        let schema = z.string().min(1, ValidationMessages.required("Field"));
-        
+        let schema = z.string().min(1, ValidationMessages.required('Field'));
+
         if (options.minLength) {
-          schema = schema.min(options.minLength, ValidationMessages.tooShort("Field", options.minLength));
+          schema = schema.min(
+            options.minLength,
+            ValidationMessages.tooShort('Field', options.minLength)
+          );
         }
-        
+
         if (options.maxLength) {
-          schema = schema.max(options.maxLength, ValidationMessages.tooLong("Field", options.maxLength));
+          schema = schema.max(
+            options.maxLength,
+            ValidationMessages.tooLong('Field', options.maxLength)
+          );
         }
-        
+
         if (options.pattern) {
-          return schema.refine((value) => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid("Field"));
+          return schema.refine(
+            value => !value || options.pattern!.test(value),
+            options.patternMessage || ValidationMessages.invalid('Field')
+          );
         }
-        
+
         return schema;
       } else {
         let baseSchema = z.string();
-        
+
         if (options.minLength) {
-          baseSchema = baseSchema.min(options.minLength, ValidationMessages.tooShort("Field", options.minLength));
+          baseSchema = baseSchema.min(
+            options.minLength,
+            ValidationMessages.tooShort('Field', options.minLength)
+          );
         }
-        
+
         if (options.maxLength) {
-          baseSchema = baseSchema.max(options.maxLength, ValidationMessages.tooLong("Field", options.maxLength));
+          baseSchema = baseSchema.max(
+            options.maxLength,
+            ValidationMessages.tooLong('Field', options.maxLength)
+          );
         }
-        
+
         if (options.pattern) {
-          return baseSchema.refine((value) => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid("Field")).optional();
+          return baseSchema
+            .refine(
+              value => !value || options.pattern!.test(value),
+              options.patternMessage || ValidationMessages.invalid('Field')
+            )
+            .optional();
         }
-        
+
         return baseSchema.optional();
       }
     },
@@ -365,7 +429,7 @@ export function useZodSchemas() {
         }
 
         if (options.integer) {
-          schema = schema.int("Value must be an integer");
+          schema = schema.int('Value must be an integer');
         }
 
         return schema;
@@ -385,7 +449,7 @@ export function useZodSchemas() {
         }
 
         if (options.integer) {
-          baseSchema = baseSchema.int("Value must be an integer");
+          baseSchema = baseSchema.int('Value must be an integer');
         }
 
         return baseSchema.optional();
@@ -405,26 +469,32 @@ export function useZodSchemas() {
  * Hook for async validation
  */
 export function useAsyncValidation() {
-  const validateAsync = useCallback(async <T>(value: T, validator: (value: T) => Promise<boolean | string>): Promise<string | null> => {
-    try {
-      const result = await validator(value);
+  const validateAsync = useCallback(
+    async <T>(
+      value: T,
+      validator: (value: T) => Promise<boolean | string>
+    ): Promise<string | null> => {
+      try {
+        const result = await validator(value);
 
-      if (typeof result === "string") {
-        return result;
+        if (typeof result === 'string') {
+          return result;
+        }
+
+        return result ? null : ValidationMessages.invalid('Field');
+      } catch (error) {
+        return error instanceof Error ? error.message : 'Validation failed';
       }
-
-      return result ? null : ValidationMessages.invalid("Field");
-    } catch (error) {
-      return error instanceof Error ? error.message : "Validation failed";
-    }
-  }, []);
+    },
+    []
+  );
 
   const createAsyncValidator = useCallback(
     <T>(validator: (value: T) => Promise<boolean | string>, debounceMs = 300) => {
       let timeoutId: NodeJS.Timeout;
 
       return (value: T): Promise<string | null> => {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           clearTimeout(timeoutId);
 
           timeoutId = setTimeout(async () => {

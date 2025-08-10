@@ -4,10 +4,7 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Logo from '@/components/layout/Logo';
 import { ConnectWallet } from '@/components/wallet/connect-wallet';
-import {
-  useActiveWalletConnectionStatus,
-  useActiveAccount,
-} from 'thirdweb/react';
+import { useActiveWalletConnectionStatus, useActiveAccount } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
@@ -65,11 +62,11 @@ const TimeLockerSplitPage = () => {
   }, [error]);
 
   const handlePrevSection = () => {
-    setCurrentSection(prev => prev === 0 ? 1 : 0);
+    setCurrentSection(prev => (prev === 0 ? 1 : 0));
   };
 
   const handleNextSection = () => {
-    setCurrentSection(prev => prev === 0 ? 1 : 0);
+    setCurrentSection(prev => (prev === 0 ? 1 : 0));
   };
 
   return (
@@ -91,7 +88,7 @@ const TimeLockerSplitPage = () => {
         {/* Footer / Why use Timelock section */}
         <footer className='flex-grow flex flex-col justify-end'>
           <div className='flex justify-between items-center mb-8'>
-            <span 
+            <span
               className='text-2xl cursor-pointer hover:text-gray-400 transition-colors'
               onClick={handlePrevSection}
             >
@@ -105,7 +102,7 @@ const TimeLockerSplitPage = () => {
                 {/* <p className='text-sm text-gray-300 mt-1'>{t('protocolSubtitle')}</p> */}
               </div>
             )}
-            <span 
+            <span
               className='text-2xl cursor-pointer hover:text-gray-400 transition-colors'
               onClick={handleNextSection}
             >
@@ -157,9 +154,7 @@ const TimeLockerSplitPage = () => {
           </div>
 
           <h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
-          <p className='text-gray-600 text-sm mb-8'>
-            {t('connectWalletDescription')}
-          </p>
+          <p className='text-gray-600 text-sm mb-8'>{t('connectWalletDescription')}</p>
           <ConnectWallet icon={false} fullWidth={true} />
         </div>
       </div>

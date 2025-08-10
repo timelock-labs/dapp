@@ -59,11 +59,11 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     const standard = contract.standard || 'compound'; // 默认使用 compound 标准
     await deleteContract(`/api/v1/timelock/delete`, {
       method: 'DELETE',
-      body:{
+      body: {
         standard,
         contract_address: contract.contract_address,
         chain_id: contract.chain_id,
-      }
+      },
     });
   };
 
@@ -138,12 +138,16 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
     {
       key: 'user_permissions',
       header: t('userPermissions'),
-      render: (row: TimelockContractItem) => (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions?.join(', ') || t('none'),
+      render: (row: TimelockContractItem) =>
+        (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions?.join(
+          ', '
+        ) || t('none'),
     },
     {
       key: 'min_delay',
       header: t('minDelay'),
-      render: (row: TimelockContractItem) => (row as TimelockContractItem & { min_delay?: number }).min_delay,
+      render: (row: TimelockContractItem) =>
+        (row as TimelockContractItem & { min_delay?: number }).min_delay,
     },
     {
       key: 'created_at',
