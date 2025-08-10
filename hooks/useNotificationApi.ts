@@ -77,9 +77,9 @@ export const useNotificationApi = () => {
 
   const updateEmailNotificationMutation = useApiMutation<EmailNotification, {
     email: string;
-    data: UpdateEmailNotificationRequest;
+    remark: string;
   }>(
-    (variables) => `/api/v1/emails/${encodeURIComponent(variables.email)}`,
+    (variables) => `/api/v1/emails/${encodeURIComponent(variables.email)}/remark`,
     'PUT',
     { defaultErrorMessage: 'Failed to update email notification' }
   );
@@ -124,8 +124,8 @@ export const useNotificationApi = () => {
     return result;
   }, [createEmailNotificationMutation]);
 
-  const updateEmailNotification = useCallback(async (email: string, data: UpdateEmailNotificationRequest) => {
-    return updateEmailNotificationMutation.mutate({ email, data });
+  const updateEmailNotification = useCallback(async (email: string, remark: string) => {
+    return updateEmailNotificationMutation.mutate({ email, remark });
   }, [updateEmailNotificationMutation]);
 
   const deleteEmailNotification = useCallback(async (id: string) => {

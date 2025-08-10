@@ -8,9 +8,11 @@ import type { PaginationResponse } from '../common';
  * Email notification entity
  */
 export interface EmailNotification {
+  is_verified: boolean;
+  last_verified_at: string;
   id: string;
   email: string;
-  email_remark?: string;
+  remark?: string;
   timelock_contracts: string[];
   verified: boolean;
   created_at: string;
@@ -47,7 +49,7 @@ export interface EmailLog {
  */
 export interface CreateEmailNotificationRequest {
   email: string;
-  email_remark?: string;
+  remark?: string;
   timelock_contracts: string[];
 }
 
@@ -55,8 +57,7 @@ export interface CreateEmailNotificationRequest {
  * Update email notification request
  */
 export interface UpdateEmailNotificationRequest {
-  email_remark?: string;
-  timelock_contracts?: string[];
+  remark?: string;
 }
 
 /**
@@ -64,7 +65,7 @@ export interface UpdateEmailNotificationRequest {
  */
 export interface VerifyEmailRequest {
   email: string;
-  verification_code: string;
+  code: string;
 }
 
 /**

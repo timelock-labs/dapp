@@ -5,33 +5,21 @@ import { EmailNotification } from '@/hooks/useNotificationApi';
 import { useTranslations } from 'next-intl';
 
 interface MailboxCardProps {
-  id: number;
-  name: string;
-  email: string;
   onDelete: (id: number, email: string) => void;
   onEdit: (mailbox: EmailNotification) => void;
-  email_remark?: string;
-  timelock_contracts: string[];
-  verified: boolean;
+  id: number;
+  email: string;
+  remark?: string | null;
   created_at: string;
-  updated_at: string;
-  verification_code?: string;
-  verification_expires_at?: string;
 }
 
 const MailboxCard: React.FC<MailboxCardProps> = ({
   id,
-  name,
   email,
+  remark,
+  created_at,
   onDelete,
   onEdit,
-  email_remark,
-  timelock_contracts,
-  verified,
-  created_at,
-  updated_at,
-  verification_code,
-  verification_expires_at,
 }) => {
   const t = useTranslations('Notify.mailboxCard');
 
@@ -42,12 +30,9 @@ const MailboxCard: React.FC<MailboxCardProps> = ({
   const handleEditClick = () => {
     const mailboxData: EmailNotification = {
       id: id.toString(),
-      email,
-      email_remark: name,
-      timelock_contracts: [],
-      verified: true,
-      created_at: '',
-      updated_at: ''
+      remark: remark,
+      email: email,
+      created_at: created_at,
     };
     onEdit(mailboxData);
   };
@@ -55,17 +40,12 @@ const MailboxCard: React.FC<MailboxCardProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-auto">
       <div className='p-6'>
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
-        <p className="text-sm text-gray-500 mb-2">{email}</p>
+        <h3 className="text-lg font-semibold text-gray-900 mb-1">{email}</h3>
+        <p className="text-sm text-gray-500 mb-2">{remark}</p>
         <div className="text-xs text-gray-700 space-y-1">
           <div><strong>ID:</strong> {id}</div>
-          <div><strong>Email Remark:</strong> {email_remark ?? '-'}</div>
-          <div><strong>Timelock Contracts:</strong> {timelock_contracts && timelock_contracts.length > 0 ? timelock_contracts.join(', ') : '-'}</div>
-          <div><strong>Verified:</strong> {verified ? 'Yes' : 'No'}</div>
+          <div><strong>Email Remark:</strong> {remark ?? '-'}</div>
           <div><strong>Created At:</strong> {created_at || '-'}</div>
-          <div><strong>Updated At:</strong> {updated_at || '-'}</div>
-          <div><strong>Verification Code:</strong> {verification_code ?? '-'}</div>
-          <div><strong>Verification Expires At:</strong> {verification_expires_at ?? '-'}</div>
         </div>
       </div>
       <div className="pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] space-x-2">

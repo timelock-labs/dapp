@@ -151,21 +151,16 @@ const EmailNotificationPage: React.FC = () => {
         {/* Mailbox Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {mailboxes.map((mailbox) => (
-            <MailboxCard
 
-              key={mailbox.id}
-              id={parseInt(mailbox.id)}
-              name={mailbox.email_remark || ''}
-              email={mailbox.email}
+            mailbox.is_verified &&
+            <MailboxCard
               onDelete={handleDeleteMailbox}
               onEdit={handleEditMailbox}
-              email_remark={mailbox.email_remark}
-              timelock_contracts={mailbox.timelock_contracts || []}
-              verified={mailbox.verified}
+              key={mailbox.id}
+              id={parseInt(mailbox.id)}
+              email={mailbox.email}
+              remark={mailbox.email_remark}
               created_at={mailbox.created_at}
-              updated_at={mailbox.updated_at}
-              verification_code={mailbox.verification_code}
-              verification_expires_at={mailbox.verification_expires_at}
             />
           ))}
           {/* Add Mailbox Card */}

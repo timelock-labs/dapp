@@ -36,7 +36,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
-  const { createEmailNotification, verifyEmail, sendVerificationCode } = useNotificationApi();
+  const { verifyEmail, sendVerificationCode } = useNotificationApi();
 
   const { useTimelockList } = useTimelockApi();
 
@@ -93,7 +93,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
         try {
           await verifyEmail({
             email: emailAddress,
-            verification_code: verificationCode,
+            code: verificationCode,
           });
           setIsEmailVerified(true);
           toast.success(t('emailVerificationSuccess'));
@@ -132,24 +132,11 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
       if (!isEmailNotificationCreated) {
         // First time - try to create email notification
         try {
-                      await sendVerificationCode({ email: emailAddress });
-          // await createEmailNotification({
-          //   email: emailAddress,
-          //   email_remark: emailRemark,
-          // });
+          await sendVerificationCode({ email: emailAddress });
 
           setIsEmailNotificationCreated(true);
           toast.success(t('verificationCodeSent'));
         } catch {
-          // Failed to send verification code: Error: API request failed with status 409
-          // // If email already exists, switch to resend mode and send code
-          // if (createError.includes('API request failed with status 409')) {
-          //   setIsEmailNotificationCreated(true);
-
-          //   toast.success(t('verificationCodeResent'));
-          // } else {
-          //   throw createError; // Re-throw other errors
-          // }
         }
       } else {
         // Subsequent times - resend verification code
@@ -251,9 +238,8 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
           {/* Verification Status Indicator */}
           {verificationCode.length === 6 && (
             <div
-              className={`mb-4 p-3 rounded-md ${
-                isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-              }`}
+              className={`mb-4 p-3 rounded-md ${isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+                }`}
             >
               {isEmailVerified ? (
                 <div className='flex items-center'>

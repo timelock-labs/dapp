@@ -35,9 +35,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   initialData,
 }) => {
   const t = useTranslations('Notify.editMailbox');
-  const [emailRemark, setEmailRemark] = useState(initialData?.email_remark || '');
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-
+  const [emailRemark, setEmailRemark] = useState(initialData?.remark || '');
   const { updateEmailNotification } = useNotificationApi();
   const { useTimelockList } = useTimelockApi();
   
@@ -62,20 +60,6 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
           });
         });
       }
-
-      // Add OpenZeppelin timelocks
-      if (timelockData.openzeppelin_timelocks) {
-        timelockData.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
-          timelockPermissions.push({
-            id: timelock.contract_address,
-            label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
-            subLabel: timelock.contract_address,
-            icon: <span className='text-blue-500 text-base'>🔷</span>,
-          });
-        });
-      }
-
-      setPermissions(timelockPermissions);
     }
   }, [timelockData]);
 
@@ -89,7 +73,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 
   useEffect(() => {
     if (initialData) {
-      setEmailRemark(initialData.email_remark || '');
+      setEmailRemark(initialData.remark || '');
     }
   }, [initialData]);
 
@@ -97,7 +81,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
   const handleCancel = () => {
     onClose();
     // Reset form state on cancel
-    setEmailRemark(initialData?.email_remark || '');
+    setEmailRemark(initialData?.remark || '');
   };
 
   const handleSave = async () => {
@@ -112,9 +96,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
     }
 
     try {
-      await updateEmailNotification(initialData.email, {
-        email_remark: emailRemark,
-      });
+      await updateEmailNotification(initialData.id, emailRemark);
 
       toast.success(t('updateSuccess'));
       onSuccess();
