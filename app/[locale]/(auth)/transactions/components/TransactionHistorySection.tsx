@@ -90,12 +90,14 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
     fetchHistoryTransactions();
   }, [fetchHistoryTransactions]);
 
+  // all, waiting, ready, executed, cancelled, expired
   const historyTabs = [
     { id: 'all', label: t('all') },
-    { id: 'queued', label: t('queued') },
+    { id: 'waiting', label: t('waiting') },
+    { id: 'ready', label: t('ready') },
     { id: 'executed', label: t('executed') },
-    { id: 'expired', label: t('expired') },
     { id: 'canceled', label: t('canceled') },
+    { id: 'expired', label: t('expired') },
   ];
 
   const formatAddress = (address: string) => {
