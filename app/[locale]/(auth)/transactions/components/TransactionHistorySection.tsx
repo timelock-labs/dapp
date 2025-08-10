@@ -36,7 +36,7 @@ const getHistoryTxTypeStyle = (type: string) => {
   switch (type) {
     case 'executed': return 'bg-green-100 text-green-800';
     case 'expired': return 'bg-red-100 text-red-800';
-    case 'canceled': return 'bg-gray-100 text-gray-800';
+    case 'cancelled': return 'bg-gray-100 text-gray-800';
     case 'queued': return 'bg-blue-100 text-blue-800';
     default: return 'bg-gray-100 text-gray-800';
   }
@@ -96,7 +96,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
     { id: 'waiting', label: t('waiting') },
     { id: 'ready', label: t('ready') },
     { id: 'executed', label: t('executed') },
-    { id: 'canceled', label: t('canceled') },
+    { id: 'cancelled', label: t('cancelled') },
     { id: 'expired', label: t('expired') },
   ];
 
@@ -152,15 +152,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
       )
     },
     {
-      key: 'status',
-      header: t('status'),
-      render: (row: HistoryTxRow) => (
-        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>
-          {row.status}
-        </span>
-      ),
-    },
-    {
       key: 'created_at',
       header: t('createdAt'),
       render: (row: HistoryTxRow) => (
@@ -170,14 +161,32 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
       ),
     },
     {
-      key: 'completed_at',
-      header: 'Completed At',
+      key:"eta",
+      header: t('eta'),
       render: (row: HistoryTxRow) => (
         <span className="text-sm text-gray-600">
-          {formatDate(row.executed_at || row.canceled_at || '')}
+          {formatDate(row.eta)}
         </span>
       ),
     },
+    {
+      key:"expired_at",
+      header: t('expiredAt'),
+      render: (row: HistoryTxRow) => (
+        <span className="text-sm text-gray-600">
+          {formatDate(row.expired_at)}
+        </span>
+      ),
+    },
+    {
+      key: 'status',
+      header: t('status'),
+      render: (row: HistoryTxRow) => (
+        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>
+          {row.status}
+        </span>
+      ),
+    }
   ];
 
   const handleExport = () => {
