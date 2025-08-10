@@ -196,20 +196,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
     }
 
     try {
-      // Prepare data for export
-      const exportData = historyTxs.map(tx => ({
-        ID: tx.id,
-        Chain: tx.chain_name,
-        Description: tx.description || 'No description',
-        'Timelock Address': tx.timelock_address,
-        'Transaction Hash': tx.tx_hash,
-        Status: tx.status,
-        'Created At': formatDate(tx.created_at),
-        'Completed At': formatDate(tx.executed_at || tx.canceled_at || ''),
-        Creator: tx.creator_address,
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const worksheet = XLSX.utils.json_to_sheet(historyTxs);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Transaction History");
 
