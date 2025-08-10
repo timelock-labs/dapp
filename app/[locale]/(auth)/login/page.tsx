@@ -18,7 +18,6 @@ const TimeLockerSplitPage = () => {
   const { address, signMessage } = useActiveAccount() || {};
 
   const connectionStatus = useActiveWalletConnectionStatus();
-  console.log('TimeLockerSplitPage: connectionStatus =', connectionStatus);
   const isConnected = connectionStatus === 'connected';
   const { data: apiResponse, request: walletConnect, error } = useApi();
   const login = useAuthStore(state => state.login);
@@ -29,8 +28,6 @@ const TimeLockerSplitPage = () => {
       const message = 'welcome to TimeLocker!';
       try {
         const signature = await signMessage!({ message: message });
-        console.log('Message:', message);
-        console.log('Signature:', signature);
         await walletConnect('/api/v1/auth/wallet-connect', {
           method: 'POST',
           body: {

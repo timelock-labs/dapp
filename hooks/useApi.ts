@@ -4,14 +4,17 @@ import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '@/store/userStore';
 import type { ApiRequestOptions, UseApiReturn, ApiResponse } from '@/types';
-
+import { useRouter } from 'next/navigation';
 
 export function useApi(): UseApiReturn {
   const [data, setData] = useState<ApiResponse>({ data: null, success: false });
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter();
+
   const accessToken = useAuthStore((state) => state.accessToken); // Get accessToken from useAuthStore
 
+  
   const request = useCallback(async (url: string, options: ApiRequestOptions = {}, retryCount: number = 0) => {
     setIsLoading(true);
     setError(null);
@@ -41,7 +44,7 @@ export function useApi(): UseApiReturn {
         return response.data;
       } catch (error: any) {
         if (error.response?.status === 401) {
-          window.location.href = '/login';
+        router.push('/login'); // Redirect to login on 401 Unauthorized
           return;
         }
         alert(
