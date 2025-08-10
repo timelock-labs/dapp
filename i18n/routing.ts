@@ -5,5 +5,7 @@ export const routing = defineRouting({
   locales: ['en', 'zh'],
  
   // Used when no locale matches
-  defaultLocale: 'en'
+  defaultLocale: 'en',
+
+  localePrefix: 'never' // 🚀 不在 URL 中加语言前缀
 });

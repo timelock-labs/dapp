@@ -34,11 +34,14 @@ export default function LanguageSwitcher({ className = "", variant = "default" }
   // 获取当前路径，去掉 locale 部分
   const segments = pathname.split("/").filter(Boolean);
   const currentLocale = segments[0];
-  const restPath = "/" + segments.slice(1).join("/");
 
   const handleSwitch = (lang: string) => {
     if (lang === currentLocale) return;
-    router.push(`/${lang}${restPath}`);
+    // 1. 存到 cookie，next-intl 会用它做默认语言
+    document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`; // 1 年有效期
+
+    // 2. 刷新页面，让服务端根据 cookie 重新加载
+    router.refresh();
   };
 
   const baseClasses = variant === "compact" ? "px-2 py-1 text-xs" : "px-3 py-1 text-sm";
@@ -49,9 +52,8 @@ export default function LanguageSwitcher({ className = "", variant = "default" }
         <button
           key={code}
           onClick={() => handleSwitch(code)}
-          className={`${baseClasses} rounded transition border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${
-            locale === code ? "bg-black text-white border-black" : "bg-white text-black border-gray-300 hover:bg-gray-50"
-          }`}
+          className={`${baseClasses} rounded transition border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${locale === code ? "bg-black text-white border-black" : "bg-white text-black border-gray-300 hover:bg-gray-50"
+            }`}
           aria-current={locale === code ? "true" : undefined}
           aria-label={`Switch to ${label}`}
           type="button"

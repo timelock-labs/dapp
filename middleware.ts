@@ -9,7 +9,7 @@ const intlMiddleware = createMiddleware(routing);
 export default function middleware(request: NextRequest) {
   // 将根路径重定向到登录页面
   if (request.nextUrl.pathname === '/') {
-    return NextResponse.redirect(new URL('/en/login', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
   
   // 对于其他路径，使用国际化中间件
