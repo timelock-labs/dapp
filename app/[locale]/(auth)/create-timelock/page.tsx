@@ -44,7 +44,7 @@ const CreateTimelockPage: React.FC = () => {
   const { id: chainId } = useActiveWalletChain() || {};
   const switchChain = useSwitchActiveWalletChain();
   const { request: createTimelockApiCall } = useApi();
-  const { accessToken, chains } = useAuthStore();
+  const {  chains } = useAuthStore();
   const { address: walletAddress } = useActiveAccount() || {};
   const { deployCompoundTimelock, isLoading } = useDeployTimelock();
   const router = useRouter();
@@ -93,11 +93,6 @@ const CreateTimelockPage: React.FC = () => {
 
   // Deployment handlers
   const handleCreate = useCallback(async () => {
-    if (!accessToken || !walletAddress) {
-      toast.error('Please connect your wallet first.');
-      return;
-    }
-
     // Validation
     if (!formState.selectedChain || !formState.minDelay) {
       toast.error('Please fill in all required fields.');
@@ -136,7 +131,7 @@ const CreateTimelockPage: React.FC = () => {
       console.error('Deployment failed:', error);
       // The useDeployTimelock hook already handles toast messages for errors.
     }
-  }, [accessToken, walletAddress, formState, selectedChainData, deployCompoundTimelock]);
+  }, [ walletAddress, formState, selectedChainData, deployCompoundTimelock]);
 
   const handleConfirmDialogClose = useCallback(() => {
     setIsConfirmDialogOpen(false);
@@ -144,7 +139,7 @@ const CreateTimelockPage: React.FC = () => {
 
   const handleConfirmDialogConfirm = useCallback(
     async (remarkFromDialog: string) => {
-      if (!accessToken || !walletAddress) {
+      if ( !walletAddress) {
         toast.error('Please connect your wallet.');
         return;
       }
@@ -162,10 +157,6 @@ const CreateTimelockPage: React.FC = () => {
 
         const apiResponse = await createTimelockApiCall('/api/v1/timelock/create-or-import', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
           body,
         });
 
@@ -193,7 +184,7 @@ const CreateTimelockPage: React.FC = () => {
         setIsConfirmDialogOpen(false);
       }
     },
-    [accessToken, walletAddress, formState, dialogDetails, createTimelockApiCall, router, locale]
+    [ walletAddress, formState, dialogDetails, createTimelockApiCall, router, locale]
   );
 
   // Effect to sync chain ID

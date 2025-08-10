@@ -31,8 +31,6 @@ const ABILibPage: React.FC = () => {
 
   const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
   const [abis, setAbis] = useState<ABIRow[]>([]);
-  const accessToken = useAuthStore(state => state.accessToken);
-
   const { data: abiListResponse, request: fetchAbiList, error, isLoading } = useApi();
   const { request: addAbi } = useApi();
   const { data: deleteAbiResponse, request: deleteAbi } = useApi();
@@ -42,20 +40,16 @@ const ABILibPage: React.FC = () => {
   const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
   const refreshAbiList = useCallback(() => {
-    if (accessToken) {
+
       fetchAbiList('/api/v1/abi/list', {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
       });
-    }
-  }, [accessToken, fetchAbiList]);
+
+  }, [ fetchAbiList]);
 
   useEffect(() => {
     refreshAbiList();
-  }, [accessToken, refreshAbiList]); // 添加 refreshAbiList 到依赖数组
+  }, [ refreshAbiList]); // 添加 refreshAbiList 到依赖数组
 
   useEffect(() => {
     if (abiListResponse?.success === true) {
@@ -94,10 +88,6 @@ const ABILibPage: React.FC = () => {
       if (validationResponse?.success && validationResponse.data.is_valid) {
         const addResponse = await addAbi('/api/v1/abi', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
           body: {
             name,
             description,
@@ -165,11 +155,7 @@ ${viewAbiResponse.data.abi_content}`);
     if (!abiToDelete) return;
 
     await deleteAbi(`/api/v1/abi/${abiToDelete.id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      method: 'DELETE'
     });
 
     setIsDeleteDialogOpen(false);

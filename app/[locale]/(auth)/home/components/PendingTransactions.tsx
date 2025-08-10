@@ -43,14 +43,11 @@ const PendingTransactions: React.FC = () => {
   const t = useTranslations('Transactions');
   const [pendingTxs, setPendingTxs] = useState<PendingTxRow[]>([]);
   const [, setIsLoading] = useState(false);
-  const accessToken = useAuthStore((state) => state.accessToken);
   
   const { getPendingTransactions } = useTransactionApi();
 
   // Fetch pending transactions
-  const fetchPendingTransactions = useCallback(async () => {
-    if (!accessToken) return;
-    
+  const fetchPendingTransactions = useCallback(async () => {    
     setIsLoading(true);
     try {
       const response = await getPendingTransactions({
@@ -72,7 +69,7 @@ const PendingTransactions: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, getPendingTransactions, t]);
+  }, [getPendingTransactions, t]);
 
   useEffect(() => {
     fetchPendingTransactions();

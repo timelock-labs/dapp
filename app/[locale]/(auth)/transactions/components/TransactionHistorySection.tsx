@@ -55,7 +55,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
-  const accessToken = useAuthStore((state) => state.accessToken);
   const chains = useAuthStore(state => state.chains);
 
   const { getTransactionList } = useTransactionApi();
@@ -67,7 +66,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
   // Fetch transaction history
   const fetchHistoryTransactions = useCallback(async () => {
-    if (!accessToken) return;
 
     try {
       const response = await getTransactionList({
@@ -87,7 +85,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
       console.error('Failed to fetch transaction history:', error);
       toast.error(t('fetchHistoryTxsError'));
     }
-  }, [accessToken, activeTab, getTransactionList, t]);
+  }, [ activeTab, getTransactionList, t]);
 
   useEffect(() => {
     fetchHistoryTransactions();

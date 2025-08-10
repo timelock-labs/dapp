@@ -45,6 +45,7 @@ export function useWeb3React(): {
 } {
   const client = createThirdwebClient({
     clientId: "0e1974955be2e739c2b5fc550a3f6c0d",
+    
   });
 
   const activeAccount = useActiveAccount();

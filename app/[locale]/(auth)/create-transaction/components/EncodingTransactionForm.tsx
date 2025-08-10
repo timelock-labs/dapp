@@ -42,7 +42,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
   onTimelockDetailsChange,
 }) => {
   const t = useTranslations("CreateTransaction");
-  const { allTimelocks, accessToken } = useAuthStore();
+  const { allTimelocks } = useAuthStore();
   const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
@@ -98,15 +98,11 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         onTimelockAddressChange(selectedTimelock.address);
 
         const fullTimelock = allTimelocks.find((tl) => tl.id.toString() === value);
-        if (fullTimelock && accessToken) {
+        if (fullTimelock) {
           setIsLoadingDetails(true);
           try {
             await fetchTimelockDetail("/api/v1/timelock/detail", {
               method: "GET",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-              },
               body: JSON.stringify({
                 chain_id: fullTimelock.chain_id,
                 contract_address: fullTimelock.contract_address,
@@ -121,7 +117,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
         }
       }
     },
-    [allTimelocks, accessToken, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions],
+    [allTimelocks, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions],
   );
 
   useEffect(() => {

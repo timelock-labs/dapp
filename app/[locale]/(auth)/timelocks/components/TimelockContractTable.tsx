@@ -45,7 +45,6 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
   const router = useRouter();
   const params = useParams();
   const locale = params.locale;
-  const accessToken = useAuthStore(state => state.accessToken);
   const chains = useAuthStore(state => state.chains);
 
   const { data: deleteResponse, request: deleteContract } = useApi();
@@ -60,12 +59,13 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 
   const handleDeleteContract = async (contract: TimelockContractItem) => {
     const standard = contract.standard || 'compound'; // 默认使用 compound 标准
-    await deleteContract(`/api/v1/timelock/${standard}/${contract.id}`, {
+    await deleteContract(`/api/v1/timelock/delete`, {
       method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      body:{
+        standard,
+        contract_address: contract.contract_address,
+        chain_id: contract.chain_id,
+      }
     });
   };
 
