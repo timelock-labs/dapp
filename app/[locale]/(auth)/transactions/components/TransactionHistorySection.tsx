@@ -74,7 +74,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
         // Add search functionality if needed
       });
 
-      const transformedData: HistoryTxRow[] = (response?.flows || []).map((tx: Transaction) => ({
+      const transformedData: HistoryTxRow[] = (response).map((tx: Transaction) => ({
         ...tx,
         chainIcon: <div className="w-4 h-4 bg-gray-300 rounded-full" />, // Placeholder icon
       }));

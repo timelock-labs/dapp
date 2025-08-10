@@ -37,7 +37,7 @@ export const useTransactionApi = () => {
         : '/api/v1/flows/list';
         
       const response = await request(url, { method: 'GET' });
-      return response.data;
+      return response.data.flows || response.data; // Handle both legacy and new response formats
     } catch (error) {
       throw error;
     }

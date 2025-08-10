@@ -14,6 +14,7 @@
     "waiting": "Waiting",
     "ready": "Ready",
     "cancelled": "Cancelled",
+    "expiredAt": "Expired At",
 
     "title": "Transactions",
     "pending": "Pending",

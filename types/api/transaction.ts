@@ -23,6 +23,7 @@ export interface Transaction {
   expired_at: Timestamp;
   created_at: Timestamp;
   updated_at: Timestamp;
+  chainIcon: React.ReactNode;
 }
 
 /**
