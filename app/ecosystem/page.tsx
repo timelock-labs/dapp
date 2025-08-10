@@ -8,44 +8,44 @@ import { useTranslations } from 'next-intl';
 import type { Partner } from '@/types/api';
 
 const EcosystemPage: React.FC = () => {
-  const t = useTranslations('Ecosystem');
-  const [sponsors, setSponsors] = useState<Partner[]>([]);
-  const [partners, setPartners] = useState<Partner[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { getSponsors } = useSponsorsApi();
+	const t = useTranslations('Ecosystem');
+	const [sponsors, setSponsors] = useState<Partner[]>([]);
+	const [partners, setPartners] = useState<Partner[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const { getSponsors } = useSponsorsApi();
 
-  useEffect(() => {
-    const fetchSponsors = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getSponsors();
-        if (response.success && response.data) {
-          setSponsors(response.data.sponsors || []);
-          setPartners(response.data.partners || []);
-        }
-      } catch (error) {
-        console.error('Error fetching sponsors:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+	useEffect(() => {
+		const fetchSponsors = async () => {
+			try {
+				setIsLoading(true);
+				const response = await getSponsors();
+				if (response.success && response.data) {
+					setSponsors(response.data.sponsors || []);
+					setPartners(response.data.partners || []);
+				}
+			} catch (error) {
+				console.error('Error fetching sponsors:', error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 
-    fetchSponsors();
-  }, [getSponsors]);
+		fetchSponsors();
+	}, [getSponsors]);
 
-  return (
-    <PageLayout title={t('title')}>
-      <div className='min-h-screen  '>
-        <div className='mx-auto flex flex-col space-y-8 pt-4'>
-          {/* Top Header Section */}
-          <EcosystemSearchHeader />
+	return (
+		<PageLayout title={t('title')}>
+			<div className='min-h-screen  '>
+				<div className='mx-auto flex flex-col space-y-8 pt-4'>
+					{/* Top Header Section */}
+					<EcosystemSearchHeader />
 
-          {/* Partners Grid Section */}
-          <PartnersGrid sponsors={sponsors} partners={partners} isLoading={isLoading} />
-        </div>
-      </div>
-    </PageLayout>
-  );
+					{/* Partners Grid Section */}
+					<PartnersGrid sponsors={sponsors} partners={partners} isLoading={isLoading} />
+				</div>
+			</div>
+		</PageLayout>
+	);
 };
 
 export default EcosystemPage;

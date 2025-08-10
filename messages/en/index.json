@@ -1,7 +1,7 @@
 {
-  "_meta": {
-    "description": "English internationalization files",
-    "modules": ["common", "auth", "navigation", "timelock", "transaction", "abi", "notification", "home", "wallet"],
-    "lastUpdated": "2025-08-02"
-  }
+	"_meta": {
+		"description": "English internationalization files",
+		"modules": ["common", "auth", "navigation", "timelock", "transaction", "abi", "notification", "home", "wallet"],
+		"lastUpdated": "2025-08-02"
+	}
 }

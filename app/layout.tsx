@@ -12,45 +12,45 @@ import { Toaster } from 'sonner';
 import { cookies } from 'next/headers';
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+	variable: '--font-geist-sans',
+	subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+	variable: '--font-geist-mono',
+	subsets: ['latin'],
 });
 
 type Props = {
-  children: ReactNode;
+	children: ReactNode;
 };
 
 export default async function RootLayout({ children }: Props) {
-  // 直接使用 defaultLocale
-  const cookieStore = await cookies();
-  const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
-  const messages = await getMessages({ locale });
+	// 直接使用 defaultLocale
+	const cookieStore = await cookies();
+	const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
+	const messages = await getMessages({ locale });
 
-  return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <title>TimeLocker</title>
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {' '}
-        {/* Apply font variables here */}
-        <ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
-          <Web3Provider>
-            {' '}
-            {/* Use the main Web3Provider component */}
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              {children}
-            </NextIntlClientProvider>
-            {/* <TokenRefresher /> */}
-          </Web3Provider>
-        </ThemeProvider>
-        <Toaster position='top-center' /> {/* Add Toaster component here */}
-      </body>
-    </html>
-  );
+	return (
+		<html lang={locale} suppressHydrationWarning>
+			<head>
+				<title>TimeLocker</title>
+			</head>
+			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				{' '}
+				{/* Apply font variables here */}
+				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
+					<Web3Provider>
+						{' '}
+						{/* Use the main Web3Provider component */}
+						<NextIntlClientProvider locale={locale} messages={messages}>
+							{children}
+						</NextIntlClientProvider>
+						{/* <TokenRefresher /> */}
+					</Web3Provider>
+				</ThemeProvider>
+				<Toaster position='top-center' /> {/* Add Toaster component here */}
+			</body>
+		</html>
+	);
 }

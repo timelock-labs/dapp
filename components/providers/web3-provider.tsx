@@ -7,13 +7,13 @@ import { ReactNode } from 'react';
 const queryClient = new QueryClient();
 
 interface Web3ProviderProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 export function Web3Provider({ children }: Web3ProviderProps) {
-  return (
-    <ThirdwebProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </ThirdwebProvider>
-  );
+	return (
+		<ThirdwebProvider>
+			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+		</ThirdwebProvider>
+	);
 }

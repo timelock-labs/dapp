@@ -10,16 +10,16 @@ import home from './en/home.json';
 import wallet from './en/wallet.json';
 
 export default {
-  // common 模块直接包含键值对，需要包装在 common 命名空间中
-  common,
+	// common 模块直接包含键值对，需要包装在 common 命名空间中
+	common,
 
-  // 其他模块已经有正确的命名空间结构，直接展开
-  ...auth,
-  ...navigation,
-  ...timelock,
-  ...transaction,
-  ...abi,
-  ...notification,
-  ...home,
-  ...wallet,
+	// 其他模块已经有正确的命名空间结构，直接展开
+	...auth,
+	...navigation,
+	...timelock,
+	...transaction,
+	...abi,
+	...notification,
+	...home,
+	...wallet,
 };

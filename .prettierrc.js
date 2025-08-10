@@ -1,40 +1,42 @@
 module.exports = {
-  // Line length and wrapping
-  printWidth: 100,
-  tabWidth: 2,
-  useTabs: false,
+	// Line length and wrapping
+	printWidth: 100,
+	tabWidth: 4,
+	useTabs: true,
 
-  // Semicolons and quotes
-  semi: true,
-  singleQuote: true,
-  quoteProps: 'as-needed',
+	// Semicolons and quotes
+	semi: true,
+	singleQuote: true,
+	quoteProps: 'as-needed',
 
-  // Trailing commas and spacing
-  trailingComma: 'es5',
-  bracketSpacing: true,
-  bracketSameLine: false,
+	// Trailing commas and spacing
+	trailingComma: 'es5',
+	bracketSpacing: true,
+	bracketSameLine: true,
 
-  // Arrow functions and JSX
-  arrowParens: 'avoid',
-  jsxSingleQuote: true,
+	// Arrow functions and JSX
+	arrowParens: 'avoid',
+	jsxSingleQuote: true,
 
-  // Line endings
-  endOfLine: 'lf',
+	// Line endings
+	endOfLine: 'lf',
 
-  // File-specific overrides
-  overrides: [
-    {
-      files: '*.md',
-      options: {
-        printWidth: 80,
-        proseWrap: 'always',
-      },
-    },
-    {
-      files: '*.json',
-      options: {
-        printWidth: 180,
-      },
-    },
-  ],
+	experimentalTernaries: true,
+
+	// File-specific overrides
+	overrides: [
+		{
+			files: '*.md',
+			options: {
+				printWidth: 80,
+				proseWrap: 'always',
+			},
+		},
+		{
+			files: '*.json',
+			options: {
+				printWidth: 180,
+			},
+		},
+	],
 };
