@@ -79,8 +79,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
         chainIcon: <div className="w-4 h-4 bg-gray-300 rounded-full" />, // Placeholder icon
       }));
 
-      alert(JSON.stringify(transformedData, null, 2)); // Debugging line
-
       setHistoryTxs(transformedData);
     } catch (error) {
       console.error('Failed to fetch transaction history:', error);

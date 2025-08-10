@@ -46,9 +46,6 @@ const TimeLockerSplitPage = () => {
   }, [isConnected, address, signMessage, walletConnect]);
 
   useEffect(() => {
-    console.log('TimeLockerSplitPage: useEffect triggered');
-    console.log('TimeLockerSplitPage: isConnected =', isConnected);
-    console.log('TimeLockerSplitPage: address =', address);
     handleUserSignature();
   }, [isConnected, address, handleUserSignature]);
 

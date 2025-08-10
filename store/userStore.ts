@@ -24,15 +24,26 @@ export const useAuthStore = create<AppState & AppActions>()(
       (set, get) => ({
         user: null,
         isAuthenticated: false,
-        accessToken: null,
-        refreshToken: null,
-        expiresAt: null,
+        accessToken: document.cookie
+          .split('; ')
+          .find(row => row.startsWith('accessToken='))
+          ?.split('=')[1] || null,
+        refreshToken: document.cookie
+          .split('; ')
+          .find(row => row.startsWith('refreshToken='))
+          ?.split('=')[1] || null,
+        expiresAt: null, // 初始化为 null，稍后会从 cookie 中获取
+        // 初始化状态
         chains: [],
         allTimelocks: [],
         _hasHydrated: false,
+
         login: (data) => {
+          // 写入到 cookie
+          document.cookie = `accessToken=${data.accessToken}; path=/`;
+          document.cookie = `refreshToken=${data.refreshToken}; path=/`;
+          document.cookie = `expiresAt=${data.expiresAt}; path=/`;
           // The persist middleware will automatically save the state.
-          // No need for manual storage management.
           set({
             user: data.user,
             isAuthenticated: true,
@@ -42,6 +53,10 @@ export const useAuthStore = create<AppState & AppActions>()(
           });
         },
         logout: () => {
+          // 从 cookie 中删除
+          document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'expiresAt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
           // The persist middleware will automatically clear the persisted state.
           set({ user: null, isAuthenticated: false, accessToken: null, refreshToken: null, expiresAt: null, allTimelocks: [] });
         },
