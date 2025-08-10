@@ -39,8 +39,6 @@ export default function LanguageSwitcher({ className = "", variant = "default" }
     if (lang === currentLocale) return;
     // 1. 存到 cookie，next-intl 会用它做默认语言
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`; // 1 年有效期
-
-    // 2. 刷新页面，让服务端根据 cookie 重新加载
     router.refresh();
   };
 

@@ -7,5 +7,8 @@ export const routing = defineRouting({
   // Used when no locale matches
   defaultLocale: 'en',
 
-  localePrefix: 'never' // 🚀 不在 URL 中加语言前缀
+  localePrefix: 'never', // 🚀 不在 URL 中加语言前缀
+
+localeCookie: true,
+localeDetection: false,
 });

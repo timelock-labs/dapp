@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Locale, NextIntlClientProvider, hasLocale } from 'next-intl';
+import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { routing } from '@/i18n/routing';import { Web3Provider } from '@/components/providers/web3-provider'; // Use the Providers from app/providers.tsx
@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import "@/app/globals.css"
 import { Geist, Geist_Mono } from "next/font/google"; // Import fonts here
 import { Toaster } from 'sonner';
+import { cookies } from 'next/headers';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,16 +22,13 @@ const geistMono = Geist_Mono({
 
 type Props = {
   children: ReactNode;
-  params: Promise<{ locale: Locale }>;
 };
 
-export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = await params;
-  // if (!hasLocale(routing.locales, locale)) {
-  //   notFound();
-  // }
-
-  const messages = await getMessages();
+export default async function RootLayout({ children }: Props) {
+  // 直接使用 defaultLocale
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
+  const messages = await getMessages({ locale });
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -43,7 +41,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <NextIntlClientProvider locale={locale} messages={messages}>
               {children}
             </NextIntlClientProvider>
-            <TokenRefresher />
+            {/* <TokenRefresher /> */}
           </Web3Provider>
         </ThemeProvider>
         <Toaster position="top-center" /> {/* Add Toaster component here */}
