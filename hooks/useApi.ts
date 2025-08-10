@@ -41,7 +41,7 @@ export function useApi(): UseApiReturn {
         return response.data;
       } catch (error: any) {
         if (error.response?.status === 401) {
-          window.location.href = '/en/login';
+          window.location.href = '/login';
           return;
         }
         alert(
