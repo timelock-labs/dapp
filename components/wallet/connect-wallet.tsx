@@ -86,11 +86,9 @@ export const ConnectWallet = memo(function ConnectWallet({
 				wallets={wallets}
 				theme='dark'
 				onConnect={() => {
-					console.log('Wallet connected');
 					onConnect?.();
 				}}
 				onDisconnect={() => {
-					console.log('Wallet disconnected');
 					logout();
 					router.push('/login');
 					onDisconnect?.();

@@ -128,11 +128,8 @@ const ABILibPage: React.FC = () => {
 
 	useEffect(() => {
 		if (viewAbiResponse?.success === true) {
-			console.log(`ABI Content for ${viewAbiResponse.data.name}:
-${viewAbiResponse.data.abi_content}`);
 			toast.success(t('viewAbiSuccess', { name: viewAbiResponse.data.name }));
 		} else if (viewAbiResponse?.success === false && viewAbiResponse.data !== null) {
-			console.error('Failed to fetch ABI details:', viewAbiResponse.error);
 			toast.error(
 				t('viewAbiError', { message: viewAbiResponse.error?.message || 'Unknown error' })
 			);
@@ -171,7 +168,6 @@ ${viewAbiResponse.data.abi_content}`);
 
 	useEffect(() => {
 		if (deleteAbiResponse?.success === true) {
-			console.log(`ABI deleted successfully.`);
 			toast.success(t('deleteAbiSuccess'));
 			refreshAbiList(); // 刷新列表
 		} else if (deleteAbiResponse?.success === false && deleteAbiResponse.data !== null) {

@@ -57,7 +57,6 @@ export function useApi(): UseApiReturn {
 							`Body: ${JSON.stringify(options.body, null, 2)}\n` +
 							`Error: ${error.message}`
 					); // Debugging line
-					console.log(error.response?.data, 'errorData');
 					throw error;
 				}
 			} catch (err: any) {

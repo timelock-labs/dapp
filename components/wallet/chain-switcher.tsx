@@ -45,12 +45,7 @@ export function ChainSwitcher() {
 	}, [chains, chainId]);
 
 	useEffect(() => {
-		console.log('ChainSwitcher: _hasHydrated =', _hasHydrated);
-		console.log('ChainSwitcher: chains length =', chains?.length);
-		console.log('ChainSwitcher: hasFetchedChains =', hasFetchedChains.current);
-
 		if (_hasHydrated && !hasFetchedChains.current && (!chains || chains.length === 0)) {
-			console.log('ChainSwitcher: Calling fetchChains');
 			hasFetchedChains.current = true;
 			fetchChains();
 		}
@@ -64,7 +59,6 @@ export function ChainSwitcher() {
 				refreshToken: switchChainResponse.data.refresh_token,
 				expiresAt: switchChainResponse.data.expires_at,
 			});
-			console.log('Chain switched and auth tokens updated successfully!');
 		} else if (switchChainResponse && switchChainResponse.error) {
 			console.error('Backend chain switch failed:', switchChainResponse.error.message);
 		}

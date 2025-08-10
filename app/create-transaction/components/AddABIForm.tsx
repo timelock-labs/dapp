@@ -29,16 +29,12 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 	const [abi, setAbi] = useState<string>('');
 
 	const handleCancel = () => {
-		console.log('Cancel button clicked');
 		setName(''); // Reset form fields
 		setAbi('');
 		onClose(); // Close the dialog
 	};
 
 	const handleSave = () => {
-		console.log('Save button clicked');
-		console.log('Name:', name);
-		console.log('ABI:', abi);
 		// Here you would typically send data to a backend or update global state
 		if (name.trim() && abi.trim()) {
 			onAddABI(name, '', abi);

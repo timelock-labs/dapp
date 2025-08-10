@@ -103,8 +103,6 @@ const CreateTimelockPage: React.FC = () => {
 		let transactionHash: string | null = null;
 
 		try {
-			console.log('Deploying timelock with standard:', formState.selectedStandard);
-
 			if (formState.selectedStandard === 'compound') {
 				const params: CompoundTimelockParams = {
 					minDelay: parseInt(formState.minDelay),
@@ -155,8 +153,6 @@ const CreateTimelockPage: React.FC = () => {
 			};
 
 			try {
-				console.log('Creating timelock record with body:', body);
-
 				const apiResponse = await createTimelockApiCall(
 					'/api/v1/timelock/create-or-import',
 					{

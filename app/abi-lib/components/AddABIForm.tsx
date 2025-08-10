@@ -25,7 +25,6 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 	const [abi, setAbi] = useState<string>('');
 
 	const handleCancel = () => {
-		console.log('Cancel button clicked');
 		setName('');
 		setDescription('');
 		setAbi('');
