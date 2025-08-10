@@ -11,6 +11,10 @@
       "view_details": "View Details",
       "interface_details": "Interface Details"
     },
+    "waiting": "Waiting",
+    "ready": "Ready",
+    "cancelled": "Cancelled",
+
     "title": "Transactions",
     "pending": "Pending",
     "history": "History",
