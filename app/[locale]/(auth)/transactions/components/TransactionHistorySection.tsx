@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import * as XLSX from 'xlsx';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
+import { Network } from 'lucide-react';
+import Image from 'next/image';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -54,6 +56,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
   const [activeTab, setActiveTab] = useState('all');
   const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
   const accessToken = useAuthStore((state) => state.accessToken);
+  const chains = useAuthStore(state => state.chains);
 
   const { getTransactionList } = useTransactionApi();
 
@@ -124,14 +127,37 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
   const columns = [
     {
-      key: 'chain_name',
+      key: 'chain',
       header: t('chain'),
-      render: (row: HistoryTxRow) => (
-        <div className="inline-flex items-center space-x-1 bg-gray-100 rounded-full px-2 py-1">
-          {row.chainIcon}
-          <span className="text-gray-800">{row.chain_id}</span>
-        </div>
-      ),
+      render: (row: any) => {
+        // 尝试通过 chain_name 找到对应的链
+        const chain = chains?.find(
+          c => c.chain_id === row.chain_id || c.display_name === row.chain_name
+        );
+        const chainLogo = chain?.logo_url || '';
+        const chainName = chain?.display_name || row.chain_name;
+
+        return (
+          <div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
+            {chainLogo ? (
+              <Image
+                src={chainLogo}
+                alt={chainName}
+                width={16}
+                height={16}
+                className='rounded-full'
+                onError={e => {
+                  console.error('Failed to load chain logo:', chainLogo);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <Network className='h-4 w-4 text-gray-700' />
+            )}
+            <span className='text-gray-800 font-medium'>{chainName}</span>
+          </div>
+        );
+      },
     },
     {
       key: 'timelock_address',
