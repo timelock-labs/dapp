@@ -51,11 +51,7 @@ export function useApi(): UseApiReturn {
 						return;
 					}
 					alert(
-						'Error:\n' +
-							`URL: ${fullUrl}\n` +
-							`Headers: ${JSON.stringify(headers, null, 2)}\n` +
-							`Body: ${JSON.stringify(options.body, null, 2)}\n` +
-							`Error: ${error.message}`
+						'Error:\n' + `URL: ${fullUrl}\n` + `Headers: ${JSON.stringify(headers, null, 2)}\n` + `Body: ${JSON.stringify(options.body, null, 2)}\n` + `Error: ${error.message}`
 					); // Debugging line
 					throw error;
 				}

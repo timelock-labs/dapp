@@ -134,9 +134,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
 				return withCache(
 					`eth-balance-${address}`,
 					async () => {
-						const balance = (await withTimeout(
-							provider.getBalance(address)
-						)) as ethers.BigNumber;
+						const balance = (await withTimeout(provider.getBalance(address))) as ethers.BigNumber;
 						return ethers.utils.formatEther(balance);
 					},
 					30000
@@ -156,10 +154,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
 					throw new Error('Provider not available');
 				}
 
-				if (
-					!ethers.utils.isAddress(tokenAddress) ||
-					!ethers.utils.isAddress(holderAddress)
-				) {
+				if (!ethers.utils.isAddress(tokenAddress) || !ethers.utils.isAddress(holderAddress)) {
 					throw new Error('Invalid address');
 				}
 
@@ -191,10 +186,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
 						const symbolTyped = symbol as string;
 						const nameTyped = name as string;
 
-						const formattedBalance = ethers.utils.formatUnits(
-							balanceTyped,
-							decimalsTyped
-						);
+						const formattedBalance = ethers.utils.formatUnits(balanceTyped, decimalsTyped);
 
 						return {
 							token: {
@@ -269,12 +261,7 @@ export function useWeb3Utils(config: Web3UtilsConfig = {}) {
 	 * Estimate gas for a transaction
 	 */
 	const estimateGas = useCallback(
-		async (transaction: {
-			to: Address;
-			data?: string;
-			value?: string;
-			from?: Address;
-		}): Promise<GasEstimation> => {
+		async (transaction: { to: Address; data?: string; value?: string; from?: Address }): Promise<GasEstimation> => {
 			return execute(async () => {
 				if (!provider) {
 					throw new Error('Provider not available');

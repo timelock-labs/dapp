@@ -58,13 +58,7 @@ const TransactionEncoderPage: React.FC = () => {
 				if (!functionName) {
 					throw new Error('Invalid timelock method');
 				}
-				const calldata = iface.encodeFunctionData(functionName, [
-					target,
-					value,
-					functionValue,
-					targetCalldata,
-					String(timeValue),
-				]);
+				const calldata = iface.encodeFunctionData(functionName, [target, value, functionValue, targetCalldata, String(timeValue)]);
 				setTimelockCalldata(calldata);
 			} catch (err) {
 				setTargetCallData('');
@@ -228,10 +222,7 @@ const TransactionEncoderPage: React.FC = () => {
 						</div>
 						<div className='flex flex-col gap-4 w-1/2'>
 							<EncodingPreview previewContent={previewContent} />
-							<MailboxSelection
-								selectedMailbox={selectedMailbox}
-								onMailboxChange={setSelectedMailbox}
-							/>
+							<MailboxSelection selectedMailbox={selectedMailbox} onMailboxChange={setSelectedMailbox} />
 							<div className='mt-auto flex justify-end'>
 								<button
 									type='button'

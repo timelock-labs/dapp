@@ -5,12 +5,7 @@ import { zodMiddleware } from './zodMiddleware';
 
 // 定义 Store 的 actions (方法)
 type AppActions = {
-	login: (data: {
-		user: User;
-		accessToken: string;
-		refreshToken: string;
-		expiresAt: string;
-	}) => void;
+	login: (data: { user: User; accessToken: string; refreshToken: string; expiresAt: string }) => void;
 	logout: () => void;
 	fetchChains: () => Promise<void>;
 	refreshAccessToken: () => Promise<void>;
@@ -62,8 +57,7 @@ export const useAuthStore = create<AppState & AppActions>()(
 				logout: () => {
 					// 从 cookie 中删除
 					document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-					document.cookie =
-						'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+					document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 					document.cookie = 'expiresAt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 					// The persist middleware will automatically clear the persisted state.
 					set({
@@ -87,10 +81,7 @@ export const useAuthStore = create<AppState & AppActions>()(
 								console.log('Setting chains:', responseData.data.chains);
 								set({ chains: responseData.data.chains });
 							} else {
-								console.error(
-									'API returned non-array data for chains:',
-									responseData
-								);
+								console.error('API returned non-array data for chains:', responseData);
 								set({ chains: [] }); // Ensure chains is always an array
 							}
 						} else {

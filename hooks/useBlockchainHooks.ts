@@ -19,12 +19,7 @@ import { useWeb3ErrorHandler } from './useWeb3ErrorHandler';
 import { useWeb3React } from './useWeb3React';
 
 // Type imports
-import type {
-	Address,
-	ContractValidationResult,
-	DeploymentResult,
-	TransactionResult,
-} from '@/types';
+import type { Address, ContractValidationResult, DeploymentResult, TransactionResult } from '@/types';
 
 /**
  * Hook for managing wallet connection state
@@ -88,8 +83,7 @@ export function useContractDeployment() {
 				async () => {
 					try {
 						// Validate bytecode
-						const validBytecode =
-							bytecode.startsWith('0x') ? bytecode : `0x${bytecode}`;
+						const validBytecode = bytecode.startsWith('0x') ? bytecode : `0x${bytecode}`;
 
 						if (validBytecode.length < 100) {
 							throw new Error('Bytecode appears to be invalid or too short');
@@ -106,9 +100,7 @@ export function useContractDeployment() {
 						const receipt = await deployTx.wait();
 
 						if (!receipt?.contractAddress || receipt.status === 0) {
-							throw new Error(
-								'Contract deployment failed or contract address not found'
-							);
+							throw new Error('Contract deployment failed or contract address not found');
 						}
 
 						return {
@@ -152,13 +144,7 @@ export function useTransactionSender() {
 	});
 
 	const sendTransaction = useCallback(
-		async (params: {
-			to: Address;
-			data?: string;
-			value?: string | number | bigint;
-			gasLimit?: number;
-			gasPrice?: string;
-		}): Promise<TransactionResult> => {
+		async (params: { to: Address; data?: string; value?: string | number | bigint; gasLimit?: number; gasPrice?: string }): Promise<TransactionResult> => {
 			requireConnection();
 
 			return execute(
@@ -291,10 +277,7 @@ export function useContractValidation() {
 				throw new Error('Provider not available');
 			}
 
-			const [code, balance] = await Promise.all([
-				provider.getCode(address),
-				provider.getBalance(address),
-			]);
+			const [code, balance] = await Promise.all([provider.getCode(address), provider.getBalance(address)]);
 
 			return {
 				hasCode: code !== '0x',
@@ -319,10 +302,7 @@ export function useContractValidation() {
  * @param abi Contract ABI
  * @returns Object containing contract interaction methods
  */
-export function useContractInteraction(
-	contractAddress: Address | null,
-	abi: ethers.ContractInterface
-) {
+export function useContractInteraction(contractAddress: Address | null, abi: ethers.ContractInterface) {
 	const { provider, signer } = useWeb3React();
 	const [contract, setContract] = useState<ethers.Contract | null>(null);
 

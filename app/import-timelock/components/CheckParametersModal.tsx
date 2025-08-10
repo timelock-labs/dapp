@@ -17,12 +17,7 @@ interface CheckParametersDialogProps {
 	};
 }
 
-const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({
-	isOpen,
-	onClose,
-	onConfirm,
-	parameters,
-}) => {
+const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, onClose, onConfirm, parameters }) => {
 	const [abiContent, setAbiContent] = useState(parameters.abiPlaceholder || '');
 	const dialogRef = useRef<HTMLDivElement>(null); // Ref for focusing the dialog content
 
@@ -67,15 +62,10 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({
 	};
 
 	// Inline component for read-only display rows
-	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({
-		label,
-		children,
-	}) => (
+	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-4'>
 			<label className='block text-sm font-medium text-gray-700 mb-1'>{label}</label>
-			<div className='bg-gray-100 text-gray-900 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono'>
-				{children}
-			</div>
+			<div className='bg-gray-100 text-gray-900 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
 		</div>
 	);
 
@@ -106,9 +96,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({
 
 				<ParameterDisplayRow label='备注'>{parameters.remarks}</ParameterDisplayRow>
 
-				<ParameterDisplayRow label='Timelock地址'>
-					{parameters.timelockAddress}
-				</ParameterDisplayRow>
+				<ParameterDisplayRow label='Timelock地址'>{parameters.timelockAddress}</ParameterDisplayRow>
 
 				{/* ABI Textarea */}
 				<div className='mb-4'>
@@ -128,14 +116,10 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({
 
 				{/* Action Buttons */}
 				<div className='flex justify-end space-x-3 mt-6'>
-					<button
-						onClick={handleCancel}
-						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+					<button onClick={handleCancel} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						取消
 					</button>
-					<button
-						onClick={handleConfirm}
-						className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
 						确认添加
 					</button>
 				</div>

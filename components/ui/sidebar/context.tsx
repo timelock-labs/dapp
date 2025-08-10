@@ -5,13 +5,7 @@ import { useIsMobile } from '@/hooks/useMobile';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { SidebarContextProps } from './types';
-import {
-	SIDEBAR_COOKIE_NAME,
-	SIDEBAR_COOKIE_MAX_AGE,
-	SIDEBAR_WIDTH,
-	SIDEBAR_WIDTH_ICON,
-	SIDEBAR_KEYBOARD_SHORTCUT,
-} from './constants';
+import { SIDEBAR_COOKIE_NAME, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, SIDEBAR_KEYBOARD_SHORTCUT } from './constants';
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 
@@ -106,10 +100,7 @@ export function SidebarProvider({
 							...style,
 						} as React.CSSProperties
 					}
-					className={cn(
-						'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
-						className
-					)}
+					className={cn('group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full', className)}
 					{...props}>
 					{children}
 				</div>

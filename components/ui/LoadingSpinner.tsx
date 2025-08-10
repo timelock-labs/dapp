@@ -16,12 +16,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 'md', className,
 
 	return (
 		<div className={cn('flex flex-col items-center justify-center space-y-3', className)}>
-			<div
-				className={cn(
-					'animate-spin rounded-full border-2 border-gray-300 border-t-black',
-					sizeClasses[size]
-				)}
-			/>
+			<div className={cn('animate-spin rounded-full border-2 border-gray-300 border-t-black', sizeClasses[size])} />
 			{text && <p className='text-sm text-gray-600 animate-pulse'>{text}</p>}
 		</div>
 	);

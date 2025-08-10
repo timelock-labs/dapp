@@ -29,12 +29,9 @@ export interface CrudConfig<TEntity, TCreateRequest, TUpdateRequest> {
  * Hook for standard CRUD operations
  * Provides create, read, update, delete, and list operations for any entity
  */
-export function useCrudOperations<
-	TEntity,
-	TCreateRequest,
-	TUpdateRequest,
-	TFilters extends FilterParams = FilterParams,
->(config: CrudConfig<TEntity, TCreateRequest, TUpdateRequest>) {
+export function useCrudOperations<TEntity, TCreateRequest, TUpdateRequest, TFilters extends FilterParams = FilterParams>(
+	config: CrudConfig<TEntity, TCreateRequest, TUpdateRequest>
+) {
 	const { baseEndpoint, entityName, defaultErrorMessages = {} } = config;
 
 	// Mutations
@@ -42,21 +39,13 @@ export function useCrudOperations<
 		defaultErrorMessage: defaultErrorMessages.create || `Failed to create ${entityName}`,
 	});
 
-	const updateMutation = useApiMutation<TEntity, { id: string | number; data: TUpdateRequest }>(
-		variables => `${baseEndpoint}/${variables.id}`,
-		'PUT',
-		{
-			defaultErrorMessage: defaultErrorMessages.update || `Failed to update ${entityName}`,
-		}
-	);
+	const updateMutation = useApiMutation<TEntity, { id: string | number; data: TUpdateRequest }>(variables => `${baseEndpoint}/${variables.id}`, 'PUT', {
+		defaultErrorMessage: defaultErrorMessages.update || `Failed to update ${entityName}`,
+	});
 
-	const deleteMutation = useApiMutation<void, { id: string | number }>(
-		variables => `${baseEndpoint}/${variables.id}`,
-		'DELETE',
-		{
-			defaultErrorMessage: defaultErrorMessages.delete || `Failed to delete ${entityName}`,
-		}
-	);
+	const deleteMutation = useApiMutation<void, { id: string | number }>(variables => `${baseEndpoint}/${variables.id}`, 'DELETE', {
+		defaultErrorMessage: defaultErrorMessages.delete || `Failed to delete ${entityName}`,
+	});
 
 	// Query hooks
 	const useEntityList = (filters: TFilters = {} as TFilters) => {
@@ -69,8 +58,7 @@ export function useCrudOperations<
 	const useEntityById = (id: string | number) => {
 		return useApiBase<TEntity>(`${baseEndpoint}/${id}`, {
 			autoFetch: true,
-			defaultErrorMessage:
-				defaultErrorMessages.read || `Failed to fetch ${entityName} details`,
+			defaultErrorMessage: defaultErrorMessages.read || `Failed to fetch ${entityName} details`,
 		});
 	};
 
@@ -131,21 +119,10 @@ export function useCrudOperations<
  */
 export function usePaginatedList<TEntity, TFilters extends FilterParams = FilterParams>(
 	endpoint: string,
-	initialFilters: TFilters & PaginationParams = { page: 1, page_size: 10 } as TFilters &
-		PaginationParams,
+	initialFilters: TFilters & PaginationParams = { page: 1, page_size: 10 } as TFilters & PaginationParams,
 	entityName = 'items'
 ) {
-	const {
-		data,
-		error,
-		isLoading,
-		isInitialized,
-		filters,
-		updateFilters,
-		resetFilters,
-		refetch,
-		reset,
-	} = useFilteredApi<
+	const { data, error, isLoading, isInitialized, filters, updateFilters, resetFilters, refetch, reset } = useFilteredApi<
 		{
 			items: TEntity[];
 			total: number;
@@ -222,19 +199,11 @@ export function usePaginatedList<TEntity, TFilters extends FilterParams = Filter
  * Provides utilities for performing operations on multiple items
  */
 export function useBatchOperations<TEntity, TBatchRequest>(endpoint: string, entityName = 'items') {
-	const batchUpdateMutation = useApiMutation<TEntity[], TBatchRequest>(
-		`${endpoint}/batch`,
-		'PUT',
-		{
-			defaultErrorMessage: `Failed to batch update ${entityName}`,
-		}
-	);
+	const batchUpdateMutation = useApiMutation<TEntity[], TBatchRequest>(`${endpoint}/batch`, 'PUT', {
+		defaultErrorMessage: `Failed to batch update ${entityName}`,
+	});
 
-	const batchDeleteMutation = useApiMutation<void, { ids: (string | number)[] }>(
-		`${endpoint}/batch`,
-		'DELETE',
-		{ defaultErrorMessage: `Failed to batch delete ${entityName}` }
-	);
+	const batchDeleteMutation = useApiMutation<void, { ids: (string | number)[] }>(`${endpoint}/batch`, 'DELETE', { defaultErrorMessage: `Failed to batch delete ${entityName}` });
 
 	const batchUpdate = useCallback(
 		async (data: TBatchRequest) => {
@@ -271,10 +240,9 @@ export function useBatchOperations<TEntity, TBatchRequest>(endpoint: string, ent
  * Provides standardized search patterns with debouncing
  */
 export function useSearch<TEntity>(endpoint: string, debounceMs = 300, entityName = 'items') {
-	const searchMutation = useApiMutation<
-		TEntity[],
-		{ query: string; filters?: Record<string, unknown> }
-	>(endpoint, 'POST', { defaultErrorMessage: `Failed to search ${entityName}` });
+	const searchMutation = useApiMutation<TEntity[], { query: string; filters?: Record<string, unknown> }>(endpoint, 'POST', {
+		defaultErrorMessage: `Failed to search ${entityName}`,
+	});
 
 	const search = useCallback(
 		async (query: string, filters?: Record<string, unknown>) => {
@@ -313,14 +281,10 @@ export function useFileUpload(
 		multiple = false,
 	} = options;
 
-	const uploadMutation = useApiMutation<{ url: string; filename: string }[], FormData>(
-		endpoint,
-		'POST',
-		{
-			defaultErrorMessage: 'Failed to upload file(s)',
-			headers: {}, // Don't set Content-Type for FormData
-		}
-	);
+	const uploadMutation = useApiMutation<{ url: string; filename: string }[], FormData>(endpoint, 'POST', {
+		defaultErrorMessage: 'Failed to upload file(s)',
+		headers: {}, // Don't set Content-Type for FormData
+	});
 
 	const validateFile = useCallback(
 		(file: File): string | null => {

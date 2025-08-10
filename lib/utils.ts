@@ -25,20 +25,7 @@ export const formatAddress = (address: string) => {
 export const formatDate = (dateString: string) => {
 	try {
 		const date = new Date(dateString);
-		const months = [
-			'Jan',
-			'Feb',
-			'Mar',
-			'Apr',
-			'May',
-			'Jun',
-			'Jul',
-			'Aug',
-			'Sep',
-			'Oct',
-			'Nov',
-			'Dec',
-		];
+		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 		const month = months[date.getMonth()];
 		const day = date.getDate();

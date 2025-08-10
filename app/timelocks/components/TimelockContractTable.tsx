@@ -36,11 +36,7 @@ const getStatusBadgeStyle = (status: string) => {
  * @param props - TimelockContractTable component props
  * @returns JSX.Element
  */
-const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
-	data,
-	onDataUpdate,
-	className,
-}) => {
+const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onDataUpdate, className }) => {
 	const t = useTranslations('TimelockTable');
 	const router = useRouter();
 	const chains = useAuthStore(state => state.chains);
@@ -75,9 +71,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 			}
 		} else if (deleteResponse?.success === false && deleteResponse.data !== null) {
 			console.error('Failed to delete contract:', deleteResponse.error);
-			toast.error(
-				t('deleteError', { message: deleteResponse.error?.message || t('unknown') })
-			);
+			toast.error(t('deleteError', { message: deleteResponse.error?.message || t('unknown') }));
 		}
 	}, [deleteResponse, onDataUpdate, t]);
 
@@ -87,9 +81,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 			header: t('chain'),
 			render: (row: TimelockContractItem) => {
 				// 尝试通过 chain_name 找到对应的链
-				const chain = chains?.find(
-					c => c.chain_name === row.chain_name || c.display_name === row.chain_name
-				);
+				const chain = chains?.find(c => c.chain_name === row.chain_name || c.display_name === row.chain_name);
 				const chainLogo = chain?.logo_url || '';
 				const chainName = chain?.display_name || row.chain_name;
 
@@ -117,12 +109,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 			key: 'name',
 			header: t('name'),
 			render: (row: TimelockContractItem) => (
-				<span
-					className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(
-						row.status
-					)}`}>
-					{row.remark}
-				</span>
+				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(row.status)}`}>{row.remark}</span>
 			),
 		},
 		{
@@ -137,16 +124,12 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 		{
 			key: 'user_permissions',
 			header: t('userPermissions'),
-			render: (row: TimelockContractItem) =>
-				(
-					row as TimelockContractItem & { user_permissions?: string[] }
-				).user_permissions?.join(', ') || t('none'),
+			render: (row: TimelockContractItem) => (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions?.join(', ') || t('none'),
 		},
 		{
 			key: 'min_delay',
 			header: t('minDelay'),
-			render: (row: TimelockContractItem) =>
-				(row as TimelockContractItem & { min_delay?: number }).min_delay,
+			render: (row: TimelockContractItem) => (row as TimelockContractItem & { min_delay?: number }).min_delay,
 		},
 		{
 			key: 'created_at',
@@ -194,12 +177,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 						</button>
 					</div>
 				</div>
-				<TableComponent<TimelockContractItem>
-					columns={columns}
-					data={data}
-					showPagination={true}
-					itemsPerPage={5}
-				/>
+				<TableComponent<TimelockContractItem> columns={columns} data={data} showPagination={true} itemsPerPage={5} />
 			</div>
 		</div>
 	);

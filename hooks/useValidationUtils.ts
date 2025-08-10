@@ -237,21 +237,7 @@ export function useValidation() {
 
 			return null;
 		},
-		[
-			isRequired,
-			isEmail,
-			isUrl,
-			isEthereumAddress,
-			isEthereumHash,
-			isStrongPassword,
-			isMediumPassword,
-			isPhone,
-			isNumeric,
-			isPositive,
-			isInRange,
-			hasMinLength,
-			hasMaxLength,
-		]
+		[isRequired, isEmail, isUrl, isEthereumAddress, isEthereumHash, isStrongPassword, isMediumPassword, isPhone, isNumeric, isPositive, isInRange, hasMinLength, hasMaxLength]
 	);
 
 	return {
@@ -285,55 +271,23 @@ export function useZodSchemas() {
 
 			url: z.string().url(ValidationMessages.url),
 
-			ethereumAddress: z
-				.string()
-				.refine(
-					value => ethers.utils.isAddress(value),
-					ValidationMessages.ethereum.address
-				),
+			ethereumAddress: z.string().refine(value => ethers.utils.isAddress(value), ValidationMessages.ethereum.address),
 
-			ethereumHash: z
-				.string()
-				.refine(
-					value => ValidationPatterns.ethereum.hash.test(value),
-					ValidationMessages.ethereum.hash
-				),
+			ethereumHash: z.string().refine(value => ValidationPatterns.ethereum.hash.test(value), ValidationMessages.ethereum.hash),
 
-			strongPassword: z
-				.string()
-				.refine(
-					value => ValidationPatterns.password.strong.test(value),
-					ValidationMessages.password.strong
-				),
+			strongPassword: z.string().refine(value => ValidationPatterns.password.strong.test(value), ValidationMessages.password.strong),
 
-			mediumPassword: z
-				.string()
-				.refine(
-					value => ValidationPatterns.password.medium.test(value),
-					ValidationMessages.password.medium
-				),
+			mediumPassword: z.string().refine(value => ValidationPatterns.password.medium.test(value), ValidationMessages.password.medium),
 
-			phone: z
-				.string()
-				.refine(value => ValidationPatterns.phone.test(value), ValidationMessages.phone),
+			phone: z.string().refine(value => ValidationPatterns.phone.test(value), ValidationMessages.phone),
 
 			positiveNumber: z.number().positive(ValidationMessages.positive),
 
 			nonEmptyString: z.string().min(1, ValidationMessages.required('Field')),
 
-			slug: z
-				.string()
-				.refine(
-					value => ValidationPatterns.slug.test(value),
-					'Must be a valid slug (lowercase letters, numbers, and hyphens only)'
-				),
+			slug: z.string().refine(value => ValidationPatterns.slug.test(value), 'Must be a valid slug (lowercase letters, numbers, and hyphens only)'),
 
-			alphanumeric: z
-				.string()
-				.refine(
-					value => ValidationPatterns.alphanumeric.test(value),
-					'Must contain only letters and numbers'
-				),
+			alphanumeric: z.string().refine(value => ValidationPatterns.alphanumeric.test(value), 'Must contain only letters and numbers'),
 		}),
 		[]
 	);
@@ -352,24 +306,15 @@ export function useZodSchemas() {
 				let schema = z.string().min(1, ValidationMessages.required('Field'));
 
 				if (options.minLength) {
-					schema = schema.min(
-						options.minLength,
-						ValidationMessages.tooShort('Field', options.minLength)
-					);
+					schema = schema.min(options.minLength, ValidationMessages.tooShort('Field', options.minLength));
 				}
 
 				if (options.maxLength) {
-					schema = schema.max(
-						options.maxLength,
-						ValidationMessages.tooLong('Field', options.maxLength)
-					);
+					schema = schema.max(options.maxLength, ValidationMessages.tooLong('Field', options.maxLength));
 				}
 
 				if (options.pattern) {
-					return schema.refine(
-						value => !value || options.pattern!.test(value),
-						options.patternMessage || ValidationMessages.invalid('Field')
-					);
+					return schema.refine(value => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid('Field'));
 				}
 
 				return schema;
@@ -377,26 +322,15 @@ export function useZodSchemas() {
 				let baseSchema = z.string();
 
 				if (options.minLength) {
-					baseSchema = baseSchema.min(
-						options.minLength,
-						ValidationMessages.tooShort('Field', options.minLength)
-					);
+					baseSchema = baseSchema.min(options.minLength, ValidationMessages.tooShort('Field', options.minLength));
 				}
 
 				if (options.maxLength) {
-					baseSchema = baseSchema.max(
-						options.maxLength,
-						ValidationMessages.tooLong('Field', options.maxLength)
-					);
+					baseSchema = baseSchema.max(options.maxLength, ValidationMessages.tooLong('Field', options.maxLength));
 				}
 
 				if (options.pattern) {
-					return baseSchema
-						.refine(
-							value => !value || options.pattern!.test(value),
-							options.patternMessage || ValidationMessages.invalid('Field')
-						)
-						.optional();
+					return baseSchema.refine(value => !value || options.pattern!.test(value), options.patternMessage || ValidationMessages.invalid('Field')).optional();
 				}
 
 				return baseSchema.optional();
@@ -439,17 +373,11 @@ export function useZodSchemas() {
 				let baseSchema = z.number();
 
 				if (options.min !== undefined) {
-					baseSchema = baseSchema.min(
-						options.min,
-						`Value must be at least ${options.min}`
-					);
+					baseSchema = baseSchema.min(options.min, `Value must be at least ${options.min}`);
 				}
 
 				if (options.max !== undefined) {
-					baseSchema = baseSchema.max(
-						options.max,
-						`Value must be no more than ${options.max}`
-					);
+					baseSchema = baseSchema.max(options.max, `Value must be no more than ${options.max}`);
 				}
 
 				if (options.positive) {
@@ -477,25 +405,19 @@ export function useZodSchemas() {
  * Hook for async validation
  */
 export function useAsyncValidation() {
-	const validateAsync = useCallback(
-		async <T>(
-			value: T,
-			validator: (value: T) => Promise<boolean | string>
-		): Promise<string | null> => {
-			try {
-				const result = await validator(value);
+	const validateAsync = useCallback(async <T>(value: T, validator: (value: T) => Promise<boolean | string>): Promise<string | null> => {
+		try {
+			const result = await validator(value);
 
-				if (typeof result === 'string') {
-					return result;
-				}
-
-				return result ? null : ValidationMessages.invalid('Field');
-			} catch (error) {
-				return error instanceof Error ? error.message : 'Validation failed';
+			if (typeof result === 'string') {
+				return result;
 			}
-		},
-		[]
-	);
+
+			return result ? null : ValidationMessages.invalid('Field');
+		} catch (error) {
+			return error instanceof Error ? error.message : 'Validation failed';
+		}
+	}, []);
 
 	const createAsyncValidator = useCallback(
 		<T>(validator: (value: T) => Promise<boolean | string>, debounceMs = 300) => {

@@ -13,13 +13,7 @@ import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
-import type {
-	CreateTimelockFormState,
-	CreationDetails,
-	CreateTimelockRequestBody,
-	DeploymentResult,
-	CompoundTimelockParams,
-} from './components/types';
+import type { CreateTimelockFormState, CreationDetails, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams } from './components/types';
 import type { ContractStandard } from '@/types/common';
 
 const CreateTimelockPage: React.FC = () => {
@@ -49,10 +43,7 @@ const CreateTimelockPage: React.FC = () => {
 	const { deployCompoundTimelock, isLoading } = useDeployTimelock();
 	const router = useRouter();
 
-	const selectedChainData = useMemo(
-		() => chains.find(chain => chain.chain_id === formState.selectedChain),
-		[chains, formState.selectedChain]
-	);
+	const selectedChainData = useMemo(() => chains.find(chain => chain.chain_id === formState.selectedChain), [chains, formState.selectedChain]);
 
 	const handleChainChange = useCallback(
 		(newChainId: number) => {
@@ -68,9 +59,7 @@ const CreateTimelockPage: React.FC = () => {
 
 			if (!chainObject) {
 				console.error(`Chain ID ${newChainId} is not supported by thirdweb`);
-				toast.error(
-					`Chain ID ${newChainId} is not supported. Please use a supported network.`
-				);
+				toast.error(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
 				return;
 			}
 
@@ -118,9 +107,7 @@ const CreateTimelockPage: React.FC = () => {
 
 				setDialogDetails({
 					chainName,
-					chainIcon: (
-						<Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />
-					),
+					chainIcon: <Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />,
 					timelockAddress: deployedContractAddress,
 					initiatingAddress: walletAddress,
 					transactionHash,
@@ -153,13 +140,10 @@ const CreateTimelockPage: React.FC = () => {
 			};
 
 			try {
-				const apiResponse = await createTimelockApiCall(
-					'/api/v1/timelock/create-or-import',
-					{
-						method: 'POST',
-						body,
-					}
-				);
+				const apiResponse = await createTimelockApiCall('/api/v1/timelock/create-or-import', {
+					method: 'POST',
+					body,
+				});
 
 				if (apiResponse && apiResponse.success) {
 					toast.success('Timelock created successfully!');
@@ -173,14 +157,11 @@ const CreateTimelockPage: React.FC = () => {
 					// Redirect to timelocks page
 					router.push(`/timelocks`);
 				} else {
-					throw new Error(
-						apiResponse?.error?.message || 'Failed to create timelock record'
-					);
+					throw new Error(apiResponse?.error?.message || 'Failed to create timelock record');
 				}
 			} catch (error: unknown) {
 				console.error('API Error:', error);
-				const errorMessage =
-					error instanceof Error ? error.message : 'Unknown error occurred';
+				const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 				toast.error('Failed to create timelock record', {
 					description: errorMessage,
 				});
@@ -224,12 +205,7 @@ const CreateTimelockPage: React.FC = () => {
 					/>
 				</div>
 
-				<ConfirmCreationDialog
-					isOpen={isConfirmDialogOpen}
-					onClose={handleConfirmDialogClose}
-					onConfirm={handleConfirmDialogConfirm}
-					creationDetails={dialogDetails}
-				/>
+				<ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={handleConfirmDialogClose} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
 			</div>
 		</PageLayout>
 	);

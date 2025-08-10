@@ -1,7 +1,7 @@
 module.exports = {
 	// Line length and wrapping
-	printWidth: 100,
-	tabWidth: 4,
+	printWidth: 180,
+	tabWidth: 2,
 	useTabs: true,
 
 	// Semicolons and quotes

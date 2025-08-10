@@ -3,13 +3,7 @@
 import { useCallback } from 'react';
 import { useApiMutation, useApiBase, useFilteredApi } from '@/hooks/useApiBase';
 import { useApi } from './useApi';
-import type {
-	Transaction,
-	TransactionListResponse,
-	TransactionStats,
-	TransactionListFilters,
-	PendingTransactionFilters,
-} from '@/types';
+import type { Transaction, TransactionListResponse, TransactionStats, TransactionListFilters, PendingTransactionFilters } from '@/types';
 
 // Re-export types for backward compatibility
 export type { Transaction };
@@ -33,10 +27,7 @@ export const useTransactionApi = () => {
 					}
 				});
 
-				const url =
-					queryParams.toString() ?
-						`/api/v1/flows/list?${queryParams.toString()}`
-					:	'/api/v1/flows/list';
+				const url = queryParams.toString() ? `/api/v1/flows/list?${queryParams.toString()}` : '/api/v1/flows/list';
 
 				const response = await request(url, { method: 'GET' });
 				return response.data.flows || response.data; // Handle both legacy and new response formats
@@ -57,10 +48,7 @@ export const useTransactionApi = () => {
 					}
 				});
 
-				const url =
-					queryParams.toString() ?
-						`/api/v1/flows/list?${queryParams.toString()}`
-					:	'/api/v1/flows/list';
+				const url = queryParams.toString() ? `/api/v1/flows/list?${queryParams.toString()}` : '/api/v1/flows/list';
 
 				const response = await request(url, { method: 'GET' });
 				return response.data;

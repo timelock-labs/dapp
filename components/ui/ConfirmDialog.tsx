@@ -37,8 +37,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 	cancelText = 'Cancel',
 	variant = 'default',
 }) => {
-	const confirmButtonClassName =
-		variant === 'destructive' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-600' : '';
+	const confirmButtonClassName = variant === 'destructive' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-600' : '';
 
 	return (
 		<AlertDialog open={isOpen} onOpenChange={onClose}>

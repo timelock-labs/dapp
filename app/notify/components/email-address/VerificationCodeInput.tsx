@@ -12,15 +12,7 @@ interface VerificationCodeInputProps {
 	isFirstTime?: boolean;
 }
 
-const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
-	email,
-	onSendCode,
-	onCodeChange,
-	codeLength = 6,
-	buttonText,
-	disabledText,
-	isFirstTime = true,
-}) => {
+const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, onSendCode, onCodeChange, codeLength = 6, buttonText, disabledText, isFirstTime = true }) => {
 	const t = useTranslations('Notify.verificationCode');
 	const [code, setCode] = useState<string[]>(Array(codeLength).fill(''));
 	const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -112,10 +104,10 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
 					disabled={isSendingCode || countdown > 0}
 					className={`ml-4 text-sm px-4 py-2 rounded-lg font-semibold transition-colors duration-150
             ${
-				isSendingCode || countdown > 0 ?
-					'bg-gray-200 text-gray-500 cursor-not-allowed'
-				:	'bg-gradient-to-r from-black via-gray-900 to-gray-700 text-white hover:from-gray-900 hover:to-black shadow-lg'
-			}
+							isSendingCode || countdown > 0 ?
+								'bg-gray-200 text-gray-500 cursor-not-allowed'
+							:	'bg-gradient-to-r from-black via-gray-900 to-gray-700 text-white hover:from-gray-900 hover:to-black shadow-lg'
+						}
           `}>
 					{countdown > 0 ?
 						<span>

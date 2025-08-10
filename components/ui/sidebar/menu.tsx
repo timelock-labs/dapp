@@ -9,25 +9,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useSidebar } from './context';
 
 export function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
-	return (
-		<ul
-			data-slot='sidebar-menu'
-			data-sidebar='menu'
-			className={cn('flex w-full min-w-0 flex-col gap-1', className)}
-			{...props}
-		/>
-	);
+	return <ul data-slot='sidebar-menu' data-sidebar='menu' className={cn('flex w-full min-w-0 flex-col gap-1', className)} {...props} />;
 }
 
 export function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
-	return (
-		<li
-			data-slot='sidebar-menu-item'
-			data-sidebar='menu-item'
-			className={cn('group/menu-item relative', className)}
-			{...props}
-		/>
-	);
+	return <li data-slot='sidebar-menu-item' data-sidebar='menu-item' className={cn('group/menu-item relative', className)} {...props} />;
 }
 
 const sidebarMenuButtonVariants = cva(
@@ -92,12 +78,7 @@ export function SidebarMenuButton({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>{button}</TooltipTrigger>
-			<TooltipContent
-				side='right'
-				align='center'
-				hidden={state !== 'collapsed' || isMobile}
-				{...tooltip}
-			/>
+			<TooltipContent side='right' align='center' hidden={state !== 'collapsed' || isMobile} {...tooltip} />
 		</Tooltip>
 	);
 }
@@ -166,14 +147,8 @@ export function SidebarMenuSkeleton({
 	}, []);
 
 	return (
-		<div
-			data-slot='sidebar-menu-skeleton'
-			data-sidebar='menu-skeleton'
-			className={cn('flex h-8 items-center gap-2 rounded-md px-2', className)}
-			{...props}>
-			{showIcon && (
-				<Skeleton className='size-4 rounded-md' data-sidebar='menu-skeleton-icon' />
-			)}
+		<div data-slot='sidebar-menu-skeleton' data-sidebar='menu-skeleton' className={cn('flex h-8 items-center gap-2 rounded-md px-2', className)} {...props}>
+			{showIcon && <Skeleton className='size-4 rounded-md' data-sidebar='menu-skeleton-icon' />}
 			<Skeleton
 				className='h-4 max-w-(--skeleton-width) flex-1'
 				data-sidebar='menu-skeleton-text'

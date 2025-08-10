@@ -5,9 +5,7 @@ type InputHTMLAttributes = React.InputHTMLAttributes<HTMLInputElement>;
 
 type OnChangeType = ValueCallback<string> | ((event: React.ChangeEvent<HTMLInputElement>) => void);
 
-interface TextInputProps
-	extends BaseComponentProps,
-		Omit<InputHTMLAttributes, 'onChange' | 'value'> {
+interface TextInputProps extends BaseComponentProps, Omit<InputHTMLAttributes, 'onChange' | 'value'> {
 	label: string;
 	value: string;
 	onChange: OnChangeType;
@@ -20,17 +18,7 @@ interface TextInputProps
  * @param props - TextInput component props
  * @returns JSX.Element
  */
-const TextInput: React.FC<TextInputProps> = ({
-	label,
-	value,
-	onChange,
-	placeholder,
-	type = 'text',
-	disabled = false,
-	error = null,
-	className = '',
-	...rest
-}) => {
+const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, placeholder, type = 'text', disabled = false, error = null, className = '', ...rest }) => {
 	return (
 		<div className='mb-4'>
 			<label className='block text-sm font-medium text-gray-700 mb-1'>{label}</label>

@@ -18,14 +18,7 @@ interface GenericTableProps<T> {
 }
 
 // Using a generic type `T` for the row data. `T` must extend an object with an 'id' for keying.
-function TableComponent<T extends { id: string | number }>({
-	title,
-	columns,
-	data,
-	showPagination = true,
-	itemsPerPage = 7,
-	headerActions,
-}: GenericTableProps<T>) {
+function TableComponent<T extends { id: string | number }>({ title, columns, data, showPagination = true, itemsPerPage = 7, headerActions }: GenericTableProps<T>) {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const totalItems = data.length;
@@ -66,10 +59,7 @@ function TableComponent<T extends { id: string | number }>({
 					<thead className='bg-gray-50 sticky top-0 z-10 border-0'>
 						<tr>
 							{columns.map(column => (
-								<th
-									key={column.key}
-									scope='col'
-									className='px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-0'>
+								<th key={column.key} scope='col' className='px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-0'>
 									{column.header}
 								</th>
 							))}
@@ -81,13 +71,9 @@ function TableComponent<T extends { id: string | number }>({
 							<tr key={row.id}>
 								{/* Each row must have a unique 'id' */}
 								{columns.map(column => (
-									<td
-										key={column.key}
-										className='px-2 py-4 whitespace-nowrap text-sm text-[#000000]'>
+									<td key={column.key} className='px-2 py-4 whitespace-nowrap text-sm text-[#000000]'>
 										{/* Render cell content using custom render function or direct key access */}
-										{column.render ?
-											column.render(row, rowIndex)
-										:	String(row[column.key as keyof T])}
+										{column.render ? column.render(row, rowIndex) : String(row[column.key as keyof T])}
 									</td>
 								))}
 							</tr>
@@ -109,17 +95,8 @@ function TableComponent<T extends { id: string | number }>({
               hover:bg-gray-300 transition-colors
               ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and disable clicks */
             `}>
-						<svg
-							className='w-4 h-4'
-							fill='none'
-							stroke='currentColor'
-							viewBox='0 0 24 24'
-							xmlns='http://www.w3.org/2000/svg'>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth='2'
-								d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
+						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
 						</svg>
 						Previous
 					</button>
@@ -140,17 +117,8 @@ function TableComponent<T extends { id: string | number }>({
               ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and disable clicks */
             `}>
 						Next
-						<svg
-							className='w-4 h-4'
-							fill='none'
-							stroke='currentColor'
-							viewBox='0 0 24 24'
-							xmlns='http://www.w3.org/2000/svg'>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth='2'
-								d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
+						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
 						</svg>
 					</button>
 				</div>

@@ -65,10 +65,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	const selectedChainValue = selectedChain.toString();
 
 	// Memoize selected chain logo
-	const selectedChainLogo = useMemo(
-		() => chainOptions.find(option => option.value === selectedChainValue)?.logo,
-		[chainOptions, selectedChainValue]
-	);
+	const selectedChainLogo = useMemo(() => chainOptions.find(option => option.value === selectedChainValue)?.logo, [chainOptions, selectedChainValue]);
 
 	// Format the time display
 	const formattedTime = useMemo(() => {
@@ -78,10 +75,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
 	return (
 		<div className='bg-white p-6 rounded-lg border-b border-gray-200'>
-			<SectionHeader
-				title={t('createTimelock')}
-				description={t('createTimelockDescription')}
-			/>
+			<SectionHeader title={t('createTimelock')} description={t('createTimelockDescription')} />
 
 			<div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6'>
 				{/* Select Chain */}
@@ -98,18 +92,13 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
 				{/* Contract Standard Selection */}
 				<div className='md:col-start-2'>
-					<ContractStandardSelection
-						selectedStandard={selectedStandard}
-						onStandardChange={onStandardChange}
-					/>
+					<ContractStandardSelection selectedStandard={selectedStandard} onStandardChange={onStandardChange} />
 				</div>
 
 				{/* minDelay Input */}
 				<div className='md:col-start-2 min-w-[548px]'>
 					<div className='mb-4'>
-						<label className='block text-sm font-medium text-gray-700 mb-1'>
-							{t('minDelay')}
-						</label>
+						<label className='block text-sm font-medium text-gray-700 mb-1'>{t('minDelay')}</label>
 						<div className='flex items-center gap-3'>
 							<input
 								type='number'
@@ -120,24 +109,14 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 								min='0'
 								step='1'
 							/>
-							{minDelay && parseInt(minDelay) > 0 && (
-								<div className='text-sm text-gray-600 whitespace-nowrap'>
-									≈ {formattedTime}
-								</div>
-							)}
+							{minDelay && parseInt(minDelay) > 0 && <div className='text-sm text-gray-600 whitespace-nowrap'>≈ {formattedTime}</div>}
 						</div>
 					</div>
 				</div>
 
 				{/* Owner Input */}
 				<div className='md:col-start-2 min-w-[548px]'>
-					<TextInput
-						label={t('admin')}
-						value={owner}
-						onChange={onOwnerChange || (() => {})}
-						placeholder={t('adminPlaceholder')}
-						type='text'
-					/>
+					<TextInput label={t('admin')} value={owner} onChange={onOwnerChange || (() => {})} placeholder={t('adminPlaceholder')} type='text' />
 				</div>
 			</div>
 
@@ -149,18 +128,8 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 					aria-label={isLoading ? t('deploying') : t('deployContract')}>
 					{isLoading ?
 						<span className='flex items-center'>
-							<svg
-								className='animate-spin -ml-1 mr-2 h-4 w-4 text-white'
-								xmlns='http://www.w3.org/2000/svg'
-								fill='none'
-								viewBox='0 0 24 24'>
-								<circle
-									className='opacity-25'
-									cx='12'
-									cy='12'
-									r='10'
-									stroke='currentColor'
-									strokeWidth='4'></circle>
+							<svg className='animate-spin -ml-1 mr-2 h-4 w-4 text-white' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+								<circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
 								<path
 									className='opacity-75'
 									fill='currentColor'

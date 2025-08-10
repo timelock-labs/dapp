@@ -14,13 +14,7 @@ export { useLocalStorage } from './common/useStorage';
 export { useDebounce, usePrevious, useToggle, useCounter, useArray } from './common/useStateUtils';
 
 // Browser utilities
-export {
-	useClipboard,
-	useClickOutside,
-	useMediaQuery,
-	useWindowSize,
-	useDocumentTitle,
-} from './common/useBrowserUtils';
+export { useClipboard, useClickOutside, useMediaQuery, useWindowSize, useDocumentTitle } from './common/useBrowserUtils';
 
 // Timers
 export { useInterval, useTimeout } from './common/useTimers';

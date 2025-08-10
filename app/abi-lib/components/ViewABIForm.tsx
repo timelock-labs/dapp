@@ -5,14 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogClose,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
 import type { ViewABIFormProps } from './types';
@@ -41,14 +34,7 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
 					</div>
 					<div className='space-y-2'>
 						<Label>{t('interface_details')}</Label>
-						<Textarea
-							className='h-[300px]'
-							defaultValue={JSON.stringify(
-								JSON.parse(viewAbiContent.abi_content),
-								null,
-								2
-							)}
-						/>
+						<Textarea className='h-[300px]' defaultValue={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
 					</div>
 				</div>
 				<DialogFooter>

@@ -41,11 +41,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	const { useTimelockList } = useTimelockApi();
 
 	// Only fetch when modal is open
-	const {
-		data: timelockData,
-		isLoading: isLoadingTimelocks,
-		error: timelockError,
-	} = useTimelockList(isOpen ? { status: 'active' } : undefined);
+	const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(isOpen ? { status: 'active' } : undefined);
 
 	// Process timelock data when it changes
 	useEffect(() => {
@@ -208,20 +204,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 					<SectionHeader title={t('title')} description={t('description')} />
 
 					{/* Email Address Input */}
-					<TextInput
-						label={t('emailAddress')}
-						value={emailAddress}
-						onChange={setEmailAddress}
-						placeholder={t('emailPlaceholder')}
-					/>
+					<TextInput label={t('emailAddress')} value={emailAddress} onChange={setEmailAddress} placeholder={t('emailPlaceholder')} />
 
 					{/* Email Remark Input */}
-					<TextInput
-						label={t('emailRemark')}
-						value={emailRemark}
-						onChange={setEmailRemark}
-						placeholder={t('remarkPlaceholder')}
-					/>
+					<TextInput label={t('emailRemark')} value={emailRemark} onChange={setEmailRemark} placeholder={t('remarkPlaceholder')} />
 
 					{/* Verification Code Input Section */}
 					<VerificationCodeInput
@@ -236,12 +222,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
 					{/* Verification Status Indicator */}
 					{verificationCode.length === 6 && (
-						<div
-							className={`mb-4 p-3 rounded-md ${
-								isEmailVerified ?
-									'bg-green-50 text-green-800'
-								:	'bg-red-50 text-red-800'
-							}`}>
+						<div className={`mb-4 p-3 rounded-md ${isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
 							{isEmailVerified ?
 								<div className='flex items-center'>
 									<span className='text-green-500 mr-2'>✓</span>
@@ -264,10 +245,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
-					<button
-						type='button'
-						onClick={handleSave}
-						className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
 						{t('save')}
 					</button>
 				</div>

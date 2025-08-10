@@ -11,17 +11,13 @@ import type { ImportTimelockRequest, ContractStandard, TimelockContract } from '
  */
 export const useTimelockApi = () => {
 	// Mutations
-	const importTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>(
-		'/api/v1/timelock/create-or-import',
-		'POST',
-		{ defaultErrorMessage: 'Failed to import timelock contract' }
-	);
+	const importTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>('/api/v1/timelock/create-or-import', 'POST', {
+		defaultErrorMessage: 'Failed to import timelock contract',
+	});
 
-	const createTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>(
-		'/api/v1/timelock/create-or-import',
-		'POST',
-		{ defaultErrorMessage: 'Failed to create timelock contract' }
-	);
+	const createTimelockMutation = useApiMutation<TimelockContract, ImportTimelockRequest>('/api/v1/timelock/create-or-import', 'POST', {
+		defaultErrorMessage: 'Failed to create timelock contract',
+	});
 
 	const updateTimelockRemarkMutation = useApiMutation<
 		TimelockContract,
@@ -45,20 +41,8 @@ export const useTimelockApi = () => {
 	});
 
 	// Queries
-	const useTimelockList = (params?: {
-		standard?: ContractStandard;
-		status?: 'active' | 'inactive';
-		enabled?: boolean;
-	}) => {
-		const queryString =
-			params ?
-				new URLSearchParams(
-					Object.entries(params).filter(([, value]) => value !== undefined) as [
-						string,
-						string,
-					][]
-				).toString()
-			:	'';
+	const useTimelockList = (params?: { standard?: ContractStandard; status?: 'active' | 'inactive'; enabled?: boolean }) => {
+		const queryString = params ? new URLSearchParams(Object.entries(params).filter(([, value]) => value !== undefined) as [string, string][]).toString() : '';
 
 		const endpoint = `/api/v1/timelock/list${queryString ? `?${queryString}` : ''}`;
 
@@ -76,11 +60,9 @@ export const useTimelockApi = () => {
 	};
 
 	// Compound-specific operations
-	const compoundAdminPermissionsMutation = useApiMutation<unknown, { id: number }>(
-		variables => `/api/v1/timelock/compound/${variables.id}/admin-permissions`,
-		'GET',
-		{ defaultErrorMessage: 'Failed to fetch admin permissions' }
-	);
+	const compoundAdminPermissionsMutation = useApiMutation<unknown, { id: number }>(variables => `/api/v1/timelock/compound/${variables.id}/admin-permissions`, 'GET', {
+		defaultErrorMessage: 'Failed to fetch admin permissions',
+	});
 
 	const setCompoundPendingAdminMutation = useApiMutation<
 		void,
@@ -92,11 +74,9 @@ export const useTimelockApi = () => {
 		defaultErrorMessage: 'Failed to set pending admin',
 	});
 
-	const acceptCompoundAdminMutation = useApiMutation<void, { id: number }>(
-		variables => `/api/v1/timelock/compound/${variables.id}/accept-admin`,
-		'POST',
-		{ defaultErrorMessage: 'Failed to accept admin role' }
-	);
+	const acceptCompoundAdminMutation = useApiMutation<void, { id: number }>(variables => `/api/v1/timelock/compound/${variables.id}/accept-admin`, 'POST', {
+		defaultErrorMessage: 'Failed to accept admin role',
+	});
 
 	// Convenience methods that wrap the mutations
 	const importTimelock = useCallback(

@@ -13,14 +13,7 @@ interface MailboxCardProps {
 	created_at: string;
 }
 
-const MailboxCard: React.FC<MailboxCardProps> = ({
-	id,
-	email,
-	remark,
-	created_at,
-	onDelete,
-	onEdit,
-}) => {
+const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at, onDelete, onEdit }) => {
 	const t = useTranslations('Notify.mailboxCard');
 
 	const handleDeleteClick = () => {

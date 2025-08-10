@@ -5,10 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
 import type { MailboxSelectionProps } from './types';
 
-const MailboxSelection: React.FC<MailboxSelectionProps> = ({
-	selectedMailbox,
-	onMailboxChange,
-}) => {
+const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
 	const t = useTranslations('CreateTransaction');
 	const { getEmailNotifications } = useNotificationApi();
 	const [mailboxOptions, setMailboxOptions] = useState<EmailNotification[]>([]);
@@ -45,24 +42,16 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({
 			{/* Bottom: Checkbox Options */}
 			<div>
 				<div className='space-y-3'>
-					<label className='block text-sm font-medium text-gray-700 mb-2'>
-						{t('mailbox.selectLabel')}
-					</label>
+					<label className='block text-sm font-medium text-gray-700 mb-2'>{t('mailbox.selectLabel')}</label>
 					<div className='flex flex-wrap gap-2'>
 						{mailboxOptions.map(option => (
-							<div
-								key={option.id}
-								className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
+							<div key={option.id} className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
 								<Checkbox
 									id={String(option.id)}
 									checked={selectedMailbox.includes(option.email)}
-									onCheckedChange={checked =>
-										handleCheckboxChange(option.email, checked as boolean)
-									}
+									onCheckedChange={checked => handleCheckboxChange(option.email, checked as boolean)}
 								/>
-								<label
-									htmlFor={String(option.id)}
-									className='text-sm text-gray-700 cursor-pointer flex-1'>
+								<label htmlFor={String(option.id)} className='text-sm text-gray-700 cursor-pointer flex-1'>
 									{option.email_remark || option.email}
 								</label>
 							</div>

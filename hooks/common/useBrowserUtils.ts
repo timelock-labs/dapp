@@ -61,10 +61,7 @@ export function useClipboard() {
 /**
  * Hook for handling clicks outside of a specified element
  */
-export function useClickOutside<T extends HTMLElement>(
-	ref: React.RefObject<T | null>,
-	handler: () => void
-) {
+export function useClickOutside<T extends HTMLElement>(ref: React.RefObject<T | null>, handler: () => void) {
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (ref.current && !ref.current.contains(event.target as Node)) {

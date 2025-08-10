@@ -13,14 +13,7 @@ import type { TargetABISectionProps } from '@/types';
  * @param props - TargetABISection component props
  * @returns JSX.Element
  */
-const TargetABISection: React.FC<TargetABISectionProps> = ({
-	abiValue,
-	onAbiChange,
-	functionValue,
-	onFunctionChange,
-	argumentValues,
-	onArgumentChange,
-}) => {
+const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, argumentValues, onArgumentChange }) => {
 	const t = useTranslations('CreateTransaction');
 	const [isAddABIOpen, setIsAddABIOpen] = useState(false);
 	const { abiList, isLoading, addAbi } = useAbiApi();
@@ -48,18 +41,12 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({
 			return abiContent
 				.filter((item: Record<string, unknown>) => {
 					// Only include functions that are writable (not view or pure)
-					return (
-						item.type === 'function' &&
-						item.stateMutability !== 'view' &&
-						item.stateMutability !== 'pure'
-					);
+					return item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure';
 				})
 				.map((func: Record<string, unknown>) => {
 					// Create unique value using function name and input types
 					const inputs = Array.isArray(func.inputs) ? func.inputs : [];
-					const inputTypes = inputs
-						.map((input: Record<string, unknown>) => input.type)
-						.join(',');
+					const inputTypes = inputs.map((input: Record<string, unknown>) => input.type).join(',');
 					const uniqueValue = `${func.name}(${inputTypes})`;
 
 					return {
@@ -145,45 +132,29 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({
 			{/* Function and Arguments Row */}
 			<div className='space-y-4'>
 				<div className='grid grid-cols-2 gap-4'>
-					<SelectInput
-						label={t('targetABI.function')}
-						value={functionValue}
-						onChange={onFunctionChange}
-						options={functionOptions}
-						placeholder={t('targetABI.selectFunction')}
-					/>
+					<SelectInput label={t('targetABI.function')} value={functionValue} onChange={onFunctionChange} options={functionOptions} placeholder={t('targetABI.selectFunction')} />
 				</div>
 
 				{/* Dynamic function arguments */}
-				{selectedFunctionDetails &&
-					selectedFunctionDetails.inputs &&
-					Array.isArray(selectedFunctionDetails.inputs) && (
-						<div className='space-y-3'>
-							<h4 className='text-sm font-medium text-gray-700'>
-								Function Arguments
-							</h4>
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-								{(
-									selectedFunctionDetails.inputs as Array<Record<string, unknown>>
-								).map((input, index) => (
-									<TextInput
-										key={index}
-										label={`${input.name || `Argument ${index + 1}`} (${input.type})`}
-										value={argumentValues[index] || ''}
-										onChange={(value: string) => onArgumentChange(index, value)}
-										placeholder={`Enter ${input.type} value`}
-									/>
-								))}
-							</div>
+				{selectedFunctionDetails && selectedFunctionDetails.inputs && Array.isArray(selectedFunctionDetails.inputs) && (
+					<div className='space-y-3'>
+						<h4 className='text-sm font-medium text-gray-700'>Function Arguments</h4>
+						<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+							{(selectedFunctionDetails.inputs as Array<Record<string, unknown>>).map((input, index) => (
+								<TextInput
+									key={index}
+									label={`${input.name || `Argument ${index + 1}`} (${input.type})`}
+									value={argumentValues[index] || ''}
+									onChange={(value: string) => onArgumentChange(index, value)}
+									placeholder={`Enter ${input.type} value`}
+								/>
+							))}
 						</div>
-					)}
+					</div>
+				)}
 			</div>
 
-			<AddABIForm
-				isOpen={isAddABIOpen}
-				onClose={() => setIsAddABIOpen(false)}
-				onAddABI={handleAddABI}
-			/>
+			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
 		</div>
 	);
 };

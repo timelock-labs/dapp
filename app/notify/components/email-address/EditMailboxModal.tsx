@@ -28,23 +28,14 @@ interface EditMailboxModalProps {
 	initialData: EmailNotification | null; // Data of the mailbox to edit
 }
 
-const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
-	isOpen,
-	onClose,
-	onSuccess,
-	initialData,
-}) => {
+const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, onSuccess, initialData }) => {
 	const t = useTranslations('Notify.editMailbox');
 	const [emailRemark, setEmailRemark] = useState(initialData?.remark || '');
 	const { updateEmailNotification } = useNotificationApi();
 	const { useTimelockList } = useTimelockApi();
 
 	// Only fetch when modal is open
-	const {
-		data: timelockData,
-		isLoading: isLoadingTimelocks,
-		error: timelockError,
-	} = useTimelockList(isOpen ? { status: 'active' } : undefined);
+	const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(isOpen ? { status: 'active' } : undefined);
 
 	// Process timelock data when it changes
 	useEffect(() => {
@@ -118,9 +109,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-			<div
-				className='bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col'
-				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
+			<div className='bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col' style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
 				<div className='p-6'>
 					<SectionHeader title={t('title')} description={t('description')} />
 
@@ -132,12 +121,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 						disabled
 					/>
 
-					<TextInput
-						label={t('emailRemark')}
-						value={emailRemark}
-						onChange={setEmailRemark}
-						placeholder=''
-					/>
+					<TextInput label={t('emailRemark')} value={emailRemark} onChange={setEmailRemark} placeholder='' />
 				</div>
 
 				<div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
@@ -147,10 +131,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({
 						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						Cancel
 					</button>
-					<button
-						type='button'
-						onClick={handleSave}
-						className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
 						Save
 					</button>
 				</div>

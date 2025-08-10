@@ -17,12 +17,7 @@ export function useAsyncOperation(
 		showToasts?: boolean;
 	} = {}
 ) {
-	const {
-		loadingMessage = 'Processing...',
-		successMessage = 'Operation completed successfully',
-		errorMessage = 'Operation failed',
-		showToasts = true,
-	} = options;
+	const { loadingMessage = 'Processing...', successMessage = 'Operation completed successfully', errorMessage = 'Operation failed', showToasts = true } = options;
 
 	const { isLoading, error, withLoading, reset } = useLoadingState();
 

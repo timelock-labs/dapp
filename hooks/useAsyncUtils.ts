@@ -57,14 +57,7 @@ interface AsyncOperationResult<T> {
  * @returns Object containing async operation utilities
  */
 export function useStandardizedAsync<T = unknown>(config: AsyncOperationConfig = {}) {
-	const {
-		timeout = 30000,
-		retries = 0,
-		retryDelay = 1000,
-		abortOnUnmount = true,
-		onError,
-		onSuccess,
-	} = config;
+	const { timeout = 30000, retries = 0, retryDelay = 1000, abortOnUnmount = true, onError, onSuccess } = config;
 
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -119,9 +112,7 @@ export function useStandardizedAsync<T = unknown>(config: AsyncOperationConfig =
 
 					if (attempt < maxRetries) {
 						// Wait before retrying
-						await new Promise(resolve =>
-							setTimeout(resolve, retryDelay * (attempt + 1))
-						);
+						await new Promise(resolve => setTimeout(resolve, retryDelay * (attempt + 1)));
 					}
 
 					attempt++;
@@ -275,82 +266,76 @@ export function useConcurrentAsync(config: AsyncOperationConfig = {}) {
 	/**
 	 * Execute multiple async operations concurrently
 	 */
-	const executeAll = useCallback(
-		async <T>(operations: Record<string, AsyncCallback<T>>): Promise<Record<string, T>> => {
-			const results: Record<string, T> = {};
-			const promises: Promise<void>[] = [];
+	const executeAll = useCallback(async <T>(operations: Record<string, AsyncCallback<T>>): Promise<Record<string, T>> => {
+		const results: Record<string, T> = {};
+		const promises: Promise<void>[] = [];
 
-			for (const [key, asyncFn] of Object.entries(operations)) {
-				const controller = new AbortController();
-				operationsRef.current.set(key, controller);
+		for (const [key, asyncFn] of Object.entries(operations)) {
+			const controller = new AbortController();
+			operationsRef.current.set(key, controller);
 
-				const promise = asyncFn()
-					.then(result => {
-						results[key] = result;
-					})
-					.catch(error => {
-						throw new Error(`Operation '${key}' failed: ${createErrorMessage(error)}`);
-					})
-					.finally(() => {
-						operationsRef.current.delete(key);
-					});
+			const promise = asyncFn()
+				.then(result => {
+					results[key] = result;
+				})
+				.catch(error => {
+					throw new Error(`Operation '${key}' failed: ${createErrorMessage(error)}`);
+				})
+				.finally(() => {
+					operationsRef.current.delete(key);
+				});
 
-				promises.push(promise);
+			promises.push(promise);
+		}
+
+		try {
+			await Promise.all(promises);
+			return results;
+		} catch (error) {
+			// Abort all remaining operations
+			for (const controller of operationsRef.current.values()) {
+				controller.abort();
 			}
-
-			try {
-				await Promise.all(promises);
-				return results;
-			} catch (error) {
-				// Abort all remaining operations
-				for (const controller of operationsRef.current.values()) {
-					controller.abort();
-				}
-				operationsRef.current.clear();
-				throw error;
-			}
-		},
-		[]
-	);
+			operationsRef.current.clear();
+			throw error;
+		}
+	}, []);
 
 	/**
 	 * Execute async operations in sequence
 	 */
-	const executeSequentially = useCallback(
-		async <T>(operations: AsyncCallback<T>[]): Promise<T[]> => {
-			const results: T[] = [];
+	const executeSequentially = useCallback(async <T>(operations: AsyncCallback<T>[]): Promise<T[]> => {
+		const results: T[] = [];
 
-			for (let i = 0; i < operations.length; i++) {
-				const controller = new AbortController();
-				operationsRef.current.set(`seq-${i}`, controller);
+		for (let i = 0; i < operations.length; i++) {
+			const controller = new AbortController();
+			operationsRef.current.set(`seq-${i}`, controller);
 
-				try {
-					const operation = operations[i];
-					if (!operation) {
-						throw new Error(`Operation at index ${i} is undefined`);
-					}
-					const result = await operation();
-					results.push(result);
-				} catch (error) {
-					// Abort remaining operations
-					for (const [key, ctrl] of operationsRef.current.entries()) {
-						if (key.startsWith('seq-')) {
-							const indexStr = key.split('-')[1];
-							if (indexStr && parseInt(indexStr) > i) {
-								ctrl.abort();
-							}
+			try {
+				const operation = operations[i];
+				if (!operation) {
+					throw new Error(`Operation at index ${i} is undefined`);
+				}
+				const result = await operation();
+				results.push(result);
+			} catch (error) {
+				// Abort remaining operations
+				for (const [key, ctrl] of operationsRef.current.entries()) {
+					if (key.startsWith('seq-')) {
+						const indexStr = key.split('-')[1];
+						if (indexStr && parseInt(indexStr) > i) {
+							ctrl.abort();
 						}
 					}
-					throw error;
-				} finally {
-					operationsRef.current.delete(`seq-${i}`);
 				}
+				throw error;
+			} finally {
+				operationsRef.current.delete(`seq-${i}`);
 			}
+		}
 
-			return results;
-		},
-		[]
-	);
+		return results;
+	}, []);
 
 	/**
 	 * Abort all operations
@@ -397,11 +382,7 @@ export function useConcurrentAsync(config: AsyncOperationConfig = {}) {
  * @param config Additional configuration
  * @returns Debounced async function
  */
-export function useDebouncedAsync<T extends any[], R>(
-	asyncFn: (...args: T) => Promise<R>,
-	delay: number,
-	config: AsyncOperationConfig = {}
-) {
+export function useDebouncedAsync<T extends any[], R>(asyncFn: (...args: T) => Promise<R>, delay: number, config: AsyncOperationConfig = {}) {
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const { execute } = useStandardizedAsync<R>(config);
 

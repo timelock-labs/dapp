@@ -1,13 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ethers5Adapter } from 'thirdweb/adapters/ethers5';
-import {
-	useActiveAccount,
-	useActiveWalletChain,
-	useActiveWalletConnectionStatus,
-	useConnect,
-	useEnsName,
-} from 'thirdweb/react';
+import { useActiveAccount, useActiveWalletChain, useActiveWalletConnectionStatus, useConnect, useEnsName } from 'thirdweb/react';
 import { createThirdwebClient } from 'thirdweb';
 
 /**
@@ -24,24 +18,8 @@ export function useWeb3React(): {
 	isActivating: boolean;
 	ENSName: string | null | undefined;
 	connector: undefined;
-	signMessage: ({
-		message,
-		originalMessage,
-		chainId,
-	}: {
-		message: string;
-		originalMessage?: string | undefined;
-		chainId?: number | undefined;
-	}) => Promise<`0x${string}`>;
-	sendTransaction: ({
-		to,
-		data,
-		value,
-	}: {
-		to: string;
-		data?: string | undefined;
-		value?: string | number | bigint | undefined;
-	}) => Promise<any>;
+	signMessage: ({ message, originalMessage, chainId }: { message: string; originalMessage?: string | undefined; chainId?: number | undefined }) => Promise<`0x${string}`>;
+	sendTransaction: ({ to, data, value }: { to: string; data?: string | undefined; value?: string | number | bigint | undefined }) => Promise<any>;
 } {
 	const client = createThirdwebClient({
 		clientId: '0e1974955be2e739c2b5fc550a3f6c0d',
@@ -89,22 +67,11 @@ export function useWeb3React(): {
 
 	const sendTransaction =
 		activeAccount ?
-			async ({
-				to,
-				data,
-				value,
-			}: {
-				to: string;
-				data?: string | undefined;
-				value?: string | number | bigint | undefined;
-			}) => {
+			async ({ to, data, value }: { to: string; data?: string | undefined; value?: string | number | bigint | undefined }) => {
 				// Ensure data is a hex string if provided
 				let hexData: `0x${string}` | undefined = undefined;
 				if (data !== undefined) {
-					hexData =
-						data.startsWith('0x') ?
-							(data as `0x${string}`)
-						:	(`0x${Buffer.from(data, 'utf8').toString('hex')}` as `0x${string}`);
+					hexData = data.startsWith('0x') ? (data as `0x${string}`) : (`0x${Buffer.from(data, 'utf8').toString('hex')}` as `0x${string}`);
 				}
 				return activeAccount.sendTransaction({
 					to,

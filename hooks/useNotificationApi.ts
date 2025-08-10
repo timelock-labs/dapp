@@ -69,10 +69,9 @@ export const useNotificationApi = () => {
 	};
 
 	// Mutations
-	const createEmailNotificationMutation = useApiMutation<
-		EmailNotification,
-		CreateEmailNotificationRequest
-	>('/api/v1/emails', 'POST', { defaultErrorMessage: 'Failed to create email notification' });
+	const createEmailNotificationMutation = useApiMutation<EmailNotification, CreateEmailNotificationRequest>('/api/v1/emails', 'POST', {
+		defaultErrorMessage: 'Failed to create email notification',
+	});
 
 	const updateEmailNotificationMutation = useApiMutation<
 		EmailNotification,
@@ -84,23 +83,15 @@ export const useNotificationApi = () => {
 		defaultErrorMessage: 'Failed to update email notification',
 	});
 
-	const deleteEmailNotificationMutation = useApiMutation<string, { id: string }>(
-		variables => `/api/v1/emails/${variables.id}`,
-		'DELETE',
-		{ defaultErrorMessage: 'Failed to delete email notification' }
-	);
+	const deleteEmailNotificationMutation = useApiMutation<string, { id: string }>(variables => `/api/v1/emails/${variables.id}`, 'DELETE', {
+		defaultErrorMessage: 'Failed to delete email notification',
+	});
 
-	const verifyEmailMutation = useApiMutation<string, VerifyEmailRequest>(
-		'/api/v1/emails/verify',
-		'POST',
-		{ defaultErrorMessage: 'Failed to verify email' }
-	);
+	const verifyEmailMutation = useApiMutation<string, VerifyEmailRequest>('/api/v1/emails/verify', 'POST', { defaultErrorMessage: 'Failed to verify email' });
 
-	const sendVerificationCodeMutation = useApiMutation<string, ResendCodeRequest>(
-		'/api/v1/emails/send-verification',
-		'POST',
-		{ defaultErrorMessage: 'Failed to resend verification code' }
-	);
+	const sendVerificationCodeMutation = useApiMutation<string, ResendCodeRequest>('/api/v1/emails/send-verification', 'POST', {
+		defaultErrorMessage: 'Failed to resend verification code',
+	});
 
 	const handleEmergencyReplyMutation = useApiMutation<
 		{
@@ -116,10 +107,7 @@ export const useNotificationApi = () => {
 		async (data: CreateEmailNotificationRequest) => {
 			const result = await createEmailNotificationMutation.mutate(data);
 			if (createEmailNotificationMutation.error) {
-				throw new ApiError(
-					createEmailNotificationMutation.error.message,
-					'CREATE_EMAIL_NOTIFICATION_FAILED'
-				);
+				throw new ApiError(createEmailNotificationMutation.error.message, 'CREATE_EMAIL_NOTIFICATION_FAILED');
 			}
 			return result;
 		},
@@ -174,10 +162,7 @@ export const useNotificationApi = () => {
 					});
 				}
 
-				const url =
-					queryParams.toString() ?
-						`/api/v1/emails?${queryParams.toString()}`
-					:	'/api/v1/emails';
+				const url = queryParams.toString() ? `/api/v1/emails?${queryParams.toString()}` : '/api/v1/emails';
 
 				const response = await request(url, { method: 'GET' });
 				return response.data;
@@ -200,10 +185,7 @@ export const useNotificationApi = () => {
 					});
 				}
 
-				const url =
-					queryParams.toString() ?
-						`/api/v1/emails/logs?${queryParams.toString()}`
-					:	'/api/v1/emails/logs';
+				const url = queryParams.toString() ? `/api/v1/emails/logs?${queryParams.toString()}` : '/api/v1/emails/logs';
 
 				const response = await request(url, { method: 'GET' });
 				return response.data;

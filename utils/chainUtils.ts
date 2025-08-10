@@ -1,20 +1,4 @@
-import {
-	ethereum,
-	sepolia,
-	polygon,
-	bsc,
-	bscTestnet,
-	optimism,
-	avalanche,
-	base,
-	arbitrum,
-	gnosis,
-	linea,
-	zkSync,
-	scroll,
-	celo,
-	defineChain,
-} from 'thirdweb/chains';
+import { ethereum, sepolia, polygon, bsc, bscTestnet, optimism, avalanche, base, arbitrum, gnosis, linea, zkSync, scroll, celo, defineChain } from 'thirdweb/chains';
 import type { Chain, ChainIdMapping } from '@/types';
 
 // Define custom chains not available in thirdweb/chains

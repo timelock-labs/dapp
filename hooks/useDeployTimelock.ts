@@ -16,12 +16,7 @@ import { useContractDeployment } from './useBlockchainHooks';
 import { createErrorMessage, validateRequiredFields } from './useHookUtils';
 
 // Type imports
-import type {
-	CompoundTimelockParams,
-	ContractStandard,
-	DeploymentResult,
-	OpenZeppelinTimelockParams,
-} from '@/types';
+import type { CompoundTimelockParams, ContractStandard, DeploymentResult, OpenZeppelinTimelockParams } from '@/types';
 
 /**
  * Configuration for timelock deployment
@@ -96,12 +91,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 
 				try {
 					// Deploy the contract
-					const result = await deployContract(
-						compoundTimelockAbi as ContractInterface,
-						compoundTimelockBytecode,
-						[params.admin, BigInt(params.minDelay)],
-						deploymentOptions
-					);
+					const result = await deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [params.admin, BigInt(params.minDelay)], deploymentOptions);
 
 					return {
 						...result,
@@ -114,13 +104,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 				}
 			});
 		},
-		[
-			deployContract,
-			executeWithValidation,
-			validateParams,
-			validateCompoundParams,
-			deploymentOptions,
-		]
+		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions]
 	);
 
 	/**
@@ -131,9 +115,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 			return executeWithValidation(async () => {
 				// TODO: Implement OpenZeppelin timelock deployment
 				// This is a placeholder for future implementation
-				throw new Error(
-					'OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.'
-				);
+				throw new Error('OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.');
 			});
 		},
 		[executeWithValidation]
@@ -143,10 +125,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 	 * Get deployment cost estimation
 	 */
 	const estimateDeploymentCost = useCallback(
-		async (
-			standard: ContractStandard,
-			params: CompoundTimelockParams | OpenZeppelinTimelockParams
-		) => {
+		async (standard: ContractStandard, params: CompoundTimelockParams | OpenZeppelinTimelockParams) => {
 			if (standard === 'compound') {
 				// This would typically use gas estimation
 				// For now, return a placeholder

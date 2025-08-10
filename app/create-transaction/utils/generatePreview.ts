@@ -52,9 +52,7 @@ const generatePreview = ({
 				})
 				.join('\n');
 		} catch {
-			argsDisplay = argumentValues
-				.map((arg, index) => `    arg${index + 1}: ${arg || 'N/A'}`)
-				.join('\n');
+			argsDisplay = argumentValues.map((arg, index) => `    arg${index + 1}: ${arg || 'N/A'}`).join('\n');
 		}
 	}
 

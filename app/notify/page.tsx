@@ -175,19 +175,10 @@ const EmailNotificationPage: React.FC = () => {
 			</div>
 
 			{/* Add Mailbox Modal (Conditional Rendering) */}
-			<AddMailboxModal
-				isOpen={isAddMailboxModalOpen}
-				onClose={() => setIsAddMailboxModalOpen(false)}
-				onSuccess={handleAddMailboxSuccess}
-			/>
+			<AddMailboxModal isOpen={isAddMailboxModalOpen} onClose={() => setIsAddMailboxModalOpen(false)} onSuccess={handleAddMailboxSuccess} />
 
 			{/* Edit Mailbox Modal (Conditional Rendering) */}
-			<EditMailboxModal
-				isOpen={isEditMailboxModalOpen}
-				onClose={() => setIsEditMailboxModalOpen(false)}
-				onSuccess={handleEditMailboxSuccess}
-				initialData={editingMailbox}
-			/>
+			<EditMailboxModal isOpen={isEditMailboxModalOpen} onClose={() => setIsEditMailboxModalOpen(false)} onSuccess={handleEditMailboxSuccess} initialData={editingMailbox} />
 
 			{/* Delete Confirmation Dialog */}
 			<ConfirmDialog

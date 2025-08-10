@@ -19,6 +19,6 @@
 // // };
 
 export default function middleware() {
-  return;
+	return;
 }
 // export const config = { matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)' };

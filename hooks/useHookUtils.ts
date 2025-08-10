@@ -12,10 +12,7 @@ import type { VoidCallback, AsyncCallback, ApiRequestOptions, HttpMethod } from 
 /**
  * Utility for creating consistent error messages
  */
-export const createErrorMessage = (
-	error: unknown,
-	defaultMessage = 'An error occurred'
-): string => {
+export const createErrorMessage = (error: unknown, defaultMessage = 'An error occurred'): string => {
 	if (error instanceof Error) {
 		return error.message;
 	}
@@ -28,10 +25,7 @@ export const createErrorMessage = (
 /**
  * Utility for creating API endpoints with parameters
  */
-export const createApiEndpoint = (
-	baseEndpoint: string,
-	params?: Record<string, string | number | boolean | undefined>
-): string => {
+export const createApiEndpoint = (baseEndpoint: string, params?: Record<string, string | number | boolean | undefined>): string => {
 	if (!params) return baseEndpoint;
 
 	const searchParams = new URLSearchParams();
@@ -48,20 +42,14 @@ export const createApiEndpoint = (
 /**
  * Utility for creating dynamic API endpoints with variables
  */
-export const createDynamicEndpoint = <T extends Record<string, any>>(
-	template: string | ((variables: T) => string),
-	variables: T
-): string => {
+export const createDynamicEndpoint = <T extends Record<string, any>>(template: string | ((variables: T) => string), variables: T): string => {
 	return typeof template === 'function' ? template(variables) : template;
 };
 
 /**
  * Utility for creating standardized API request options
  */
-export const createApiRequestOptions = (
-	method: HttpMethod = 'GET',
-	options: Partial<ApiRequestOptions> = {}
-): ApiRequestOptions => {
+export const createApiRequestOptions = (method: HttpMethod = 'GET', options: Partial<ApiRequestOptions> = {}): ApiRequestOptions => {
 	return {
 		method,
 		headers: {
@@ -75,10 +63,7 @@ export const createApiRequestOptions = (
 /**
  * Utility for handling async operations with consistent error handling
  */
-export const withErrorHandling = async <T>(
-	asyncFn: AsyncCallback<T>,
-	errorMessage?: string
-): Promise<T> => {
+export const withErrorHandling = async <T>(asyncFn: AsyncCallback<T>, errorMessage?: string): Promise<T> => {
 	try {
 		return await asyncFn();
 	} catch (error) {
@@ -93,20 +78,15 @@ export const withErrorHandling = async <T>(
  */
 export const createToastNotification = {
 	loading: (message: string) => toast.loading(message),
-	success: (message: string, id?: string | number) =>
-		id ? toast.success(message, { id }) : toast.success(message),
-	error: (message: string, id?: string | number) =>
-		id ? toast.error(message, { id }) : toast.error(message),
+	success: (message: string, id?: string | number) => (id ? toast.success(message, { id }) : toast.success(message)),
+	error: (message: string, id?: string | number) => (id ? toast.error(message, { id }) : toast.error(message)),
 	dismiss: (id?: string | number) => (id ? toast.dismiss(id) : toast.dismiss()),
 };
 
 /**
  * Utility for debouncing function calls
  */
-export const createDebouncedCallback = <T extends (...args: any[]) => any>(
-	callback: T,
-	delay: number
-): T => {
+export const createDebouncedCallback = <T extends (...args: any[]) => any>(callback: T, delay: number): T => {
 	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
 	return useCallback(
@@ -126,10 +106,7 @@ export const createDebouncedCallback = <T extends (...args: any[]) => any>(
 /**
  * Utility for throttling function calls
  */
-export const createThrottledCallback = <T extends (...args: any[]) => any>(
-	callback: T,
-	delay: number
-): T => {
+export const createThrottledCallback = <T extends (...args: any[]) => any>(callback: T, delay: number): T => {
 	const lastCallRef = useRef<number>(0);
 	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -190,11 +167,7 @@ export const useAbortController = () => {
 /**
  * Utility for creating consistent mutation state objects
  */
-export const createMutationState = <T>(
-	data: T | null,
-	error: Error | null,
-	isLoading: boolean
-) => ({
+export const createMutationState = <T>(data: T | null, error: Error | null, isLoading: boolean) => ({
 	data,
 	error,
 	isLoading,
@@ -206,12 +179,7 @@ export const createMutationState = <T>(
 /**
  * Utility for creating consistent query state objects
  */
-export const createQueryState = <T>(
-	data: T | null,
-	error: Error | null,
-	isLoading: boolean,
-	isInitialized: boolean
-) => ({
+export const createQueryState = <T>(data: T | null, error: Error | null, isLoading: boolean, isInitialized: boolean) => ({
 	data,
 	error,
 	isLoading,
@@ -224,10 +192,7 @@ export const createQueryState = <T>(
 /**
  * Utility for validating required fields
  */
-export const validateRequiredFields = <T extends Record<string, any>>(
-	data: T,
-	requiredFields: (keyof T)[]
-): string[] => {
+export const validateRequiredFields = <T extends Record<string, any>>(data: T, requiredFields: (keyof T)[]): string[] => {
 	const errors: string[] = [];
 
 	requiredFields.forEach(field => {
@@ -267,11 +232,7 @@ export const formatApiError = (error: unknown): { message: string; code?: string
 /**
  * Utility for creating consistent loading states with timeout
  */
-export const useLoadingTimeout = (
-	isLoading: boolean,
-	timeoutMs = 30000,
-	onTimeout?: VoidCallback
-) => {
+export const useLoadingTimeout = (isLoading: boolean, timeoutMs = 30000, onTimeout?: VoidCallback) => {
 	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
 	useEffect(() => {
@@ -297,11 +258,7 @@ export const useLoadingTimeout = (
 /**
  * Utility for creating retry logic
  */
-export const createRetryLogic = <T>(
-	asyncFn: AsyncCallback<T>,
-	maxRetries = 3,
-	retryDelay = 1000
-): AsyncCallback<T> => {
+export const createRetryLogic = <T>(asyncFn: AsyncCallback<T>, maxRetries = 3, retryDelay = 1000): AsyncCallback<T> => {
 	return async () => {
 		let lastError: Error;
 
@@ -324,11 +281,7 @@ export const createRetryLogic = <T>(
 /**
  * Utility for creating optimistic updates
  */
-export const createOptimisticUpdate = <T>(
-	currentData: T | null,
-	optimisticData: T,
-	updateFn: (current: T | null, optimistic: T) => T
-): T => {
+export const createOptimisticUpdate = <T>(currentData: T | null, optimisticData: T, updateFn: (current: T | null, optimistic: T) => T): T => {
 	return updateFn(currentData, optimisticData);
 };
 
