@@ -88,26 +88,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {/* <Image src={Logo} alt="Timelock Logo" className="h-8 w-[136px]" /> */}
-        <div className="logo-font font-xl font-bold text-xl">{t('sidebar.logo')}</div>
 
-        {/* 如需团队切换功能请取消注释并确保 sidebarData.teams 存在 */}
-{/* <TeamSwitcher teams={sidebarData.teams} /> */}
+        <div className="logo-font font-xl font-bold text-xl">{t('sidebar.logo')}</div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={sidebarData.navMain} />
-        {/* 项目区块 */}
-        {/* 如需项目区块请取消注释并确保 NavProjects 组件已导入 */}
-        {/* <NavProjects projects={sidebarData.projects} /> */}
       </SidebarContent>
       <div className="flex flex-col gap-8 justify-center items-center">
         <LanguageSwitcher />
         <SidebarFooter>
           <NavUser user={{
-  name: "support@timelock.com",
-  email: "support@timelock.com",
-  avatar: "/avatars/shadcn.jpg"
-}} />
+            name: "support@timelock.com",
+            email: "support@timelock.com",
+            avatar: "/avatars/shadcn.jpg"
+          }} />
         </SidebarFooter>
       </div>
       <SidebarRail />
