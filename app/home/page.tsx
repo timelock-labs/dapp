@@ -20,19 +20,8 @@ const LoadingSkeleton = () => (
 );
 
 // 页面内容包装器，提供淡入动画
-const PageWrapper = ({
-	children,
-	isVisible,
-}: {
-	children: React.ReactNode;
-	isVisible: boolean;
-}) => (
-	<div
-		className={`transition-all duration-500 ease-in-out ${
-			isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-		}`}>
-		{children}
-	</div>
+const PageWrapper = ({ children, isVisible }: { children: React.ReactNode; isVisible: boolean }) => (
+	<div className={`transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>{children}</div>
 );
 
 export default function Home() {

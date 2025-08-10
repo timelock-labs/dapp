@@ -45,13 +45,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 	const { allTimelocks } = useAuthStore();
 	const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
 	const [isLoadingDetails, setIsLoadingDetails] = useState(false);
-	const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>(
-		{}
-	);
-	const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<
-		string,
-		unknown
-	> | null>(null);
+	const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
+	const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
 
 	const { id: chainId } = useActiveWalletChain() || {};
 	const switchChain = useSwitchActiveWalletChain();
@@ -122,13 +117,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 				}
 			}
 		},
-		[
-			allTimelocks,
-			fetchTimelockDetail,
-			onTimelockAddressChange,
-			onTimelockTypeChange,
-			timelockOptions,
-		]
+		[allTimelocks, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions]
 	);
 
 	useEffect(() => {
@@ -142,11 +131,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 	const handleTimelockMethodChange = useCallback(() => {
 		// 修复 currentTimelockDetails 可能为 null 的问题
-		if (
-			currentTimelockDetails &&
-			currentTimelockDetails.chain_id &&
-			Number(currentTimelockDetails.chain_id) !== chainId
-		) {
+		if (currentTimelockDetails && currentTimelockDetails.chain_id && Number(currentTimelockDetails.chain_id) !== chainId) {
 			const chainObject = getChainObject(Number(currentTimelockDetails.chain_id));
 			switchChain(chainObject).then(() => {
 				console.log('Switched to chain:', currentTimelockDetails.chain_id);
@@ -170,12 +155,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		}
 
 		// 从 ABI 读取所有 function 名称作为 options
-		const functions = TimelockCompundABI.filter(
-			item =>
-				item.type === 'function' &&
-				item.stateMutability !== 'view' &&
-				item.stateMutability !== 'pure'
-		);
+		const functions = TimelockCompundABI.filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
 		return functions.map(fn => {
 			const inputTypes = (fn.inputs || []).map(input => input.type).join(',');
 			const signature = `${fn.name}(${inputTypes})`;
@@ -200,9 +180,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		const timeOffset = new Date().getTimezoneOffset() / 60;
 
-		return zone ?
-				`(${zone} UTC${timeOffset >= 0 ? '+' : ''}${timeOffset})`
-			:	`UTC${timeOffset >= 0 ? '+' : ''}${timeOffset}`;
+		return zone ? `(${zone} UTC${timeOffset >= 0 ? '+' : ''}${timeOffset})` : `UTC${timeOffset >= 0 ? '+' : ''}${timeOffset}`;
 	};
 
 	function toLocalDateTimeString(date: Date) {
@@ -225,9 +203,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 				icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 			/>
 			<div className='flex flex-col space-y-4 w-full'>
-				<div
-					className='flex flex-row gap-4 border border-gray-300 rounded-lg p-4'
-					id='timelock-selection'>
+				<div className='flex flex-row gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
 					<div className='flex-1'>
 						<SelectInput
 							label={t('encodingTransaction.selectTimelock')}
@@ -248,32 +224,14 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 							value={timelockMethod}
 							onChange={onTimelockMethodChange}
 							options={timelockMethodOptions}
-							placeholder={
-								timelockType ?
-									t('encodingTransaction.selectTimelockMethodPlaceholder')
-								:	t('encodingTransaction.selectTimelockFirstPlaceholder')
-							}
+							placeholder={timelockType ? t('encodingTransaction.selectTimelockMethodPlaceholder') : t('encodingTransaction.selectTimelockFirstPlaceholder')}
 						/>
 					</div>
 				</div>
 
-				<div
-					id='transaction-details'
-					className='border border-gray-300 rounded-lg p-4 mt-2'>
-					<TextInput
-						label={t('encodingTransaction.target')}
-						value={target}
-						onChange={handleTargetChange}
-						placeholder='Target'
-						error={validationErrors.target}
-					/>
-					<TextInput
-						label={t('encodingTransaction.value')}
-						defaultValue={0}
-						value={value}
-						onChange={handleValueChange}
-						placeholder='Value'
-					/>
+				<div id='transaction-details' className='border border-gray-300 rounded-lg p-4 mt-2'>
+					<TextInput label={t('encodingTransaction.target')} value={target} onChange={handleTargetChange} placeholder='Target' error={validationErrors.target} />
+					<TextInput label={t('encodingTransaction.value')} defaultValue={0} value={value} onChange={handleValueChange} placeholder='Value' />
 					<TextAreaInput
 						label={t('encodingTransaction.calldata')}
 						value={targetCalldata}
@@ -305,9 +263,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 									label=''
 									value={String(timeValue)}
 									onChange={(e: string) => onTimeChange(Number(e))}
-									placeholder={
-										t('encodingTransaction.timePlaceholder') || 'Time (seconds)'
-									}
+									placeholder={t('encodingTransaction.timePlaceholder') || 'Time (seconds)'}
 								/>
 							</div>
 						</div>

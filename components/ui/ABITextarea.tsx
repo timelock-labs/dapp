@@ -16,17 +16,7 @@ interface ABITextareaProps {
 	disabled?: boolean;
 }
 
-const ABITextarea: React.FC<ABITextareaProps> = ({
-	id = 'abi-content',
-	label,
-	value,
-	onChange,
-	placeholder,
-	rows = 5,
-	className = '',
-	required = false,
-	disabled = false,
-}) => {
+const ABITextarea: React.FC<ABITextareaProps> = ({ id = 'abi-content', label, value, onChange, placeholder, rows = 5, className = '', required = false, disabled = false }) => {
 	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		onChange(e.target.value);
 	};
@@ -36,9 +26,7 @@ const ABITextarea: React.FC<ABITextareaProps> = ({
 	return (
 		<div className='space-y-2'>
 			{label && (
-				<Label
-					htmlFor={id}
-					className={required ? "after:content-['*'] after:text-red-500 after:ml-1" : ''}>
+				<Label htmlFor={id} className={required ? "after:content-['*'] after:text-red-500 after:ml-1" : ''}>
 					{label}
 				</Label>
 			)}

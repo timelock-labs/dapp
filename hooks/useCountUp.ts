@@ -20,18 +20,7 @@ export const useCountUp = (options: UseCountUpOptions) => {
 
 	useEffect(() => {
 		if (elementRef.current) {
-			const {
-				start = 0,
-				end,
-				duration = 2,
-				decimals = 2,
-				prefix = '',
-				suffix = '',
-				separator = ',',
-				decimal = '.',
-				useEasing = true,
-				useGrouping = true,
-			} = options;
+			const { start = 0, end, duration = 2, decimals = 2, prefix = '', suffix = '', separator = ',', decimal = '.', useEasing = true, useGrouping = true } = options;
 
 			countUpRef.current = new CountUp(elementRef.current, end, {
 				startVal: start,

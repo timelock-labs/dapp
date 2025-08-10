@@ -10,14 +10,7 @@ interface PermissionCheckboxProps {
 	onChange: (id: string, checked: boolean) => void;
 }
 
-const PermissionCheckbox: React.FC<PermissionCheckboxProps> = ({
-	id,
-	label,
-	subLabel,
-	icon,
-	checked,
-	onChange,
-}) => {
+const PermissionCheckbox: React.FC<PermissionCheckboxProps> = ({ id, label, subLabel, icon, checked, onChange }) => {
 	return (
 		<label htmlFor={id} className='flex items-start cursor-pointer py-2'>
 			<input

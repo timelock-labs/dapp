@@ -7,11 +7,7 @@ interface TableSkeletonProps {
 	showHeader?: boolean;
 }
 
-const TableSkeleton: React.FC<TableSkeletonProps> = ({
-	rows = 5,
-	columns = 6,
-	showHeader = true,
-}) => {
+const TableSkeleton: React.FC<TableSkeletonProps> = ({ rows = 5, columns = 6, showHeader = true }) => {
 	return (
 		<div className='w-full'>
 			{/* Header skeleton */}
@@ -41,9 +37,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
 
 				{/* Table rows */}
 				{Array.from({ length: rows }).map((_, rowIndex) => (
-					<div
-						key={rowIndex}
-						className='border-b border-gray-200 px-6 py-4 last:border-b-0'>
+					<div key={rowIndex} className='border-b border-gray-200 px-6 py-4 last:border-b-0'>
 						<div className='flex space-x-4'>
 							{Array.from({ length: columns }).map((_, colIndex) => (
 								<div key={colIndex} className='flex-1'>

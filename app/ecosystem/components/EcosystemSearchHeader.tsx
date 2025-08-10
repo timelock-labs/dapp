@@ -13,13 +13,7 @@ const EcosystemSearchHeader: React.FC = () => {
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',
 			}}>
-			<Image
-				src='/ecoPanter.png'
-				alt='Ecosystem Partner'
-				width={20}
-				height={20}
-				className='text-gray-400'
-			/>
+			<Image src='/ecoPanter.png' alt='Ecosystem Partner' width={20} height={20} className='text-gray-400' />
 			<h2 className='text-xl font-semibold'>探索我们的生态伙伴</h2>
 		</div>
 	);

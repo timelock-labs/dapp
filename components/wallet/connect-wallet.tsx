@@ -9,13 +9,7 @@ import { cn } from '@/lib/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
 import { client, supportedChains } from '@/lib/thirdweb';
 
-const wallets = [
-	createWallet('io.metamask'),
-	createWallet('com.coinbase.wallet'),
-	createWallet('com.okex.wallet'),
-	createWallet('global.safe'),
-	createWallet('com.safepal'),
-];
+const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
 
 interface ConnectWalletProps extends BaseComponentProps {
 	icon?: boolean;
@@ -62,13 +56,7 @@ const WALLET_STYLES = {
  * @param props - ConnectWallet component props
  * @returns JSX.Element
  */
-export const ConnectWallet = memo(function ConnectWallet({
-	fullWidth,
-	headerStyle,
-	onConnect,
-	onDisconnect,
-	className,
-}: ConnectWalletProps) {
+export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyle, onConnect, onDisconnect, className }: ConnectWalletProps) {
 	const logout = useAuthStore(state => state.logout);
 	const router = useRouter();
 

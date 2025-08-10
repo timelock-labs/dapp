@@ -13,13 +13,7 @@ import { createErrorMessage, useAbortController } from './useHookUtils';
 import { useWeb3React } from './useWeb3React';
 
 // Type imports
-import type {
-	Address,
-	ContractStandard,
-	ContractValidationResult,
-	ImportTimelockRequest,
-	TimelockParameters,
-} from '@/types';
+import type { Address, ContractStandard, ContractValidationResult, ImportTimelockRequest, TimelockParameters } from '@/types';
 
 // Re-export types for backward compatibility
 export type { TimelockParameters };
@@ -105,9 +99,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 
 				// Try Compound timelock first
 				try {
-					const compoundValidation = await validateContract(contractAddress, [
-						...TIMELOCK_ABIS.compound,
-					]);
+					const compoundValidation = await validateContract(contractAddress, [...TIMELOCK_ABIS.compound]);
 					if (compoundValidation.isValid) {
 						return 'compound';
 					}
@@ -117,9 +109,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 
 				// Try OpenZeppelin timelock (when implemented)
 				try {
-					const ozValidation = await validateContract(contractAddress, [
-						...TIMELOCK_ABIS.openzeppelin,
-					]);
+					const ozValidation = await validateContract(contractAddress, [...TIMELOCK_ABIS.openzeppelin]);
 					if (ozValidation.isValid) {
 						return 'openzeppelin';
 					}
@@ -147,11 +137,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 				throw new Error('Provider not available');
 			}
 
-			const contract = new ethers.Contract(
-				contractAddress,
-				[...TIMELOCK_ABIS.compound],
-				provider
-			);
+			const contract = new ethers.Contract(contractAddress, [...TIMELOCK_ABIS.compound], provider);
 			const controller = createController();
 
 			try {
@@ -170,15 +156,14 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 					contract.MAXIMUM_DELAY().catch(() => ethers.BigNumber.from(30 * 24 * 60 * 60)), // Default 30 days
 				]);
 
-				const [admin, pendingAdmin, delay, gracePeriod, minDelay, maxDelay] =
-					(await Promise.race([parametersPromise, timeoutPromise])) as [
-						string,
-						string,
-						ethers.BigNumber,
-						ethers.BigNumber,
-						ethers.BigNumber,
-						ethers.BigNumber,
-					];
+				const [admin, pendingAdmin, delay, gracePeriod, minDelay, maxDelay] = (await Promise.race([parametersPromise, timeoutPromise])) as [
+					string,
+					string,
+					ethers.BigNumber,
+					ethers.BigNumber,
+					ethers.BigNumber,
+					ethers.BigNumber,
+				];
 
 				if (controller.signal.aborted) {
 					throw new Error('Operation was cancelled');
@@ -186,8 +171,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 
 				return {
 					admin,
-					pendingAdmin:
-						pendingAdmin === ethers.constants.AddressZero ? undefined : pendingAdmin,
+					pendingAdmin: pendingAdmin === ethers.constants.AddressZero ? undefined : pendingAdmin,
 					minDelay: delay.toNumber(),
 					gracePeriod: gracePeriod.toNumber(),
 					minimumDelay: minDelay.toNumber(),
@@ -209,13 +193,10 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 	/**
 	 * Get OpenZeppelin timelock parameters (placeholder for future implementation)
 	 */
-	const getOpenZeppelinParameters = useCallback(
-		async (contractAddress: Address): Promise<Partial<TimelockParameters>> => {
-			// TODO: Implement OpenZeppelin parameter fetching
-			throw new Error('OpenZeppelin timelock import not yet implemented');
-		},
-		[]
-	);
+	const getOpenZeppelinParameters = useCallback(async (contractAddress: Address): Promise<Partial<TimelockParameters>> => {
+		// TODO: Implement OpenZeppelin parameter fetching
+		throw new Error('OpenZeppelin timelock import not yet implemented');
+	}, []);
 
 	/**
 	 * Fetch timelock parameters from blockchain with comprehensive validation
@@ -292,14 +273,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 				return result;
 			});
 		},
-		[
-			executeParameterFetch,
-			executeValidation,
-			detectTimelockStandard,
-			getCompoundParameters,
-			getOpenZeppelinParameters,
-			cacheParameters,
-		]
+		[executeParameterFetch, executeValidation, detectTimelockStandard, getCompoundParameters, getOpenZeppelinParameters, cacheParameters]
 	);
 
 	/**

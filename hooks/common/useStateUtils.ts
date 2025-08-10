@@ -42,9 +42,7 @@ export function usePrevious<T>(value: T): T | undefined {
 /**
  * Hook for managing boolean toggle state
  */
-export function useToggle(
-	initialValue = false
-): [boolean, VoidCallback, VoidCallback, VoidCallback] {
+export function useToggle(initialValue = false): [boolean, VoidCallback, VoidCallback, VoidCallback] {
 	const [value, setValue] = useState(initialValue);
 
 	const toggle = useCallback(() => setValue(prev => !prev), []);

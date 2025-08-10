@@ -7,17 +7,7 @@ import type { RadioButtonOptionProps } from '@/types';
  * @param props - RadioButtonOption component props
  * @returns JSX.Element
  */
-const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({
-	id,
-	name,
-	value,
-	label,
-	description,
-	checked,
-	onChange,
-	className = '',
-	disabled = false,
-}) => {
+const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({ id, name, value, label, description, checked, onChange, className = '', disabled = false }) => {
 	const handleChange = useCallback(() => {
 		if (!disabled) {
 			onChange(value);
@@ -27,10 +17,10 @@ const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({
 	const baseClasses = `
     flex items-start rounded-lg border cursor-pointer transition-all duration-200 p-2
     ${
-		checked ?
-			'border-black bg-gray-100' // Checked styles
-		:	'border-gray-300 hover:border-gray-400 bg-white' // Unchecked styles
-	}
+			checked ?
+				'border-black bg-gray-100' // Checked styles
+			:	'border-gray-300 hover:border-gray-400 bg-white' // Unchecked styles
+		}
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
     ${className}
   `;
@@ -43,17 +33,7 @@ const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({
 
 	return (
 		<label htmlFor={id} className={baseClasses}>
-			<input
-				type='radio'
-				id={id}
-				name={name}
-				value={value}
-				checked={checked}
-				onChange={handleChange}
-				disabled={disabled}
-				className={radioClasses}
-				aria-disabled={disabled}
-			/>
+			<input type='radio' id={id} name={name} value={value} checked={checked} onChange={handleChange} disabled={disabled} className={radioClasses} aria-disabled={disabled} />
 			<div className='flex-1'>
 				<p className='text-gray-900 font-medium text-base'>{label}</p>
 				{description && <p className='text-gray-500 text-sm mt-1'>{description}</p>}

@@ -6,13 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetHeader,
-	SheetTitle,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useSidebar } from './context';
 import { SIDEBAR_WIDTH_MOBILE } from './constants';
 
@@ -32,13 +26,7 @@ export function Sidebar({
 
 	if (collapsible === 'none') {
 		return (
-			<div
-				data-slot='sidebar'
-				className={cn(
-					'bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col',
-					className
-				)}
-				{...props}>
+			<div data-slot='sidebar' className={cn('bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col', className)} {...props}>
 				{children}
 			</div>
 		);
@@ -113,11 +101,7 @@ export function Sidebar({
 	);
 }
 
-export function SidebarTrigger({
-	className,
-	onClick,
-	...props
-}: React.ComponentProps<typeof Button>) {
+export function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
 	const { toggleSidebar } = useSidebar();
 
 	return (
@@ -178,50 +162,19 @@ export function SidebarInset({ className, ...props }: React.ComponentProps<'main
 }
 
 export function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input>) {
-	return (
-		<Input
-			data-slot='sidebar-input'
-			data-sidebar='input'
-			className={cn('bg-background h-8 w-full shadow-none', className)}
-			{...props}
-		/>
-	);
+	return <Input data-slot='sidebar-input' data-sidebar='input' className={cn('bg-background h-8 w-full shadow-none', className)} {...props} />;
 }
 
 export function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
-	return (
-		<div
-			data-slot='sidebar-header'
-			data-sidebar='header'
-			className={cn('flex flex-col gap-2 p-4', className)}
-			{...props}
-		/>
-	);
+	return <div data-slot='sidebar-header' data-sidebar='header' className={cn('flex flex-col gap-2 p-4', className)} {...props} />;
 }
 
 export function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
-	return (
-		<div
-			data-slot='sidebar-footer'
-			data-sidebar='footer'
-			className={cn(
-				'flex flex-col gap-2 p-2 border-t border-sidebar-border h-[72px]',
-				className
-			)}
-			{...props}
-		/>
-	);
+	return <div data-slot='sidebar-footer' data-sidebar='footer' className={cn('flex flex-col gap-2 p-2 border-t border-sidebar-border h-[72px]', className)} {...props} />;
 }
 
 export function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {
-	return (
-		<Separator
-			data-slot='sidebar-separator'
-			data-sidebar='separator'
-			className={cn('bg-sidebar-border mx-2 w-auto', className)}
-			{...props}
-		/>
-	);
+	return <Separator data-slot='sidebar-separator' data-sidebar='separator' className={cn('bg-sidebar-border mx-2 w-auto', className)} {...props} />;
 }
 
 export function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
@@ -229,10 +182,7 @@ export function SidebarContent({ className, ...props }: React.ComponentProps<'di
 		<div
 			data-slot='sidebar-content'
 			data-sidebar='content'
-			className={cn(
-				'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
-				className
-			)}
+			className={cn('flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden', className)}
 			{...props}
 		/>
 	);

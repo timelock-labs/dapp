@@ -51,10 +51,7 @@ const ABILibPage: React.FC = () => {
 
 	useEffect(() => {
 		if (abiListResponse?.success === true) {
-			const allAbis = [
-				...(abiListResponse.data.user_abis || []),
-				...(abiListResponse.data.shared_abis || []),
-			];
+			const allAbis = [...(abiListResponse.data.user_abis || []), ...(abiListResponse.data.shared_abis || [])];
 			setAbis(allAbis);
 			// 移除成功通知，避免页面加载时显示
 		} else if (abiListResponse?.success === false && abiListResponse.data !== null) {
@@ -107,10 +104,7 @@ const ABILibPage: React.FC = () => {
 					);
 				}
 			} else {
-				const errorMessage =
-					validationResponse?.error?.message ||
-					validationResponse?.data?.error_message ||
-					'Unknown validation error';
+				const errorMessage = validationResponse?.error?.message || validationResponse?.data?.error_message || 'Unknown validation error';
 				console.error('ABI validation failed:', errorMessage);
 				toast.error(t('validateAbiError', { message: errorMessage }));
 			}
@@ -130,9 +124,7 @@ const ABILibPage: React.FC = () => {
 		if (viewAbiResponse?.success === true) {
 			toast.success(t('viewAbiSuccess', { name: viewAbiResponse.data.name }));
 		} else if (viewAbiResponse?.success === false && viewAbiResponse.data !== null) {
-			toast.error(
-				t('viewAbiError', { message: viewAbiResponse.error?.message || 'Unknown error' })
-			);
+			toast.error(t('viewAbiError', { message: viewAbiResponse.error?.message || 'Unknown error' }));
 		}
 	}, [viewAbiResponse, t]);
 
@@ -203,9 +195,7 @@ const ABILibPage: React.FC = () => {
 			key: 'name',
 			header: t('abiName'),
 			render: (row: ABIRow) => (
-				<div
-					className='flex items-center space-x-2 cursor-pointer'
-					onClick={() => handleViewABI(row)}>
+				<div className='flex items-center space-x-2 cursor-pointer' onClick={() => handleViewABI(row)}>
 					{!row.is_shared && <StarSVG />}
 					<span>{row.name}</span>
 				</div>
@@ -220,9 +210,7 @@ const ABILibPage: React.FC = () => {
 		{
 			key: 'type',
 			header: t('abiType'),
-			render: (row: ABIRow) => (
-				<span>{row.is_shared ? t('platformShared') : t('userImported')}</span>
-			),
+			render: (row: ABIRow) => <span>{row.is_shared ? t('platformShared') : t('userImported')}</span>,
 		},
 		{
 			key: 'operations',
@@ -283,9 +271,7 @@ const ABILibPage: React.FC = () => {
 
 							{/* Table rows */}
 							{Array.from({ length: 5 }).map((_, rowIndex) => (
-								<div
-									key={rowIndex}
-									className='border-b border-gray-200 px-6 py-4 last:border-b-0'>
+								<div key={rowIndex} className='border-b border-gray-200 px-6 py-4 last:border-b-0'>
 									<div className='flex space-x-4'>
 										<div className='flex-1'>
 											<div className='flex items-center space-x-2'>
@@ -317,10 +303,7 @@ const ABILibPage: React.FC = () => {
 			<div className='min-h-screen  '>
 				<div className='mx-auto border border-gray-200 rounded-lg p-6 '>
 					<div className='flex justify-between items-center mb-6'>
-						<SectionHeader
-							title={t('storedABI')}
-							description={t('storedABIDescription')}
-						/>
+						<SectionHeader title={t('storedABI')} description={t('storedABIDescription')} />
 						<button
 							type='button'
 							onClick={() => setIsAddABIOpen(true)}
@@ -338,11 +321,7 @@ const ABILibPage: React.FC = () => {
 				</div>
 			</div>
 
-			<AddABIForm
-				isOpen={isAddABIOpen}
-				onClose={() => setIsAddABIOpen(false)}
-				onAddABI={handleAddABI}
-			/>
+			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
 			<ViewABIForm
 				isOpen={isViewABIOpen}
 				onClose={() => setIsViewABIOpen(false)}
@@ -354,9 +333,7 @@ const ABILibPage: React.FC = () => {
 				onClose={cancelDeleteABI}
 				onConfirm={confirmDeleteABI}
 				title='Delete ABI'
-				description={`Are you sure you want to delete ABI "${
-					abiToDelete?.name || ''
-				}"? This action cannot be undone.`}
+				description={`Are you sure you want to delete ABI "${abiToDelete?.name || ''}"? This action cannot be undone.`}
 				confirmText='Delete'
 				cancelText='Cancel'
 				variant='destructive'

@@ -27,13 +27,7 @@ const ImportTimelockPage: React.FC = () => {
 	const { chains, fetchChains } = useAuthStore();
 
 	// Import hooks
-	const {
-		isLoading: isDetecting,
-		parameters,
-		fetchTimelockParameters,
-		validateContractAddress,
-		clearParameters,
-	} = useTimelockImport();
+	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();
 
 	const { importTimelock } = useTimelockApi();
 
@@ -108,9 +102,7 @@ const ImportTimelockPage: React.FC = () => {
 
 			// Verify the detected standard matches user selection
 			if (detectedParams.standard !== contractStandard) {
-				toast.error(
-					`Detected standard (${detectedParams.standard}) doesn't match selected standard (${contractStandard})`
-				);
+				toast.error(`Detected standard (${detectedParams.standard}) doesn't match selected standard (${contractStandard})`);
 				return;
 			}
 
@@ -159,10 +151,7 @@ const ImportTimelockPage: React.FC = () => {
 				clearParameters();
 				handleCloseModal();
 			} else {
-				const errorMessage =
-					response.error instanceof Error ?
-						response.error.message
-					:	'Failed to import timelock';
+				const errorMessage = response.error instanceof Error ? response.error.message : 'Failed to import timelock';
 				throw new Error(errorMessage);
 			}
 		} catch (error) {
@@ -190,14 +179,7 @@ const ImportTimelockPage: React.FC = () => {
 							<SectionHeader
 								title='导入Timelock'
 								description='View and update your personal details and account information.'
-								icon={
-									<Image
-										src={QuestionIcon}
-										alt='Question Icon'
-										width={15}
-										height={15}
-									/>
-								}
+								icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 							/>
 							{/* Additional content for left column if any */}
 						</div>
@@ -205,32 +187,10 @@ const ImportTimelockPage: React.FC = () => {
 						<div className='flex flex-col pl-8'>
 							{' '}
 							{/* Add padding-left to separate from left column */}
-							<SelectInput
-								label='选择所在链'
-								value={selectedChain}
-								onChange={setSelectedChain}
-								options={chainOptions}
-								placeholder='选择所在链'
-							/>
-							<TextInput
-								label='合约地址'
-								value={contractAddress}
-								onChange={handleContractAddressChange}
-								placeholder='0x...'
-							/>
-							<SelectInput
-								label='合约标准'
-								value={contractStandard}
-								onChange={setContractStandard}
-								options={standardOptions}
-								placeholder='Select Standard'
-							/>
-							<TextInput
-								label='备注'
-								value={remarks}
-								onChange={setRemarks}
-								placeholder='Target'
-							/>
+							<SelectInput label='选择所在链' value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder='选择所在链' />
+							<TextInput label='合约地址' value={contractAddress} onChange={handleContractAddressChange} placeholder='0x...' />
+							<SelectInput label='合约标准' value={contractStandard} onChange={setContractStandard} options={standardOptions} placeholder='Select Standard' />
+							<TextInput label='备注' value={remarks} onChange={setRemarks} placeholder='Target' />
 						</div>
 					</div>
 					{/* Button at Bottom Right */}
@@ -240,12 +200,7 @@ const ImportTimelockPage: React.FC = () => {
 						<button
 							type='button'
 							onClick={handleNextStep}
-							disabled={
-								isDetecting ||
-								!selectedChain ||
-								!contractAddress ||
-								!contractStandard
-							}
+							disabled={isDetecting || !selectedChain || !contractAddress || !contractStandard}
 							className='bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'>
 							{isDetecting ? '检测中...' : '下一步'}
 						</button>
@@ -260,8 +215,7 @@ const ImportTimelockPage: React.FC = () => {
 						chainIcon: '',
 						remarks: remarks || 'Imported Timelock',
 						timelockAddress: contractAddress,
-						abiPlaceholder:
-							detectedParameters ? JSON.stringify(detectedParameters, null, 2) : '',
+						abiPlaceholder: detectedParameters ? JSON.stringify(detectedParameters, null, 2) : '',
 					}}
 				/>
 			</div>

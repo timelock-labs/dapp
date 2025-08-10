@@ -4,13 +4,7 @@
  */
 
 // UI component types
-export type {
-	ButtonVariant,
-	ButtonSize,
-	ButtonProps,
-	InputProps,
-	CardProps,
-} from './components/ui';
+export type { ButtonVariant, ButtonSize, ButtonProps, InputProps, CardProps } from './components/ui';
 
 // Timelock component types
 export type {

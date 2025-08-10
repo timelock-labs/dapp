@@ -75,9 +75,7 @@ const TimeLockerSplitPage = () => {
 			<div className="flex flex-col w-[684px] h-[852px] p-10 rounded-xl border border-gray-800 mr-4 bg-[url('/logo-bg.png')] bg-cover bg-center bg-no-repeat">
 				{/* Header */}
 				<header className='mb-10'>
-					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">
-						TimeLocker
-					</h1>
+					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">TimeLocker</h1>
 				</header>
 
 				{/* Main Motto Section */}
@@ -88,9 +86,7 @@ const TimeLockerSplitPage = () => {
 				{/* Footer / Why use Timelock section */}
 				<footer className='flex-grow flex flex-col justify-end'>
 					<div className='flex justify-between items-center mb-8'>
-						<span
-							className='text-2xl cursor-pointer hover:text-gray-400 transition-colors'
-							onClick={handlePrevSection}>
+						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handlePrevSection}>
 							&larr;
 						</span>
 						{currentSection === 0 ?
@@ -100,9 +96,7 @@ const TimeLockerSplitPage = () => {
 								{/* <p className='text-sm text-gray-300 mt-1'>{t('protocolSubtitle')}</p> */}
 							</div>
 						}
-						<span
-							className='text-2xl cursor-pointer hover:text-gray-400 transition-colors'
-							onClick={handleNextSection}>
+						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handleNextSection}>
 							&rarr;
 						</span>
 					</div>
@@ -149,9 +143,7 @@ const TimeLockerSplitPage = () => {
 						<Logo />
 					</div>
 
-					<h2 className='text-black text-2xl font-semibold leading-[72px]'>
-						{t('getStarted')}
-					</h2>
+					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
 					<p className='text-gray-600 text-sm mb-8'>{t('connectWalletDescription')}</p>
 					<ConnectWallet icon={false} fullWidth={true} />
 				</div>

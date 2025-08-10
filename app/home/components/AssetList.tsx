@@ -80,64 +80,31 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			{/* Asset List Items */}
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
 				{currentAssets.map((asset, index) => (
-					<div
-						key={index}
-						className='grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0'>
+					<div key={index} className='grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0'>
 						<div className='flex items-center space-x-3'>
 							<div className='relative w-9 h-9'>
 								{' '}
 								{/* Adjusted size to match visual */}
 								{asset.logo_urls?.token_logo_url && (
-									<Image
-										src={asset.logo_urls.token_logo_url}
-										alt={
-											asset.contract_display_name ||
-											asset.contract_name ||
-											'Token'
-										}
-										width={36}
-										height={36}
-										className='rounded-full'
-									/>
+									<Image src={asset.logo_urls.token_logo_url} alt={asset.contract_display_name || asset.contract_name || 'Token'} width={36} height={36} className='rounded-full' />
 								)}
 								{asset.logo_urls?.chain_logo_url && (
-									<Image
-										src={asset.logo_urls.chain_logo_url}
-										alt='Chain'
-										width={16}
-										height={16}
-										className='absolute bottom-0 right-0 rounded-full border border-white'
-									/>
+									<Image src={asset.logo_urls.chain_logo_url} alt='Chain' width={16} height={16} className='absolute bottom-0 right-0 rounded-full border border-white' />
 								)}
 							</div>
 							<div>
-								<p className='text-gray-800 font-medium text-base'>
-									{asset.contract_display_name || asset.contract_name}
-								</p>
+								<p className='text-gray-800 font-medium text-base'>{asset.contract_display_name || asset.contract_name}</p>
 								<p className='text-gray-500 text-sm'>
-									<AnimatedAssetValue
-										value={asset.quote_rate || 0}
-										prefix='$'
-										decimals={2}
-										fallback='0.00'
-									/>
+									<AnimatedAssetValue value={asset.quote_rate || 0} prefix='$' decimals={2} fallback='0.00' />
 								</p>
 							</div>
 						</div>
 						<div className='text-right'>
 							<p className='text-gray-800 font-medium text-base'>
-								<AnimatedAmountValue
-									value={parseFloat(asset.balance) || 0}
-									maxDigits={8}
-								/>
+								<AnimatedAmountValue value={parseFloat(asset.balance) || 0} maxDigits={8} />
 							</p>
 							<p className='text-gray-500 text-sm'>
-								<AnimatedAssetValue
-									value={asset.quote || 0}
-									prefix='$'
-									decimals={2}
-									fallback='0.00'
-								/>
+								<AnimatedAssetValue value={asset.quote || 0} prefix='$' decimals={2} fallback='0.00' />
 							</p>
 						</div>
 					</div>
@@ -155,21 +122,10 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
             bg-white border border-grey-800  text-gray-800 text-sm font-medium
             px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
-            ${
-				currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-			} /* Dim and prevent clicks when disabled */
+            ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}>
-					<svg
-						className='w-4 h-4'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							strokeWidth='2'
-							d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
+					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
 					</svg>
 					Previous
 				</button>
@@ -193,22 +149,11 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
             bg-white border border-grey-800  text-gray-800 text-sm font-medium
             px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
-            ${
-				currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-			} /* Dim and prevent clicks when disabled */
+            ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}>
 					Next
-					<svg
-						className='w-4 h-4'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							strokeWidth='2'
-							d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
+					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
 					</svg>
 				</button>
 			</div>

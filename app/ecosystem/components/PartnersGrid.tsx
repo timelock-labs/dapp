@@ -42,15 +42,7 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
 								key={partner.id}
 								title={partner.name}
 								description={partner.description}
-								icon={
-									<Image
-										src={partner.logo_url}
-										alt={partner.name}
-										width={40}
-										height={40}
-										className='w-10 h-10 rounded-full overflow-hidden'
-									/>
-								}
+								icon={<Image src={partner.logo_url} alt={partner.name} width={40} height={40} className='w-10 h-10 rounded-full overflow-hidden' />}
 								link={partner.link}
 							/>
 						))}
@@ -71,15 +63,7 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
 								key={partner.id}
 								title={partner.name}
 								description={partner.description}
-								icon={
-									<Image
-										src={partner.logo_url}
-										alt={partner.name}
-										width={40}
-										height={40}
-										className='w-10 h-10 rounded-full overflow-hidden'
-									/>
-								}
+								icon={<Image src={partner.logo_url} alt={partner.name} width={40} height={40} className='w-10 h-10 rounded-full overflow-hidden' />}
 								link={partner.link}
 							/>
 						))}

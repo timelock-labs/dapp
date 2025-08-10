@@ -6,15 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ABITextarea from '@/components/ui/ABITextarea';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogClose,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import type { AddABIFormProps } from '@/types';
 
 /**
@@ -61,21 +53,9 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 					{/* Name Input Field - Vertical Layout */}
 					<div className='space-y-2'>
 						<Label htmlFor='abiName'>{t('nameLabel')}</Label>
-						<Input
-							id='abiName'
-							value={name}
-							onChange={e => setName(e.target.value)}
-							placeholder={t('nameLabel')}
-						/>
+						<Input id='abiName' value={name} onChange={e => setName(e.target.value)} placeholder={t('nameLabel')} />
 					</div>
-					<ABITextarea
-						id='abiContent'
-						label={t('contentLabel')}
-						value={abi}
-						onChange={setAbi}
-						placeholder={t('contentLabel')}
-						rows={8}
-					/>
+					<ABITextarea id='abiContent' label={t('contentLabel')} value={abi} onChange={setAbi} placeholder={t('contentLabel')} rows={8} />
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>

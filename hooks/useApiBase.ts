@@ -8,13 +8,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useApi } from './useApi';
 import { useAuthStore } from '@/store/userStore';
-import type {
-	ApiRequestOptions,
-	HttpMethod,
-	AsyncResult,
-	PaginationParams,
-	FilterParams,
-} from '@/types';
+import type { ApiRequestOptions, HttpMethod, AsyncResult, PaginationParams, FilterParams } from '@/types';
 
 /**
  * Configuration for API hook behavior
@@ -45,10 +39,7 @@ export interface UseApiBaseReturn<T> extends AsyncResult<T> {
 /**
  * Hook for making authenticated API requests with consistent patterns
  */
-export function useApiBase<T = unknown>(
-	endpoint: string,
-	options: ApiHookConfig = {}
-): UseApiBaseReturn<T> {
+export function useApiBase<T = unknown>(endpoint: string, options: ApiHookConfig = {}): UseApiBaseReturn<T> {
 	const { request } = useApi();
 	const accessToken = useAuthStore(state => state.accessToken);
 
@@ -60,12 +51,7 @@ export function useApiBase<T = unknown>(
 	const hasFetched = useRef(false);
 	const abortController = useRef<AbortController | null>(null);
 
-	const {
-		autoFetch = false,
-		requiresAuth = true,
-		defaultErrorMessage = 'Request failed',
-		...requestOptions
-	} = options;
+	const { autoFetch = false, requiresAuth = true, defaultErrorMessage = 'Request failed', ...requestOptions } = options;
 
 	/**
 	 * Create headers with authentication if required
@@ -120,15 +106,7 @@ export function useApiBase<T = unknown>(
 			setIsInitialized(true);
 			abortController.current = null;
 		}
-	}, [
-		endpoint,
-		request,
-		createHeaders,
-		requestOptions,
-		requiresAuth,
-		accessToken,
-		defaultErrorMessage,
-	]);
+	}, [endpoint, request, createHeaders, requestOptions, requiresAuth, accessToken, defaultErrorMessage]);
 
 	/**
 	 * Refetch data manually
@@ -193,11 +171,7 @@ interface PaginatedApiResponse<T> {
 /**
  * Hook for making paginated API requests
  */
-export function usePaginatedApi<T = unknown>(
-	endpoint: string,
-	initialParams: PaginationParams = { page: 1, page_size: 10 },
-	options: ApiHookConfig = {}
-) {
+export function usePaginatedApi<T = unknown>(endpoint: string, initialParams: PaginationParams = { page: 1, page_size: 10 }, options: ApiHookConfig = {}) {
 	const [params, setParams] = useState<PaginationParams>(initialParams);
 	const [allData, setAllData] = useState<T[]>([]);
 	const [totalCount, setTotalCount] = useState(0);
@@ -275,11 +249,7 @@ export function usePaginatedApi<T = unknown>(
 /**
  * Hook for making filtered API requests
  */
-export function useFilteredApi<T = unknown, F extends FilterParams = FilterParams>(
-	endpoint: string,
-	initialFilters: F,
-	options: ApiHookConfig = {}
-) {
+export function useFilteredApi<T = unknown, F extends FilterParams = FilterParams>(endpoint: string, initialFilters: F, options: ApiHookConfig = {}) {
 	const [filters, setFilters] = useState<F>(initialFilters);
 
 	const buildUrl = useCallback(() => {
@@ -348,11 +318,7 @@ export function useApiMutation<TData = unknown, TVariables = unknown>(
 	const [error, setError] = useState<Error | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const {
-		requiresAuth = true,
-		defaultErrorMessage = 'Mutation failed',
-		...requestOptions
-	} = options;
+	const { requiresAuth = true, defaultErrorMessage = 'Mutation failed', ...requestOptions } = options;
 
 	const createHeaders = useCallback(() => {
 		const headers: Record<string, string> = {
@@ -377,8 +343,7 @@ export function useApiMutation<TData = unknown, TVariables = unknown>(
 			setError(null);
 
 			try {
-				const url =
-					typeof endpoint === 'function' ? endpoint(variables as TVariables) : endpoint;
+				const url = typeof endpoint === 'function' ? endpoint(variables as TVariables) : endpoint;
 
 				const response = await request(url, {
 					method,
@@ -401,16 +366,7 @@ export function useApiMutation<TData = unknown, TVariables = unknown>(
 				setIsLoading(false);
 			}
 		},
-		[
-			endpoint,
-			method,
-			request,
-			createHeaders,
-			requiresAuth,
-			accessToken,
-			defaultErrorMessage,
-			requestOptions,
-		]
+		[endpoint, method, request, createHeaders, requiresAuth, accessToken, defaultErrorMessage, requestOptions]
 	);
 
 	const reset = useCallback(() => {

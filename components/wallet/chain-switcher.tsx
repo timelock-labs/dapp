@@ -1,17 +1,8 @@
 'use client';
 import Image from 'next/image';
-import {
-	useSwitchActiveWalletChain,
-	useActiveWalletChain,
-	useActiveWalletConnectionStatus,
-} from 'thirdweb/react';
+import { useSwitchActiveWalletChain, useActiveWalletChain, useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { Button } from '@/components/ui/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronDown, Network } from 'lucide-react';
 import { useAuthStore } from '@/store/userStore';
@@ -99,25 +90,15 @@ export function ChainSwitcher() {
 			} catch (error: unknown) {
 				// If the chain is not configured, try to add it
 				if (error instanceof Error && error.name.includes('ChainNotConfigured')) {
-					const chainToAdd =
-						Array.isArray(chains) ?
-							chains.find(c => c.chain_id === newChainId)
-						:	undefined;
+					const chainToAdd = Array.isArray(chains) ? chains.find(c => c.chain_id === newChainId) : undefined;
 
 					const windowWithEthereum = window as Window &
 						typeof globalThis & {
 							ethereum?: {
-								request: (args: {
-									method: string;
-									params?: Record<string, unknown>[] | undefined;
-								}) => Promise<unknown>;
+								request: (args: { method: string; params?: Record<string, unknown>[] | undefined }) => Promise<unknown>;
 							};
 						};
-					if (
-						chainToAdd &&
-						typeof window !== 'undefined' &&
-						windowWithEthereum.ethereum
-					) {
+					if (chainToAdd && typeof window !== 'undefined' && windowWithEthereum.ethereum) {
 						try {
 							await windowWithEthereum.ethereum.request({
 								method: 'wallet_addEthereumChain',
@@ -160,19 +141,8 @@ export function ChainSwitcher() {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild className=' cursor-pointer h-9'>
 				<Button variant='outline' size='sm' disabled={isSwitchingChain}>
-					<span className='mr-1'>
-						{currentChain?.logo_url && (
-							<Image
-								src={currentChain.logo_url}
-								alt={currentChain.chain_name ?? ''}
-								width={16}
-								height={16}
-							/>
-						)}
-					</span>
-					<span className='hidden sm:inline'>
-						{currentChain?.display_name ?? 'Unsupported Chain'}
-					</span>
+					<span className='mr-1'>{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name ?? ''} width={16} height={16} />}</span>
+					<span className='hidden sm:inline'>{currentChain?.display_name ?? 'Unsupported Chain'}</span>
 					<ChevronDown className='ml-2 h-3 w-3' />
 				</Button>
 			</DropdownMenuTrigger>
@@ -185,18 +155,11 @@ export function ChainSwitcher() {
 							className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
 							disabled={isSwitchingChain}>
 							<span className='mr-1 text-lg'>
-								<Image
-									src={chain.logo_url}
-									alt={chain.chain_name}
-									width={20}
-									height={20}
-								/>
+								<Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} />
 							</span>
 							<div className='flex flex-col'>
 								<span className='font-medium'>{chain.display_name}</span>
-								{chainId === chain.id && (
-									<span className='text-xs text-muted-foreground'>Connected</span>
-								)}
+								{chainId === chain.id && <span className='text-xs text-muted-foreground'>Connected</span>}
 							</div>
 						</DropdownMenuItem>
 					))}

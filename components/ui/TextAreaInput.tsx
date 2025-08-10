@@ -18,22 +18,10 @@ interface TextAreaInputProps extends BaseComponentProps {
  * @param props - TextAreaInput component props
  * @returns JSX.Element
  */
-const TextAreaInput: React.FC<TextAreaInputProps> = ({
-	label,
-	value,
-	onChange,
-	placeholder,
-	rows = 8,
-	disabled = false,
-	error,
-	className,
-}) => {
+const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, placeholder, rows = 8, disabled = false, error, className }) => {
 	return (
 		<div className='mb-4'>
-			<label
-				className={`block text-sm font-medium mb-1 ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>
-				{label}
-			</label>
+			<label className={`block text-sm font-medium mb-1 ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>{label}</label>
 			<textarea
 				rows={rows}
 				className={`

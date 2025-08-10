@@ -63,13 +63,11 @@ const PendingTransactions: React.FC = () => {
 				// Add search functionality if needed
 			});
 
-			const transformedData: PendingTxRow[] = (response?.transactions || []).map(
-				(tx: Transaction) => ({
-					...tx,
-					chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
-					operations: null, // Will be rendered by column render function
-				})
-			);
+			const transformedData: PendingTxRow[] = (response?.transactions || []).map((tx: Transaction) => ({
+				...tx,
+				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
+				operations: null, // Will be rendered by column render function
+			}));
 
 			setPendingTxs(transformedData);
 		} catch (error) {
@@ -117,38 +115,23 @@ const PendingTransactions: React.FC = () => {
 			key: 'status',
 			header: t('status'),
 			render: (row: PendingTxRow) => (
-				<span
-					className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPendingTxTypeStyle(row.status)}`}>
-					{row.status}
-				</span>
+				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPendingTxTypeStyle(row.status)}`}>{row.status}</span>
 			),
 		},
 		{
 			key: 'time_remaining',
 			header: 'End Time',
-			render: (row: PendingTxRow) => (
-				<span className='text-sm text-gray-600'>
-					{formatTimeRemaining(row.time_remaining)}
-				</span>
-			),
+			render: (row: PendingTxRow) => <span className='text-sm text-gray-600'>{formatTimeRemaining(row.time_remaining)}</span>,
 		},
 	];
 
 	return (
 		<div className='bg-white rounded-xl p-6 border border-gray-200 flex flex-col h-full'>
 			<div className='mb-4'>
-				<SectionHeader
-					title='Pending Transactions'
-					description='View your pending transactions'
-				/>
+				<SectionHeader title='Pending Transactions' description='View your pending transactions' />
 			</div>
 			<div className='flex-1 overflow-hidden'>
-				<TableComponent<PendingTxRow>
-					columns={columns}
-					data={pendingTxs}
-					showPagination={true}
-					itemsPerPage={10}
-				/>
+				<TableComponent<PendingTxRow> columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
 			</div>
 		</div>
 	);

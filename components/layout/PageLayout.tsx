@@ -24,11 +24,7 @@ interface PageLayoutProps extends BaseComponentProps {
 export default function PageLayout({ title, children, className }: PageLayoutProps) {
 	return (
 		<div className={className}>
-			<ThemeProvider
-				attribute='class'
-				defaultTheme='light'
-				enableSystem
-				disableTransitionOnChange>
+			<ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
 				<SidebarProvider>
 					<AppSidebar />
 					<SidebarInset>

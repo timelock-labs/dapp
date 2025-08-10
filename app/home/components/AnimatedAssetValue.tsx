@@ -10,14 +10,7 @@ interface AnimatedAssetValueProps {
 	fallback?: string;
 }
 
-const AnimatedAssetValue: React.FC<AnimatedAssetValueProps> = ({
-	value,
-	decimals = 2,
-	prefix = '',
-	suffix = '',
-	className = '',
-	fallback = '0.00',
-}) => {
+const AnimatedAssetValue: React.FC<AnimatedAssetValueProps> = ({ value, decimals = 2, prefix = '', suffix = '', className = '', fallback = '0.00' }) => {
 	const countUpRef = useCountUp({
 		end: value || 0,
 		duration: 1.5,

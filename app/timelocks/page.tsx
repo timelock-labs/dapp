@@ -27,20 +27,18 @@ const Timelocks: React.FC = () => {
 
 	useEffect(() => {
 		if (timelockListResponse && timelockListResponse.success && timelockListResponse.data) {
-			const compoundTimelocks: TimelockContractItem[] =
-				timelockListResponse.data.compound_timelocks.map(
-					(timelock: TimelockContractItem): TimelockContractItem => ({
-						...timelock,
-						standard: 'compound' as const,
-					})
-				);
-			const openzeppelinTimelocks: TimelockContractItem[] =
-				timelockListResponse.data.openzeppelin_timelocks.map(
-					(timelock: TimelockContractItem): TimelockContractItem => ({
-						...timelock,
-						standard: 'openzeppelin' as const,
-					})
-				);
+			const compoundTimelocks: TimelockContractItem[] = timelockListResponse.data.compound_timelocks.map(
+				(timelock: TimelockContractItem): TimelockContractItem => ({
+					...timelock,
+					standard: 'compound' as const,
+				})
+			);
+			const openzeppelinTimelocks: TimelockContractItem[] = timelockListResponse.data.openzeppelin_timelocks.map(
+				(timelock: TimelockContractItem): TimelockContractItem => ({
+					...timelock,
+					standard: 'openzeppelin' as const,
+				})
+			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
 			setAllTimelocks(combinedTimelocks);
 		}

@@ -10,15 +10,7 @@ import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import * as XLSX from 'xlsx';
-import type {
-	Transaction,
-	BaseComponentProps,
-	TransactionStatus,
-	ContractStandard,
-	Hash,
-	Address,
-	Timestamp,
-} from '@/types';
+import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { Network } from 'lucide-react';
 import Image from 'next/image';
 
@@ -122,20 +114,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		if (!dateString) return '-';
 		try {
 			const date = new Date(dateString);
-			const months = [
-				'Jan',
-				'Feb',
-				'Mar',
-				'Apr',
-				'May',
-				'Jun',
-				'Jul',
-				'Aug',
-				'Sep',
-				'Oct',
-				'Nov',
-				'Dec',
-			];
+			const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 			const month = months[date.getMonth()];
 			const day = date.getDate();
 			const year = date.getFullYear();
@@ -154,9 +133,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('chain'),
 			render: (row: any) => {
 				// 尝试通过 chain_name 找到对应的链
-				const chain = chains?.find(
-					c => c.chain_id === row.chain_id || c.display_name === row.chain_name
-				);
+				const chain = chains?.find(c => c.chain_id === row.chain_id || c.display_name === row.chain_name);
 				const chainLogo = chain?.logo_url || '';
 				const chainName = chain?.display_name || row.chain_name;
 
@@ -201,32 +178,23 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		{
 			key: 'created_at',
 			header: t('createdAt'),
-			render: (row: HistoryTxRow) => (
-				<span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>
-			),
+			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>,
 		},
 		{
 			key: 'eta',
 			header: t('eta'),
-			render: (row: HistoryTxRow) => (
-				<span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>
-			),
+			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>,
 		},
 		{
 			key: 'expired_at',
 			header: t('expiredAt'),
-			render: (row: HistoryTxRow) => (
-				<span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>
-			),
+			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>,
 		},
 		{
 			key: 'status',
 			header: t('status'),
 			render: (row: HistoryTxRow) => (
-				<span
-					className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>
-					{row.status}
-				</span>
+				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
 			),
 		},
 	];
@@ -256,37 +224,23 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	};
 
 	return (
-		<div
-			className={`rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6 ${className || ''}`}>
+		<div className={`rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6 ${className || ''}`}>
 			<div className='h-[152px] flex flex-col justify-between pt-6 pb-4'>
 				<div>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 				</div>
 				<div className='flex justify-between items-center'>
 					<div>
-						<TabbedNavigation
-							tabs={historyTabs}
-							activeTab={activeTab}
-							onTabChange={handleTabChange}
-						/>
+						<TabbedNavigation tabs={historyTabs} activeTab={activeTab} onTabChange={handleTabChange} />
 					</div>
 					<div className='flex items-center space-x-3'>
-						<SearchBar
-							value={searchQuery}
-							onChange={setSearchQuery}
-							placeholder='Search'
-						/>
+						<SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' />
 						<ExportButton onClick={handleExport} />
 					</div>
 				</div>
 			</div>
 			<div className='flex-1 overflow-hidden h-[300px]'>
-				<TableComponent<HistoryTxRow>
-					columns={columns}
-					data={historyTxs}
-					showPagination={false}
-					itemsPerPage={10}
-				/>
+				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={false} itemsPerPage={10} />
 			</div>
 		</div>
 	);

@@ -4,15 +4,7 @@ import { useLocale } from 'next-intl';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import {
-	SidebarGroup,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubButton,
-	SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from '@/components/ui/sidebar';
 import type { BaseComponentProps } from '@/types';
 
 interface NavMainItem {
@@ -45,11 +37,7 @@ export function NavMain({ items, className }: NavMainProps) {
 				{items.map(item =>
 					item.items ?
 						// If item has sub-items, use Collapsible
-						<Collapsible
-							key={item.title}
-							asChild
-							defaultOpen={item.isActive}
-							className='group/collapsible'>
+						<Collapsible key={item.title} asChild defaultOpen={item.isActive} className='group/collapsible'>
 							<SidebarMenuItem>
 								<CollapsibleTrigger asChild>
 									<SidebarMenuButton tooltip={item.title}>

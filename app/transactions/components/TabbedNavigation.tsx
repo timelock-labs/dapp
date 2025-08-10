@@ -20,11 +20,7 @@ const TabbedNavigation: React.FC<TabbedNavigationProps> = ({ tabs, activeTab, on
 					key={tab.id}
 					onClick={() => onTabChange(tab.id)}
 					className={`flex items-center justify-center h-7 px-2 py-1 text-sm font-medium p-3
-             ${
-					activeTab !== tab.id ?
-						'bg-gray-100'
-					:	'bg-white border border-white shadow-sm shadow-black-500 rounded-md  hover:border-black-500 '
-				} 
+             ${activeTab !== tab.id ? 'bg-gray-100' : 'bg-white border border-white shadow-sm shadow-black-500 rounded-md  hover:border-black-500 '} 
             `}>
 					{tab.label}
 				</button>

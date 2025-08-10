@@ -40,8 +40,7 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 			}} // Background image styling
 		>
 			<h3 className='text-xl font-semibold mb-2'>{title}</h3>
-			<p className='text-sm opacity-80'>{description}</p>{' '}
-			{/* Description with lower opacity */}
+			<p className='text-sm opacity-80'>{description}</p> {/* Description with lower opacity */}
 		</div>
 	);
 };

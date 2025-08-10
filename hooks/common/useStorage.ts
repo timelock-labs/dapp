@@ -7,10 +7,7 @@
 import { useState, useCallback } from 'react';
 import type { VoidCallback } from '@/types';
 
-export function useLocalStorage<T>(
-	key: string,
-	defaultValue: T
-): [T, (value: T | ((prev: T) => T)) => void, VoidCallback] {
+export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T | ((prev: T) => T)) => void, VoidCallback] {
 	const [storedValue, setStoredValue] = useState<T>(() => {
 		if (typeof window === 'undefined') {
 			return defaultValue;

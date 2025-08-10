@@ -16,10 +16,7 @@ import type { UseFormReturn } from '@/types';
  * @param validationSchema Optional Zod schema for validation
  * @returns Form state and control methods
  */
-export function useForm<T extends Record<string, unknown>>(
-	initialValues: T,
-	validationSchema?: z.ZodSchema<T>
-): UseFormReturn<T> {
+export function useForm<T extends Record<string, unknown>>(initialValues: T, validationSchema?: z.ZodSchema<T>): UseFormReturn<T> {
 	const [values, setValues] = useState<T>(initialValues);
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -144,10 +141,7 @@ export function useForm<T extends Record<string, unknown>>(
  * @param dependencies Dependencies that trigger revalidation
  * @returns Field validation utilities
  */
-export function useFieldValidation<T>(
-	validationFn: (value: T) => string | null,
-	dependencies: unknown[] = []
-) {
+export function useFieldValidation<T>(validationFn: (value: T) => string | null, dependencies: unknown[] = []) {
 	const [error, setError] = useState<string | null>(null);
 	const [isValidating, setIsValidating] = useState(false);
 

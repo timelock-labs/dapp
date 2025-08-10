@@ -3,14 +3,7 @@
  */
 
 import type { z } from 'zod';
-import type {
-	BaseComponentProps,
-	ContractStandard,
-	Address,
-	Hash,
-	ValueCallback,
-	VoidCallback,
-} from './common';
+import type { BaseComponentProps, ContractStandard, Address, Hash, ValueCallback, VoidCallback } from './common';
 
 /**
  * Form validation error

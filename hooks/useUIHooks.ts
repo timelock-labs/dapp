@@ -227,27 +227,20 @@ export function useToast() {
 		}>
 	>([]);
 
-	const addToast = useCallback(
-		(
-			message: string,
-			type: 'success' | 'error' | 'warning' | 'info' = 'info',
-			duration = 5000
-		) => {
-			const id = Math.random().toString(36).substr(2, 9);
-			const toast = { id, message, type, duration };
+	const addToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 5000) => {
+		const id = Math.random().toString(36).substr(2, 9);
+		const toast = { id, message, type, duration };
 
-			setToasts(prev => [...prev, toast]);
+		setToasts(prev => [...prev, toast]);
 
-			if (duration > 0) {
-				setTimeout(() => {
-					removeToast(id);
-				}, duration);
-			}
+		if (duration > 0) {
+			setTimeout(() => {
+				removeToast(id);
+			}, duration);
+		}
 
-			return id;
-		},
-		[]
-	);
+		return id;
+	}, []);
 
 	const removeToast = useCallback((id: string) => {
 		setToasts(prev => prev.filter(toast => toast.id !== id));
@@ -433,9 +426,7 @@ export function useFocusTrap(isActive: boolean) {
 		if (!isActive || !containerRef.current) return;
 
 		const container = containerRef.current;
-		const focusableElements = container.querySelectorAll(
-			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-		);
+		const focusableElements = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
 
 		const firstElement = focusableElements[0] as HTMLElement;
 		const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;

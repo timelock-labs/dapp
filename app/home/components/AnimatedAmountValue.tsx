@@ -16,9 +16,7 @@ const AnimatedAmountValue: React.FC<AnimatedAmountValueProps> = ({
 
 	// Memoize calculations to avoid unnecessary re-renders
 	const { shouldUseScientific, coefficientNum, exponent, decimals } = useMemo(() => {
-		const shouldUse =
-			Math.abs(numValue) >= Math.pow(10, maxDigits) ||
-			(Math.abs(numValue) < 0.0001 && Math.abs(numValue) > 0);
+		const shouldUse = Math.abs(numValue) >= Math.pow(10, maxDigits) || (Math.abs(numValue) < 0.0001 && Math.abs(numValue) > 0);
 
 		const scientificStr = numValue.toExponential(2);
 		const parts = scientificStr.split('e');

@@ -5,12 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { ConfirmCreationDialogProps } from './types';
 import ParameterDisplayRow from './ParameterDisplayRow';
 
-const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
-	isOpen,
-	onClose,
-	onConfirm,
-	creationDetails,
-}) => {
+const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {
 	const t = useTranslations('ConfirmCreationDialog');
 	const dialogRef = useRef<HTMLDivElement>(null);
 	const [remark, setRemark] = useState('');
@@ -92,17 +87,11 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
 					<span className='ml-2'>{creationDetails.chainName}</span>
 				</ParameterDisplayRow>
 
-				<ParameterDisplayRow label={t('timelockAddressLabel')}>
-					{creationDetails.timelockAddress}
-				</ParameterDisplayRow>
+				<ParameterDisplayRow label={t('timelockAddressLabel')}>{creationDetails.timelockAddress}</ParameterDisplayRow>
 
-				<ParameterDisplayRow label={t('initiatingAddressLabel')}>
-					{creationDetails.initiatingAddress}
-				</ParameterDisplayRow>
+				<ParameterDisplayRow label={t('initiatingAddressLabel')}>{creationDetails.initiatingAddress}</ParameterDisplayRow>
 
-				<ParameterDisplayRow label={t('transactionHashLabel')}>
-					{creationDetails.transactionHash}
-				</ParameterDisplayRow>
+				<ParameterDisplayRow label={t('transactionHashLabel')}>{creationDetails.transactionHash}</ParameterDisplayRow>
 
 				{/* Contract Remarks Input Field */}
 				<div className='mb-4'>
@@ -112,9 +101,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
 					<input
 						type='text'
 						className={`mt-1 block w-full px-3 py-2 rounded-md border shadow-sm bg-white text-gray-900 focus:ring-1 ${
-							remarkError ?
-								'border-red-300 focus:border-red-500 focus:ring-red-500'
-							:	'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+							remarkError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
 						}`}
 						placeholder={t('contractRemarkPlaceholder')}
 						value={remark}
@@ -126,16 +113,10 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({
 
 				{/* Action Buttons */}
 				<div className='flex justify-end space-x-3 mt-6'>
-					<button
-						type='button'
-						onClick={onClose}
-						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+					<button type='button' onClick={onClose} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
-					<button
-						type='button'
-						onClick={handleConfirm}
-						className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
 						{t('confirmAdd')}
 					</button>
 				</div>

@@ -12,13 +12,10 @@ import type { ABIItem, ABIListResponse } from '@/types';
 export const useAbiApi = () => {
 	// Query hooks
 	const useAbiList = () => {
-		const { data, error, isLoading, refetch, isInitialized } = useApiBase<ABIListResponse>(
-			'/api/v1/abi/list',
-			{
-				autoFetch: true,
-				defaultErrorMessage: 'Failed to fetch ABI list',
-			}
-		);
+		const { data, error, isLoading, refetch, isInitialized } = useApiBase<ABIListResponse>('/api/v1/abi/list', {
+			autoFetch: true,
+			defaultErrorMessage: 'Failed to fetch ABI list',
+		});
 
 		// Transform the data to combine shared and user ABIs
 		const abiList = data ? [...(data.shared_abis || []), ...(data.user_abis || [])] : [];
@@ -49,11 +46,7 @@ export const useAbiApi = () => {
 		}
 	>('/api/v1/abi/add', 'POST', { defaultErrorMessage: 'Failed to add ABI' });
 
-	const deleteAbiMutation = useApiMutation<void, { id: number }>(
-		variables => `/api/v1/abi/${variables.id}/delete`,
-		'DELETE',
-		{ defaultErrorMessage: 'Failed to delete ABI' }
-	);
+	const deleteAbiMutation = useApiMutation<void, { id: number }>(variables => `/api/v1/abi/${variables.id}/delete`, 'DELETE', { defaultErrorMessage: 'Failed to delete ABI' });
 
 	// Convenience methods
 	const addAbi = useCallback(

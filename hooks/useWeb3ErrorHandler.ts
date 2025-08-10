@@ -17,25 +17,14 @@ import { createErrorMessage, createToastNotification } from './useHookUtils';
 const WEB3_ERROR_PATTERNS = {
 	// User rejection errors
 	USER_REJECTED: {
-		patterns: [
-			/user rejected/i,
-			/user denied/i,
-			/user cancelled/i,
-			/rejected by user/i,
-			/transaction was rejected/i,
-		],
+		patterns: [/user rejected/i, /user denied/i, /user cancelled/i, /rejected by user/i, /transaction was rejected/i],
 		message: 'Transaction was rejected by user',
 		severity: 'warning' as const,
 	},
 
 	// Insufficient funds errors
 	INSUFFICIENT_FUNDS: {
-		patterns: [
-			/insufficient funds/i,
-			/insufficient balance/i,
-			/not enough/i,
-			/exceeds balance/i,
-		],
+		patterns: [/insufficient funds/i, /insufficient balance/i, /not enough/i, /exceeds balance/i],
 		message: 'Insufficient funds for this transaction',
 		severity: 'error' as const,
 	},
@@ -55,25 +44,14 @@ const WEB3_ERROR_PATTERNS = {
 
 	// Network errors
 	NETWORK_ERROR: {
-		patterns: [
-			/network error/i,
-			/connection error/i,
-			/timeout/i,
-			/failed to fetch/i,
-			/network request failed/i,
-		],
+		patterns: [/network error/i, /connection error/i, /timeout/i, /failed to fetch/i, /network request failed/i],
 		message: 'Network error. Please check your connection and try again.',
 		severity: 'error' as const,
 	},
 
 	// Contract errors
 	CONTRACT_REVERT: {
-		patterns: [
-			/execution reverted/i,
-			/revert/i,
-			/contract call failed/i,
-			/transaction failed/i,
-		],
+		patterns: [/execution reverted/i, /revert/i, /contract call failed/i, /transaction failed/i],
 		message: 'Transaction was reverted by the contract',
 		severity: 'error' as const,
 	},
@@ -202,8 +180,7 @@ export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
 
 			// Show toast notification if enabled
 			if (showToasts) {
-				const toastMessage =
-					context ? `${context}: ${parsedError.message}` : parsedError.message;
+				const toastMessage = context ? `${context}: ${parsedError.message}` : parsedError.message;
 
 				if (parsedError.severity === 'error') {
 					createToastNotification.error(toastMessage);
@@ -277,8 +254,7 @@ export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
 	const errorCheckers = useMemo(
 		() => ({
 			isUserRejection: (error: unknown) => parseError(error).type === 'USER_REJECTED',
-			isInsufficientFunds: (error: unknown) =>
-				parseError(error).type === 'INSUFFICIENT_FUNDS',
+			isInsufficientFunds: (error: unknown) => parseError(error).type === 'INSUFFICIENT_FUNDS',
 			isGasError: (error: unknown) => {
 				const type = parseError(error).type;
 				return type === 'GAS_LIMIT' || type === 'GAS_PRICE';
@@ -314,11 +290,7 @@ export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
  * Get retryability for error type
  */
 function getRetryability(errorType: keyof typeof WEB3_ERROR_PATTERNS): boolean {
-	const retryableErrors: (keyof typeof WEB3_ERROR_PATTERNS)[] = [
-		'NETWORK_ERROR',
-		'GAS_PRICE',
-		'NONCE_ERROR',
-	];
+	const retryableErrors: (keyof typeof WEB3_ERROR_PATTERNS)[] = ['NETWORK_ERROR', 'GAS_PRICE', 'NONCE_ERROR'];
 
 	return retryableErrors.includes(errorType);
 }
@@ -328,42 +300,16 @@ function getRetryability(errorType: keyof typeof WEB3_ERROR_PATTERNS): boolean {
  */
 function getSuggestions(errorType: keyof typeof WEB3_ERROR_PATTERNS): string[] {
 	const suggestions: Record<keyof typeof WEB3_ERROR_PATTERNS, string[]> = {
-		USER_REJECTED: [
-			'Try the transaction again',
-			'Make sure you want to proceed with the transaction',
-		],
-		INSUFFICIENT_FUNDS: [
-			'Add more funds to your wallet',
-			'Reduce the transaction amount',
-			'Check if you have enough ETH for gas fees',
-		],
-		GAS_LIMIT: [
-			'Increase the gas limit',
-			'Try again with a higher gas limit',
-			'Contact support if the issue persists',
-		],
-		GAS_PRICE: [
-			'Increase the gas price',
-			'Wait for network congestion to reduce',
-			'Try again later',
-		],
-		NETWORK_ERROR: [
-			'Check your internet connection',
-			'Try refreshing the page',
-			'Switch to a different RPC endpoint',
-		],
-		CONTRACT_REVERT: [
-			'Check the contract requirements',
-			'Verify your transaction parameters',
-			'Contact the contract developer',
-		],
+		USER_REJECTED: ['Try the transaction again', 'Make sure you want to proceed with the transaction'],
+		INSUFFICIENT_FUNDS: ['Add more funds to your wallet', 'Reduce the transaction amount', 'Check if you have enough ETH for gas fees'],
+		GAS_LIMIT: ['Increase the gas limit', 'Try again with a higher gas limit', 'Contact support if the issue persists'],
+		GAS_PRICE: ['Increase the gas price', 'Wait for network congestion to reduce', 'Try again later'],
+		NETWORK_ERROR: ['Check your internet connection', 'Try refreshing the page', 'Switch to a different RPC endpoint'],
+		CONTRACT_REVERT: ['Check the contract requirements', 'Verify your transaction parameters', 'Contact the contract developer'],
 		NONCE_ERROR: ['Try the transaction again', 'Reset your wallet if the issue persists'],
 		WALLET_NOT_CONNECTED: ['Connect your wallet', 'Refresh the page and try again'],
 		WRONG_CHAIN: ['Switch to the correct network', 'Check the required network in your wallet'],
-		PERMISSION_DENIED: [
-			'Check your wallet permissions',
-			'Make sure you have the required access',
-		],
+		PERMISSION_DENIED: ['Check your wallet permissions', 'Make sure you have the required access'],
 	};
 
 	return suggestions[errorType] || [];

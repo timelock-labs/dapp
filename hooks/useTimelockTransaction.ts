@@ -12,13 +12,7 @@ import { useAsyncOperation } from './useCommonHooks';
 import { createErrorMessage, createToastNotification } from './useHookUtils';
 
 // Type imports
-import type {
-	Address,
-	GasEstimation,
-	Hash,
-	SendTransactionParams,
-	TransactionResult,
-} from '@/types';
+import type { Address, GasEstimation, Hash, SendTransactionParams, TransactionResult } from '@/types';
 import { send } from 'process';
 
 /**
@@ -61,21 +55,10 @@ interface TimelockTransactionParams {
  * @returns Object containing transaction methods and state
  */
 export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) => {
-	const {
-		estimateGas: shouldEstimateGas = true,
-		showToasts = true,
-		gasLimit: defaultGasLimit,
-		gasPrice: defaultGasPrice,
-		waitForConfirmation = false,
-	} = config;
+	const { estimateGas: shouldEstimateGas = true, showToasts = true, gasLimit: defaultGasLimit, gasPrice: defaultGasPrice, waitForConfirmation = false } = config;
 
 	const { requireConnection, isConnected } = useWalletConnection();
-	const {
-		sendTransaction: sendTx,
-		isLoading: isSending,
-		error: sendError,
-		reset: resetSender,
-	} = useTransactionSender();
+	const { sendTransaction: sendTx, isLoading: isSending, error: sendError, reset: resetSender } = useTransactionSender();
 	const { estimateGas } = useGasEstimation();
 
 	// Async operation for gas estimation
@@ -158,10 +141,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					try {
 						gasEstimation = await estimateTransactionGas(params);
 					} catch (error) {
-						console.warn(
-							'Gas estimation failed, proceeding without estimation:',
-							error
-						);
+						console.warn('Gas estimation failed, proceeding without estimation:', error);
 					}
 				}
 
@@ -170,10 +150,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					to: params.toAddress,
 					data: params.calldata,
 					value: params.value,
-					gasLimit:
-						params.gasLimit ||
-						defaultGasLimit ||
-						(gasEstimation?.gasLimit ? parseInt(gasEstimation.gasLimit) : undefined),
+					gasLimit: params.gasLimit || defaultGasLimit || (gasEstimation?.gasLimit ? parseInt(gasEstimation.gasLimit) : undefined),
 					gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,
 				};
 
@@ -181,9 +158,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					// Show loading toast if enabled
 					let toastId: string | number | undefined;
 					if (showToasts) {
-						toastId = createToastNotification.loading(
-							'Please confirm transaction in your wallet...'
-						);
+						toastId = createToastNotification.loading('Please confirm transaction in your wallet...');
 					}
 
 					// Send the transaction
@@ -191,10 +166,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 
 					// Update toast with transaction hash
 					if (showToasts && toastId) {
-						createToastNotification.success(
-							`Transaction sent: ${result.transactionHash.slice(0, 10)}...`,
-							toastId
-						);
+						createToastNotification.success(`Transaction sent: ${result.transactionHash.slice(0, 10)}...`, toastId);
 					}
 
 					// Wait for confirmation if enabled
@@ -225,9 +197,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					}
 
 					if (message.includes('gas')) {
-						throw new Error(
-							'Transaction failed due to gas issues. Try increasing gas limit.'
-						);
+						throw new Error('Transaction failed due to gas issues. Try increasing gas limit.');
 					}
 
 					throw new Error(message);
@@ -249,10 +219,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 	);
 
 	// Memoize loading state
-	const isLoading = useMemo(
-		() => isSending || isExecuting || isEstimatingGas,
-		[isSending, isExecuting, isEstimatingGas]
-	);
+	const isLoading = useMemo(() => isSending || isExecuting || isEstimatingGas, [isSending, isExecuting, isEstimatingGas]);
 
 	// Memoize error state
 	const error = useMemo(() => sendError, [sendError]);
