@@ -11,15 +11,13 @@ import { useTranslations } from 'next-intl';
 const AddTimelockContractSection: React.FC = () => {
   const t = useTranslations('Timelocks'); // Assuming translations are set up for Timelock
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale;
 
   const handleCreateContract = () => {
-    router.push(`/${locale}/create-timelock`);
+    router.push(`/create-timelock`);
   };
 
   const handleImportContract = () => {
-    router.push(`/${locale}/import-timelock`);
+    router.push(`/import-timelock`);
   };
 
   return (

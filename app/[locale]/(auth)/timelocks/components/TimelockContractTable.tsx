@@ -43,18 +43,16 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({
 }) => {
   const t = useTranslations('TimelockTable');
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale;
   const chains = useAuthStore(state => state.chains);
 
   const { data: deleteResponse, request: deleteContract } = useApi();
 
   const handleImportContract = () => {
-    router.push(`/${locale}/import-timelock`);
+    router.push(`/import-timelock`);
   };
 
   const handleCreateContract = () => {
-    router.push(`/${locale}/create-timelock`);
+    router.push(`/create-timelock`);
   };
 
   const handleDeleteContract = async (contract: TimelockContractItem) => {

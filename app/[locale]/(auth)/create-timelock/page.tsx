@@ -48,8 +48,6 @@ const CreateTimelockPage: React.FC = () => {
   const { address: walletAddress } = useActiveAccount() || {};
   const { deployCompoundTimelock, isLoading } = useDeployTimelock();
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale;
 
   const selectedChainData = useMemo(
     () => chains.find(chain => chain.chain_id === formState.selectedChain),
@@ -170,7 +168,7 @@ const CreateTimelockPage: React.FC = () => {
             owner: walletAddress || '',
           });
           // Redirect to timelocks page
-          router.push(`/${locale}/timelocks`);
+          router.push(`/timelocks`);
         } else {
           throw new Error(apiResponse?.error?.message || 'Failed to create timelock record');
         }
@@ -184,7 +182,7 @@ const CreateTimelockPage: React.FC = () => {
         setIsConfirmDialogOpen(false);
       }
     },
-    [ walletAddress, formState, dialogDetails, createTimelockApiCall, router, locale]
+    [ walletAddress, formState, dialogDetails, createTimelockApiCall, router]
   );
 
   // Effect to sync chain ID

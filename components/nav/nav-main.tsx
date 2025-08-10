@@ -85,7 +85,7 @@ export function NavMain({
             // If item has no sub-items, use simple Link
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} asChild>
-                <Link href={`/${locale}/${item.url}`}>
+                <Link href={`/${item.url}`}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
