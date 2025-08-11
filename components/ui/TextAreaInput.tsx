@@ -25,7 +25,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, p
 			<textarea
 				rows={rows}
 				className={`
-          mt-1 block w-full px-3 py-2 border rounded-md shadow-sm
+          mt-1 block w-full px-3 py-2 border rounded-md
           focus:outline-none focus:ring-blue-500 focus:border-blue-500
           sm:text-sm text-gray-900
           ${error ? 'border-red-500' : 'border-gray-300'}

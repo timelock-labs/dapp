@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ConfirmCreationDialogProps } from './types';
+import type { ConfirmCreationDialogProps } from '../types/types';
 import ParameterDisplayRow from './ParameterDisplayRow';
 
 const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {
@@ -74,7 +74,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 				aria-modal='true' // Indicates that the dialog blocks content behind it
 				aria-labelledby={dialogTitleId} // Links the dialog to its title for screen readers
 				tabIndex={-1} // Makes the dialog content focusable
-				className='bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4 relative outline-none' // outline-none removes focus outline
+				className='bg-white p-6 rounded-lg w-full max-w-2xl mx-4 relative outline-none' // outline-none removes focus outline
 			>
 				{/* Dialog Title */}
 				<h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
@@ -100,7 +100,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 					</label>
 					<input
 						type='text'
-						className={`mt-1 block w-full px-3 py-2 rounded-md border shadow-sm bg-white text-gray-900 focus:ring-1 ${
+						className={`mt-1 block w-full px-3 py-2 rounded-md border bg-white text-gray-900 focus:ring-1 ${
 							remarkError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
 						}`}
 						placeholder={t('contractRemarkPlaceholder')}

@@ -17,7 +17,7 @@ const STANDARD_OPTIONS: StandardOptionConfig[] = [
  * @param props - ContractStandardSelection component props
  * @returns JSX.Element
  */
-const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard, onStandardChange }) => {
+const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard }) => {
 	const t = useTranslations('CreateTimelock');
 
 	// Memoize standard options to prevent unnecessary re-renders
@@ -36,7 +36,6 @@ const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ s
 						label={t(option.labelKey || option.label || '')}
 						description={t(option.descriptionKey || option.description || '')}
 						checked={selectedStandard === option.value}
-						onChange={() => onStandardChange(option.value)}
 					/>
 				))}
 			</div>

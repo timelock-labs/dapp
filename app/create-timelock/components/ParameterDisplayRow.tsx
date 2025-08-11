@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ParameterDisplayRowProps } from './types';
+import type { ParameterDisplayRowProps } from '../types/types';
 
 const ParameterDisplayRow: React.FC<ParameterDisplayRowProps> = ({ label, value, children }) => (
 	<div className='flex items-center mb-2'>

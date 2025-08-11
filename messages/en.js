@@ -9,6 +9,8 @@ import notification from './en/notification.json';
 import home from './en/home.json';
 import wallet from './en/wallet.json';
 
+import createTimelock from '@/app/create-timelock/i18n/en.json';
+
 export default {
 	// common 模块直接包含键值对，需要包装在 common 命名空间中
 	common,
@@ -22,4 +24,5 @@ export default {
 	...notification,
 	...home,
 	...wallet,
+	...createTimelock,
 };

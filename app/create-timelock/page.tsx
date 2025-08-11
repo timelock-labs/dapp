@@ -8,25 +8,26 @@ import { useDeployTimelock } from '@/hooks/useDeployTimelock';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
-import type { CreateTimelockFormState, CreationDetails, CreateTimelockRequestBody, DeploymentResult, CompoundTimelockParams } from './components/types';
+import type { CreateTimelockFormState, CreationDetails, DeploymentResult, CompoundTimelockParams } from './types/types';
 import type { ContractStandard } from '@/types/common';
 
 const CreateTimelockPage: React.FC = () => {
 	const t = useTranslations('CreateTimelock');
 
+	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
 	const [formState, setFormState] = useState<CreateTimelockFormState>({
 		selectedChain: 1,
 		selectedStandard: 'compound',
 		minDelay: '259200',
-		owner: '', // 将在钱包连接后设置为钱包地址
+		owner: '', 
 	});
-
-	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+	
 	const [dialogDetails, setDialogDetails] = useState<CreationDetails>({
 		chainName: '',
 		chainIcon: <Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />,
@@ -37,9 +38,9 @@ const CreateTimelockPage: React.FC = () => {
 
 	const { id: chainId } = useActiveWalletChain() || {};
 	const switchChain = useSwitchActiveWalletChain();
-	const { request: createTimelockApiCall } = useApi();
+	const { request: createTimelockReq } = useApi();
 	const { chains } = useAuthStore();
-	const { address: walletAddress } = useActiveAccount() || {};
+	const { address: walletAddress } = useActiveAccount() || {};	
 	const { deployCompoundTimelock, isLoading } = useDeployTimelock();
 	const router = useRouter();
 
@@ -67,10 +68,6 @@ const CreateTimelockPage: React.FC = () => {
 		},
 		[switchChain]
 	);
-
-	const handleStandardChange = useCallback((standard: ContractStandard) => {
-		setFormState(prev => ({ ...prev, selectedStandard: standard }));
-	}, []);
 
 	const handleMinDelayChange = useCallback((minDelay: string) => {
 		setFormState(prev => ({ ...prev, minDelay }));
@@ -131,18 +128,13 @@ const CreateTimelockPage: React.FC = () => {
 				return;
 			}
 
-			const body: CreateTimelockRequestBody = {
-				chain_id: formState.selectedChain,
-				remark: remarkFromDialog || '',
-				standard: formState.selectedStandard,
-				contract_address: dialogDetails.timelockAddress,
-				is_imported: false, // Always false for new timelocks
-			};
-
 			try {
-				const apiResponse = await createTimelockApiCall('/api/v1/timelock/create-or-import', {
-					method: 'POST',
-					body,
+				const apiResponse = await createTimelockReq('/api/v1/timelock/create-or-import', {
+					chain_id: formState.selectedChain,
+					remark: remarkFromDialog || '',
+					standard: formState.selectedStandard,
+					contract_address: dialogDetails.timelockAddress,
+					is_imported: false
 				});
 
 				if (apiResponse && apiResponse.success) {
@@ -169,7 +161,7 @@ const CreateTimelockPage: React.FC = () => {
 				setIsConfirmDialogOpen(false);
 			}
 		},
-		[walletAddress, formState, dialogDetails, createTimelockApiCall, router]
+		[walletAddress, formState, dialogDetails, createTimelockReq, router]
 	);
 
 	// Effect to sync chain ID
@@ -195,7 +187,7 @@ const CreateTimelockPage: React.FC = () => {
 						selectedChain={formState.selectedChain}
 						onChainChange={handleChainChange}
 						selectedStandard={formState.selectedStandard}
-						onStandardChange={handleStandardChange}
+		
 						minDelay={formState.minDelay}
 						onMinDelayChange={handleMinDelayChange}
 						owner={formState.owner || ''}

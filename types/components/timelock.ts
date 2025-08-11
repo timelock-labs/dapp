@@ -50,7 +50,6 @@ export interface CreateTimelockFormProps extends BaseComponentProps {
 	selectedChain: number;
 	onChainChange: (chainId: number) => void;
 	selectedStandard: ContractStandard;
-	onStandardChange: (standard: ContractStandard) => void;
 	minDelay: string;
 	onMinDelayChange: (minDelay: string) => void;
 	owner?: string;
@@ -64,7 +63,6 @@ export interface CreateTimelockFormProps extends BaseComponentProps {
  */
 export interface ContractStandardSelectionProps extends BaseComponentProps {
 	selectedStandard: ContractStandard;
-	onStandardChange: (standard: ContractStandard) => void;
 	options?: StandardOptionConfig[];
 }
 

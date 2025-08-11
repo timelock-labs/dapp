@@ -4,7 +4,9 @@ import auth from './zh/auth.json';
 import navigation from './zh/navigation.json';
 import timelock from './zh/timelock.json';
 import transaction from './zh/transaction.json';
+
 import abi from '@/app/abi-lib/i18n/zh.json';
+import createTimelock from '@/app/create-timelock/i18n/zh.json';
 
 import notification from './zh/notification.json';
 import home from './zh/home.json';
@@ -23,4 +25,5 @@ export default {
 	...notification,
 	...home,
 	...wallet,
+	...createTimelock,
 };

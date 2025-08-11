@@ -22,7 +22,6 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	selectedChain,
 	onChainChange,
 	selectedStandard,
-	onStandardChange,
 	minDelay,
 	onMinDelayChange,
 	owner = '',
@@ -92,7 +91,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 
 				{/* Contract Standard Selection */}
 				<div className='md:col-start-2'>
-					<ContractStandardSelection selectedStandard={selectedStandard} onStandardChange={onStandardChange} />
+					<ContractStandardSelection selectedStandard={selectedStandard} />
 				</div>
 
 				{/* minDelay Input */}
@@ -102,14 +101,14 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 						<div className='flex items-center gap-3'>
 							<input
 								type='number'
-								className='mt-1 block flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 bg-white'
+								className='mt-1 block flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 bg-white'
 								placeholder={t('minDelayPlaceholder')}
 								value={minDelay}
 								onChange={e => onMinDelayChange(e.target.value)}
 								min='0'
 								step='1'
 							/>
-							{minDelay && parseInt(minDelay) > 0 && <div className='text-sm text-gray-600 whitespace-nowrap'>≈ {formattedTime}</div>}
+							{minDelay && parseInt(minDelay) > 0 && <div className='text-sm text-gray-600 whitespace-nowrap'>= {formattedTime}</div>}
 						</div>
 					</div>
 				</div>

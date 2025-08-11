@@ -33,9 +33,9 @@ const ABILibPage: React.FC = () => {
 	const [abis, setAbis] = useState<ABIRow[]>([]);
 	const { data: abiListsRes, request: fetchAbiList, error, isLoading } = useApi();
 
-	const { request: addAbi, data: addAbiRes } = useApi();
-	const { request: deleteAbi, data: deleteAbiRes } = useApi();
-	const { request: validateAbi, data: validateAbiRes } = useApi();
+	const { request: addAbiReq, data: addAbiRes } = useApi();
+	const { request: deleteAbiReq, data: deleteAbiRes } = useApi();
+	const { request: validateAbiReq, data: validateAbiRes } = useApi();
 
 	const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
@@ -98,11 +98,11 @@ const ABILibPage: React.FC = () => {
 	};
 
 	const handleAddABI = async (name: string, description: string, abi_content: string) => {
-		await validateAbi('/api/v1/abi/validate', { abi_content });
+		await validateAbiReq('/api/v1/abi/validate', { abi_content });
 		const isValid = validateAbiRes?.success && validateAbiRes.data.is_valid;
 		if (!isValid) return;
 
-		await addAbi('/api/v1/abi', {
+		await addAbiReq('/api/v1/abi', {
 			name,
 			description,
 			abi_content,
@@ -129,7 +129,7 @@ const ABILibPage: React.FC = () => {
 	const confirmDeleteABI = async () => {
 		if (!abiToDelete) return;
 
-		const { success: deleteAbiSuccess, error: deleteAbiError } = await deleteAbi(`/api/v1/abi/delete`, {
+		const { success: deleteAbiSuccess, error: deleteAbiError } = await deleteAbiReq(`/api/v1/abi/delete`, {
 			id: abiToDelete.id,
 		});
 
