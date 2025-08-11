@@ -109,9 +109,9 @@ const CreateTimelockPage: React.FC = () => {
 					chainName: selectedChainData?.display_name || 'Unsupport Chain',
 					chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
 					timelockAddress: contractAddress,
-					initiatingAddress: formState.owner,
+					initiatingAddress: formState.owner as any,
 					transactionHash,
-					explorerUrl: selectedChainData?.block_explorer_urls,
+					explorerUrl: selectedChainData?.block_explorer_urls as any,
 				});
 				setIsConfirmDialogOpen(true);
 			}

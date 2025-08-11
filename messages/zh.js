@@ -11,6 +11,7 @@ import createTimelock from '@/app/create-timelock/i18n/zh.json';
 import notification from './zh/notification.json';
 import home from './zh/home.json';
 import wallet from './zh/wallet.json';
+import ecosystem from '@/app/ecosystem/i18n/zh.json';
 
 export default {
 	// common 模块直接包含键值对，需要包装在 common 命名空间中
@@ -26,4 +27,5 @@ export default {
 	...home,
 	...wallet,
 	...createTimelock,
+	...ecosystem
 };
