@@ -12,12 +12,6 @@ import type { CreateTimelockFormProps, ChainOption } from '@/types';
 
 const DEFAULT_CHAIN_LOGO = '/default-chain-logo.png';
 
-/**
- * Create timelock form component with chain selection and contract standard options
- *
- * @param props - CreateTimelockForm component props
- * @returns JSX.Element
- */
 export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	selectedChain,
 	onChainChange,
@@ -52,7 +46,6 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 		[chains]
 	);
 
-	// Handle chain selection change
 	const handleChainChange = useCallback(
 		(value: string) => {
 			onChainChange(Number(value));
@@ -60,13 +53,10 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 		[onChainChange]
 	);
 
-	// Format the selected chain value for the SelectInput
 	const selectedChainValue = selectedChain.toString();
 
-	// Memoize selected chain logo
 	const selectedChainLogo = useMemo(() => chainOptions.find(option => option.value === selectedChainValue)?.logo, [chainOptions, selectedChainValue]);
 
-	// Format the time display
 	const formattedTime = useMemo(() => {
 		const seconds = parseInt(minDelay) || 0;
 		return formatSecondsToLocalizedTime(seconds, locale === 'zh' ? 'zh' : 'en');

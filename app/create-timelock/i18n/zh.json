@@ -32,6 +32,8 @@
 		"compoundStandardLabel": "Compound 标准 Timelock 合约",
 		"compoundStandardDescription": "适合小型企业入门",
 		"openzeppelinStandardLabel": "OpenZeppelin 标准 Timelock 合约",
-		"openzeppelinStandardDescription": "适合成长型企业的高级功能"
+		"openzeppelinStandardDescription": "适合成长型企业的高级功能",
+        "contractRemarkPlaceholder": "请输入备注",
+        "contractRemarkRequired": "备注为必填项"
 	}
 }

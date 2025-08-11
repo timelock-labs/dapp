@@ -20,7 +20,6 @@ const STANDARD_OPTIONS: StandardOptionConfig[] = [
 const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard }) => {
 	const t = useTranslations('CreateTimelock');
 
-	// Memoize standard options to prevent unnecessary re-renders
 	const standardOptions = useMemo(() => STANDARD_OPTIONS, []);
 
 	return (

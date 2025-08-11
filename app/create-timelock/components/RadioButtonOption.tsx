@@ -1,12 +1,6 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import type { RadioButtonOptionProps } from '@/types';
 
-/**
- * Radio button option component with label and description
- *
- * @param props - RadioButtonOption component props
- * @returns JSX.Element
- */
 const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({ id, name, value, label, description, checked, className = '', disabled = false }) => {
 	const baseClasses = `
     flex items-start rounded-lg border cursor-pointer transition-all duration-200 px-3 py-2  border border-gray-300

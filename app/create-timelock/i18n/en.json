@@ -32,6 +32,8 @@
         "compoundStandardLabel": "Compound Standard Timelock Contract",
         "compoundStandardDescription": "Suitable for small business entry",
         "openzeppelinStandardLabel": "OpenZeppelin Standard Timelock Contract",
-        "openzeppelinStandardDescription": "Advanced features for growing businesses"
+        "openzeppelinStandardDescription": "Advanced features for growing businesses",
+        "contractRemarkPlaceholder": "Enter remark",
+        "contractRemarkRequired": "Contract remark is required"
     }
 }

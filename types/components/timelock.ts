@@ -76,7 +76,7 @@ export interface RadioButtonOptionProps extends BaseComponentProps {
 	label: string;
 	description?: string;
 	checked: boolean;
-	onChange: (value: string) => void;
+	onChange?: (value: string) => void;
 	disabled?: boolean;
 }
 
@@ -89,6 +89,7 @@ export interface CreationDetails {
 	timelockAddress: string;
 	initiatingAddress: string;
 	transactionHash: string;
+	explorerUrl:string;
 }
 
 /**

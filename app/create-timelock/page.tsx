@@ -13,8 +13,7 @@ import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
-import type { CreateTimelockFormState, CreationDetails, DeploymentResult, CompoundTimelockParams } from './types/types';
-import type { ContractStandard } from '@/types/common';
+import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from './types/types';
 
 const CreateTimelockPage: React.FC = () => {
 	const t = useTranslations('CreateTimelock');
@@ -25,26 +24,50 @@ const CreateTimelockPage: React.FC = () => {
 		selectedChain: 1,
 		selectedStandard: 'compound',
 		minDelay: '259200',
-		owner: '', 
+		owner: '',
 	});
-	
+
 	const [dialogDetails, setDialogDetails] = useState<CreationDetails>({
 		chainName: '',
 		chainIcon: <Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />,
 		timelockAddress: '',
 		initiatingAddress: '',
 		transactionHash: '',
+		explorerUrl: '',
 	});
 
 	const { id: chainId } = useActiveWalletChain() || {};
 	const switchChain = useSwitchActiveWalletChain();
-	const { request: createTimelockReq } = useApi();
+	const { request: createTimelockReq, data: createTimelockData } = useApi();
 	const { chains } = useAuthStore();
-	const { address: walletAddress } = useActiveAccount() || {};	
+	const { address: walletAddress } = useActiveAccount() || {};
 	const { deployCompoundTimelock, isLoading } = useDeployTimelock();
 	const router = useRouter();
 
 	const selectedChainData = useMemo(() => chains.find(chain => chain.chain_id === formState.selectedChain), [chains, formState.selectedChain]);
+
+	useEffect(() => {
+		if (chainId) {
+			setFormState(prev => ({ ...prev, selectedChain: chainId }));
+		}
+	}, [chainId]);
+
+	useEffect(() => {
+		if (walletAddress && (!formState.owner || formState.owner === '')) {
+			setFormState(prev => ({ ...prev, owner: walletAddress }));
+		}
+	}, [walletAddress, formState.owner]);
+
+	useEffect(() => {
+		if (createTimelockData && createTimelockData.success) {
+			toast.success('Timelock created successfully!');
+			router.push(`/timelocks`);
+		} else {
+			toast.error('Failed to create timelock record', {
+				description: createTimelockData?.error?.message || 'Unknown error occurred',
+			});
+		}
+	}, [createTimelockData]);
 
 	const handleChainChange = useCallback(
 		(newChainId: number) => {
@@ -54,16 +77,12 @@ const CreateTimelockPage: React.FC = () => {
 			}
 
 			setFormState(prev => ({ ...prev, selectedChain: newChainId }));
-
-			// Get the thirdweb chain object for the given chain ID
 			const chainObject = getChainObject(newChainId);
 
 			if (!chainObject) {
-				console.error(`Chain ID ${newChainId} is not supported by thirdweb`);
 				toast.error(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
 				return;
 			}
-
 			switchChain(chainObject);
 		},
 		[switchChain]
@@ -77,106 +96,45 @@ const CreateTimelockPage: React.FC = () => {
 		setFormState(prev => ({ ...prev, owner }));
 	}, []);
 
-	// Deployment handlers
-	const handleCreate = useCallback(async () => {
-		// Validation
-		if (!formState.selectedChain || !formState.minDelay) {
-			toast.error('Please fill in all required fields.');
-			return;
-		}
-
-		let deployedContractAddress: string | null = null;
-		let transactionHash: string | null = null;
-
+	const handleCreate = async () => {
 		try {
-			if (formState.selectedStandard === 'compound') {
-				const params: CompoundTimelockParams = {
-					minDelay: parseInt(formState.minDelay),
-					admin: (formState.owner || walletAddress) as `0x${string}`,
-				};
-				const result: DeploymentResult = await deployCompoundTimelock(params);
-				deployedContractAddress = result.contractAddress;
-				transactionHash = result.transactionHash;
-			}
+			const params: CompoundTimelockParams = {
+				minDelay: parseInt(formState.minDelay),
+				admin: (formState.owner || walletAddress) as `0x${string}`,
+			};
+			const { contractAddress, transactionHash } = await deployCompoundTimelock(params);
 
-			if (deployedContractAddress && transactionHash) {
-				const chainName = selectedChainData?.chain_name || 'Unsupport Chain';
-
+			if (contractAddress && transactionHash) {
 				setDialogDetails({
-					chainName,
-					chainIcon: <Image src='' alt='Chain Logo' width={16} height={16} className='mr-1' />,
-					timelockAddress: deployedContractAddress,
-					initiatingAddress: walletAddress,
+					chainName: selectedChainData?.display_name || 'Unsupport Chain',
+					chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
+					timelockAddress: contractAddress,
+					initiatingAddress: formState.owner,
 					transactionHash,
+					explorerUrl: selectedChainData?.block_explorer_urls,
 				});
 				setIsConfirmDialogOpen(true);
 			}
 		} catch (error) {
-			console.error('Deployment failed:', error);
-			// The useDeployTimelock hook already handles toast messages for errors.
+			toast.error('Failed to deploy timelock', {
+				description: error instanceof Error ? error.message : 'Unknown error occurred',
+			});
 		}
-	}, [walletAddress, formState, selectedChainData, deployCompoundTimelock]);
+	}
 
-	const handleConfirmDialogClose = useCallback(() => {
+
+
+	const handleConfirmDialogConfirm = async (remarkFromDialog: string) => {
+		await createTimelockReq('/api/v1/timelock/create-or-import', {
+			chain_id: formState.selectedChain,
+			remark: remarkFromDialog || '',
+			standard: "compound",
+			contract_address: dialogDetails.timelockAddress,
+			is_imported: false
+		});
+
 		setIsConfirmDialogOpen(false);
-	}, []);
-
-	const handleConfirmDialogConfirm = useCallback(
-		async (remarkFromDialog: string) => {
-			if (!walletAddress) {
-				toast.error('Please connect your wallet.');
-				return;
-			}
-
-			try {
-				const apiResponse = await createTimelockReq('/api/v1/timelock/create-or-import', {
-					chain_id: formState.selectedChain,
-					remark: remarkFromDialog || '',
-					standard: formState.selectedStandard,
-					contract_address: dialogDetails.timelockAddress,
-					is_imported: false
-				});
-
-				if (apiResponse && apiResponse.success) {
-					toast.success('Timelock created successfully!');
-					// Reset form
-					setFormState({
-						selectedChain: 1,
-						selectedStandard: 'compound',
-						minDelay: '259200',
-						owner: walletAddress || '',
-					});
-					// Redirect to timelocks page
-					router.push(`/timelocks`);
-				} else {
-					throw new Error(apiResponse?.error?.message || 'Failed to create timelock record');
-				}
-			} catch (error: unknown) {
-				console.error('API Error:', error);
-				const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-				toast.error('Failed to create timelock record', {
-					description: errorMessage,
-				});
-			} finally {
-				setIsConfirmDialogOpen(false);
-			}
-		},
-		[walletAddress, formState, dialogDetails, createTimelockReq, router]
-	);
-
-	// Effect to sync chain ID
-	useEffect(() => {
-		if (chainId) {
-			setFormState(prev => ({ ...prev, selectedChain: chainId }));
-		}
-	}, [chainId]);
-
-	// Effect to set default owner when wallet connects
-	useEffect(() => {
-		if (walletAddress && (!formState.owner || formState.owner === '')) {
-			setFormState(prev => ({ ...prev, owner: walletAddress }));
-		}
-	}, [walletAddress, formState.owner]);
+	};
 
 	return (
 		<PageLayout title={t('createTimelock')}>
@@ -186,8 +144,7 @@ const CreateTimelockPage: React.FC = () => {
 					<CreateTimelockForm
 						selectedChain={formState.selectedChain}
 						onChainChange={handleChainChange}
-						selectedStandard={formState.selectedStandard}
-		
+						selectedStandard={"compound"}
 						minDelay={formState.minDelay}
 						onMinDelayChange={handleMinDelayChange}
 						owner={formState.owner || ''}
@@ -197,7 +154,7 @@ const CreateTimelockPage: React.FC = () => {
 					/>
 				</div>
 
-				<ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={handleConfirmDialogClose} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
+				<ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={() => setIsConfirmDialogOpen(false)} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
 			</div>
 		</PageLayout>
 	);
