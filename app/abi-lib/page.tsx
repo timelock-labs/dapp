@@ -62,16 +62,15 @@ const ABILibPage: React.FC = () => {
 
 	// Effect to handle clicks outside the dropdown
 	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-				setOpenDropdownId(null);
-			}
-		};
-		
 		openDropdownId ? document.addEventListener('mousedown', handleClickOutside) : document.removeEventListener('mousedown', handleClickOutside);
-
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [openDropdownId]);
+
+	const handleClickOutside = (event: MouseEvent) => {
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+			setOpenDropdownId(null);
+		}
+	};
 
 	const handleAddABI = async (name: string, description: string, abi_content: string) => {
 		const validationResponse = await validateAbi('/api/v1/abi/validate', { abi_content });
