@@ -3,30 +3,26 @@ import React, { useEffect, useState } from 'react';
 import EcosystemSearchHeader from './components/EcosystemSearchHeader';
 import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
-import { useSponsorsApi } from '@/hooks/useSponsorsApi';
 import { useTranslations } from 'next-intl';
 import type { Partner } from '@/types/api';
+import { useApi } from '@/hooks/useApi';
 
 const EcosystemPage: React.FC = () => {
 	const t = useTranslations('Ecosystem');
 	const [sponsors, setSponsors] = useState<Partner[]>([]);
 	const [partners, setPartners] = useState<Partner[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const { getSponsors } = useSponsorsApi();
 
+	const { request: getSponsors, isLoading } = useApi();
 	useEffect(() => {
 		const fetchSponsors = async () => {
 			try {
-				setIsLoading(true);
-				const response = await getSponsors();
+				const response = await getSponsors('/api/v1/sponsors/public');
 				if (response.success && response.data) {
 					setSponsors(response.data.sponsors || []);
 					setPartners(response.data.partners || []);
 				}
 			} catch (error) {
 				console.error('Error fetching sponsors:', error);
-			} finally {
-				setIsLoading(false);
 			}
 		};
 
@@ -37,10 +33,7 @@ const EcosystemPage: React.FC = () => {
 		<PageLayout title={t('title')}>
 			<div className='min-h-screen  '>
 				<div className='mx-auto flex flex-col space-y-8 pt-4'>
-					{/* Top Header Section */}
 					<EcosystemSearchHeader />
-
-					{/* Partners Grid Section */}
 					<PartnersGrid sponsors={sponsors} partners={partners} isLoading={isLoading} />
 				</div>
 			</div>
