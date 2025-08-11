@@ -67,14 +67,8 @@ const ABILibPage: React.FC = () => {
 				setOpenDropdownId(null);
 			}
 		};
-
-		if (openDropdownId) {
-			document.addEventListener('mousedown', handleClickOutside);
-		}
-
-		if (!openDropdownId) {
-			document.removeEventListener('mousedown', handleClickOutside);
-		}
+		
+		openDropdownId ? document.addEventListener('mousedown', handleClickOutside) : document.removeEventListener('mousedown', handleClickOutside);
 
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [openDropdownId]);
@@ -202,7 +196,7 @@ const ABILibPage: React.FC = () => {
 		},
 	];
 
-	if (isLoading)  return <LoadingSkeleton />	
+	if (isLoading) return <LoadingSkeleton />
 
 	return (
 		<PageLayout title={t('title')}>
@@ -221,7 +215,7 @@ const ABILibPage: React.FC = () => {
 					<TableComponent<ABIRow>
 						columns={columns}
 						data={abis}
-						showPagination={false} 
+						showPagination={false}
 						itemsPerPage={5}
 					/>
 				</div>

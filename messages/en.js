@@ -4,7 +4,7 @@ import auth from './en/auth.json';
 import navigation from './en/navigation.json';
 import timelock from './en/timelock.json';
 import transaction from './en/transaction.json';
-import abi from './en/abi.json';
+import abi from '@/app/abi-lib/i18n/en.json';
 import notification from './en/notification.json';
 import home from './en/home.json';
 import wallet from './en/wallet.json';

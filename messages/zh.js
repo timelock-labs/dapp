@@ -4,7 +4,8 @@ import auth from './zh/auth.json';
 import navigation from './zh/navigation.json';
 import timelock from './zh/timelock.json';
 import transaction from './zh/transaction.json';
-import abi from './zh/abi.json';
+import abi from '@/app/abi-lib/i18n/zh.json';
+
 import notification from './zh/notification.json';
 import home from './zh/home.json';
 import wallet from './zh/wallet.json';
