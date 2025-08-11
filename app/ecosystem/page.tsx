@@ -13,21 +13,18 @@ const EcosystemPage: React.FC = () => {
 	const [partners, setPartners] = useState<Partner[]>([]);
 
 	const { request: getSponsors, isLoading } = useApi();
-	useEffect(() => {
-		const fetchSponsors = async () => {
-			try {
-				const response = await getSponsors('/api/v1/sponsors/public');
-				if (response.success && response.data) {
-					setSponsors(response.data.sponsors || []);
-					setPartners(response.data.partners || []);
-				}
-			} catch (error) {
-				console.error('Error fetching sponsors:', error);
-			}
-		};
 
+	useEffect(() => {
 		fetchSponsors();
-	}, [getSponsors]);
+	}, []);
+
+	const fetchSponsors = async () => {
+		const response = await getSponsors('/api/v1/sponsors/public');
+		if (response.success && response.data) {
+			setSponsors(response.data.sponsors || []);
+			setPartners(response.data.partners || []);
+		}
+	};
 
 	return (
 		<PageLayout title={t('title')}>
