@@ -18,7 +18,7 @@ interface GenericTableProps<T> {
 }
 
 // Using a generic type `T` for the row data. `T` must extend an object with an 'id' for keying.
-function TableComponent<T extends { id: string | number }>({ title, columns, data, showPagination = true, itemsPerPage = 7, headerActions }: GenericTableProps<T>) {
+function TableComponent<T extends { id: string | number }>({ title, columns, data, showPagination = true, itemsPerPage = 999999, headerActions }: GenericTableProps<T>) {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const totalItems = data.length;

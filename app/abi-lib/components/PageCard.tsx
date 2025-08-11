@@ -32,7 +32,7 @@ const PageCard = ({
                 columns={columns}
                 data={abis}
                 showPagination={false}
-                itemsPerPage={5}
+                // itemsPerPage={5}
             />
         </div>
     </div>

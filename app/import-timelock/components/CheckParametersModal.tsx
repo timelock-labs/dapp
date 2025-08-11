@@ -26,7 +26,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	const [abiContent, setAbiContent] = useState(abiText || []);
 	const dialogRef = useRef<HTMLDivElement>(null);
 
-	
+
 	useEffect(() => {
 		if (!isOpen) return;
 
@@ -38,7 +38,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 
 		document.addEventListener('keydown', handleEscape);
 
-		
+
 		if (dialogRef.current) {
 			dialogRef.current.focus();
 		}
@@ -49,24 +49,24 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	}, [isOpen, onClose]);
 
 	useEffect(() => {
-		
+
 		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
 	}, []);
 
-	
+
 	if (!isOpen) return null;
 
 	const handleConfirm = () => {
 		onConfirm(abiContent);
-		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2)); 
+		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
 	};
 
 	const handleCancel = () => {
 		onClose();
-		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2)); 
+		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
 	};
 
-	
+
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-4'>
 			<label className='block text-sm font-medium text-gray-700 mb-1'>{label}</label>
@@ -74,12 +74,12 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 		</div>
 	);
 
-	const dialogTitleId = 'check-params-dialog-title'; 
+	const dialogTitleId = 'check-params-dialog-title';
 
 	return (
-		
+
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-			
+
 			<div
 				ref={dialogRef} // Attach ref for focus management
 				role='dialog' // ARIA role for dialog
@@ -88,7 +88,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				tabIndex={-1} // Makes the dialog content focusable
 				className='bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
 			>
-				
+
 				<h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
 					请检查参数
 				</h2>
@@ -138,7 +138,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 					/>
 				</div>
 
-				
+
 				<div className='flex justify-end space-x-3 mt-6'>
 					<button onClick={handleCancel} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						取消
