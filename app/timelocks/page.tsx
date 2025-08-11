@@ -16,9 +16,7 @@ const Timelocks: React.FC = () => {
 	const { allTimelocks, setAllTimelocks } = useAuthStore();
 
 	const refetchTimelocks = React.useCallback(() => {
-		fetchTimelockList('/api/v1/timelock/list', {
-			method: 'GET',
-		});
+		fetchTimelockList('/api/v1/timelock/list');
 	}, [fetchTimelockList]);
 
 	useEffect(() => {

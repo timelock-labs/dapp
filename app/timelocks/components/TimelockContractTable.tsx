@@ -54,12 +54,9 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 	const handleDeleteContract = async (contract: TimelockContractItem) => {
 		const standard = contract.standard || 'compound'; // 默认使用 compound 标准
 		await deleteContract(`/api/v1/timelock/delete`, {
-			method: 'DELETE',
-			body: {
-				standard,
-				contract_address: contract.contract_address,
-				chain_id: contract.chain_id,
-			},
+			standard,
+			contract_address: contract.contract_address,
+			chain_id: contract.chain_id,
 		});
 	};
 
