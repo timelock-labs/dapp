@@ -26,12 +26,9 @@ const TimeLockerSplitPage = () => {
 			try {
 				const signature = await signMessage!({ message: message });
 				await walletConnect('/api/v1/auth/wallet-connect', {
-					method: 'POST',
-					body: {
-						wallet_address: address,
-						signature: signature,
-						message: message,
-					},
+					wallet_address: address,
+					signature: signature,
+					message: message,
 				});
 			} catch (error) {
 				console.error('Error signing message:', error);
@@ -91,7 +88,7 @@ const TimeLockerSplitPage = () => {
 						</span>
 						{currentSection === 0 ?
 							<h2 className='text-xl font-medium'>{t('whyTimelock')}</h2>
-						:	<div className='text-center'>
+							: <div className='text-center'>
 								<h2 className='text-xl font-medium'>{t('whyProtocol')}</h2>
 								{/* <p className='text-sm text-gray-300 mt-1'>{t('protocolSubtitle')}</p> */}
 							</div>
@@ -116,7 +113,7 @@ const TimeLockerSplitPage = () => {
 									{t('features.industryStandard')}
 								</div>
 							</>
-						:	<>
+							: <>
 								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
 									{t('protocolFeatures.importExisting')}
 								</div>

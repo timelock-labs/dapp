@@ -8,48 +8,60 @@ import CheckParametersModal from './components/CheckParametersModal';
 import QuestionIcon from '@/public/QuestionIcon.svg';
 import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/userStore';
-import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport';
+import { useTimelockImport, TimelockParameters } from '@/app/import-timelock/api/useTimelockImport';
 import { useTimelockApi } from '@/hooks/useTimelockApi';
-import { ChainUtils } from '@/utils/chainUtils';
+import { ChainUtils, getChainObject } from '@/utils/chainUtils';
 import { toast } from 'sonner';
-import { ImportTimelockFormData, ImportTimelockRequest } from '@/types';
+import { ImportTimelockRequest } from '@/types';
+import { useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
+import router from 'next/router';
 
 const ImportTimelockPage: React.FC = () => {
-	// State for form fields
 	const [selectedChain, setSelectedChain] = useState('');
 	const [contractAddress, setContractAddress] = useState('');
-	const [contractStandard, setContractStandard] = useState('');
+	const [contractStandard, setContractStandard] = useState('compound');
 	const [remarks, setRemarks] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [detectedParameters, setDetectedParameters] = useState<TimelockParameters | null>(null);
 
-	// Get chains from store
 	const { chains, fetchChains } = useAuthStore();
+	const switchChain = useSwitchActiveWalletChain();
+	const { id: chainId } = useActiveWalletChain() || {};
 
-	// Import hooks
 	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();
 
 	const { importTimelock } = useTimelockApi();
 
-	// Fetch chains on component mount
 	useEffect(() => {
-		if (chains.length === 0) {
-			fetchChains();
-		}
-	}, [chains, fetchChains]);
+		fetchChains();
+	}, [fetchChains]);
 
-	// Update detected parameters when they change
+
+	useEffect(() => {
+		if (!selectedChain && chainId) {
+			setSelectedChain(chainId.toString());
+		}
+	}, [chainId, selectedChain]);
+
+	useEffect(() => {
+		if (selectedChain) {
+			const chainObject = getChainObject(parseInt(selectedChain));
+			if (chainObject) {
+				switchChain(chainObject);
+			}
+		}
+	}, [selectedChain, switchChain]);
+
 	useEffect(() => {
 		if (parameters && parameters.isValid) {
 			setDetectedParameters(parameters);
-			setContractStandard(parameters.standard || '');
 		}
 	}, [parameters]);
 
 	// Convert chains to options format
 	const chainOptions = chains.map(chain => ({
 		value: chain.chain_id.toString(),
-		label: chain.chain_name,
+		label: chain.display_name,
 	}));
 
 	const standardOptions = [{ value: 'compound', label: 'Compound' }];
@@ -60,7 +72,6 @@ const ImportTimelockPage: React.FC = () => {
 		// Clear any previous detection results when address changes
 		if (detectedParameters) {
 			setDetectedParameters(null);
-			setContractStandard('');
 			clearParameters();
 		}
 	};
@@ -128,7 +139,6 @@ const ImportTimelockPage: React.FC = () => {
 
 		try {
 			const chainId = parseInt(selectedChain);
-			const chainName = ChainUtils.getChainName(chains, chainId);
 
 			const importData: ImportTimelockRequest = {
 				chain_id: chainId,
@@ -142,14 +152,7 @@ const ImportTimelockPage: React.FC = () => {
 
 			if (response.success) {
 				toast.success('Timelock imported successfully!');
-				// Reset form
-				setSelectedChain('');
-				setContractAddress('');
-				setContractStandard('');
-				setRemarks('');
-				setDetectedParameters(null);
-				clearParameters();
-				handleCloseModal();
+				router.push('/timelocks');
 			} else {
 				const errorMessage = response.error instanceof Error ? response.error.message : 'Failed to import timelock';
 				throw new Error(errorMessage);
@@ -164,39 +167,23 @@ const ImportTimelockPage: React.FC = () => {
 	return (
 		<PageLayout title='Timelock'>
 			<div className=' bg-white p-8 flex flex-col '>
-				{' '}
-				{/* Outer container, flex-col to push button */}
 				<div className='flex-grow bg-white'>
-					{' '}
-					{/* Inner card-like container */}
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200'>
-						{' '}
-						{/* 1:1 Left-Right Layout */}
-						{/* Left Column: Header with Question Mark Icon */}
 						<div className='flex flex-col pr-8'>
-							{' '}
-							{/* Add padding-right to separate from right column */}
 							<SectionHeader
 								title='导入Timelock'
 								description='View and update your personal details and account information.'
 								icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 							/>
-							{/* Additional content for left column if any */}
 						</div>
-						{/* Right Column: Form Fields */}
 						<div className='flex flex-col pl-8'>
-							{' '}
-							{/* Add padding-left to separate from left column */}
 							<SelectInput label='选择所在链' value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder='选择所在链' />
 							<TextInput label='合约地址' value={contractAddress} onChange={handleContractAddressChange} placeholder='0x...' />
 							<SelectInput label='合约标准' value={contractStandard} onChange={setContractStandard} options={standardOptions} placeholder='Select Standard' />
 							<TextInput label='备注' value={remarks} onChange={setRemarks} placeholder='Target' />
 						</div>
 					</div>
-					{/* Button at Bottom Right */}
 					<div className='mx-auto flex justify-end mt-8'>
-						{' '}
-						{/* mx-auto and justify-end to align with main content */}
 						<button
 							type='button'
 							onClick={handleNextStep}
@@ -206,6 +193,7 @@ const ImportTimelockPage: React.FC = () => {
 						</button>
 					</div>
 				</div>
+				{JSON.stringify(detectedParameters)}
 				<CheckParametersModal
 					isOpen={isModalOpen}
 					onClose={handleCloseModal}

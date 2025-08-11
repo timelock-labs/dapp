@@ -70,10 +70,5 @@
 		"total_value_locked": "Total Value Locked",
 		"chains_supported": "Chains Supported",
 		"supported_networks": "Supported Networks:"
-	},
-	"Ecosystem": {
-		"title": "Ecosystem",
-		"sponsors": "Sponsors",
-		"partners": "Partners"
 	}
 }

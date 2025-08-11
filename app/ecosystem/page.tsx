@@ -1,25 +1,25 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import EcosystemSearchHeader from './components/EcosystemSearchHeader';
+import EcosystemSearchHeader from './components/Header';
 import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
-import type { Partner } from '@/types/api';
 import { useApi } from '@/hooks/useApi';
+import type { Partner } from "./types/types"
 
 const EcosystemPage: React.FC = () => {
 	const t = useTranslations('Ecosystem');
 	const [sponsors, setSponsors] = useState<Partner[]>([]);
 	const [partners, setPartners] = useState<Partner[]>([]);
 
-	const { request: getSponsors, isLoading } = useApi();
+	const { request: getSponsorsReq, isLoading } = useApi();
 
 	useEffect(() => {
 		fetchSponsors();
 	}, []);
 
 	const fetchSponsors = async () => {
-		const response = await getSponsors('/api/v1/sponsors/public');
+		const response = await getSponsorsReq('/api/v1/sponsors/public');
 		if (response.success && response.data) {
 			setSponsors(response.data.sponsors || []);
 			setPartners(response.data.partners || []);
