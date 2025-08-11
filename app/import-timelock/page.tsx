@@ -14,7 +14,9 @@ import { ChainUtils, getChainObject } from '@/utils/chainUtils';
 import { toast } from 'sonner';
 import { ImportTimelockRequest } from '@/types';
 import { useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
+import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
+import { useApi } from '@/hooks/useApi';
 
 const ImportTimelockPage: React.FC = () => {
 	const [selectedChain, setSelectedChain] = useState('');
@@ -30,13 +32,12 @@ const ImportTimelockPage: React.FC = () => {
 
 	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();
 
-	const { importTimelock } = useTimelockApi();
+	const {request: importTimelockRequest} = useApi();
+	const router = useRouter();
 
 	useEffect(() => {
-		if(chains.length === 0){
-			fetchChains();
-		}
-	}, [fetchChains]);
+		fetchChains();
+	}, []);
 
 
 	useEffect(() => {
@@ -60,7 +61,6 @@ const ImportTimelockPage: React.FC = () => {
 		}
 	}, [parameters]);
 
-	// Convert chains to options format
 	const chainOptions = chains.map(chain => ({
 		value: chain.chain_id.toString(),
 		label: chain.display_name,
@@ -68,10 +68,8 @@ const ImportTimelockPage: React.FC = () => {
 
 	const standardOptions = [{ value: 'compound', label: 'Compound' }];
 
-	// Handle contract address change (remove auto-detection)
 	const handleContractAddressChange = (address: string) => {
 		setContractAddress(address);
-		// Clear any previous detection results when address changes
 		if (detectedParameters) {
 			setDetectedParameters(null);
 			clearParameters();
@@ -79,7 +77,6 @@ const ImportTimelockPage: React.FC = () => {
 	};
 
 	const handleNextStep = async () => {
-		// Validation
 		if (!selectedChain) {
 			toast.error('Please select a chain');
 			return;
@@ -95,9 +92,7 @@ const ImportTimelockPage: React.FC = () => {
 			return;
 		}
 
-		// Start detection process
 		try {
-			// First validate the contract address
 			const isValid = await validateContractAddress(contractAddress);
 
 			if (!isValid) {
@@ -105,7 +100,6 @@ const ImportTimelockPage: React.FC = () => {
 				return;
 			}
 
-			// Detect timelock parameters from blockchain
 			const detectedParams = await fetchTimelockParameters(contractAddress);
 
 			if (!detectedParams.isValid) {
@@ -150,7 +144,7 @@ const ImportTimelockPage: React.FC = () => {
 				is_imported: true, // Always true for imported contracts
 			};
 
-			const response = await importTimelock(importData);
+			const response = await importTimelockRequest("/api/v1/timelock/create-or-import",importData);
 
 			if (response.success) {
 				toast.success('Timelock imported successfully!');
@@ -195,18 +189,12 @@ const ImportTimelockPage: React.FC = () => {
 						</button>
 					</div>
 				</div>
-				{JSON.stringify(detectedParameters)}
 				<CheckParametersModal
 					isOpen={isModalOpen}
 					onClose={handleCloseModal}
 					onConfirm={handleConfirmParams}
-					parameters={{
-						chainName: ChainUtils.getChainName(chains, selectedChain),
-						chainIcon: '',
-						remarks: remarks || 'Imported Timelock',
-						timelockAddress: contractAddress,
-						abiPlaceholder: detectedParameters ? JSON.stringify(detectedParameters, null, 2) : '',
-					}}
+					abiText={JSON.stringify(compoundTimelockAbi, null, 2)}
+					parameters={{chainName: ChainUtils.getChainName(chains, selectedChain),...detectedParameters}}
 				/>
 			</div>
 		</PageLayout>

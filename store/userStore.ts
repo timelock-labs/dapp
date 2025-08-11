@@ -72,7 +72,6 @@ export const useAuthStore = create<AppState & AppActions>()(
 				},
 				fetchChains: async () => {
 					try {
-						console.log('Fetching chains...');
 						const response = await axios.post('/api/v1/chain/list');
 						if (response.data.success) {
 							if (response.data.data && Array.isArray(response.data.data.chains)) {
