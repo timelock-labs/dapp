@@ -21,6 +21,7 @@
 		"viewAbiSuccess": "{name} 的 ABI 详情获取成功。",
 		"viewAbiError": "获取 ABI 详情失败：{message}",
 		"deleteAbiSuccess": "ABI 删除成功。",
-		"deleteAbiError": "删除 ABI 失败：{message}"
+		"deleteAbiError": "删除 ABI 失败：{message}",
+		"validateAbiSuccess": "ABI 验证成功。"
 	}
 }

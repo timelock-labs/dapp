@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'; // Assuming you have a Label comp
 import ABITextarea from '@/components/ui/ABITextarea';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 
-import type { AddABIFormProps } from './types';
+import type { AddABIFormProps } from '../types/types';
 
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
 	const t = useTranslations('Transactions.AddABIForm');

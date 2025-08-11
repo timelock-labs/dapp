@@ -21,6 +21,7 @@
 		"viewAbiSuccess": "ABI details for {name} fetched successfully.",
 		"viewAbiError": "Failed to fetch ABI details: {message}",
 		"deleteAbiSuccess": "ABI deleted successfully.",
-		"deleteAbiError": "Failed to delete ABI: {message}"
+		"deleteAbiError": "Failed to delete ABI: {message}",
+		"validateAbiSuccess": "ABI validated successfully."
 	}
 }

@@ -17,8 +17,9 @@ import EllipsesSVG from '@/components/icons/ellipses';
 import AddSVG from '@/components/icons/add';
 import ABIRowDropdown from './components/ABIRowDropdown';
 
-import type { ABIRow, ABIContent } from './components/types';
+import type { ABIRow, ABIContent } from './types/types';
 import LoadingSkeleton from './components/LoadingSkeleton';
+
 
 
 const ABILibPage: React.FC = () => {
@@ -34,9 +35,9 @@ const ABILibPage: React.FC = () => {
 	const [abis, setAbis] = useState<ABIRow[]>([]);
 	const { data: abiListsRes, request: fetchAbiList, error, isLoading } = useApi();
 
-	const { request: addAbi } = useApi();
-	const { request: deleteAbi } = useApi();
-	const { request: validateAbi } = useApi();
+	const { request: addAbi, data: addAbiRes } = useApi();
+	const { request: deleteAbi, data: deleteAbiRes } = useApi();
+	const { request: validateAbi, data: validateAbiRes } = useApi();
 
 	const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
@@ -49,16 +50,42 @@ const ABILibPage: React.FC = () => {
 	}, [refreshAbiList]);
 
 	useEffect(() => {
-		if (abiListsRes?.success === true) {
+		if (abiListsRes?.success) {
 			const allAbis = [...(abiListsRes.data.user_abis || []), ...(abiListsRes.data.shared_abis || [])];
 			setAbis(allAbis);
 			toast.success(t('fetchAbiListSuccess'));
 		}
 
-		if (abiListsRes?.success === false) {
+		if (!abiListsRes?.success) {
 			toast.error(t('fetchAbiListError', { message: abiListsRes.error?.message || 'Unknown error' }));
 		}
 	}, [abiListsRes]);
+
+	useEffect(() => {
+		if (addAbiRes?.success) {
+			refreshAbiList();
+			setIsAddABIOpen(false);
+			toast.success(t('addAbiSuccess'));
+		} else {
+			toast.error(t('addAbiError', { message: addAbiRes.error?.message || 'Unknown error' }));
+		}
+
+	}, [addAbiRes]);
+
+	useEffect(() => {
+		if (deleteAbiRes?.success) {
+			refreshAbiList();
+			setIsDeleteDialogOpen(false);
+			toast.success(t('deleteAbiSuccess'));
+		} else {
+			toast.error(t('deleteAbiError', { message: deleteAbiRes.error?.message || 'Unknown error' }));
+		}
+	}, [deleteAbiRes]);
+
+	useEffect(() => {
+		const isValid = validateAbiRes?.success && validateAbiRes.data.is_valid;
+		isValid ? toast.success(t('validateAbiSuccess')) : toast.error(t('validateAbiError', { message: validateAbiRes.error?.message || 'Unknown error' }));
+	}, [validateAbiRes]);
 
 	// Effect to handle clicks outside the dropdown
 	useEffect(() => {
@@ -73,28 +100,15 @@ const ABILibPage: React.FC = () => {
 	};
 
 	const handleAddABI = async (name: string, description: string, abi_content: string) => {
-		const validationResponse = await validateAbi('/api/v1/abi/validate', { abi_content });
-		const isValid = validationResponse?.success && validationResponse.data.is_valid;
-		isValid
-			? toast.success(t('validateAbiSuccess'))
-			: toast.error(t('validateAbiError', { message: validationResponse.error?.message || 'Unknown error' }));
+		await validateAbi('/api/v1/abi/validate', { abi_content });
+		const isValid = validateAbiRes?.success && validateAbiRes.data.is_valid;
 		if (!isValid) return;
 
-		const { success: addAbiSuccess, error: addAbiError } = await addAbi('/api/v1/abi', {
+		await addAbi('/api/v1/abi', {
 			name,
 			description,
 			abi_content,
 		});
-
-		if (addAbiSuccess) {
-			toast.success(t('addAbiSuccess'));
-			refreshAbiList();
-			setIsAddABIOpen(false);
-		}
-
-		if (!addAbiSuccess) {
-			toast.error(t('addAbiError', { message: addAbiError?.message || 'Unknown error' }));
-		}
 	}
 
 	const handleViewABI = async (row: ABIRow) => {
