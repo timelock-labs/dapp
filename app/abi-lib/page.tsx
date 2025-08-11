@@ -1,7 +1,5 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import SectionHeader from '@/components/ui/SectionHeader';
-import TableComponent from '@/components/ui/TableComponent';
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import AddABIForm from './components/AddABIForm';
@@ -14,11 +12,11 @@ import ViewABIForm from './components/ViewABIForm';
 
 import StarSVG from '@/components/icons/star';
 import EllipsesSVG from '@/components/icons/ellipses';
-import AddSVG from '@/components/icons/add';
-import ABIRowDropdown from './components/ABIRowDropdown';
+import ABIRowDropdown from './components/RowDropdown';
 
 import type { ABIRow, ABIContent } from './types/types';
 import LoadingSkeleton from './components/LoadingSkeleton';
+import PageCard from './components/PageCard';
 
 
 
@@ -213,34 +211,13 @@ const ABILibPage: React.FC = () => {
 
 	return (
 		<PageLayout title={t('title')}>
-			<div className='min-h-screen'>
-				<div className='mx-auto border border-gray-200 rounded-lg p-6 '>
-					<div className='flex justify-between items-center mb-6'>
-						<SectionHeader title={t('storedABI')} description={t('storedABIDescription')} />
-						<button
-							type='button'
-							onClick={() => setIsAddABIOpen(true)}
-							className='inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
-							<AddSVG />
-							<span>{t('new')}</span>
-						</button>
-					</div>
-					<TableComponent<ABIRow>
-						columns={columns}
-						data={abis}
-						showPagination={false}
-						itemsPerPage={5}
-					/>
-				</div>
-			</div>
-
+			<PageCard abis={abis} columns={columns} setIsAddABIOpen={setIsAddABIOpen} />
 			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
 			<ViewABIForm
 				isOpen={isViewABIOpen}
 				onClose={() => setIsViewABIOpen(false)}
 				viewAbiContent={viewAbiContent as ABIContent} // Safe cast, ensure not null when opening
 			/>
-
 			<ConfirmDialog
 				isOpen={isDeleteDialogOpen}
 				onClose={cancelDeleteABI}
