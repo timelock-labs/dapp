@@ -9,14 +9,15 @@ import QuestionIcon from '@/public/QuestionIcon.svg';
 import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/userStore';
 import { useTimelockImport, TimelockParameters } from '@/app/import-timelock/api/useTimelockImport';
-import { useTimelockApi } from '@/hooks/useTimelockApi';
-import { ChainUtils, getChainObject } from '@/utils/chainUtils';
+import { getChainObject, ChainUtils } from '@/utils/chainUtils';
 import { toast } from 'sonner';
 import { ImportTimelockRequest } from '@/types';
 import { useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
 import { useRouter } from 'next/navigation';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { useApi } from '@/hooks/useApi';
+
+const standardOptions = [{ value: 'compound', label: 'Compound' }];
 
 const ImportTimelockPage: React.FC = () => {
 	const [selectedChain, setSelectedChain] = useState('');
@@ -32,7 +33,7 @@ const ImportTimelockPage: React.FC = () => {
 
 	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();
 
-	const {request: importTimelockRequest} = useApi();
+	const { request: importTimelockRequest, data: importTimelockData } = useApi();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -66,15 +67,12 @@ const ImportTimelockPage: React.FC = () => {
 		label: chain.display_name,
 	}));
 
-	const standardOptions = [{ value: 'compound', label: 'Compound' }];
-
-	const handleContractAddressChange = (address: string) => {
-		setContractAddress(address);
+	useEffect(() => {
 		if (detectedParameters) {
 			setDetectedParameters(null);
 			clearParameters();
 		}
-	};
+	}, [contractAddress])
 
 	const handleNextStep = async () => {
 		if (!selectedChain) {
@@ -107,13 +105,6 @@ const ImportTimelockPage: React.FC = () => {
 				return;
 			}
 
-			// Verify the detected standard matches user selection
-			if (detectedParams.standard !== contractStandard) {
-				toast.error(`Detected standard (${detectedParams.standard}) doesn't match selected standard (${contractStandard})`);
-				return;
-			}
-
-			// If detection successful, open confirmation modal
 			setDetectedParameters(detectedParams);
 			setIsModalOpen(true);
 		} catch (error) {
@@ -123,42 +114,34 @@ const ImportTimelockPage: React.FC = () => {
 		}
 	};
 
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
-	};
-
 	const handleConfirmParams = async () => {
 		if (!detectedParameters || !detectedParameters.isValid) {
 			toast.error('Invalid timelock parameters');
 			return;
 		}
 
-		try {
-			const chainId = parseInt(selectedChain);
+		const chainId = parseInt(selectedChain);
+		const importData: ImportTimelockRequest = {
+			chain_id: chainId,
+			contract_address: contractAddress,
+			standard: detectedParameters.standard!,
+			remark: remarks || 'Imported Timelock',
+			is_imported: true, // Always true for imported contracts
+		};
 
-			const importData: ImportTimelockRequest = {
-				chain_id: chainId,
-				contract_address: contractAddress,
-				standard: detectedParameters.standard!,
-				remark: remarks || 'Imported Timelock',
-				is_imported: true, // Always true for imported contracts
-			};
+		await importTimelockRequest("/api/v1/timelock/create-or-import", importData);
+	};
 
-			const response = await importTimelockRequest("/api/v1/timelock/create-or-import",importData);
-
-			if (response.success) {
+	useEffect(() => {
+		if (importTimelockData) {
+			if (importTimelockData.success) {
 				toast.success('Timelock imported successfully!');
 				router.push('/timelocks');
 			} else {
-				const errorMessage = response.error instanceof Error ? response.error.message : 'Failed to import timelock';
-				throw new Error(errorMessage);
+				toast.error('Failed to import timelock');
 			}
-		} catch (error) {
-			console.error('Import failed:', error);
-			const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-			toast.error(`Import failed: ${errorMessage}`);
 		}
-	};
+	}, [importTimelockData])
 
 	return (
 		<PageLayout title='Timelock'>
@@ -174,7 +157,7 @@ const ImportTimelockPage: React.FC = () => {
 						</div>
 						<div className='flex flex-col pl-8'>
 							<SelectInput label='选择所在链' value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder='选择所在链' />
-							<TextInput label='合约地址' value={contractAddress} onChange={handleContractAddressChange} placeholder='0x...' />
+							<TextInput label='合约地址' value={contractAddress} onChange={(e) => setContractAddress(e)} placeholder='0x...' />
 							<SelectInput label='合约标准' value={contractStandard} onChange={setContractStandard} options={standardOptions} placeholder='Select Standard' />
 							<TextInput label='备注' value={remarks} onChange={setRemarks} placeholder='Target' />
 						</div>
@@ -191,10 +174,10 @@ const ImportTimelockPage: React.FC = () => {
 				</div>
 				<CheckParametersModal
 					isOpen={isModalOpen}
-					onClose={handleCloseModal}
+					onClose={() => setIsModalOpen(false)}
 					onConfirm={handleConfirmParams}
 					abiText={JSON.stringify(compoundTimelockAbi, null, 2)}
-					parameters={{chainName: ChainUtils.getChainName(chains, selectedChain),...detectedParameters}}
+					parameters={{ chainName: ChainUtils.getChainName(chains, selectedChain), ...detectedParameters }}
 				/>
 			</div>
 		</PageLayout>
