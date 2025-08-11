@@ -1,24 +1,25 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
-import TableComponent from '@/components/ui/TableComponent'; // Assuming TableComponent is in components/
+import SectionHeader from '@/components/ui/SectionHeader';
+import TableComponent from '@/components/ui/TableComponent';
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
-import AddABIForm from './components/AddABIForm'; // Import the new form component
-import ConfirmDialog from '@/components/ui/ConfirmDialog'; // Import the confirm dialog
+import AddABIForm from './components/AddABIForm';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { formatDate } from '@/lib/utils';
 
-import ViewABIForm from './components/ViewABIForm'; // Import the view ABI form component
+import ViewABIForm from './components/ViewABIForm';
 
-import StarSVG from '@/components/icons/star'; // Import the star icon
-import EllipsesSVG from '@/components/icons/ellipses'; // Import the ellipses icon
-import AddSVG from '@/components/icons/add'; // Import the add icon
+import StarSVG from '@/components/icons/star';
+import EllipsesSVG from '@/components/icons/ellipses';
+import AddSVG from '@/components/icons/add';
 import ABIRowDropdown from './components/ABIRowDropdown';
 
 import type { ABIRow, ABIContent } from './components/types';
+import LoadingSkeleton from './components/LoadingSkeleton';
+
 
 const ABILibPage: React.FC = () => {
 	const t = useTranslations('ABI-Lib');
@@ -31,146 +32,33 @@ const ABILibPage: React.FC = () => {
 
 	const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
 	const [abis, setAbis] = useState<ABIRow[]>([]);
-	const { data: abiListResponse, request: fetchAbiList, error, isLoading } = useApi();
+	const { data: abiListsRes, request: fetchAbiList, error, isLoading } = useApi();
+
 	const { request: addAbi } = useApi();
-	const { data: deleteAbiResponse, request: deleteAbi } = useApi();
-	const { data: viewAbiResponse } = useApi();
+	const { request: deleteAbi } = useApi();
 	const { request: validateAbi } = useApi();
 
 	const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
 	const refreshAbiList = useCallback(() => {
-		fetchAbiList('/api/v1/abi/list', {
-			method: 'GET',
-		});
+		fetchAbiList('/api/v1/abi/list');
 	}, [fetchAbiList]);
 
 	useEffect(() => {
 		refreshAbiList();
-	}, [refreshAbiList]); // 添加 refreshAbiList 到依赖数组
+	}, [refreshAbiList]);
 
 	useEffect(() => {
-		if (abiListResponse?.success === true) {
-			const allAbis = [...(abiListResponse.data.user_abis || []), ...(abiListResponse.data.shared_abis || [])];
+		if (abiListsRes?.success === true) {
+			const allAbis = [...(abiListsRes.data.user_abis || []), ...(abiListsRes.data.shared_abis || [])];
 			setAbis(allAbis);
-			// 移除成功通知，避免页面加载时显示
-		} else if (abiListResponse?.success === false && abiListResponse.data !== null) {
-			console.error('Failed to fetch ABI list:', abiListResponse.error);
-			toast.error(
-				t('fetchAbiListError', {
-					message: abiListResponse.error?.message || 'Unknown error',
-				})
-			);
+			toast.success(t('fetchAbiListSuccess'));
 		}
-	}, [abiListResponse, t]);
 
-	useEffect(() => {
-		if (error) {
-			console.error('API Error:', error);
+		if (abiListsRes?.success === false) {
+			toast.error(t('fetchAbiListError', { message: abiListsRes.error?.message || 'Unknown error' }));
 		}
-	}, [error]);
-
-	const handleAddABI = async (name: string, description: string, abi_content: string) => {
-		try {
-			const validationResponse = await validateAbi('/api/v1/abi/validate', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: {
-					abi_content,
-				},
-			});
-
-			if (validationResponse?.success && validationResponse.data.is_valid) {
-				const addResponse = await addAbi('/api/v1/abi', {
-					method: 'POST',
-					body: {
-						name,
-						description,
-						abi_content,
-					},
-				});
-
-				if (addResponse?.success) {
-					toast.success(t('addAbiSuccess'));
-					refreshAbiList(); // 刷新列表
-					setIsAddABIOpen(false);
-				} else {
-					toast.error(
-						t('addAbiError', {
-							message: addResponse?.error?.message || 'Unknown error',
-						})
-					);
-				}
-			} else {
-				const errorMessage = validationResponse?.error?.message || validationResponse?.data?.error_message || 'Unknown validation error';
-				console.error('ABI validation failed:', errorMessage);
-				toast.error(t('validateAbiError', { message: errorMessage }));
-			}
-		} catch (error: unknown) {
-			console.error('Error in handleAddABI:', error);
-			const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-			toast.error(t('addAbiError', { message: errorMessage }));
-		}
-	};
-
-	const handleViewABI = async (row: ABIRow) => {
-		setIsViewABIOpen(true);
-		setViewAbiContent(row);
-	};
-
-	useEffect(() => {
-		if (viewAbiResponse?.success === true) {
-			toast.success(t('viewAbiSuccess', { name: viewAbiResponse.data.name }));
-		} else if (viewAbiResponse?.success === false && viewAbiResponse.data !== null) {
-			toast.error(t('viewAbiError', { message: viewAbiResponse.error?.message || 'Unknown error' }));
-		}
-	}, [viewAbiResponse, t]);
-
-	const handleEllipsisMenu = (rowId: number) => {
-		if (openDropdownId === rowId) {
-			setOpenDropdownId(null);
-		} else {
-			setOpenDropdownId(rowId);
-		}
-	};
-
-	const handleDeleteABI = (row: ABIRow) => {
-		setAbiToDelete(row);
-		setIsDeleteDialogOpen(true);
-		setOpenDropdownId(null);
-	};
-
-	const confirmDeleteABI = async () => {
-		if (!abiToDelete) return;
-
-		await deleteAbi(`/api/v1/abi/${abiToDelete.id}`, {
-			method: 'DELETE',
-		});
-
-		setIsDeleteDialogOpen(false);
-		setAbiToDelete(null);
-	};
-
-	const cancelDeleteABI = () => {
-		setIsDeleteDialogOpen(false);
-		setAbiToDelete(null);
-	};
-
-	useEffect(() => {
-		if (deleteAbiResponse?.success === true) {
-			toast.success(t('deleteAbiSuccess'));
-			refreshAbiList(); // 刷新列表
-		} else if (deleteAbiResponse?.success === false && deleteAbiResponse.data !== null) {
-			console.error('Failed to delete ABI:', deleteAbiResponse.error);
-			toast.error(
-				t('deleteAbiError', {
-					message: deleteAbiResponse.error?.message || 'Unknown error',
-				})
-			);
-		}
-	}, [deleteAbiResponse, t, refreshAbiList]);
+	}, [abiListsRes]);
 
 	// Effect to handle clicks outside the dropdown
 	useEffect(() => {
@@ -182,12 +70,84 @@ const ABILibPage: React.FC = () => {
 
 		if (openDropdownId) {
 			document.addEventListener('mousedown', handleClickOutside);
-		} else {
+		}
+
+		if (!openDropdownId) {
 			document.removeEventListener('mousedown', handleClickOutside);
 		}
 
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [openDropdownId]);
+
+	const handleAddABI = async (name: string, description: string, abi_content: string) => {
+		const validationResponse = await validateAbi('/api/v1/abi/validate', { abi_content });
+		const isValid = validationResponse?.success && validationResponse.data.is_valid;
+		isValid
+			? toast.success(t('validateAbiSuccess'))
+			: toast.error(t('validateAbiError', { message: validationResponse.error?.message || 'Unknown error' }));
+		if (!isValid) return;
+
+		const { success: addAbiSuccess, error: addAbiError } = await addAbi('/api/v1/abi', {
+			name,
+			description,
+			abi_content,
+		});
+
+		if (addAbiSuccess) {
+			toast.success(t('addAbiSuccess'));
+			refreshAbiList();
+			setIsAddABIOpen(false);
+		}
+
+		if (!addAbiSuccess) {
+			toast.error(t('addAbiError', { message: addAbiError?.message || 'Unknown error' }));
+		}
+	}
+
+	const handleViewABI = async (row: ABIRow) => {
+		setIsViewABIOpen(true);
+		setViewAbiContent(row);
+	};
+
+	const handleEllipsisMenu = (rowId: number) => {
+		openDropdownId === rowId ?
+			setOpenDropdownId(null) :
+			setOpenDropdownId(rowId);
+	};
+
+	const handleDeleteABI = (row: ABIRow) => {
+		setAbiToDelete(row);
+		setIsDeleteDialogOpen(true);
+		setOpenDropdownId(null);
+	};
+
+	const confirmDeleteABI = async () => {
+		if (!abiToDelete) return;
+
+		const { success: deleteAbiSuccess, error: deleteAbiError } = await deleteAbi(`/api/v1/abi/delete`, {
+			id: abiToDelete.id,
+		});
+
+		if (deleteAbiSuccess) {
+			toast.success(t('deleteAbiSuccess'));
+			refreshAbiList();
+			setIsDeleteDialogOpen(false);
+			setAbiToDelete(null);
+		}
+
+		if (!deleteAbiSuccess) {
+			toast.error(
+				t('deleteAbiError', {
+					message: deleteAbiError?.message || 'Unknown error',
+				})
+			);
+		}
+	};
+
+	const cancelDeleteABI = () => {
+		setIsDeleteDialogOpen(false);
+		setAbiToDelete(null);
+	};
 
 	// Define columns for TableComponent
 	const columns = [
@@ -242,65 +202,11 @@ const ABILibPage: React.FC = () => {
 		},
 	];
 
-	// Show loading skeleton while data is being fetched
-	if (isLoading) {
-		return (
-			<PageLayout title={t('title')}>
-				<div className='min-h-screen'>
-					<div className='mx-auto border border-gray-200 rounded-lg p-6'>
-						{/* Header skeleton */}
-						<div className='flex items-center justify-between mb-6'>
-							<div className='space-y-2'>
-								<div className='h-6 w-32 bg-gray-200 rounded animate-pulse'></div>
-								<div className='h-4 w-80 bg-gray-200 rounded animate-pulse'></div>
-							</div>
-							<div className='h-10 w-20 bg-gray-200 rounded animate-pulse'></div>
-						</div>
-
-						{/* Table skeleton */}
-						<div className='border border-gray-200 rounded-lg overflow-hidden'>
-							{/* Table header */}
-							<div className='bg-gray-50 border-b border-gray-200 px-6 py-3'>
-								<div className='flex space-x-4'>
-									<div className='h-4 w-24 bg-gray-200 rounded animate-pulse flex-1'></div>
-									<div className='h-4 w-20 bg-gray-200 rounded animate-pulse flex-1'></div>
-									<div className='h-4 w-16 bg-gray-200 rounded animate-pulse flex-1'></div>
-									<div className='h-4 w-16 bg-gray-200 rounded animate-pulse flex-1'></div>
-								</div>
-							</div>
-
-							{/* Table rows */}
-							{Array.from({ length: 5 }).map((_, rowIndex) => (
-								<div key={rowIndex} className='border-b border-gray-200 px-6 py-4 last:border-b-0'>
-									<div className='flex space-x-4'>
-										<div className='flex-1'>
-											<div className='flex items-center space-x-2'>
-												<div className='h-4 w-4 bg-gray-200 rounded animate-pulse'></div>
-												<div className='h-4 w-32 bg-gray-200 rounded animate-pulse'></div>
-											</div>
-										</div>
-										<div className='flex-1'>
-											<div className='h-4 w-24 bg-gray-200 rounded animate-pulse'></div>
-										</div>
-										<div className='flex-1'>
-											<div className='h-6 w-20 bg-gray-200 rounded-full animate-pulse'></div>
-										</div>
-										<div className='flex-1'>
-											<div className='h-8 w-8 bg-gray-200 rounded animate-pulse'></div>
-										</div>
-									</div>
-								</div>
-							))}
-						</div>
-					</div>
-				</div>
-			</PageLayout>
-		);
-	}
+	if (isLoading)  return <LoadingSkeleton />	
 
 	return (
 		<PageLayout title={t('title')}>
-			<div className='min-h-screen  '>
+			<div className='min-h-screen'>
 				<div className='mx-auto border border-gray-200 rounded-lg p-6 '>
 					<div className='flex justify-between items-center mb-6'>
 						<SectionHeader title={t('storedABI')} description={t('storedABIDescription')} />
@@ -315,8 +221,8 @@ const ABILibPage: React.FC = () => {
 					<TableComponent<ABIRow>
 						columns={columns}
 						data={abis}
-						showPagination={false} // Image does not show pagination for this table
-						itemsPerPage={5} // Max 5 items visible in image
+						showPagination={false} 
+						itemsPerPage={5}
 					/>
 				</div>
 			</div>

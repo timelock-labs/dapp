@@ -26,9 +26,7 @@ export interface ApiResponse<T = any> {
  * API request options
  */
 export interface ApiRequestOptions {
-	method?: HttpMethod;
 	headers?: Record<string, string>;
-	body?: any;
 }
 
 /**
@@ -38,5 +36,5 @@ export interface UseApiReturn {
 	data: ApiResponse;
 	error: Error | null;
 	isLoading: boolean;
-	request: (url: string, options?: ApiRequestOptions, retryCount?: number) => Promise<any>;
+	request: (url: string, body?: object, options?: ApiRequestOptions) => Promise<any>;
 }
