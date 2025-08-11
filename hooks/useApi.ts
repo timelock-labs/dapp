@@ -15,7 +15,7 @@ export function useApi(): UseApiReturn {
 	const accessToken = useAuthStore(state => state.accessToken);
 
 	const request = useCallback(
-		async (url: string, body: object, options: ApiRequestOptions = {}) => {
+		async (url: string, body?: object, options: ApiRequestOptions = {}) => {
 			setIsLoading(true);
 			setError(null);
 
