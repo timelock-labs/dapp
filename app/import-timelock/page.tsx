@@ -33,7 +33,9 @@ const ImportTimelockPage: React.FC = () => {
 	const { importTimelock } = useTimelockApi();
 
 	useEffect(() => {
-		fetchChains();
+		if(chains.length === 0){
+			fetchChains();
+		}
 	}, [fetchChains]);
 
 

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AppStateSchema, type AppState, type User, type TimelockContractItem } from './schema';
 import { zodMiddleware } from './zodMiddleware';
+import axios from 'axios';
 
 // 定义 Store 的 actions (方法)
 type AppActions = {
@@ -72,24 +73,17 @@ export const useAuthStore = create<AppState & AppActions>()(
 				fetchChains: async () => {
 					try {
 						console.log('Fetching chains...');
-						const response = await fetch('/api/v1/chain/list');
-						console.log('Chains API response status:', response.status);
-						if (response.ok) {
-							const responseData = await response.json();
-							console.log('Chains API response data:', responseData);
-							if (responseData.data && Array.isArray(responseData.data.chains)) {
-								console.log('Setting chains:', responseData.data.chains);
-								set({ chains: responseData.data.chains });
+						const response = await axios.post('/api/v1/chain/list');
+						if (response.data.success) {
+							if (response.data.data && Array.isArray(response.data.data.chains)) {
+								set({ chains: response.data.data.chains });
 							} else {
-								console.error('API returned non-array data for chains:', responseData);
 								set({ chains: [] }); // Ensure chains is always an array
 							}
 						} else {
-							console.error('Failed to fetch chains', response.statusText);
 							set({ chains: [] }); // Ensure chains is always an array on error
 						}
 					} catch (error) {
-						console.error('Error fetching chains:', error);
 						set({ chains: [] }); // Ensure chains is always an array on error
 					}
 				},
