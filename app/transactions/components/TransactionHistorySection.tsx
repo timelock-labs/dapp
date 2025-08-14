@@ -14,6 +14,7 @@ import { Network } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
+import AddSVG from '@/components/icons/add';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -228,7 +229,14 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			<div className='h-[152px] flex flex-col justify-between pt-6 pb-4'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
-					<button className='cursor-pointer' onClick={()=>{router.push("/create-transaction")}}>Create</button>
+					<button
+						type='button'
+						onClick={()=>{router.push("/create-transaction")}}
+						className='inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
+						<AddSVG />
+						<span>Create</span>
+					</button>
+
 				</div>
 				<div className='flex justify-between items-center'>
 					<div>
