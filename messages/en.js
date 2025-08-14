@@ -10,6 +10,7 @@ import home from './en/home.json';
 import wallet from './en/wallet.json';
 
 import createTimelock from '@/app/create-timelock/i18n/en.json';
+import importTimelock from '@/app/import-timelock/i18n/en.json';
 import ecosystem from '@/app/ecosystem/i18n/en.json';
 
 export default {
@@ -26,5 +27,6 @@ export default {
 	...home,
 	...wallet,
 	...createTimelock,
+	...importTimelock,
 	...ecosystem
 };

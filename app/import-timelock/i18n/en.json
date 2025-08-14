@@ -1,0 +1,29 @@
+{
+	"ImportTimelock": {
+		"title": "Import Timelock",
+		"description": "View and update your personal details and account information.",
+		"selectChain": "Select Chain",
+		"selectChainPlaceholder": "Select Chain",
+		"contractAddress": "Contract Address",
+		"contractAddressPlaceholder": "0x...",
+		"contractStandard": "Contract Standard",
+		"contractStandardPlaceholder": "Select Standard",
+		"remarks": "Remarks",
+		"remarksPlaceholder": "Remarks",
+		"nextStep": "Next Step",
+		"detecting": "Detecting...",
+		"errors": {
+			"selectChain": "Please select a chain",
+			"enterContractAddress": "Please enter contract address",
+			"selectContractStandard": "Please select contract standard",
+			"invalidContractAddress": "Invalid contract address or not a contract",
+			"failedToDetectParameters": "Failed to detect valid timelock parameters",
+			"detectionFailed": "Detection failed",
+			"invalidTimelockParameters": "Invalid timelock parameters"
+		},
+		"success": {
+			"importSuccess": "Timelock imported successfully!"
+		},
+		"defaultRemark": "Imported Timelock"
+	}
+}

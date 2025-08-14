@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming path
 import TextInput from '@/components/ui/TextInput'; // Assuming path
 import SelectInput from '@/components/ui/SelectInput'; // Assuming path
@@ -17,9 +18,10 @@ import { useRouter } from 'next/navigation';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { useApi } from '@/hooks/useApi';
 
-const standardOptions = [{ value: 'compound', label: 'Compound' }];
-
 const ImportTimelockPage: React.FC = () => {
+	const t = useTranslations('ImportTimelock');
+	
+	const standardOptions = [{ value: 'compound', label: 'Compound' }];
 	const [selectedChain, setSelectedChain] = useState('');
 	const [contractAddress, setContractAddress] = useState('');
 	const [contractStandard, setContractStandard] = useState('compound');
@@ -76,17 +78,17 @@ const ImportTimelockPage: React.FC = () => {
 
 	const handleNextStep = async () => {
 		if (!selectedChain) {
-			toast.error('Please select a chain');
+			toast.error(t('errors.selectChain'));
 			return;
 		}
 
 		if (!contractAddress) {
-			toast.error('Please enter contract address');
+			toast.error(t('errors.enterContractAddress'));
 			return;
 		}
 
 		if (!contractStandard) {
-			toast.error('Please select contract standard');
+			toast.error(t('errors.selectContractStandard'));
 			return;
 		}
 
@@ -94,14 +96,14 @@ const ImportTimelockPage: React.FC = () => {
 			const isValid = await validateContractAddress(contractAddress);
 
 			if (!isValid) {
-				toast.error('Invalid contract address or not a contract');
+				toast.error(t('errors.invalidContractAddress'));
 				return;
 			}
 
 			const detectedParams = await fetchTimelockParameters(contractAddress);
 
 			if (!detectedParams.isValid) {
-				toast.error('Failed to detect valid timelock parameters');
+				toast.error(t('errors.failedToDetectParameters'));
 				return;
 			}
 
@@ -109,14 +111,14 @@ const ImportTimelockPage: React.FC = () => {
 			setIsModalOpen(true);
 		} catch (error) {
 			console.error('Detection failed:', error);
-			const errorMessage = error instanceof Error ? error.message : 'Detection failed';
+			const errorMessage = error instanceof Error ? error.message : t('errors.detectionFailed');
 			toast.error(errorMessage);
 		}
 	};
 
 	const handleConfirmParams = async () => {
 		if (!detectedParameters || !detectedParameters.isValid) {
-			toast.error('Invalid timelock parameters');
+			toast.error(t('errors.invalidTimelockParameters'));
 			return;
 		}
 
@@ -125,7 +127,7 @@ const ImportTimelockPage: React.FC = () => {
 			chain_id: chainId,
 			contract_address: contractAddress,
 			standard: detectedParameters.standard!,
-			remark: remarks || 'Imported Timelock',
+			remark: remarks || t('defaultRemark'),
 			is_imported: true, // Always true for imported contracts
 		};
 
@@ -133,33 +135,53 @@ const ImportTimelockPage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (importTimelockData) {
-			if (importTimelockData.success) {
-				toast.success('Timelock imported successfully!');
-				router.push('/timelocks');
-			} else {
-				toast.error('Failed to import timelock');
-			}
+		if (importTimelockData?.success) {
+			toast.success(t('success.importSuccess'));
+			router.push('/timelocks');
+		} else if (importTimelockData && !importTimelockData.success) {
+			toast.error('Failed to import timelock');
 		}
-	}, [importTimelockData])
+	}, [importTimelockData, router, t])
 
 	return (
-		<PageLayout title='Timelock'>
+		<PageLayout title={t('title')}>
 			<div className=' bg-white p-8 flex flex-col '>
 				<div className='flex-grow bg-white'>
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200'>
 						<div className='flex flex-col pr-8'>
 							<SectionHeader
-								title='导入Timelock'
-								description='View and update your personal details and account information.'
+								title={t('title')}
+								description={t('description')}
 								icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 							/>
 						</div>
 						<div className='flex flex-col pl-8'>
-							<SelectInput label='选择所在链' value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder='选择所在链' />
-							<TextInput label='合约地址' value={contractAddress} onChange={(e) => setContractAddress(e)} placeholder='0x...' />
-							<SelectInput label='合约标准' value={contractStandard} onChange={setContractStandard} options={standardOptions} placeholder='Select Standard' />
-							<TextInput label='备注' value={remarks} onChange={setRemarks} placeholder='Target' />
+							<SelectInput 
+								label={t('selectChain')} 
+								value={selectedChain} 
+								onChange={setSelectedChain} 
+								options={chainOptions} 
+								placeholder={t('selectChainPlaceholder')} 
+							/>
+							<TextInput 
+								label={t('contractAddress')} 
+								value={contractAddress} 
+								onChange={(e) => setContractAddress(e)} 
+								placeholder={t('contractAddressPlaceholder')} 
+							/>
+							<SelectInput 
+								label={t('contractStandard')} 
+								value={contractStandard} 
+								onChange={setContractStandard} 
+								options={standardOptions} 
+								placeholder={t('contractStandardPlaceholder')} 
+							/>
+							<TextInput 
+								label={t('remarks')} 
+								value={remarks} 
+								onChange={setRemarks} 
+								placeholder={t('remarksPlaceholder')} 
+							/>
 						</div>
 					</div>
 					<div className='mx-auto flex justify-end mt-8'>
@@ -168,7 +190,7 @@ const ImportTimelockPage: React.FC = () => {
 							onClick={handleNextStep}
 							disabled={isDetecting || !selectedChain || !contractAddress || !contractStandard}
 							className='bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'>
-							{isDetecting ? '检测中...' : '下一步'}
+							{isDetecting ? t('detecting') : t('nextStep')}
 						</button>
 					</div>
 				</div>
