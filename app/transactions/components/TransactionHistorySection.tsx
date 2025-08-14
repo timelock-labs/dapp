@@ -5,7 +5,6 @@ import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
 import TableComponent from '@/components/ui/TableComponent';
-import { useTransactionApi } from '@/hooks/useTransactionApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -13,6 +12,8 @@ import * as XLSX from 'xlsx';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { Network } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useApi } from '@/hooks/useApi';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -62,7 +63,8 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const chains = useAuthStore(state => state.chains);
 
-	const { getTransactionList } = useTransactionApi();
+	const {request: getTransactionList} = useApi();
+	const router = useRouter();
 
 	const handleTabChange = (tabId: string) => {
 		console.log('activeTab:', tabId);
@@ -72,14 +74,13 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	// Fetch transaction history
 	const fetchHistoryTransactions = useCallback(async () => {
 		try {
-			const response = await getTransactionList({
+			const {data} = await getTransactionList('/api/v1/transactions', {
 				page: 1,
 				page_size: 10,
 				status: activeTab === 'all' ? undefined : (activeTab as TransactionStatus),
-				// Add search functionality if needed
 			});
 
-			const transformedData: HistoryTxRow[] = response.map((tx: Transaction) => ({
+			const transformedData: HistoryTxRow[] = data.map((tx: Transaction) => ({
 				...tx,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
 			}));
@@ -89,7 +90,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			console.error('Failed to fetch transaction history:', error);
 			toast.error(t('fetchHistoryTxsError'));
 		}
-	}, [activeTab, getTransactionList, t]);
+	}, [activeTab, t]);
 
 	useEffect(() => {
 		fetchHistoryTransactions();
@@ -226,8 +227,9 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	return (
 		<div className={`rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6 ${className || ''}`}>
 			<div className='h-[152px] flex flex-col justify-between pt-6 pb-4'>
-				<div>
+				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
+					<button className='cursor-pointer' onClick={()=>{router.push("/create-transaction")}}>Create</button>
 				</div>
 				<div className='flex justify-between items-center'>
 					<div>

@@ -2,26 +2,26 @@ import React, { useEffect, useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslations } from 'next-intl';
-import { useNotificationApi, EmailNotification } from '@/app/notify/api/useNotificationApi';
 import type { MailboxSelectionProps } from './types';
+import { useApi } from '@/hooks/useApi';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
 	const t = useTranslations('CreateTransaction');
-	const { getEmailNotifications } = useNotificationApi();
-	const [mailboxOptions, setMailboxOptions] = useState<EmailNotification[]>([]);
+	const {request: getEmailNotifications} = useApi();
+	const [mailboxOptions, setMailboxOptions] = useState<any[]>([]);
 
 	useEffect(() => {
 		const fetchEmails = async () => {
 			try {
-				const response = await getEmailNotifications({ page: 1, page_size: 100 });
-				setMailboxOptions(response?.emils || []);
+				const {data} = await getEmailNotifications("/api/v1/emails",{ page: 1, page_size: 100 });
+				setMailboxOptions(data?.emils || []);
 			} catch (error) {
 				console.error('Failed to fetch email notifications:', error);
 			}
 		};
 
 		fetchEmails();
-	}, [getEmailNotifications]);
+	}, []);
 
 	const handleCheckboxChange = (value: string, checked: boolean) => {
 		if (checked) {

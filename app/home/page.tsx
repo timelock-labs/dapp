@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Assert from './components/Assert';
 import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
-import { useTimelockApi } from '@/hooks/useTimelockApi';
+import { useApi } from '@/hooks/useApi';
 
 // 加载骨架屏组件
 const LoadingSkeleton = () => (
@@ -29,14 +29,25 @@ export default function Home() {
 	const isConnected = connectionStatus === 'connected';
 	const [showContent, setShowContent] = useState(false);
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
+	const [timelockData, setTimelockData] = useState<any>(null);
 
-	const { useTimelockList } = useTimelockApi();
-	const { data: timelockData, isLoading } = useTimelockList({
-		status: 'active',
-		enabled: isConnected, // 只有连接钱包后才请求数据
-	});
+	const { request: getTimelockList,isLoading } = useApi();
 
-	console.log(timelockData, 'timelockData');
+	useEffect(() => {
+		if (isConnected) {
+			fetchTimelockData();
+		}
+	}, [isConnected]);
+
+	const fetchTimelockData = async () => {
+		try {
+			const response = await getTimelockList('/api/v1/timelocks');
+			setTimelockData(response.data);
+		} catch (error) {
+			console.error('Failed to fetch timelock data:', error);
+		}
+	};
+
 	const hasTimelocks = !!(timelockData && timelockData.total > 0);
 
 	// 处理页面状态变化
