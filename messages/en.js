@@ -1,17 +1,17 @@
 // 动态导入并合并所有英文模块
 import common from './en/common.json';
-import auth from './en/auth.json';
-import navigation from './en/navigation.json';
-import timelock from './en/timelock.json';
-import transaction from './en/transaction.json';
-import abi from '@/app/abi-lib/i18n/en.json';
-import notification from './en/notification.json';
-import home from './en/home.json';
 import wallet from './en/wallet.json';
+import abi from '@/app/abi-lib/i18n/en.json';
+import login from '@/app/login/i18n/en.json';
+import navigation from '@/components/navigation/i18n/en.json';
 
 import createTimelock from '@/app/create-timelock/i18n/en.json';
 import createTransaction from '@/app/create-transaction/i18n/en.json';
 import importTimelock from '@/app/import-timelock/i18n/en.json';
+import home from '@/app/home/i18n/en.json';
+import timelocks from '@/app/timelocks/i18n/en.json';
+import transactions from '@/app/transactions/i18n/en.json';
+import notify from '@/app/notify/i18n/en.json';
 import ecosystem from '@/app/ecosystem/i18n/en.json';
 
 export default {
@@ -19,16 +19,16 @@ export default {
 	common,
 
 	// 其他模块已经有正确的命名空间结构，直接展开
-	...auth,
 	...navigation,
-	...timelock,
-	...transaction,
-	...abi,
-	...notification,
-	...home,
 	...wallet,
+	...abi,
+	...login,
 	...createTimelock,
 	...createTransaction,
 	...importTimelock,
-	...ecosystem
+	...home,
+	...timelocks,
+	...transactions,
+	...notify,
+	...ecosystem,
 };
