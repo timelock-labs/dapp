@@ -59,15 +59,15 @@ const CreateTimelockPage: React.FC = () => {
 	}, [walletAddress, formState.owner]);
 
 	useEffect(() => {
-		if (createTimelockData && createTimelockData.success) {
+		if (createTimelockData?.success) {
 			toast.success('Timelock created successfully!');
 			router.push(`/timelocks`);
-		} else {
+		} else if (createTimelockData && !createTimelockData.success) {
 			toast.error('Failed to create timelock record', {
 				description: createTimelockData?.error?.message || 'Unknown error occurred',
 			});
 		}
-	}, [createTimelockData]);
+	}, [createTimelockData, router]);
 
 	const handleChainChange = useCallback(
 		(newChainId: number) => {
