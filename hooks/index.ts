@@ -21,9 +21,6 @@ export * from './useBlockchainHooks';
 export * from './useWeb3Utils';
 export * from './useWeb3ErrorHandler';
 
-// Domain-specific hooks
-export * from './useTransactionApi';
-
 // Re-export commonly used hooks for convenience
 export {
 	useLoadingState,

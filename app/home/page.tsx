@@ -41,8 +41,8 @@ export default function Home() {
 
 	const fetchTimelockData = async () => {
 		try {
-			const response = await getTimelockList('/api/v1/timelocks');
-			setTimelockData(response.data);
+			const {data} = await getTimelockList('/api/v1/timelock/list', { page: 1, page_size: 10 });
+			setTimelockData(data);
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);
 		}

@@ -3,11 +3,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TableComponent from '@/components/ui/TableComponent';
-import { useTransactionApi, Transaction } from '@/hooks/useTransactionApi';
-import { useAuthStore } from '@/store/userStore';
-import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { formatTimeRemaining, formatAddress } from '@/lib/utils';
+import { useApi } from '@/hooks/useApi';
+import { toast } from 'sonner';
 
 // Define Transaction type specific to this table
 interface PendingTxRow {
@@ -48,40 +47,31 @@ const getPendingTxTypeStyle = (type: string) => {
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
-	const [pendingTxs, setPendingTxs] = useState<PendingTxRow[]>([]);
-	const [, setIsLoading] = useState(false);
+	const [pendingTxs,setPendingTxs] = useState<PendingTxRow[]>([]);
 
-	const { getPendingTransactions } = useTransactionApi();
+	const {request: getPendingTransactions } = useApi();
 
 	// Fetch pending transactions
 	const fetchPendingTransactions = useCallback(async () => {
-		setIsLoading(true);
 		try {
-			const response = await getPendingTransactions({
-				page: 1,
-				page_size: 10,
-				// Add search functionality if needed
-			});
-
-			const transformedData: PendingTxRow[] = (response?.transactions || []).map((tx: Transaction) => ({
+			const {data} = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50,standard: 'compound',status: 'ready' });
+			const transformedData: PendingTxRow[] = data.flows.map((tx: any) => ({
 				...tx,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
-				operations: null, // Will be rendered by column render function
 			}));
-
 			setPendingTxs(transformedData);
 		} catch (error) {
 			console.error('Failed to fetch pending transactions:', error);
 			toast.error(t('fetchPendingTxsError'));
-		} finally {
-			setIsLoading(false);
 		}
-	}, [getPendingTransactions, t]);
+	}, [t]);
 
 	useEffect(() => {
 		fetchPendingTransactions();
 	}, [fetchPendingTransactions]);
+	
 
+	
 	const columns = [
 		{
 			key: 'chain_name',

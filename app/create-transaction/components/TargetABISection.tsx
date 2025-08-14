@@ -3,9 +3,9 @@ import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
 import AddABIForm from './AddABIForm';
 import { useTranslations } from 'next-intl';
-import { useAbiApi } from '@/hooks/useAbiApi';
 import { toast } from 'sonner';
 import type { TargetABISectionProps } from '@/types';
+import { useApi } from '@/hooks/useApi';
 
 /**
  * Target ABI section component for selecting ABI and function with arguments
@@ -16,7 +16,26 @@ import type { TargetABISectionProps } from '@/types';
 const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, argumentValues, onArgumentChange }) => {
 	const t = useTranslations('CreateTransaction');
 	const [isAddABIOpen, setIsAddABIOpen] = useState(false);
-	const { abiList, isLoading, addAbi } = useAbiApi();
+	const [abiList, setAbiList] = useState<any[]>([]); // Replace 'any' with your ABI type
+	const { request: getAbiList, isLoading } = useApi();
+	const { request: addAbi } = useApi();
+
+	// Fetch ABI list on mount
+	React.useEffect(() => {
+		fetchAbiList();
+	}, []);
+
+	const fetchAbiList = async () => {
+		try {
+			const { data } = await getAbiList('/api/v1/abi/list');
+			setAbiList(data || []);
+		} catch (error) {
+			console.error('Failed to fetch ABI list:', error);
+			toast.error(t('fetchABIError', { message: error instanceof Error ? error.message : 'Unknown error' }));
+		}
+	};
+
+
 
 	// Convert ABI list to options format
 	const abiOptions = useMemo(() => {
@@ -94,7 +113,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 
 	const handleAddABI = async (name: string, abi: string) => {
 		try {
-			await addAbi(name, '', abi);
+			await addAbi("/api/v1/abi/add", { name, description: '', abi });
 			toast.success('ABI added successfully!');
 			setIsAddABIOpen(false);
 		} catch (error: unknown) {
@@ -115,9 +134,9 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 						options={abiOptions}
 						placeholder={
 							isLoading ? 'Loading ABIs...'
-							: abiOptions.length === 0 ?
-								'No ABIs available'
-							:	t('targetABI.placeholder')
+								: abiOptions.length === 0 ?
+									'No ABIs available'
+									: t('targetABI.placeholder')
 						}
 					/>
 				</div>
