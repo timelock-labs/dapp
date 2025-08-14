@@ -33,7 +33,7 @@ export interface ApiRequestOptions {
  * Hook return type for API operations
  */
 export interface UseApiReturn {
-	data: ApiResponse;
+	data: ApiResponse | null;
 	error: Error | null;
 	isLoading: boolean;
 	request: (url: string, body?: object, options?: ApiRequestOptions) => Promise<any>;

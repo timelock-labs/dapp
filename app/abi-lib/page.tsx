@@ -33,7 +33,7 @@ const ABILibPage: React.FC = () => {
 
 	const { request: addAbiReq, data: addAbiRes } = useApi();
 	const { request: deleteAbiReq, data: deleteAbiRes } = useApi();
-	const { request: validateAbiReq, data: validateAbiRes } = useApi();
+	const { request: validateAbiReq } = useApi();
 
 	const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
@@ -49,42 +49,41 @@ const ABILibPage: React.FC = () => {
 		if (abiListsRes?.success) {
 			const allAbis = [...(abiListsRes.data.user_abis || []), ...(abiListsRes.data.shared_abis || [])];
 			setAbis(allAbis);
-			toast.success(t('fetchAbiListSuccess'));
-		}
-
-		if (!abiListsRes?.success) {
+		} else if (abiListsRes && !abiListsRes.success) {
 			toast.error(t('fetchAbiListError', { message: abiListsRes.error?.message || 'Unknown error' }));
 		}
-	}, [abiListsRes]);
+	}, [abiListsRes, t]);
 
 	useEffect(() => {
 		if (addAbiRes?.success) {
 			refreshAbiList();
 			setIsAddABIOpen(false);
 			toast.success(t('addAbiSuccess'));
-		} else {
+		} else if (addAbiRes && !addAbiRes.success) {
 			toast.error(t('addAbiError', { message: addAbiRes.error?.message || 'Unknown error' }));
 		}
-	}, [addAbiRes]);
+	}, [addAbiRes, refreshAbiList, t]);
 
 	useEffect(() => {
 		if (deleteAbiRes?.success) {
 			refreshAbiList();
 			setIsDeleteDialogOpen(false);
+			setAbiToDelete(null);
 			toast.success(t('deleteAbiSuccess'));
-		} else {
+		} else if (deleteAbiRes && !deleteAbiRes.success) {
 			toast.error(t('deleteAbiError', { message: deleteAbiRes.error?.message || 'Unknown error' }));
 		}
-	}, [deleteAbiRes]);
+	}, [deleteAbiRes, refreshAbiList, t]);
 
-	useEffect(() => {
-		const isValid = validateAbiRes?.success && validateAbiRes.data.is_valid;
-		isValid ? toast.success(t('validateAbiSuccess')) : toast.error(t('validateAbiError', { message: validateAbiRes.error?.message || 'Unknown error' }));
-	}, [validateAbiRes]);
+	// Remove validation useEffect since it's handled in handleAddABI
 
 	// Effect to handle clicks outside the dropdown
 	useEffect(() => {
-		openDropdownId ? document.addEventListener('mousedown', handleClickOutside) : document.removeEventListener('mousedown', handleClickOutside);
+		if (openDropdownId) {
+			document.addEventListener('mousedown', handleClickOutside);
+		} else {
+			document.removeEventListener('mousedown', handleClickOutside);
+		}
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [openDropdownId]);
 
@@ -95,15 +94,32 @@ const ABILibPage: React.FC = () => {
 	};
 
 	const handleAddABI = async (name: string, description: string, abi_content: string) => {
-		await validateAbiReq('/api/v1/abi/validate', { abi_content });
-		const isValid = validateAbiRes?.success && validateAbiRes.data.is_valid;
-		if (!isValid) return;
+		try {
+			// First validate the ABI
+			const validateResult = await validateAbiReq('/api/v1/abi/validate', { abi_content });
 
-		await addAbiReq('/api/v1/abi', {
-			name,
-			description,
-			abi_content,
-		});
+			if (!validateResult?.success || !validateResult.data?.is_valid) {
+				toast.error(
+					t('validateAbiError', {
+						message: validateResult?.error?.message || 'Invalid ABI format',
+					})
+				);
+				return;
+			}
+
+			// If validation passes, add the ABI
+			await addAbiReq('/api/v1/abi', {
+				name,
+				description,
+				abi_content,
+			});
+		} catch (error) {
+			toast.error(
+				t('addAbiError', {
+					message: error instanceof Error ? error.message : 'Unknown error',
+				})
+			);
+		}
 	};
 
 	const handleViewABI = async (row: ABIRow) => {
@@ -112,7 +128,11 @@ const ABILibPage: React.FC = () => {
 	};
 
 	const handleEllipsisMenu = (rowId: number) => {
-		openDropdownId === rowId ? setOpenDropdownId(null) : setOpenDropdownId(rowId);
+		if (openDropdownId === rowId) {
+			setOpenDropdownId(null);
+		} else {
+			setOpenDropdownId(rowId);
+		}
 	};
 
 	const handleDeleteABI = (row: ABIRow) => {
@@ -124,23 +144,13 @@ const ABILibPage: React.FC = () => {
 	const confirmDeleteABI = async () => {
 		if (!abiToDelete) return;
 
-		const { success: deleteAbiSuccess, error: deleteAbiError } = await deleteAbiReq(`/api/v1/abi/delete`, {
-			id: abiToDelete.id,
-		});
-
-		if (deleteAbiSuccess) {
-			toast.success(t('deleteAbiSuccess'));
-			refreshAbiList();
-			setIsDeleteDialogOpen(false);
-			setAbiToDelete(null);
-		}
-
-		if (!deleteAbiSuccess) {
-			toast.error(
-				t('deleteAbiError', {
-					message: deleteAbiError?.message || 'Unknown error',
-				})
-			);
+		try {
+			await deleteAbiReq(`/api/v1/abi/delete`, {
+				id: abiToDelete.id,
+			});
+		} catch (error) {
+			// Error handling is done in the useEffect for deleteAbiRes
+			console.error('Delete ABI error:', error);
 		}
 	};
 

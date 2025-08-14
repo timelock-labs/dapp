@@ -7,7 +7,7 @@ import type { ApiRequestOptions, UseApiReturn, ApiResponse } from '@/types';
 import { useRouter } from 'next/navigation';
 
 export function useApi(): UseApiReturn {
-	const [data, setData] = useState<ApiResponse>({ data: null, success: false });
+	const [data, setData] = useState<ApiResponse | null>(null);
 	const [error, setError] = useState<Error | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
@@ -34,7 +34,7 @@ export function useApi(): UseApiReturn {
 			try {
 				const { data } = await axios.request({
 					url: fullUrl,
-					method: "POST",
+					method: 'POST',
 					headers: headers,
 					data: body,
 					...options,
@@ -44,14 +44,12 @@ export function useApi(): UseApiReturn {
 				setIsLoading(false);
 
 				return data;
-			} catch (error: any) {
+			} catch (error: unknown) {
 				if (error.response?.status === 401) {
 					router.push('/login');
 					return;
 				}
-				alert(
-					'Error:\n' + `URL: ${fullUrl}\n` + `Headers: ${JSON.stringify(headers, null, 2)}\n` + `Body: ${JSON.stringify(body, null, 2)}\n` + `Error: ${error.message}`
-				);
+				alert('Error:\n' + `URL: ${fullUrl}\n` + `Headers: ${JSON.stringify(headers, null, 2)}\n` + `Body: ${JSON.stringify(body, null, 2)}\n` + `Error: ${error.message}`);
 				setError(error);
 				throw error;
 			}
