@@ -7,6 +7,7 @@ import transaction from './zh/transaction.json';
 
 import abi from '@/app/abi-lib/i18n/zh.json';
 import createTimelock from '@/app/create-timelock/i18n/zh.json';
+import createTransaction from '@/app/create-transaction/i18n/zh.json';
 import importTimelock from '@/app/import-timelock/i18n/zh.json';
 
 import notification from './zh/notification.json';
@@ -28,6 +29,7 @@ export default {
 	...home,
 	...wallet,
 	...createTimelock,
+	...createTransaction,
 	...importTimelock,
 	...ecosystem
 };

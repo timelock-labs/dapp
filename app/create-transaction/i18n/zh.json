@@ -1,0 +1,48 @@
+{
+	"CreateTransaction": {
+		"title": "创建交易",
+		"encodingTransaction": {
+			"title": "编码交易",
+			"description": "描述",
+			"selectTimelock": "选择时间锁",
+			"selectTimelockMethod": "选择时间锁方法",
+			"timelockAddress": "时间锁地址 *",
+			"target": "目标地址",
+			"value": "数值",
+			"formDescription": "描述",
+			"descriptionPlaceholder": "使用英文描述该笔交易的用途，该描述将上链。",
+			"noTimelocksAvailable": "未发现 Timelock 合约，请先添加",
+			"selectTimelockPlaceholder": "请选择时间锁合约",
+			"selectTimelockMethodPlaceholder": "请选择方法",
+			"targetPlaceholder": "请输入目标地址",
+			"valuePlaceholder": "请输入数值（单位：wei）",
+			"selectTimelockFirstPlaceholder": "请先选择时间锁合约",
+			"loadingTimelockDetails": "正在加载时间锁详情...",
+			"calldata": "编码数据",
+			"calldataPlaceholder": "将自动获取编码数据",
+			"timePlaceholder": "请输入时间（单位：秒）"
+		},
+		"preview": {
+			"title": "编码预览",
+			"description": "在提交前预览您的交易编码。",
+			"noData": "暂无预览数据。"
+		},
+		"mailbox": {
+			"title": "监听邮箱",
+			"description": "选择用于接收交易通知的邮箱。",
+			"selectLabel": "选择已配置邮箱",
+			"selectPlaceholder": "请选择已配置邮箱",
+			"option1": "邮箱 1",
+			"option2": "邮箱 2"
+		},
+		"targetABI": {
+			"label": "目标 ABI",
+			"placeholder": "请选择 ABI",
+			"function": "函数",
+			"selectFunction": "选择函数",
+			"time": "时间"
+		},
+		"submitting": "提交中...",
+		"sendTransactionButton": "发送交易"
+	}
+}
