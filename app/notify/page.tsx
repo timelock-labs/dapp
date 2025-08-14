@@ -75,7 +75,7 @@ const EmailNotificationPage: React.FC = () => {
 		fetchEmailNotifications();
 	};
 
-	const handleEditMailbox = (mailbox: EmailNotification) => {
+	const handleEditMailbox = (mailbox: any) => {
 		setEditingMailbox(mailbox);
 		setIsEditMailboxModalOpen(true);
 	};
