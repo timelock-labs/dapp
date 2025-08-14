@@ -9,9 +9,6 @@ export * from './useHookUtils';
 export * from './useValidationUtils';
 export * from './useAsyncUtils';
 
-// API-related hooks
-export * from './useApiBase';
-
 // Form-related hooks
 export * from './useFormHooks';
 
@@ -39,8 +36,6 @@ export {
 } from './useCommonHooks';
 
 export { useIsMobile, useIsTablet, useIsDesktop, useDeviceType, useResponsiveValue, useIsTouchDevice } from './useMobile';
-
-export { useApiBase, useApiMutation, usePaginatedApi, useFilteredApi } from './useApiBase';
 
 export { useForm, useFieldValidation, useFormArray, useMultiStepForm, useFormPersistence } from './useFormHooks';
 
