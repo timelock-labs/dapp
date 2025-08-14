@@ -67,7 +67,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	const router = useRouter();
 
 	const handleTabChange = (tabId: string) => {
-		console.log('activeTab:', tabId);
 		setActiveTab(tabId);
 	};
 

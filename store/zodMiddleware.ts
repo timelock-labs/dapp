@@ -30,8 +30,6 @@ export const zodMiddleware =
 			if (!result.success) {
 				console.groupCollapsed('%c[Zustand]  Zustand State Validation Failed', 'color: red; font-weight: bold;');
 				// console.error('Validation errors:', result.error.flatten());
-				console.log('Previous state:', oldState);
-				console.log('Next state (invalid):', nextState);
 				console.groupEnd();
 				// In development, you might even throw an error to interrupt invalid state updates
 				// throw new Error("Zustand state validation failed!");

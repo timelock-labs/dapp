@@ -158,7 +158,6 @@ const TransactionEncoderPage: React.FC = () => {
 			toast.error('Please connect your wallet first');
 			return;
 		}
-		console.log(chainName, 'chainName');
 
 		if (!chainId) {
 			toast.error('Please select a network');

@@ -112,7 +112,6 @@ export const useAuthStore = create<AppState & AppActions>()(
 								refreshToken: data.data.refresh_token,
 								expiresAt: new Date(data.data.expires_at).getTime(),
 							});
-							console.log('Access token refreshed successfully.');
 						} else {
 							console.error('Failed to refresh access token:', response.statusText);
 							// Optionally, log out the user if refresh fails
