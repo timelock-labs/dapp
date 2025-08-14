@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import type { AddABIFormProps } from '../types/types';
 
 const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
-	const t = useTranslations('Transactions.AddABIForm');
+	const t = useTranslations('ABI-Lib.addForm');
 	const [name, setName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const [abi, setAbi] = useState<string>('');

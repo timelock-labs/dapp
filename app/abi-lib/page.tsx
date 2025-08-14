@@ -18,8 +18,6 @@ import type { ABIRow, ABIContent } from './types/types';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import PageCard from './components/PageCard';
 
-
-
 const ABILibPage: React.FC = () => {
 	const t = useTranslations('ABI-Lib');
 	const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -31,7 +29,7 @@ const ABILibPage: React.FC = () => {
 
 	const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
 	const [abis, setAbis] = useState<ABIRow[]>([]);
-	const { data: abiListsRes, request: fetchAbiList, error, isLoading } = useApi();
+	const { data: abiListsRes, request: fetchAbiList, isLoading } = useApi();
 
 	const { request: addAbiReq, data: addAbiRes } = useApi();
 	const { request: deleteAbiReq, data: deleteAbiRes } = useApi();
@@ -67,7 +65,6 @@ const ABILibPage: React.FC = () => {
 		} else {
 			toast.error(t('addAbiError', { message: addAbiRes.error?.message || 'Unknown error' }));
 		}
-
 	}, [addAbiRes]);
 
 	useEffect(() => {
@@ -107,7 +104,7 @@ const ABILibPage: React.FC = () => {
 			description,
 			abi_content,
 		});
-	}
+	};
 
 	const handleViewABI = async (row: ABIRow) => {
 		setIsViewABIOpen(true);
@@ -115,9 +112,7 @@ const ABILibPage: React.FC = () => {
 	};
 
 	const handleEllipsisMenu = (rowId: number) => {
-		openDropdownId === rowId ?
-			setOpenDropdownId(null) :
-			setOpenDropdownId(rowId);
+		openDropdownId === rowId ? setOpenDropdownId(null) : setOpenDropdownId(rowId);
 	};
 
 	const handleDeleteABI = (row: ABIRow) => {
@@ -207,7 +202,7 @@ const ABILibPage: React.FC = () => {
 		},
 	];
 
-	if (isLoading) return <LoadingSkeleton />
+	if (isLoading) return <LoadingSkeleton />;
 
 	return (
 		<PageLayout title={t('title')}>
@@ -222,10 +217,10 @@ const ABILibPage: React.FC = () => {
 				isOpen={isDeleteDialogOpen}
 				onClose={cancelDeleteABI}
 				onConfirm={confirmDeleteABI}
-				title='Delete ABI'
-				description={`Are you sure you want to delete ABI "${abiToDelete?.name || ''}"? This action cannot be undone.`}
-				confirmText='Delete'
-				cancelText='Cancel'
+				title={t('deleteDialog.title')}
+				description={t('deleteDialog.description', { name: abiToDelete?.name || '' })}
+				confirmText={t('deleteDialog.confirmText')}
+				cancelText={t('deleteDialog.cancelText')}
 				variant='destructive'
 			/>
 		</PageLayout>

@@ -22,6 +22,28 @@
 		"viewAbiError": "Failed to fetch ABI details: {message}",
 		"deleteAbiSuccess": "ABI deleted successfully.",
 		"deleteAbiError": "Failed to delete ABI: {message}",
-		"validateAbiSuccess": "ABI validated successfully."
+		"validateAbiSuccess": "ABI validated successfully.",
+		"addForm": {
+			"title": "Add New ABI",
+			"description": "Enter the details for the new ABI.",
+			"nameLabel": "ABI Name",
+			"descriptionLabel": "Description",
+			"contentLabel": "ABI Content (JSON)",
+			"cancelButton": "Cancel",
+			"addButton": "Add"
+		},
+		"viewForm": {
+			"title": "View ABI Details",
+			"nameLabel": "ABI Name",
+			"descriptionLabel": "Description",
+			"interfaceDetails": "Interface Details",
+			"closeButton": "Close"
+		},
+		"deleteDialog": {
+			"title": "Delete ABI",
+			"description": "Are you sure you want to delete ABI \"{name}\"? This action cannot be undone.",
+			"confirmText": "Delete",
+			"cancelText": "Cancel"
+		}
 	}
 }

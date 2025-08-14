@@ -10,8 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 
 import type { ViewABIFormProps } from '../types/types';
 
-const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
-	const t = useTranslations('Transactions.AddABIForm');
+const ViewABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
+	const t = useTranslations('ABI-Lib.viewForm');
 
 	if (!isOpen) {
 		return null;
@@ -21,7 +21,7 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent className='w-[558px] overflow-hidden'>
 				<DialogHeader>
-					<DialogTitle>{t('view_details')}</DialogTitle>
+					<DialogTitle>{t('title')}</DialogTitle>
 				</DialogHeader>
 				<div className='grid gap-4 py-4 overflow-hidden'>
 					<div className='space-y-2'>
@@ -33,14 +33,14 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
 						<Textarea defaultValue={viewAbiContent.description} />
 					</div>
 					<div className='space-y-2'>
-						<Label>{t('interface_details')}</Label>
+						<Label>{t('interfaceDetails')}</Label>
 						<Textarea className='h-[300px]' defaultValue={JSON.stringify(JSON.parse(viewAbiContent.abi_content), null, 2)} />
 					</div>
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button type='button' variant='outline' onClick={() => onClose()}>
-							{t('cancelButton')}
+							{t('closeButton')}
 						</Button>
 					</DialogClose>
 				</DialogFooter>
@@ -49,4 +49,4 @@ const AddABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConten
 	);
 };
 
-export default AddABIForm;
+export default ViewABIForm;
