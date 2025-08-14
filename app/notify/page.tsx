@@ -9,15 +9,15 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
-import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
 import { toast } from 'sonner';
+import { useApi } from '@/hooks/useApi';
 
 const EmailNotificationPage: React.FC = () => {
 	const t = useTranslations('Notify');
-	const [mailboxes, setMailboxes] = useState<EmailNotification[]>([]);
+	const [mailboxes, setMailboxes] = useState<any[]>([]);
 	const [isAddMailboxModalOpen, setIsAddMailboxModalOpen] = useState(false);
 	const [isEditMailboxModalOpen, setIsEditMailboxModalOpen] = useState(false);
-	const [editingMailbox, setEditingMailbox] = useState<EmailNotification | null>(null);
+	const [editingMailbox, setEditingMailbox] = useState<any>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<{
 		isOpen: boolean;
@@ -25,14 +25,15 @@ const EmailNotificationPage: React.FC = () => {
 		id: number;
 	}>({ isOpen: false, email: '', id: 0 });
 
-	const { getEmailNotifications, deleteEmailNotification } = useNotificationApi();
+	const {request:deleteEmailNotification} = useApi();
+	const {request:getEmailNotifications} = useApi()
 
 	// Fetch email notifications
 	const fetchEmailNotifications = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			const response = await getEmailNotifications({ page: 1, page_size: 50 });
-			setMailboxes(response?.emails || []);
+			const {data} = await getEmailNotifications("/api/v1/emails",{ page: 1, page_size: 50 });
+			setMailboxes(data?.emails || []);
 		} catch (error) {
 			console.error('Failed to fetch email notifications:', error);
 			toast.error(
@@ -43,7 +44,7 @@ const EmailNotificationPage: React.FC = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [getEmailNotifications, t]);
+	}, []);
 
 	useEffect(() => {
 		fetchEmailNotifications();
@@ -55,7 +56,7 @@ const EmailNotificationPage: React.FC = () => {
 
 	const confirmDeleteMailbox = async () => {
 		try {
-			await deleteEmailNotification(deleteConfirmDialog.id);
+			await deleteEmailNotification("/api/v1/emails/delete",{id:deleteConfirmDialog.id});
 			toast.success(t('deleteMailboxSuccess'));
 			await fetchEmailNotifications(); // Refresh data
 		} catch (error) {
@@ -164,7 +165,7 @@ const EmailNotificationPage: React.FC = () => {
 									key={mailbox.id}
 									id={parseInt(mailbox.id)}
 									email={mailbox.email}
-									remark={mailbox.email_remark}
+									remark={mailbox.remark}
 									created_at={mailbox.created_at}
 								/>
 							)

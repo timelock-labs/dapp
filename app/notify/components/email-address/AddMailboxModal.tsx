@@ -2,25 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput'; // Adjust path
-import ListeningPermissions from './ListeningPermissions'; // Adjust path
 import VerificationCodeInput from './VerificationCodeInput'; // Adjust path
-import { useNotificationApi } from '@/hooks/useNotificationApi';
-import { useTimelockApi } from '@/hooks/useTimelockApi';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-
-interface Permission {
-	id: string;
-	label: string;
-	subLabel: string;
-	icon: React.ReactNode;
-}
-
-interface TimelockData {
-	contract_address: string;
-	remark?: string;
-	chain_name: string;
-}
+import { useApi } from '@/hooks/useApi';
 
 interface AddMailboxModalProps {
 	isOpen: boolean;
@@ -36,58 +21,16 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	const [isEmailVerified, setIsEmailVerified] = useState(false);
 	const [isEmailNotificationCreated, setIsEmailNotificationCreated] = useState(false);
 
-	const { verifyEmail, sendVerificationCode } = useNotificationApi();
+	const { request: sendVerificationCode } = useApi();
+	const { request: verifyEmail } = useApi();
 
-	const { useTimelockList } = useTimelockApi();
-
-	// Only fetch when modal is open
-	const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(isOpen ? { status: 'active' } : undefined);
-
-	// Process timelock data when it changes
-	useEffect(() => {
-		if (timelockData) {
-			const timelockPermissions: Permission[] = [];
-
-			// Add Compound timelocks
-			if (timelockData.compound_timelocks) {
-				timelockData.compound_timelocks.forEach((timelock: TimelockData) => {
-					timelockPermissions.push({
-						id: timelock.contract_address,
-						label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
-						subLabel: timelock.contract_address,
-						icon: <span className='text-yellow-500 text-base'>🪙</span>,
-					});
-				});
-			}
-
-			// Add OpenZeppelin timelocks
-			if (timelockData.openzeppelin_timelocks) {
-				timelockData.openzeppelin_timelocks.forEach((timelock: TimelockData) => {
-					timelockPermissions.push({
-						id: timelock.contract_address,
-						label: `${timelock.remark || 'OpenZeppelin Timelock'} (${timelock.chain_name})`,
-						subLabel: timelock.contract_address,
-						icon: <span className='text-blue-500 text-base'>🔷</span>,
-					});
-				});
-			}
-		}
-	}, [timelockData]);
-
-	// Handle timelock error
-	useEffect(() => {
-		if (timelockError) {
-			console.error('Failed to fetch timelines:', timelockError);
-			toast.error(t('fetchTimelockListError'));
-		}
-	}, [timelockError, t]);
 
 	// Debounce email verification
 	useEffect(() => {
 		if (verificationCode.length === 6 && emailAddress) {
 			const handler = setTimeout(async () => {
 				try {
-					await verifyEmail({
+					await verifyEmail("/api/v1/emails/verify", {
 						email: emailAddress,
 						code: verificationCode,
 					});
@@ -126,16 +69,14 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
 		try {
 			if (!isEmailNotificationCreated) {
-				// First time - try to create email notification
 				try {
-					await sendVerificationCode({ email: emailAddress });
-
+					await sendVerificationCode("/api/v1/emails/send-verification", { email: emailAddress });
 					setIsEmailNotificationCreated(true);
 					toast.success(t('verificationCodeSent'));
-				} catch {}
+				} catch { }
 			} else {
 				// Subsequent times - resend verification code
-				await sendVerificationCode({ email: emailAddress });
+				await sendVerificationCode("/api/v1/emails/send-verification", { email: emailAddress });
 				toast.success(t('verificationCodeResent'));
 			}
 			// Reset verification status when new code is sent
@@ -192,24 +133,15 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	}
 
 	return (
-		// Modal Overlay
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 '>
-			{/* Modal Content */}
 			<div
 				className='bg-white  rounded-lg shadow-xl border border-gray-200 flex flex-col'
 				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }} // Added maxHeight and overflowY
 			>
 				<div className='p-6'>
-					{/* Header Section */}
 					<SectionHeader title={t('title')} description={t('description')} />
-
-					{/* Email Address Input */}
 					<TextInput label={t('emailAddress')} value={emailAddress} onChange={setEmailAddress} placeholder={t('emailPlaceholder')} />
-
-					{/* Email Remark Input */}
 					<TextInput label={t('emailRemark')} value={emailRemark} onChange={setEmailRemark} placeholder={t('remarkPlaceholder')} />
-
-					{/* Verification Code Input Section */}
 					<VerificationCodeInput
 						email={emailAddress}
 						onSendCode={handleSendCode}
@@ -220,7 +152,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 						isFirstTime={!isEmailNotificationCreated}
 					/>
 
-					{/* Verification Status Indicator */}
 					{verificationCode.length === 6 && (
 						<div className={`mb-4 p-3 rounded-md ${isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
 							{isEmailVerified ?
@@ -228,7 +159,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 									<span className='text-green-500 mr-2'>✓</span>
 									{t('verificationSuccess')}
 								</div>
-							:	<div className='flex items-center'>
+								: <div className='flex items-center'>
 									<span className='text-red-500 mr-2'>✗</span>
 									{t('verificationCodeIncorrect')}
 								</div>
@@ -237,7 +168,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 					)}
 				</div>
 
-				{/* Buttons */}
 				<div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
 					<button
 						type='button'

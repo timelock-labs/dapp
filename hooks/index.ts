@@ -24,7 +24,7 @@ export * from './useWeb3ErrorHandler';
 // Domain-specific hooks
 export * from './useTimelockApi';
 export * from './useTransactionApi';
-export * from './useNotificationApi';
+export * from '../app/notify/api/useNotificationApi';
 
 // Re-export commonly used hooks for convenience
 export {

@@ -1,12 +1,11 @@
 import React from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import DeleteButton from '@/components/ui/DeleteButton';
-import { EmailNotification } from '@/hooks/useNotificationApi';
 import { useTranslations } from 'next-intl';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
-	onEdit: (mailbox: EmailNotification) => void;
+	onEdit: (mailbox: any) => void;
 	id: number;
 	email: string;
 	remark?: string | null;
@@ -21,7 +20,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	};
 
 	const handleEditClick = () => {
-		const mailboxData: EmailNotification = {
+		const mailboxData: any = {
 			id: id.toString(),
 			remark: remark,
 			email: email,

@@ -2,67 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TextInput from '@/components/ui/TextInput';
-import ListeningPermissions from './ListeningPermissions';
-import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
-import { useTimelockApi } from '@/hooks/useTimelockApi';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-
-interface Permission {
-	id: string;
-	label: string;
-	subLabel: string;
-	icon: React.ReactNode;
-}
-
-interface TimelockData {
-	contract_address: string;
-	remark?: string;
-	chain_name: string;
-}
+import { useApi } from '@/hooks/useApi';
 
 interface EditMailboxModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSuccess: () => void; // Callback to trigger re-fetch in parent
-	initialData: EmailNotification | null; // Data of the mailbox to edit
+	initialData: any | null; // Data of the mailbox to edit
 }
 
 const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, onSuccess, initialData }) => {
 	const t = useTranslations('Notify.editMailbox');
 	const [emailRemark, setEmailRemark] = useState(initialData?.remark || '');
-	const { updateEmailNotification } = useNotificationApi();
-	const { useTimelockList } = useTimelockApi();
 
-	// Only fetch when modal is open
-	const { data: timelockData, isLoading: isLoadingTimelocks, error: timelockError } = useTimelockList(isOpen ? { status: 'active' } : undefined);
-
-	// Process timelock data when it changes
-	useEffect(() => {
-		if (timelockData) {
-			const timelockPermissions: Permission[] = [];
-
-			// Add Compound timelocks
-			if (timelockData.compound_timelocks) {
-				timelockData.compound_timelocks.forEach((timelock: TimelockData) => {
-					timelockPermissions.push({
-						id: timelock.contract_address,
-						label: `${timelock.remark || 'Compound Timelock'} (${timelock.chain_name})`,
-						subLabel: timelock.contract_address,
-						icon: <span className='text-yellow-500 text-base'>🪙</span>,
-					});
-				});
-			}
-		}
-	}, [timelockData]);
-
-	// Handle timelock error
-	useEffect(() => {
-		if (timelockError) {
-			console.error('Failed to fetch timelocks:', timelockError);
-			toast.error(t('fetchTimelockListError'));
-		}
-	}, [timelockError, t]);
+	const {request: updateEmailNotification } = useApi();
 
 	useEffect(() => {
 		if (initialData) {
@@ -88,7 +43,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 		}
 
 		try {
-			await updateEmailNotification(initialData.id, emailRemark);
+			await updateEmailNotification("/api/v1/emails/remark",{id:parseInt(initialData.id), remark:emailRemark});
 
 			toast.success(t('updateSuccess'));
 			onSuccess();

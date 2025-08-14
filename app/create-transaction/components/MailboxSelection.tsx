@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslations } from 'next-intl';
-import { useNotificationApi, EmailNotification } from '@/hooks/useNotificationApi';
+import { useNotificationApi, EmailNotification } from '@/app/notify/api/useNotificationApi';
 import type { MailboxSelectionProps } from './types';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
