@@ -24,6 +24,24 @@
 		"success": {
 			"importSuccess": "Timelock 导入成功！"
 		},
-		"defaultRemark": "导入的 Timelock"
+		"defaultRemark": "导入的 Timelock",
+		"modal": {
+			"title": "请检查参数",
+			"chain": "所在链",
+			"isValid": "是否有效",
+			"yes": "是",
+			"no": "否",
+			"contractStandard": "合约标准",
+			"contractAddress": "合约地址",
+			"minDelay": "最小延迟",
+			"admin": "管理员",
+			"gracePeriod": "宽限期",
+			"minimumDelay": "最小延迟",
+			"maximumDelay": "最大延迟",
+			"seconds": "秒",
+			"abi": "ABI",
+			"cancel": "取消",
+			"confirm": "确认添加"
+		}
 	}
 }

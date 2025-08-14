@@ -24,6 +24,24 @@
 		"success": {
 			"importSuccess": "Timelock imported successfully!"
 		},
-		"defaultRemark": "Imported Timelock"
+		"defaultRemark": "Imported Timelock",
+		"modal": {
+			"title": "Check Parameters",
+			"chain": "Chain",
+			"isValid": "Is Valid",
+			"yes": "Yes",
+			"no": "No",
+			"contractStandard": "Contract Standard",
+			"contractAddress": "Contract Address",
+			"minDelay": "Min Delay",
+			"admin": "Admin",
+			"gracePeriod": "Grace Period",
+			"minimumDelay": "Minimum Delay",
+			"maximumDelay": "Maximum Delay",
+			"seconds": " seconds",
+			"abi": "ABI",
+			"cancel": "Cancel",
+			"confirm": "Confirm Import"
+		}
 	}
 }

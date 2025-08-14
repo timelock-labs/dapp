@@ -1,5 +1,6 @@
 // components/CheckParametersDialog.tsx
-import React, { useState, useEffect, useRef, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 
 // Define interface for the data this dialog will display
@@ -23,9 +24,9 @@ interface CheckParametersDialogProps {
 }
 
 const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, onClose, onConfirm, abiText, parameters }) => {
-	const [abiContent, setAbiContent] = useState(abiText || []);
+	const t = useTranslations('ImportTimelock.modal');
+	const [abiContent, setAbiContent] = useState<string>(abiText || '');
 	const dialogRef = useRef<HTMLDivElement>(null);
-
 
 	useEffect(() => {
 		if (!isOpen) return;
@@ -38,7 +39,6 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 
 		document.addEventListener('keydown', handleEscape);
 
-
 		if (dialogRef.current) {
 			dialogRef.current.focus();
 		}
@@ -49,10 +49,8 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	}, [isOpen, onClose]);
 
 	useEffect(() => {
-
 		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
 	}, []);
-
 
 	if (!isOpen) return null;
 
@@ -66,7 +64,6 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 		setAbiContent(JSON.stringify(compoundTimelockAbi, null, 2));
 	};
 
-
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-4'>
 			<label className='block text-sm font-medium text-gray-700 mb-1'>{label}</label>
@@ -77,9 +74,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	const dialogTitleId = 'check-params-dialog-title';
 
 	return (
-
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-
 			<div
 				ref={dialogRef} // Attach ref for focus management
 				role='dialog' // ARIA role for dialog
@@ -88,43 +83,42 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				tabIndex={-1} // Makes the dialog content focusable
 				className='bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
 			>
-
 				<h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
-					请检查参数
+					{t('title')}
 				</h2>
 				<div className='grid grid-cols-2 gap-4 mb-4'>
-					<ParameterDisplayRow label='所在链'>
+					<ParameterDisplayRow label={t('chain')}>
 						{parameters.chainIcon}
 						<span className='ml-2'>{parameters.chainName}</span>
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='是否有效'>
-						{parameters.isValid ? '是' : '否'}
+					<ParameterDisplayRow label={t('isValid')}>{parameters.isValid ? t('yes') : t('no')}</ParameterDisplayRow>
+					<ParameterDisplayRow label={t('contractStandard')}>{parameters.standard}</ParameterDisplayRow>
+					<ParameterDisplayRow label={t('contractAddress')}>
+						<span className='break-all'>{parameters.contractAddress}</span>
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='合约标准'>
-						{parameters.standard}
+					<ParameterDisplayRow label={t('minDelay')}>
+						{parameters.minDelay.toLocaleString()}
+						{t('seconds')}
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='合约地址'>
-						{parameters.contractAddress}
+					<ParameterDisplayRow label={t('admin')}>
+						<span className='break-all'>{parameters.admin}</span>
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='最小延迟'>
-						{parameters.minDelay}秒
+					<ParameterDisplayRow label={t('gracePeriod')}>
+						{parameters.gracePeriod.toLocaleString()}
+						{t('seconds')}
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='管理员'>
-						{parameters.admin}
+					<ParameterDisplayRow label={t('minimumDelay')}>
+						{parameters.minimumDelay.toLocaleString()}
+						{t('seconds')}
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label='宽限期'>
-						{parameters.gracePeriod}秒
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label='最小延迟'>
-						{parameters.minimumDelay}秒
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label='最大延迟'>
-						{parameters.maximumDelay}秒
+					<ParameterDisplayRow label={t('maximumDelay')}>
+						{parameters.maximumDelay.toLocaleString()}
+						{t('seconds')}
 					</ParameterDisplayRow>
 				</div>
 
 				<div className='mb-4'>
-					<label className='block text-sm font-medium text-gray-700 mb-1'>ABI</label>
+					<label className='block text-sm font-medium text-gray-700 mb-1'>{t('abi')}</label>
 					<textarea
 						readOnly
 						aria-label='ABI Content'
@@ -138,13 +132,15 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 					/>
 				</div>
 
-
 				<div className='flex justify-end space-x-3 mt-6'>
-					<button onClick={handleCancel} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
-						取消
+					<button
+						type='button'
+						onClick={handleCancel}
+						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+						{t('cancel')}
 					</button>
-					<button onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer'>
-						确认添加
+					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer'>
+						{t('confirm')}
 					</button>
 				</div>
 			</div>
