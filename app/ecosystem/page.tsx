@@ -19,10 +19,10 @@ const EcosystemPage: React.FC = () => {
 	}, []);
 
 	const fetchSponsors = async () => {
-		const response = await getSponsorsReq('/api/v1/sponsors/public');
-		if (response.success && response.data) {
-			setSponsors(response.data.sponsors || []);
-			setPartners(response.data.partners || []);
+		const { data, success } = await getSponsorsReq('/api/v1/sponsors/public');
+		if (success && data) {
+			setSponsors(data.sponsors || []);
+			setPartners(data.partners || []);
 		}
 	};
 

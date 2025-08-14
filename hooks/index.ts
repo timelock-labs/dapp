@@ -11,7 +11,6 @@ export * from './useAsyncUtils';
 
 // API-related hooks
 export * from './useApiBase';
-export * from './useApiPatterns';
 
 // Form-related hooks
 export * from './useFormHooks';
@@ -58,8 +57,6 @@ export {
 export { useWeb3Utils } from './useWeb3Utils';
 
 export { useWeb3ErrorHandler } from './useWeb3ErrorHandler';
-
-export { useCrudOperations, usePaginatedList, useBatchOperations, useSearch, useFileUpload, useDataExport } from './useApiPatterns';
 
 export { useValidation, useZodSchemas, useAsyncValidation, ValidationPatterns, ValidationMessages } from './useValidationUtils';
 
