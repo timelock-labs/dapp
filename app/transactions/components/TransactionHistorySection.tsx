@@ -74,13 +74,13 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	// Fetch transaction history
 	const fetchHistoryTransactions = useCallback(async () => {
 		try {
-			const {data} = await getTransactionList('/api/v1/transactions', {
+			const {data} = await getTransactionList('/api/v1/flows/list', {
 				page: 1,
 				page_size: 10,
 				status: activeTab === 'all' ? undefined : (activeTab as TransactionStatus),
 			});
 
-			const transformedData: HistoryTxRow[] = data.map((tx: Transaction) => ({
+			const transformedData: HistoryTxRow[] = data.flows.map((tx: Transaction) => ({
 				...tx,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
 			}));
