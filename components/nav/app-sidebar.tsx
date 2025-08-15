@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House } from 'lucide-react';
 import { NavMain } from '@/components/nav/nav-main';
 import { NavUser } from '@/components/nav/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, useSidebar } from '@/components/ui/sidebar';
 import LanguageSwitcher from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 // import type { BaseComponentProps } from '@/types';
@@ -17,6 +17,7 @@ import { useTranslations } from 'next-intl';
  */
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const t = useTranslations();
+	const { state } = useSidebar();
 	const sidebarData = {
 		navMain: [
 			{
@@ -78,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<NavMain items={sidebarData.navMain} />
 			</SidebarContent>
 			<div className='flex flex-col gap-8 justify-center items-center'>
-				<LanguageSwitcher />
+				{state === 'expanded' && <LanguageSwitcher />}
 				<SidebarFooter>
 					<NavUser
 						user={{
