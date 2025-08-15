@@ -22,8 +22,10 @@ const PendingTransactions: React.FC = () => {
 
 	const fetchPendingTransactions = useCallback(async () => {
 		try {
-			const { data } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
-			const transformedData: any[] = data.flows.map((tx: any) => ({
+			const { data:waitingData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
+			const { data:executedData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'ready' });
+
+			const transformedData: any[] = [...waitingData.flows,...executedData.flows].map((tx: any) => ({
 				...tx,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
 			}));
