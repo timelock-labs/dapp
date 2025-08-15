@@ -119,9 +119,9 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 	useEffect(() => {
 		if (timelockDetailResponse && timelockDetailResponse.success) {
-			setCurrentTimelockDetails(timelockDetailResponse.data);
+			setCurrentTimelockDetails(timelockDetailResponse.data.compound_timelocks);
 			if (onTimelockDetailsChange) {
-				onTimelockDetailsChange(timelockDetailResponse.data);
+				onTimelockDetailsChange(timelockDetailResponse.data.compound_timelocks);
 			}
 		}
 	}, [timelockDetailResponse, onTimelockDetailsChange]);
