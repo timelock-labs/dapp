@@ -34,11 +34,11 @@ const TimeLockerSplitPage = () => {
 				console.error('Error signing message:', error);
 			}
 		}
-	}, [isConnected, address, signMessage, walletConnect]);
+	}, [isConnected, address]);
 
 	useEffect(() => {
 		handleUserSignature();
-	}, [isConnected, address, handleUserSignature]);
+	}, [isConnected, address]);
 
 	useEffect(() => {
 		if (apiResponse && apiResponse.success) {

@@ -23,7 +23,6 @@ export function useApi(): UseApiReturn {
 			const fullUrl = `${baseUrl}${url}`;
 
 			const headers: Record<string, string> = {
-				'Content-Type': 'application/json',
 				...options.headers,
 			};
 
