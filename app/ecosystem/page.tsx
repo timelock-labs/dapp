@@ -5,7 +5,7 @@ import PartnersGrid from './components/PartnersGrid';
 import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import { useApi } from '@/hooks/useApi';
-import type { Partner } from "./types/types"
+import type { Partner } from './types/types';
 
 const EcosystemPage: React.FC = () => {
 	const t = useTranslations('Ecosystem');

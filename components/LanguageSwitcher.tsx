@@ -43,7 +43,7 @@ export default function LanguageSwitcher({ className = '', variant = 'default' }
 		// 1. 存到 cookie，next-intl 会用它做默认语言
 		cookieUtil.set('NEXT_LOCALE', lang, {
 			path: '/',
-			maxAge: 31536000 // 1 年有效期
+			maxAge: 31536000, // 1 年有效期
 		});
 		router.refresh();
 	};

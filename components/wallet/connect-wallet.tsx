@@ -104,8 +104,8 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
 					${fullWidth ?
-					`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
+						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
 				}
 
 				/* 悬停效果 */
@@ -124,8 +124,8 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
 					${fullWidth ?
-					`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
+						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
 					box-sizing: border-box !important;
 				}
 

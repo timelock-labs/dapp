@@ -24,13 +24,12 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	const { request: sendVerificationCode } = useApi();
 	const { request: verifyEmail } = useApi();
 
-
 	// Debounce email verification
 	useEffect(() => {
 		if (verificationCode.length === 6 && emailAddress) {
 			const handler = setTimeout(async () => {
 				try {
-					await verifyEmail("/api/v1/emails/verify", {
+					await verifyEmail('/api/v1/emails/verify', {
 						email: emailAddress,
 						code: verificationCode,
 					});
@@ -65,11 +64,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 		}
 
 		try {
-
 			try {
-				await sendVerificationCode("/api/v1/emails/send-verification", { email: emailAddress, remark: emailRemark });
+				await sendVerificationCode('/api/v1/emails/send-verification', { email: emailAddress, remark: emailRemark });
 				toast.success(t('verificationCodeSent'));
-			} catch { }
+			} catch {}
 		} catch (error) {
 			console.error('Failed to send verification code:', error);
 			toast.error(
@@ -145,7 +143,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 									<span className='text-green-500 mr-2'>✓</span>
 									{t('verificationSuccess')}
 								</div>
-								: <div className='flex items-center'>
+							:	<div className='flex items-center'>
 									<span className='text-red-500 mr-2'>✗</span>
 									{t('verificationCodeIncorrect')}
 								</div>

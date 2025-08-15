@@ -31,7 +31,7 @@ export default function Home() {
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
 	const [timelockData, setTimelockData] = useState<any>(null);
 
-	const { request: getTimelockList,isLoading } = useApi();
+	const { request: getTimelockList, isLoading } = useApi();
 
 	useEffect(() => {
 		if (isConnected) {
@@ -41,7 +41,7 @@ export default function Home() {
 
 	const fetchTimelockData = async () => {
 		try {
-			const {data} = await getTimelockList('/api/v1/timelock/list', { page: 1, page_size: 10 });
+			const { data } = await getTimelockList('/api/v1/timelock/list', { page: 1, page_size: 10 });
 			setTimelockData(data);
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);

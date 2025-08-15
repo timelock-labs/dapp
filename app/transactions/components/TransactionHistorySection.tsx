@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
 import AddSVG from '@/components/icons/add';
 import { formatDate, formatAddress } from '@/lib/utils';
-import getHistoryTxTypeStyle from "@/utils/getHistoryTxTypeStyle"
+import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -117,7 +117,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-							: <Network className='h-4 w-4 text-gray-700' />}
+						:	<Network className='h-4 w-4 text-gray-700' />}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -196,12 +196,13 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 					<button
 						type='button'
-						onClick={() => { router.push("/create-transaction") }}
+						onClick={() => {
+							router.push('/create-transaction');
+						}}
 						className='inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
 						<AddSVG />
 						<span>Create</span>
 					</button>
-
 				</div>
 				<div className='flex justify-between items-center'>
 					<div>

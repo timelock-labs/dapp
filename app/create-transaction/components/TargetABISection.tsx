@@ -35,8 +35,6 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 		}
 	};
 
-
-
 	// Convert ABI list to options format
 	const abiOptions = useMemo(() => {
 		if (!Array.isArray(abiList)) {
@@ -113,7 +111,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 
 	const handleAddABI = async (name: string, abi: string) => {
 		try {
-			await addAbi("/api/v1/abi/add", { name, description: '', abi });
+			await addAbi('/api/v1/abi/add', { name, description: '', abi });
 			toast.success('ABI added successfully!');
 			setIsAddABIOpen(false);
 		} catch (error: unknown) {
@@ -134,9 +132,9 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 						options={abiOptions}
 						placeholder={
 							isLoading ? 'Loading ABIs...'
-								: abiOptions.length === 0 ?
-									'No ABIs available'
-									: t('targetABI.placeholder')
+							: abiOptions.length === 0 ?
+								'No ABIs available'
+							:	t('targetABI.placeholder')
 						}
 					/>
 				</div>

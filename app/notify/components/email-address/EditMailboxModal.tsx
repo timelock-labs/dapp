@@ -17,7 +17,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 	const t = useTranslations('Notify.editMailbox');
 	const [emailRemark, setEmailRemark] = useState(initialData?.remark || '');
 
-	const {request: updateEmailNotification } = useApi();
+	const { request: updateEmailNotification } = useApi();
 
 	useEffect(() => {
 		if (initialData) {
@@ -43,7 +43,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 		}
 
 		try {
-			await updateEmailNotification("/api/v1/emails/remark",{id:parseInt(initialData.id), remark:emailRemark});
+			await updateEmailNotification('/api/v1/emails/remark', { id: parseInt(initialData.id), remark: emailRemark });
 
 			toast.success(t('updateSuccess'));
 			onSuccess();

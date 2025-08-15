@@ -18,9 +18,8 @@ const PendingTransactions: React.FC = () => {
 	const [pendingTxs, setPendingTxs] = useState<any[]>([]);
 
 	const { request: getPendingTransactions } = useApi();
-		const chains = useAuthStore(state => state.chains);
+	const chains = useAuthStore(state => state.chains);
 
-	// Fetch pending transactions
 	const fetchPendingTransactions = useCallback(async () => {
 		try {
 			const { data } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
@@ -63,7 +62,7 @@ const PendingTransactions: React.FC = () => {
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-							: <Network className='h-4 w-4 text-gray-700' />}
+						:	<Network className='h-4 w-4 text-gray-700' />}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -105,9 +104,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: any) => (
-				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
-			),
+			render: (row: any) => <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>,
 		},
 	];
 
@@ -117,7 +114,7 @@ const PendingTransactions: React.FC = () => {
 				<SectionHeader title='Pending Transactions' description='View your pending transactions' />
 			</div>
 			<div className='flex-1 overflow-hidden'>
-				<TableComponent<PendingTxRow> columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
+				<TableComponent<any> columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
 			</div>
 		</div>
 	);

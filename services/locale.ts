@@ -7,7 +7,7 @@ export function setUserLocale(locale: Locale) {
 	cookieUtil.set(LOCALE_COOKIE_NAME, locale, {
 		path: '/',
 		maxAge: 31536000,
-		sameSite: 'lax'
+		sameSite: 'lax',
 	});
 	window.location.reload();
 }

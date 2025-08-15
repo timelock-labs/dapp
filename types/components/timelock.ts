@@ -89,7 +89,7 @@ export interface CreationDetails {
 	timelockAddress: string;
 	initiatingAddress: string;
 	transactionHash: string;
-	explorerUrl:string;
+	explorerUrl: string;
 }
 
 /**

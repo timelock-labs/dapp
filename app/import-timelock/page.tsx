@@ -20,7 +20,7 @@ import { useApi } from '@/hooks/useApi';
 
 const ImportTimelockPage: React.FC = () => {
 	const t = useTranslations('ImportTimelock');
-	
+
 	const standardOptions = [{ value: 'compound', label: 'Compound' }];
 	const [selectedChain, setSelectedChain] = useState('');
 	const [contractAddress, setContractAddress] = useState('');
@@ -41,7 +41,6 @@ const ImportTimelockPage: React.FC = () => {
 	useEffect(() => {
 		fetchChains();
 	}, []);
-
 
 	useEffect(() => {
 		if (!selectedChain && chainId) {
@@ -74,7 +73,7 @@ const ImportTimelockPage: React.FC = () => {
 			setDetectedParameters(null);
 			clearParameters();
 		}
-	}, [contractAddress])
+	}, [contractAddress]);
 
 	const handleNextStep = async () => {
 		if (!selectedChain) {
@@ -131,7 +130,7 @@ const ImportTimelockPage: React.FC = () => {
 			is_imported: true, // Always true for imported contracts
 		};
 
-		await importTimelockRequest("/api/v1/timelock/create-or-import", importData);
+		await importTimelockRequest('/api/v1/timelock/create-or-import', importData);
 	};
 
 	useEffect(() => {
@@ -141,7 +140,7 @@ const ImportTimelockPage: React.FC = () => {
 		} else if (importTimelockData && !importTimelockData.success) {
 			toast.error('Failed to import timelock');
 		}
-	}, [importTimelockData, router, t])
+	}, [importTimelockData, router, t]);
 
 	return (
 		<PageLayout title={t('title')}>
@@ -149,39 +148,19 @@ const ImportTimelockPage: React.FC = () => {
 				<div className='flex-grow bg-white'>
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200'>
 						<div className='flex flex-col pr-8'>
-							<SectionHeader
-								title={t('title')}
-								description={t('description')}
-								icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
-							/>
+							<SectionHeader title={t('title')} description={t('description')} icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />} />
 						</div>
 						<div className='flex flex-col pl-8'>
-							<SelectInput 
-								label={t('selectChain')} 
-								value={selectedChain} 
-								onChange={setSelectedChain} 
-								options={chainOptions} 
-								placeholder={t('selectChainPlaceholder')} 
+							<SelectInput label={t('selectChain')} value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder={t('selectChainPlaceholder')} />
+							<TextInput label={t('contractAddress')} value={contractAddress} onChange={e => setContractAddress(e)} placeholder={t('contractAddressPlaceholder')} />
+							<SelectInput
+								label={t('contractStandard')}
+								value={contractStandard}
+								onChange={setContractStandard}
+								options={standardOptions}
+								placeholder={t('contractStandardPlaceholder')}
 							/>
-							<TextInput 
-								label={t('contractAddress')} 
-								value={contractAddress} 
-								onChange={(e) => setContractAddress(e)} 
-								placeholder={t('contractAddressPlaceholder')} 
-							/>
-							<SelectInput 
-								label={t('contractStandard')} 
-								value={contractStandard} 
-								onChange={setContractStandard} 
-								options={standardOptions} 
-								placeholder={t('contractStandardPlaceholder')} 
-							/>
-							<TextInput 
-								label={t('remarks')} 
-								value={remarks} 
-								onChange={setRemarks} 
-								placeholder={t('remarksPlaceholder')} 
-							/>
+							<TextInput label={t('remarks')} value={remarks} onChange={setRemarks} placeholder={t('remarksPlaceholder')} />
 						</div>
 					</div>
 					<div className='mx-auto flex justify-end mt-8'>

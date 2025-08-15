@@ -130,7 +130,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		// 修复 currentTimelockDetails 可能为 null 的问题
 		if (currentTimelockDetails && currentTimelockDetails.chain_id && Number(currentTimelockDetails.chain_id) !== chainId) {
 			const chainObject = getChainObject(Number(currentTimelockDetails.chain_id));
-			switchChain(chainObject)
+			switchChain(chainObject);
 		}
 	}, [chainId, currentTimelockDetails, switchChain]);
 

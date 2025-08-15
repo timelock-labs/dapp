@@ -25,14 +25,14 @@ const EmailNotificationPage: React.FC = () => {
 		id: number;
 	}>({ isOpen: false, email: '', id: 0 });
 
-	const {request:deleteEmailNotification} = useApi();
-	const {request:getEmailNotifications} = useApi()
+	const { request: deleteEmailNotification } = useApi();
+	const { request: getEmailNotifications } = useApi();
 
 	// Fetch email notifications
 	const fetchEmailNotifications = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			const {data} = await getEmailNotifications("/api/v1/emails",{ page: 1, page_size: 50 });
+			const { data } = await getEmailNotifications('/api/v1/emails', { page: 1, page_size: 50 });
 			setMailboxes(data?.emails || []);
 		} catch (error) {
 			console.error('Failed to fetch email notifications:', error);
@@ -56,7 +56,7 @@ const EmailNotificationPage: React.FC = () => {
 
 	const confirmDeleteMailbox = async () => {
 		try {
-			await deleteEmailNotification("/api/v1/emails/delete",{id:deleteConfirmDialog.id});
+			await deleteEmailNotification('/api/v1/emails/delete', { id: deleteConfirmDialog.id });
 			toast.success(t('deleteMailboxSuccess'));
 			await fetchEmailNotifications(); // Refresh data
 		} catch (error) {

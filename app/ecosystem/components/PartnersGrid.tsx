@@ -26,7 +26,7 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
 							<PageSkeleton key={index} />
 						))}
 					</div>
-					: <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+				:	<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 						{sponsors.map(partner => (
 							<FeatureCard
 								key={partner.id}
@@ -47,7 +47,7 @@ const PartnersGrid: React.FC<PartnersGridProps> = ({ sponsors, partners, isLoadi
 							<PageSkeleton key={index} />
 						))}
 					</div>
-					: <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+				:	<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 						{partners.map(partner => (
 							<FeatureCard
 								key={partner.id}

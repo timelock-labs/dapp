@@ -7,13 +7,13 @@ import { useApi } from '@/hooks/useApi';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
 	const t = useTranslations('CreateTransaction');
-	const {request: getEmailNotifications} = useApi();
+	const { request: getEmailNotifications } = useApi();
 	const [mailboxOptions, setMailboxOptions] = useState<any[]>([]);
 
 	useEffect(() => {
 		const fetchEmails = async () => {
 			try {
-				const {data} = await getEmailNotifications("/api/v1/emails",{ page: 1, page_size: 100 });
+				const { data } = await getEmailNotifications('/api/v1/emails', { page: 1, page_size: 100 });
 				setMailboxOptions(data?.emails || []);
 			} catch (error) {
 				console.error('Failed to fetch email notifications:', error);
@@ -37,13 +37,13 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 					{mailboxOptions.map(option => (
 						<div key={option.id} className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
 							<label htmlFor={String(option.id)} className='text-sm text-gray-700 cursor-pointer flex-1'>
-									{option.email_remark || option.email}
-								</label>
-							</div>
-						))}
-					</div>
+								{option.email_remark || option.email}
+							</label>
+						</div>
+					))}
 				</div>
 			</div>
+		</div>
 	);
 };
 

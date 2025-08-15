@@ -17,11 +17,7 @@ const WalletSection: React.FC = () => {
 		<div className='bg-white p-6 rounded-lg  flex flex-col items-center justify-center relative border border-gray-200 border-dashed'>
 			<div className='flex flex-col items-center justify-center'>
 				{/* Icon container with dotted border */}
-				<div
-					className='w-12 h-12 border-2 border-gray-200
-          flex items-center justify-center rounded-lg relative'>
-					{/* Placeholder SVG resembling an inbox/box icon */}
-
+				<div className='w-12 h-12 border-2 border-gray-200 flex items-center justify-center rounded-lg relative'>
 					<Image src={timelockewallet} alt='Timelock Wallet' width={20} height={16} className='w-5 h-4' />
 				</div>
 			</div>

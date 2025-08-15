@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import bg_png from '../images/bg.png'; 
+import bg_png from '../images/bg.png';
 
 const EcosystemSearchHeader: React.FC = () => {
 	const t = useTranslations('Ecosystem');
@@ -15,7 +15,7 @@ const EcosystemSearchHeader: React.FC = () => {
 				backgroundPosition: 'center',
 			}}>
 			<Image src='/ecoPanter.png' alt='Ecosystem Partner' width={20} height={20} className='text-gray-400' />
-			<h2 className='text-xl font-semibold'>{t("FindEcosystemPartner")}</h2>
+			<h2 className='text-xl font-semibold'>{t('FindEcosystemPartner')}</h2>
 		</div>
 	);
 };

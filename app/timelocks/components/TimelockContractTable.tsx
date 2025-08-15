@@ -87,7 +87,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 
 				return (
 					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ? (
+						{chainLogo ?
 							<Image
 								src={chainLogo}
 								alt={chainName}
@@ -99,9 +99,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-						) : (
-							<Network className='h-4 w-4 text-gray-700' />
-						)}
+						:	<Network className='h-4 w-4 text-gray-700' />}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);

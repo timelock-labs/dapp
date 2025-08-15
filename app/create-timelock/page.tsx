@@ -120,17 +120,15 @@ const CreateTimelockPage: React.FC = () => {
 				description: error instanceof Error ? error.message : 'Unknown error occurred',
 			});
 		}
-	}
-
-
+	};
 
 	const handleConfirmDialogConfirm = async (remarkFromDialog: string) => {
 		await createTimelockReq('/api/v1/timelock/create-or-import', {
 			chain_id: formState.selectedChain,
 			remark: remarkFromDialog || '',
-			standard: "compound",
+			standard: 'compound',
 			contract_address: dialogDetails.timelockAddress,
-			is_imported: false
+			is_imported: false,
 		});
 
 		setIsConfirmDialogOpen(false);
@@ -144,7 +142,7 @@ const CreateTimelockPage: React.FC = () => {
 					<CreateTimelockForm
 						selectedChain={formState.selectedChain}
 						onChainChange={handleChainChange}
-						selectedStandard={"compound"}
+						selectedStandard={'compound'}
 						minDelay={formState.minDelay}
 						onMinDelayChange={handleMinDelayChange}
 						owner={formState.owner || ''}

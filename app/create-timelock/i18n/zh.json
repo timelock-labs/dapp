@@ -1,5 +1,5 @@
 {
-    "CreateTimelock": {
+	"CreateTimelock": {
 		"createTimelock": "创建时间锁",
 		"createTimelockDescription": "选择合适的标准创建属于您的 Timelock。",
 		"selectChain": "选择链",
@@ -33,7 +33,7 @@
 		"compoundStandardDescription": "适合小型企业入门",
 		"openzeppelinStandardLabel": "OpenZeppelin 标准 Timelock 合约",
 		"openzeppelinStandardDescription": "适合成长型企业的高级功能",
-        "contractRemarkPlaceholder": "请输入备注",
-        "contractRemarkRequired": "备注为必填项"
+		"contractRemarkPlaceholder": "请输入备注",
+		"contractRemarkRequired": "备注为必填项"
 	}
 }

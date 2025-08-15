@@ -87,7 +87,6 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 			if (!provider) {
 				throw new Error('Provider not available');
 			}
-			
 
 			const controller = createController();
 
