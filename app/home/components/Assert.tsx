@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TotalAssetValue from './TotalAssetValue';
-import AssetList from './AssetList';
 import PendingTransactions from './PendingTransactions';
-// Import local JSON data
-import ethData from '../asserts/eth.json';
-import arbitrumData from '../asserts/arbitrum.json';
-import sepoliaData from '../asserts/sepolia.json';
+import { useApi } from '@/hooks/useApi';
+
 
 interface AssertProps {
 	// Props interface for future extensibility
@@ -16,11 +13,27 @@ interface AssertProps {
 }
 
 const Assert: React.FC<AssertProps> = () => {
-	// Combine all assets from local JSON data
+	const { request: getUerAssets } = useApi();
+	const [userAssets, setUserAssets] = useState();
+
+	useEffect(() => {
+		fetchUserAssets();
+	}, []);
+
+	const fetchUserAssets = async () => {
+		try {
+			const { data } = await getUerAssets('/api/v1/assets');
+			alert(data);
+			setUserAssets(data);
+		} catch (error) {
+			console.error('Failed to fetch user assets:', error);
+		}
+	};
+
 	const allAssets = useMemo(() => {
-		const ethAssets = ethData.data?.items || [];
-		const arbitrumAssets = arbitrumData.data?.items || [];
-		const sepoliaAssets = sepoliaData.data?.items || [];
+		const ethAssets = [];
+		const arbitrumAssets = [];
+		const sepoliaAssets = [];
 
 		return [...ethAssets, ...arbitrumAssets, ...sepoliaAssets];
 	}, []);
@@ -29,16 +42,6 @@ const Assert: React.FC<AssertProps> = () => {
 	const totalUsdValue = useMemo(() => {
 		return allAssets.reduce((total, asset) => total + (asset.quote || 0), 0);
 	}, [allAssets]);
-
-	const assetsResponse = {
-		success: true,
-		data: {
-			assets: allAssets,
-			total_usd_value: totalUsdValue,
-		},
-	};
-
-	const assets = assetsResponse?.data?.assets || [];
 
 	return (
 		<PageLayout title='Home'>
@@ -54,7 +57,8 @@ const Assert: React.FC<AssertProps> = () => {
 				<div className='grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow h-full'>
 					{/* Asset List */}
 					<div className='md:col-span-1 flex flex-col'>
-						<AssetList assets={assets} />
+						{/* <AssetList assets={userAssets} /> */}
+						{userAssets}
 					</div>
 
 					{/* Pending Transactions */}

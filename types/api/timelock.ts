@@ -2,7 +2,7 @@
  * Timelock-related API types
  */
 
-import type { Address, Hash, Timestamp, ContractStandard } from '../common';
+import type { Address, Timestamp, ContractStandard } from '../common';
 import type { ApiResponse } from './base';
 
 /**

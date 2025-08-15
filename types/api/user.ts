@@ -2,7 +2,7 @@
  * User-related API types
  */
 
-import type { Address, Timestamp } from '../common';
+import type { Address } from '../common';
 
 /**
  * User data structure
