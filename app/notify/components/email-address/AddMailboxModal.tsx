@@ -67,7 +67,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 		try {
 
 			try {
-				await sendVerificationCode("/api/v1/emails/send-verification", { email: emailAddress });
+				await sendVerificationCode("/api/v1/emails/send-verification", { email: emailAddress, remark: emailRemark });
 				toast.success(t('verificationCodeSent'));
 			} catch { }
 		} catch (error) {
