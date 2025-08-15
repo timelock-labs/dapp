@@ -15,6 +15,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
 import AddSVG from '@/components/icons/add';
+import { formatDate, formatAddress } from '@/lib/utils';
+import getHistoryTxTypeStyle from "@/utils/getHistoryTxTypeStyle"
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -36,21 +38,6 @@ interface HistoryTxRow {
 	chainIcon: React.ReactNode;
 }
 
-const getHistoryTxTypeStyle = (type: string) => {
-	switch (type) {
-		case 'executed':
-			return 'bg-green-100 text-green-800';
-		case 'expired':
-			return 'bg-red-100 text-red-800';
-		case 'cancelled':
-			return 'bg-gray-100 text-gray-800';
-		case 'queued':
-			return 'bg-blue-100 text-blue-800';
-		default:
-			return 'bg-gray-100 text-gray-800';
-	}
-};
-
 /**
  * Transaction history section component with filtering and export functionality
  *
@@ -64,7 +51,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const chains = useAuthStore(state => state.chains);
 
-	const {request: getTransactionList} = useApi();
+	const { request: getTransactionList } = useApi();
 	const router = useRouter();
 
 	const handleTabChange = (tabId: string) => {
@@ -74,7 +61,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	// Fetch transaction history
 	const fetchHistoryTransactions = useCallback(async () => {
 		try {
-			const {data} = await getTransactionList('/api/v1/flows/list', {
+			const { data } = await getTransactionList('/api/v1/flows/list', {
 				page: 1,
 				page_size: 10,
 				status: activeTab === 'all' ? undefined : (activeTab as TransactionStatus),
@@ -106,28 +93,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		{ id: 'expired', label: t('expired') },
 	];
 
-	const formatAddress = (address: string) => {
-		if (!address) return '';
-		return `${address.slice(0, 6)}...${address.slice(-4)}`;
-	};
-
-	const formatDate = (dateString: string) => {
-		if (!dateString) return '-';
-		try {
-			const date = new Date(dateString);
-			const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-			const month = months[date.getMonth()];
-			const day = date.getDate();
-			const year = date.getFullYear();
-			const hours = date.getHours().toString().padStart(2, '0');
-			const minutes = date.getMinutes().toString().padStart(2, '0');
-			return `${month} ${day}, ${year} ${hours}:${minutes}`;
-		} catch (error) {
-			console.error('Error formatting date:', error);
-			return dateString;
-		}
-	};
-
 	const columns = [
 		{
 			key: 'chain',
@@ -152,7 +117,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-						:	<Network className='h-4 w-4 text-gray-700' />}
+							: <Network className='h-4 w-4 text-gray-700' />}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -231,7 +196,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 					<button
 						type='button'
-						onClick={()=>{router.push("/create-transaction")}}
+						onClick={() => { router.push("/create-transaction") }}
 						className='inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
 						<AddSVG />
 						<span>Create</span>
@@ -242,9 +207,9 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 					<div>
 						<TabbedNavigation tabs={historyTabs} activeTab={activeTab} onTabChange={handleTabChange} />
 					</div>
-					<div className='flex items-center space-x-3'>
-						<SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' />
-						<ExportButton onClick={handleExport} />
+					<div className='flex items-center space-x-3 pb-2'>
+						{/* <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' /> */}
+						{/* <ExportButton onClick={handleExport} /> */}
 					</div>
 				</div>
 			</div>

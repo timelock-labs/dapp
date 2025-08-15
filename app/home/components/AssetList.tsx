@@ -77,6 +77,8 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 				<span className='text-right'>Amount/Value</span>
 			</div>
 
+			{JSON.stringify(assets)}
+
 			{/* Asset List Items */}
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
 				{currentAssets.map((asset, index) => (

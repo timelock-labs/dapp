@@ -71,21 +71,25 @@ const TransactionEncoderPage: React.FC = () => {
 		setTargetCallData(''); // Reset calldata when function or arguments change
 		if (!!functionValue && argumentValues.length > 0) {
 			try {
-				const types = functionValue
+				const types = functionValue ?
 					.match(/\(([^)]*)\)/)?.[1]
-					.split(',')
-					.map(type => type.trim())
-					.filter(type => type.length > 0);
+						.split(',')
+						.map((type: any) => type.trim())
+						.filter((type: any) => type.length > 0) || [];
 
-				const calldata = ethers.utils.defaultAbiCoder.encode(
-					types || [],
-					argumentValues.map((arg, idx) =>
-						types && types[idx] === 'address' ? arg
+				const args = argumentValues.map((arg, idx) =>
+					types && types[idx] === 'address' ? arg
 						: arg.startsWith('0x') ? arg
-						: ethers.utils.parseEther(arg)
-					)
-				);
-				setTargetCallData(calldata);
+							: ethers.utils.parseEther(arg)
+				)
+
+				if (types?.length === args.length) {
+					const calldata = ethers.utils.defaultAbiCoder.encode(
+						types || [],
+						args
+					);
+					setTargetCallData(calldata);
+				}
 			} catch (err) {
 				setTargetCallData('');
 				console.error('Failed to encode calldata:', err);
