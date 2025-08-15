@@ -7,6 +7,9 @@ import React from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 
+// Utils
+import { cookieUtil } from '@/utils/cookieUtil';
+
 // Type imports
 import type { BaseComponentProps } from '@/types';
 
@@ -38,7 +41,10 @@ export default function LanguageSwitcher({ className = '', variant = 'default' }
 	const handleSwitch = (lang: string) => {
 		if (lang === currentLocale) return;
 		// 1. 存到 cookie，next-intl 会用它做默认语言
-		document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`; // 1 年有效期
+		cookieUtil.set('NEXT_LOCALE', lang, {
+			path: '/',
+			maxAge: 31536000 // 1 年有效期
+		});
 		router.refresh();
 	};
 

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AppStateSchema, type AppState, type User, type TimelockContractItem } from './schema';
 import { zodMiddleware } from './zodMiddleware';
+import { cookieUtil } from '../utils/cookieUtil';
 import axios from 'axios';
 
 // 定义 Store 的 actions (方法)
@@ -18,115 +19,108 @@ type AppActions = {
 // 创建 store，并包裹 zodMiddleware
 export const useAuthStore = create<AppState & AppActions>()(
 	persist(
-		zodMiddleware<AppState, AppActions>(
-			AppStateSchema,
-			(set, get) => ({
-				user: null,
-				isAuthenticated: false,
-				accessToken:
-					document?.cookie
-						.split('; ')
-						.find(row => row.startsWith('accessToken='))
-						?.split('=')[1] || null,
-				refreshToken:
-					document?.cookie
-						.split('; ')
-						.find(row => row.startsWith('refreshToken='))
-						?.split('=')[1] || null,
-				expiresAt: null, // 初始化为 null，稍后会从 cookie 中获取
-				// 初始化状态
-				chains: [],
-				allTimelocks: [],
-				_hasHydrated: false,
+		zodMiddleware<AppState, AppActions>(AppStateSchema, (set, get) => ({
+			user: null,
+			isAuthenticated: false,
+			accessToken: cookieUtil.get('accessToken'),
+			refreshToken: cookieUtil.get('refreshToken'),
+			expiresAt: null, // 初始化为 null，稍后会从 cookie 中获取
+			// 初始化状态
+			chains: [],
+			allTimelocks: [],
+			_hasHydrated: false,
 
-				login: data => {
-					// 写入到 cookie
-					document.cookie = `accessToken=${data.accessToken}; path=/`;
-					document.cookie = `refreshToken=${data.refreshToken}; path=/`;
-					document.cookie = `expiresAt=${data.expiresAt}; path=/`;
-					// The persist middleware will automatically save the state.
-					set({
-						user: data.user,
-						isAuthenticated: true,
-						accessToken: data.accessToken,
-						refreshToken: data.refreshToken,
-						expiresAt: new Date(data.expiresAt).getTime(),
-					});
-				},
-				logout: () => {
-					// 从 cookie 中删除
-					document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-					document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-					document.cookie = 'expiresAt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-					// The persist middleware will automatically clear the persisted state.
-					set({
-						user: null,
-						isAuthenticated: false,
-						accessToken: null,
-						refreshToken: null,
-						expiresAt: null,
-						allTimelocks: [],
-					});
-				},
-				fetchChains: async () => {
-					try {
-						const response = await axios.post('/api/v1/chain/list');
-						if (response.data.success) {
-							if (response.data.data && Array.isArray(response.data.data.chains)) {
-								set({ chains: response.data.data.chains });
-							} else {
-								set({ chains: [] }); // Ensure chains is always an array
-							}
+			login: data => {
+				// 写入到 cookie
+				cookieUtil.set('accessToken', data.accessToken);
+				cookieUtil.set('refreshToken', data.refreshToken);
+				cookieUtil.set('expiresAt', data.expiresAt);
+				// The persist middleware will automatically save the state.
+				set({
+					user: data.user,
+					isAuthenticated: true,
+					accessToken: data.accessToken,
+					refreshToken: data.refreshToken,
+					expiresAt: new Date(data.expiresAt).getTime(),
+				});
+			},
+			logout: () => {
+				// 从 cookie 中删除
+				cookieUtil.remove('accessToken');
+				cookieUtil.remove('refreshToken');
+				cookieUtil.remove('expiresAt');
+				// The persist middleware will automatically clear the persisted state.
+				set({
+					user: null,
+					isAuthenticated: false,
+					accessToken: null,
+					refreshToken: null,
+					expiresAt: null,
+					allTimelocks: [],
+				});
+			},
+			fetchChains: async () => {
+				try {
+					const response = await axios.post('/api/v1/chain/list');
+					if (response.data.success) {
+						if (response.data.data && Array.isArray(response.data.data.chains)) {
+							set({ chains: response.data.data.chains });
 						} else {
-							set({ chains: [] }); // Ensure chains is always an array on error
+							set({ chains: [] }); // Ensure chains is always an array
 						}
-					} catch (error) {
+					} else {
 						set({ chains: [] }); // Ensure chains is always an array on error
 					}
-				},
-				refreshAccessToken: async () => {
-					const state = get();
-					if (!state.refreshToken) {
-						console.warn('No refresh token available.');
-						return;
-					}
+				} catch (error) {
+					set({ chains: [] }); // Ensure chains is always an array on error
+				}
+			},
+			refreshAccessToken: async () => {
+				const state = get();
+				if (!state.refreshToken) {
+					console.warn('No refresh token available.');
+					return;
+				}
 
-					try {
-						const response = await fetch('/api/v1/auth/refresh', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								refresh_token: state.refreshToken,
-							}),
+				try {
+					const response = await fetch('/api/v1/auth/refresh', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							refresh_token: state.refreshToken,
+						}),
+					});
+
+					if (response.ok) {
+						const data = await response.json();
+						// 更新 cookie
+						cookieUtil.set('accessToken', data.data.access_token);
+						cookieUtil.set('refreshToken', data.data.refresh_token);
+						cookieUtil.set('expiresAt', data.data.expires_at);
+						// Persist middleware will automatically save the updated tokens.
+						set({
+							accessToken: data.data.access_token,
+							refreshToken: data.data.refresh_token,
+							expiresAt: new Date(data.data.expires_at).getTime(),
 						});
-
-						if (response.ok) {
-							const data = await response.json();
-							// Persist middleware will automatically save the updated tokens.
-							set({
-								accessToken: data.data.access_token,
-								refreshToken: data.data.refresh_token,
-								expiresAt: new Date(data.data.expires_at).getTime(),
-							});
-						} else {
-							console.error('Failed to refresh access token:', response.statusText);
-							// Optionally, log out the user if refresh fails
-							get().logout();
-						}
-					} catch (error) {
-						console.error('Error refreshing access token:', error);
+					} else {
+						console.error('Failed to refresh access token:', response.statusText);
+						// Optionally, log out the user if refresh fails
 						get().logout();
 					}
-				},
-				loginWithInvalidData: () => {
-					// This action deliberately sets data that does not conform to the schema
-					set({ user: { id: '123', name: 'x', email: 'bad-email' } });
-				},
-				setAllTimelocks: timelocks => set({ allTimelocks: timelocks }),
-			})
-		),
+				} catch (error) {
+					console.error('Error refreshing access token:', error);
+					get().logout();
+				}
+			},
+			loginWithInvalidData: () => {
+				// This action deliberately sets data that does not conform to the schema
+				set({ user: { id: '123', name: 'x', email: 'bad-email' } });
+			},
+			setAllTimelocks: timelocks => set({ allTimelocks: timelocks }),
+		})),
 		{
 			name: 'auth-storage', // 使用唯一的键名以避免冲突
 			storage: createJSONStorage(() => localStorage), // 按要求使用 localStorage

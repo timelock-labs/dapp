@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useIsMobile } from '@/hooks/useMobile';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { cookieUtil } from '@/utils/cookieUtil';
 import { SidebarContextProps } from './types';
 import { SIDEBAR_COOKIE_NAME, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, SIDEBAR_KEYBOARD_SHORTCUT } from './constants';
 
@@ -48,7 +49,10 @@ export function SidebarProvider({
 			}
 
 			// This sets the cookie to keep the sidebar state.
-			document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+			cookieUtil.set(SIDEBAR_COOKIE_NAME, String(openState), {
+				path: '/',
+				maxAge: SIDEBAR_COOKIE_MAX_AGE
+			});
 		},
 		[setOpenProp, open]
 	);
