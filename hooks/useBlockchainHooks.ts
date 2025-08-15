@@ -122,6 +122,7 @@ export function useContractDeployment() {
 	);
 
 	return {
+		signer,
 		deployContract,
 		isLoading,
 		error,
