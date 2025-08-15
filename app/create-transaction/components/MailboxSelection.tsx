@@ -14,7 +14,7 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 		const fetchEmails = async () => {
 			try {
 				const {data} = await getEmailNotifications("/api/v1/emails",{ page: 1, page_size: 100 });
-				setMailboxOptions(data?.emils || []);
+				setMailboxOptions(data?.emails || []);
 			} catch (error) {
 				console.error('Failed to fetch email notifications:', error);
 			}
