@@ -28,7 +28,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 	const fetchAbiList = async () => {
 		try {
 			const { data } = await getAbiList('/api/v1/abi/list');
-			setAbiList(data || []);
+			setAbiList(data?.abis || []);
 		} catch (error) {
 			console.error('Failed to fetch ABI list:', error);
 			toast.error(t('fetchABIError', { message: error instanceof Error ? error.message : 'Unknown error' }));
@@ -139,7 +139,6 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 									: t('targetABI.placeholder')
 						}
 					/>
-					{JSON.stringify(abiOptions)}
 				</div>
 				<button
 					type='button'
