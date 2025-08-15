@@ -18,6 +18,5 @@ export interface ABIItem {
  * ABI list response structure
  */
 export interface ABIListResponse {
-	shared_abis: ABIItem[];
-	user_abis: ABIItem[];
+	abis: ABIItem[];
 }

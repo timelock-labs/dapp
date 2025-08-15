@@ -47,8 +47,7 @@ const ABILibPage: React.FC = () => {
 
 	useEffect(() => {
 		if (abiListsRes?.success) {
-			const allAbis = [...(abiListsRes.data.user_abis || []), ...(abiListsRes.data.shared_abis || [])];
-			setAbis(allAbis);
+			setAbis(abiListsRes.data.abis);
 		} else if (abiListsRes && !abiListsRes.success) {
 			toast.error(t('fetchAbiListError', { message: abiListsRes.error?.message || 'Unknown error' }));
 		}
