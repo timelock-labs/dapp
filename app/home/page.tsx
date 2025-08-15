@@ -6,8 +6,6 @@ import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 
-import getUserToken from '@/hooks/moralisApi';
-
 // 加载骨架屏组件
 const LoadingSkeleton = () => (
 	<div className='animate-pulse space-y-6 p-6'>
@@ -33,8 +31,6 @@ export default function Home() {
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
 	const [timelockData, setTimelockData] = useState<any>(null);
 
-	const [timelockAssets, setTimelockAssets] = useState<any[]>([]);
-
 	const { request: getTimelockList, isLoading } = useApi();
 
 	useEffect(() => {
@@ -47,17 +43,6 @@ export default function Home() {
 		try {
 			const { data } = await getTimelockList('/api/v1/timelock/list', { page: 1, page_size: 10 });
 			setTimelockData(data);
-
-			const timelocks = data?.compound_timelocks || [];
-			if (timelocks.length > 0) {
-				const t = timelocks[0]
-				alert(JSON.stringify(t, null, 2));
-				const r = await getUserToken(t.chain_id.toString(), t.contract_address)
-				alert(JSON.stringify(r, null, 2))
-				setCurrentView('assert');
-			} else {
-				setCurrentView('create');
-			}
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);
 		}
@@ -101,7 +86,7 @@ export default function Home() {
 			case 'loading':
 				return <LoadingSkeleton />;
 			case 'assert':
-				return <Assert />;
+				return <Assert timelocks={timelockData.compound_timelocks} />;
 			case 'create':
 			default:
 				return <CreateProtocol />;
@@ -110,7 +95,6 @@ export default function Home() {
 
 	return (
 		<div className='min-h-screen'>
-			{JSON.stringify(timelockData?.compound_timelocks, null, 2)}
 			<PageWrapper isVisible={showContent}>{renderCurrentView()}</PageWrapper>
 		</div>
 	);

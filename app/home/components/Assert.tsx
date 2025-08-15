@@ -5,52 +5,60 @@ import PageLayout from '@/components/layout/PageLayout';
 import TotalAssetValue from './TotalAssetValue';
 import PendingTransactions from './PendingTransactions';
 import { useApi } from '@/hooks/useApi';
+import useMoralis from '@/hooks/useMoralis';
 
 
 interface AssertProps {
 	// Props interface for future extensibility
 	className?: string;
+	timelocks: any[]; // Assuming timelocks is an array of objects
 }
 
-const Assert: React.FC<AssertProps> = () => {
+const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	const { request: getUerAssets } = useApi();
-	const [userAssets, setUserAssets] = useState();
+	const [userAssets, setUserAssets] = useState()
+
+	const  moralis = useMoralis();
+	const { getUserAssets } = moralis;
 
 	useEffect(() => {
 		fetchUserAssets();
 	}, []);
 
 	const fetchUserAssets = async () => {
-		try {
-			const { data } = await getUerAssets('/api/v1/assets');
-			alert(data);
-			setUserAssets(data);
-		} catch (error) {
-			console.error('Failed to fetch user assets:', error);
+		if (!timelocks || timelocks.length === 0) {
+			console.warn('No timelocks provided');
+			return;
 		}
-	};
-
-	const allAssets = useMemo(() => {
-		const ethAssets = [];
-		const arbitrumAssets = [];
-		const sepoliaAssets = [];
-
-		return [...ethAssets, ...arbitrumAssets, ...sepoliaAssets];
-	}, []);
-
-	// Calculate total USD value
-	const totalUsdValue = useMemo(() => {
-		return allAssets.reduce((total, asset) => total + (asset.quote || 0), 0);
-	}, [allAssets]);
+		// Assuming timelocks is an array of objects with chain_id and contract_address properties
+		let assetsList = [];
+		for (const timelock of timelocks) {
+			try {
+				const assets = await getUserAssets(timelock.chain_id, timelock.contract_address);
+				console.log(`Fetched assets for timelock: ${JSON.stringify(timelock)}`, assets);
+				if (assets && assets.length > 0) {
+					// Process assets as needed
+					assetsList.push(...assets);
+				} else {
+					console.warn(`No assets found for timelock: ${JSON.stringify(timelock)}`);
+				}
+			} catch (error) {
+				console.error('Failed to fetch user assets:', error);
+			}
+		}
+		setUserAssets(assetsList);
+	}
 
 	return (
 		<PageLayout title='Home'>
-			{' '}
+			{JSON.stringify(timelocks, null, 2)}
+			{JSON.stringify(userAssets, null, 2)}
+					{userAssets}
 			{/* 使用 PageLayout 包裹 */}
 			<div className='flex flex-col space-y-6'>
 				{/* Top Section: Total Asset Value */}
 				<div className='w-full'>
-					<TotalAssetValue totalUsdValue={totalUsdValue} />
+					<TotalAssetValue totalUsdValue={2} />
 				</div>
 
 				{/* Bottom Section: Asset List and Pending Transactions */}
@@ -58,7 +66,7 @@ const Assert: React.FC<AssertProps> = () => {
 					{/* Asset List */}
 					<div className='md:col-span-1 flex flex-col'>
 						{/* <AssetList assets={userAssets} /> */}
-						{userAssets}
+				
 					</div>
 
 					{/* Pending Transactions */}
