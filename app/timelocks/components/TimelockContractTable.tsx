@@ -6,6 +6,7 @@ import TableComponent from '@/components/ui/TableComponent';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useRouter, useParams } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
+import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
@@ -22,11 +23,11 @@ interface TimelockContractTableProps extends BaseComponentProps {
 const getStatusBadgeStyle = (status: string) => {
 	switch (status.toLowerCase()) {
 		case 'active':
-			return 'bg-green-100 text-green-800 border border-green-200';
+			return 'text-emerald-600 font-medium';
 		case 'pending':
-			return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+			return 'text-amber-600 font-medium';
 		default:
-			return 'bg-gray-100 text-gray-800 border border-gray-200';
+			return 'text-slate-600 font-medium';
 	}
 };
 
@@ -39,6 +40,8 @@ const getStatusBadgeStyle = (status: string) => {
 const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onDataUpdate, className }) => {
 	const t = useTranslations('TimelockTable');
 	const router = useRouter();
+	const params = useParams();
+	const locale = params.locale as string;
 	const chains = useAuthStore(state => state.chains);
 
 	const { data: deleteResponse, request: deleteContract } = useApi();
@@ -84,7 +87,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 
 				return (
 					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ?
+						{chainLogo ? (
 							<Image
 								src={chainLogo}
 								alt={chainName}
@@ -96,7 +99,9 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-						:	<Network className='h-4 w-4 text-gray-700' />}
+						) : (
+							<Network className='h-4 w-4 text-gray-700' />
+						)}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -105,9 +110,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'name',
 			header: t('name'),
-			render: (row: TimelockContractItem) => (
-				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeStyle(row.status)}`}>{row.remark}</span>
-			),
+			render: (row: TimelockContractItem) => <span className={`text-sm ${getStatusBadgeStyle(row.status)}`}>{row.remark}</span>,
 		},
 		{
 			key: 'contract_address',
@@ -121,12 +124,67 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'user_permissions',
 			header: t('userPermissions'),
-			render: (row: TimelockContractItem) => (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions?.join(', ') || t('none'),
+			render: (row: TimelockContractItem) => {
+				const permissions = (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions;
+
+				if (!permissions || permissions.length === 0) {
+					return <span className='text-gray-500'>{t('none')}</span>;
+				}
+
+				const getRoleStyle = (role: string) => {
+					switch (role.toLowerCase()) {
+						case 'admin':
+							return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
+						case 'creator':
+							return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm';
+						case 'admincreator':
+							return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm';
+						default:
+							return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200 shadow-sm';
+					}
+				};
+
+				const getRoleDisplayName = (role: string) => {
+					switch (role.toLowerCase()) {
+						case 'admin':
+							return 'Admin';
+						case 'creator':
+							return 'Creator';
+						case 'admincreator':
+							return 'Admin & Creator';
+						default:
+							return role;
+					}
+				};
+
+				return (
+					<div className='flex flex-wrap gap-2'>
+						{permissions.map((permission, index) => (
+							<span
+								key={index}
+								className={`px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 ${getRoleStyle(permission)}`}>
+								<span className='w-1.5 h-1.5 rounded-full bg-current opacity-60 mr-1.5'></span>
+								{getRoleDisplayName(permission)}
+							</span>
+						))}
+					</div>
+				);
+			},
 		},
 		{
-			key: 'min_delay',
+			key: 'delay',
 			header: t('minDelay'),
-			render: (row: TimelockContractItem) => (row as TimelockContractItem & { min_delay?: number }).min_delay,
+			render: (row: TimelockContractItem) => {
+				const delay = (row as TimelockContractItem & { delay?: number }).delay;
+				if (!delay) return '-';
+
+				const formattedTime = formatSecondsToLocalizedTime(delay, locale === 'zh' ? 'zh' : 'en');
+				return (
+					<span className='font-mono'>
+						{delay.toLocaleString()} <span className='text-gray-500'>({formattedTime})</span>
+					</span>
+				);
+			},
 		},
 		{
 			key: 'created_at',
