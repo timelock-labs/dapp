@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
+import { formatTimeRemaining } from '@/lib/utils';
 
 // Define interface for the data this dialog will display
 interface CheckParametersDialogProps {
@@ -97,23 +98,19 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 						<span className='break-all'>{parameters.contractAddress}</span>
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('minDelay')}>
-						{parameters.minDelay.toLocaleString()}
-						{t('seconds')}
+						{parameters.minDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.minDelay)})
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('admin')}>
 						<span className='break-all'>{parameters.admin}</span>
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('gracePeriod')}>
-						{parameters.gracePeriod.toLocaleString()}
-						{t('seconds')}
+						{parameters.gracePeriod.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.gracePeriod)})
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('minimumDelay')}>
-						{parameters.minimumDelay.toLocaleString()}
-						{t('seconds')}
+						{parameters.minimumDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.minimumDelay)})
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('maximumDelay')}>
-						{parameters.maximumDelay.toLocaleString()}
-						{t('seconds')}
+						{parameters.maximumDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.maximumDelay)})
 					</ParameterDisplayRow>
 				</div>
 
