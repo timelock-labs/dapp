@@ -43,7 +43,7 @@ export function useApi(): UseApiReturn {
 				setIsLoading(false);
 
 				return data;
-			} catch (error: unknown) {
+			} catch (error: any) {
 				if (error.response?.status === 401) {
 					router.push('/login');
 					return;

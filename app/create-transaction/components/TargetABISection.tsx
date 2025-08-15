@@ -139,6 +139,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 									: t('targetABI.placeholder')
 						}
 					/>
+					{JSON.stringify(abiOptions)}
 				</div>
 				<button
 					type='button'

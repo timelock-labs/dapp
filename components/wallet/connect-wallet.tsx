@@ -2,12 +2,14 @@
 
 import { ConnectButton } from 'thirdweb/react';
 import { createWallet } from 'thirdweb/wallets';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
 import { client, supportedChains } from '@/lib/thirdweb';
+
+import { useActiveAccount, useActiveWalletConnectionStatus } from 'thirdweb/react';
 
 const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
 
@@ -62,6 +64,14 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 
 	const wrapperClass = cn('connect-wallet-container', fullWidth ? 'w-full' : 'w-auto', className);
 
+	const connectionStatus = useActiveWalletConnectionStatus();
+
+	useEffect(() => {
+		if (connectionStatus === 'disconnected') {
+			router.push('/login');
+		}
+	}, [connectionStatus]);
+
 	return (
 		<div className={wrapperClass}>
 			<ConnectButton
@@ -94,8 +104,8 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
 					${fullWidth ?
-						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
+					`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+					: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
 				}
 
 				/* 悬停效果 */
@@ -114,8 +124,8 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
 					${fullWidth ?
-						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
+					`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+					: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
 					box-sizing: border-box !important;
 				}
 

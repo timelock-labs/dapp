@@ -102,12 +102,9 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 					setIsLoadingDetails(true);
 					try {
 						await fetchTimelockDetail('/api/v1/timelock/detail', {
-							method: 'GET',
-							body: JSON.stringify({
-								chain_id: fullTimelock.chain_id,
-								contract_address: fullTimelock.contract_address,
-								standard: 'compound',
-							}),
+							chain_id: fullTimelock.chain_id,
+							contract_address: fullTimelock.contract_address,
+							standard: 'compound',
 						});
 					} catch (error) {
 						console.error('Failed to fetch timelock details:', error);
