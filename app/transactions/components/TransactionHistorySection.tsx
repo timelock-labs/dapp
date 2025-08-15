@@ -120,7 +120,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-						:	<Network className='h-4 w-4 text-gray-700' />}
+							: <Network className='h-4 w-4 text-gray-700' />}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -171,8 +171,8 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('actions'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex space-x-2'>
-					<ExecuteButton timelock={row} />
-					<CancelButton timelock={row} />
+					{row.status === "ready" && <ExecuteButton timelock={row} />}
+					{(row.status === "waiting" || row.status == "ready") && <CancelButton timelock={row} />}
 				</div>
 			),
 		}
