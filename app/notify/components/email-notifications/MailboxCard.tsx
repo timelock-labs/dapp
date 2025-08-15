@@ -2,6 +2,7 @@ import React from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useTranslations } from 'next-intl';
+import { formatDate } from '@/lib/utils';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
@@ -36,13 +37,10 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 				<p className='text-sm text-gray-500 mb-2'>{remark}</p>
 				<div className='text-xs text-gray-700 space-y-1'>
 					<div>
-						<strong>ID:</strong> {id}
-					</div>
-					<div>
 						<strong>Email Remark:</strong> {remark ?? '-'}
 					</div>
 					<div>
-						<strong>Created At:</strong> {created_at || '-'}
+						<strong>Created At:</strong> {formatDate(created_at) || '-'}
 					</div>
 				</div>
 			</div>
