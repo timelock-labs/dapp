@@ -175,7 +175,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 	const timeZone = () => {
 		const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		const timeOffset = new Date().getTimezoneOffset() / 60;
+		const timeOffset = -new Date().getTimezoneOffset() / 60;
 
 		return zone ? `(${zone} UTC${timeOffset >= 0 ? '+' : ''}${timeOffset})` : `UTC${timeOffset >= 0 ? '+' : ''}${timeOffset}`;
 	};
@@ -249,7 +249,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 									type='datetime-local'
 									aria-label={`Transaction execution time ${timeZone()}`}
 									value={toLocalDateTimeString(new Date(timeValue * 1000))}
-									className='max-w-[200px] border border-gray-300 rounded px-3 h-[34px]  focus:outline-none focus:ring-2 focus:ring-blue-200'
+									className='mb-3 max-w-[200px] border border-gray-300 rounded-md px-3 h-[38px] focus:outline-none focus:ring-2 focus:ring-blue-200'
 									onChange={e => {
 										const date = new Date(e.target.value);
 										if (!isNaN(date.getTime())) {
