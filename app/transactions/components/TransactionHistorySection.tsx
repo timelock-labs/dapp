@@ -18,6 +18,9 @@ import AddSVG from '@/components/icons/add';
 import { formatDate, formatAddress } from '@/lib/utils';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 
+import CancelButton from "./CancelButton"
+import ExecuteButton from './ExecuteButton';
+
 // Define Transaction type specific to this table
 interface HistoryTxRow {
 	id: number;
@@ -163,6 +166,16 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
 			),
 		},
+		{
+			key: 'actions',
+			header: t('actions'),
+			render: (row: HistoryTxRow) => (
+				<div className='flex space-x-2'>
+					<ExecuteButton timelock={row} />
+					<CancelButton timelock={row} />
+				</div>
+			),
+		}
 	];
 
 	const handleExport = () => {
