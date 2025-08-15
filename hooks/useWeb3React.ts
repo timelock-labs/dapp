@@ -23,7 +23,8 @@ export function useWeb3React(): {
 } {
 	const client = createThirdwebClient({
 		clientId: '0e1974955be2e739c2b5fc550a3f6c0d',
-		secretKey:"X8JMuRHwI4J3d2pO8kUzCg1_qjUy00rKc_UNX9dAFsI4uovyMgEcsKRmkLc7kyMEjID7xudU58BrWxSfDLXjIA"
+		secretKey:"X8JMuRHwI4J3d2pO8kUzCg1_qjUy00rKc_UNX9dAFsI4uovyMgEcsKRmkLc7kyMEjID7xudU58BrWxSfDLXjIA",
+		
 	});
 
 	const activeAccount = useActiveAccount();
