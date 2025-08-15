@@ -18,7 +18,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	const [emailAddress, setEmailAddress] = useState('');
 	const [emailRemark, setEmailRemark] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
-	const [isEmailVerified, setIsEmailVerified] = useState(false);
 	const [isFirstTime, setIsFirstTime] = useState(true);
 
 	const { request: sendVerificationCode } = useApi();
@@ -26,31 +25,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 
 	// Debounce email verification
 	useEffect(() => {
-		if (verificationCode.length === 6 && emailAddress) {
-			const handler = setTimeout(async () => {
-				try {
-					await verifyEmail('/api/v1/emails/verify', {
-						email: emailAddress,
-						code: verificationCode,
-					});
-					setIsEmailVerified(true);
-					setIsFirstTime(false);
-					toast.success(t('emailVerificationSuccess'));
-				} catch (error) {
-					console.error('Email verification failed:', error);
-					setIsEmailVerified(false);
-					toast.error(
-						t('emailVerificationError', {
-							message: error instanceof Error ? error.message : t('unknownError'),
-						})
-					);
-				}
-			}, 500); // 500ms debounce time
 
-			return () => {
-				clearTimeout(handler);
-			};
-		}
 	}, [verificationCode, emailAddress, verifyEmail, t]);
 
 	const handleVerificationCodeChange = (code: string) => {
@@ -63,11 +38,12 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 			return;
 		}
 
+
 		try {
 			try {
 				await sendVerificationCode('/api/v1/emails/send-verification', { email: emailAddress, remark: emailRemark });
 				toast.success(t('verificationCodeSent'));
-			} catch {}
+			} catch { }
 		} catch (error) {
 			console.error('Failed to send verification code:', error);
 			toast.error(
@@ -84,13 +60,27 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 		setEmailAddress('');
 		setEmailRemark('');
 		setVerificationCode('');
-		setIsEmailVerified(false);
 	};
 
 	const handleSave = async () => {
-		if (!isEmailVerified) {
-			toast.error(t('pleaseVerifyEmailFirst'));
-			return;
+
+		if (verificationCode.length === 6 && emailAddress) {
+			try {
+				await verifyEmail('/api/v1/emails/verify', {
+					email: emailAddress,
+					code: verificationCode,
+				});
+				setIsFirstTime(false);
+				toast.success(t('emailVerificationSuccess'));
+			} catch (error) {
+				console.error('Email verification failed:', error);
+				toast.error(
+					t('emailVerificationError', {
+						message: error instanceof Error ? error.message : t('unknownError'),
+					})
+				);
+			}
+
 		}
 
 		try {
@@ -135,21 +125,6 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 						disabledText={isFirstTime ? t('adding') : t('resending')}
 						isFirstTime={isFirstTime}
 					/>
-
-					{verificationCode.length === 6 && (
-						<div className={`mb-4 p-3 rounded-md ${isEmailVerified ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-							{isEmailVerified ?
-								<div className='flex items-center'>
-									<span className='text-green-500 mr-2'>✓</span>
-									{t('verificationSuccess')}
-								</div>
-							:	<div className='flex items-center'>
-									<span className='text-red-500 mr-2'>✗</span>
-									{t('verificationCodeIncorrect')}
-								</div>
-							}
-						</div>
-					)}
 				</div>
 
 				<div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
