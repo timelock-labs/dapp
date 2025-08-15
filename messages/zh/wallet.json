@@ -1,7 +1,0 @@
-{
-	"wallet": {
-		"noTimelockWallet": "你还没有 Timelock 钱包",
-		"description": "直接从您的项目读取和写入数据库和存储。",
-		"createNew": "创建"
-	}
-}

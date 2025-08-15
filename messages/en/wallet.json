@@ -1,7 +1,0 @@
-{
-	"wallet": {
-		"noTimelockWallet": "You don't have a Timelock wallet yet",
-		"description": "Read and write directly to databases and stores from your projects.",
-		"createNew": "Create new"
-	}
-}

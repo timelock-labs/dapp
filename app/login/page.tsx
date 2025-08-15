@@ -8,6 +8,7 @@ import { useActiveWalletConnectionStatus, useActiveAccount } from 'thirdweb/reac
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const TimeLockerSplitPage = () => {
 	const t = useTranslations('walletLogin');
@@ -31,7 +32,7 @@ const TimeLockerSplitPage = () => {
 					message: message,
 				});
 			} catch (error) {
-				console.error('Error signing message:', error);
+				toast.error('Error signing in');
 			}
 		}
 	}, [isConnected, address]);
@@ -54,7 +55,7 @@ const TimeLockerSplitPage = () => {
 
 	useEffect(() => {
 		if (error) {
-			console.error('Backend connection failed:', error);
+			toast.error('Backend connection failed');
 		}
 	}, [error]);
 

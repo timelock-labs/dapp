@@ -70,5 +70,10 @@
 		"total_value_locked": "Total Value Locked",
 		"chains_supported": "Chains Supported",
 		"supported_networks": "Supported Networks:"
+	},
+	"wallet": {
+		"noTimelockWallet": "You don't have a Timelock wallet yet",
+		"description": "Read and write directly to databases and stores from your projects.",
+		"createNew": "Create new"
 	}
 }

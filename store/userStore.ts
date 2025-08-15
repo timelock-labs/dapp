@@ -19,19 +19,17 @@ type AppActions = {
 export const useAuthStore = create<AppState & AppActions>()(
 	persist(
 		zodMiddleware<AppState, AppActions>(
-			// 第一个参数是我们的 Zod schema
 			AppStateSchema,
-			// 第二个参数是标准的 zustand creator
 			(set, get) => ({
 				user: null,
 				isAuthenticated: false,
 				accessToken:
-					document.cookie
+					document?.cookie
 						.split('; ')
 						.find(row => row.startsWith('accessToken='))
 						?.split('=')[1] || null,
 				refreshToken:
-					document.cookie
+					document?.cookie
 						.split('; ')
 						.find(row => row.startsWith('refreshToken='))
 						?.split('=')[1] || null,

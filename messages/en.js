@@ -1,6 +1,5 @@
 // 动态导入并合并所有英文模块
 import common from './en/common.json';
-import wallet from './en/wallet.json';
 import abi from '@/app/abi-lib/i18n/en.json';
 import login from '@/app/login/i18n/en.json';
 import navigation from '@/components/navigation/i18n/en.json';
@@ -20,7 +19,6 @@ export default {
 
 	// 其他模块已经有正确的命名空间结构，直接展开
 	...navigation,
-	...wallet,
 	...abi,
 	...login,
 	...createTimelock,
