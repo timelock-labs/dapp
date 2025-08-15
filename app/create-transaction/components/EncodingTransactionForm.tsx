@@ -149,8 +149,12 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 			return [];
 		}
 
-		// 从 ABI 读取所有 function 名称作为 options
-		const functions = TimelockCompundABI.filter(item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure');
+		// 只保留指定的三个函数
+		const allowedFunctions = ['cancelTransaction', 'executeTransaction', 'queueTransaction'];
+		const functions = TimelockCompundABI.filter(
+			item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure' && allowedFunctions.includes(item.name)
+		);
+
 		return functions.map(fn => {
 			const inputTypes = (fn.inputs || []).map(input => input.type).join(',');
 			const signature = `${fn.name}(${inputTypes})`;
@@ -159,8 +163,6 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 				label: signature,
 			};
 		});
-
-		return [];
 	}, [timelockType, allTimelocks]);
 
 	useEffect(() => {
@@ -206,10 +208,11 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 							onChange={handleTimelockChange}
 							options={timelockOptions}
 							placeholder={
-								isLoadingDetails ? t('encodingTransaction.loadingTimelockDetails')
-								: allTimelocks.length === 0 ?
-									t('encodingTransaction.noTimelocksAvailable')
-								:	t('encodingTransaction.selectTimelockPlaceholder')
+								isLoadingDetails
+									? t('encodingTransaction.loadingTimelockDetails')
+									: allTimelocks.length === 0
+									? t('encodingTransaction.noTimelocksAvailable')
+									: t('encodingTransaction.selectTimelockPlaceholder')
 							}
 						/>
 					</div>
