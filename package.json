@@ -7,7 +7,7 @@
 		"build": "next build --turbopack",
 		"start": "next start",
 		"lint": "next lint",
-		"format":"prettier --write . && eslint --fix ."
+		"format": "prettier --write . && eslint --fix ."
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
@@ -38,6 +38,7 @@
 		"input-otp": "^1.4.2",
 		"lodash.debounce": "^4.0.8",
 		"lucide-react": "^0.511.0",
+		"moralis": "^2.27.2",
 		"next": "15.3.3",
 		"next-auth": "^4.24.11",
 		"next-intl": "^4.1.0",
