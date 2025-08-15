@@ -29,7 +29,7 @@
 		},
 		"mailbox": {
 			"title": "监听邮箱",
-			"description": "选择用于接收交易通知的邮箱。",
+			"description": "下列邮箱将全程追踪该笔交易",
 			"selectLabel": "选择已配置邮箱",
 			"selectPlaceholder": "请选择已配置邮箱",
 			"option1": "邮箱 1",

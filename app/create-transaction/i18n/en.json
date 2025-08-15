@@ -29,7 +29,7 @@
 		},
 		"mailbox": {
 			"title": "Listening Mailbox",
-			"description": "Select the mailbox to receive transaction notifications.",
+			"description": "The following email address will track the transaction throughout the entire process",
 			"selectLabel": "Select Configured Mailbox",
 			"selectPlaceholder": "Select configured mailbox",
 			"option1": "Mailbox 1",

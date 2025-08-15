@@ -23,17 +23,9 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 		fetchEmails();
 	}, []);
 
-	const handleCheckboxChange = (value: string, checked: boolean) => {
-		if (checked) {
-			onMailboxChange([...selectedMailbox, value]);
-		} else {
-			onMailboxChange(selectedMailbox.filter((item: string) => item !== value));
-		}
-	};
-
 	return (
 		// Change to vertical (top-bottom) layout
-		<div className='bg-white py-6 flex flex-col gap-8 items-start'>
+		<div className='bg-white py-6 flex flex-col gap-2 items-start'>
 			{/* Top: Section Header */}
 			<div>
 				<SectionHeader title={t('mailbox.title')} description={t('mailbox.description')} />
@@ -41,17 +33,10 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 
 			{/* Bottom: Checkbox Options */}
 			<div>
-				<div className='space-y-3'>
-					<label className='block text-sm font-medium text-gray-700 mb-2'>{t('mailbox.selectLabel')}</label>
-					<div className='flex flex-wrap gap-2'>
-						{mailboxOptions.map(option => (
-							<div key={option.id} className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
-								<Checkbox
-									id={String(option.id)}
-									checked={selectedMailbox.includes(option.email)}
-									onCheckedChange={checked => handleCheckboxChange(option.email, checked as boolean)}
-								/>
-								<label htmlFor={String(option.id)} className='text-sm text-gray-700 cursor-pointer flex-1'>
+				<div className='flex flex-wrap gap-2'>
+					{mailboxOptions.map(option => (
+						<div key={option.id} className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
+							<label htmlFor={String(option.id)} className='text-sm text-gray-700 cursor-pointer flex-1'>
 									{option.email_remark || option.email}
 								</label>
 							</div>
@@ -59,7 +44,6 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 					</div>
 				</div>
 			</div>
-		</div>
 	);
 };
 
