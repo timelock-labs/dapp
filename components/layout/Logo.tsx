@@ -20,7 +20,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
 
 	return (
 		<div className={`flex items-center rounded-lg font-righteous p-[10px] gap-[8px] bg-[#171717] ${sizeClasses[size]} ${className || ''}`}>
-			<span className='leading-[100%] logo-font text-white'>TimeLocker</span>
+			<span className='leading-[100%] logo-font text-white'>Timelocker</span>
 		</div>
 	);
 };

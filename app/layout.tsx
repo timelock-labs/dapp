@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: Props) {
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<head>
-				<title>TimeLocker</title>
+				<title>Timelocker</title>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				{' '}

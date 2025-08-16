@@ -1,6 +1,6 @@
 {
 	"sidebar": {
-		"logo": "TimeLocker",
+		"logo": "Timelocker",
 		"nav": {
 			"timelock_contracts": "Timelock",
 			"abi_library": "ABI Library",

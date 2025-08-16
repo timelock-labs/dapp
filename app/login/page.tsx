@@ -23,7 +23,7 @@ const TimeLockerSplitPage = () => {
 
 	const handleUserSignature = useCallback(async () => {
 		if (isConnected && address) {
-			const message = 'welcome to TimeLocker!';
+			const message = 'welcome to Timelocker!';
 			try {
 				const signature = await signMessage!({ message: message });
 				await walletConnect('/api/v1/auth/wallet-connect', {
@@ -73,7 +73,7 @@ const TimeLockerSplitPage = () => {
 			<div className="flex flex-col w-[684px] h-[852px] p-10 rounded-xl border border-gray-800 mr-4 bg-[url('/logo-bg.png')] bg-cover bg-center bg-no-repeat">
 				{/* Header */}
 				<header className='mb-10'>
-					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">TimeLocker</h1>
+					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">Timelocker</h1>
 				</header>
 
 				{/* Main Motto Section */}
