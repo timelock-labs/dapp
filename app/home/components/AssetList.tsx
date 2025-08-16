@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import AnimatedAssetValue from './AnimatedAssetValue';
 import AnimatedAmountValue from './AnimatedAmountValue';
+import { ethers } from 'ethers';
 
 export interface Asset {
 	token_address: string;
@@ -80,11 +81,10 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 								<div>{asset.name} ({asset.symbol})</div>
 								<div>${asset.usd_price ? asset.usd_price : '0.00'}</div>
 							</div>
-
 						</div>
 						<div>
 							<span className='text-gray-500 text-sm'>
-								${asset.balance_formatted ? asset.balance_formatted : '0.00'}
+								{ethers.utils.formatUnits(asset.balance.toString(), asset.decimals)}
 							</span>
 						</div>
 					</div>
