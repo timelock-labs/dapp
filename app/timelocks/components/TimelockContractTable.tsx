@@ -11,8 +11,9 @@ import DeleteButton from '@/components/ui/DeleteButton';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { Network } from 'lucide-react';
+import { Copy, Network } from 'lucide-react';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
+import copyToClipboard from '@/utils/copy';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
@@ -113,11 +114,20 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'contract_address',
 			header: t('timelock'),
+			render: (row: TimelockContractItem) => (
+				<div className='flex items-center space-x-2'>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+				</div>
+			),
 		},
 		{
 			key: 'admin',
 			header: t('owner'),
-			render: (row: TimelockContractItem) => row.admin,
+			render: (row: TimelockContractItem) => (
+				<div className='flex items-center space-x-2'>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.admin)}>{row.admin}</span>
+				</div>
+			),
 		},
 		{
 			key: 'user_permissions',

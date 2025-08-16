@@ -20,6 +20,7 @@ import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 
 import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
+import copyToClipboard from '@/utils/copy';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -132,18 +133,18 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			key: 'timelock_address',
 			header: t('timelockAddress'),
 			render: (row: HistoryTxRow) => (
-				<span className='font-mono text-sm' title={row.contract_address}>
-					{formatAddress(row.contract_address)}
-				</span>
+				<div className='flex items-center space-x-2'>
+					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+				</div>
 			),
 		},
 		{
 			key: 'tx_hash',
 			header: t('txHash'),
 			render: (row: HistoryTxRow) => (
-				<span className='font-mono text-sm' title={row.queue_tx_hash}>
-					{formatAddress(row.queue_tx_hash)}
-				</span>
+				<div className='flex items-center space-x-2'>
+					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>{formatAddress(row.queue_tx_hash)}</span>
+				</div>
 			),
 		},
 		{
