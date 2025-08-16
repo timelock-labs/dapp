@@ -134,7 +134,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('timelockAddress'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
 				</div>
 			),
 		},
@@ -143,7 +143,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('txHash'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>{formatAddress(row.queue_tx_hash)}</span>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>{formatAddress(row.queue_tx_hash)}</span>
 				</div>
 			),
 		},
