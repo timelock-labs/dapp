@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Assert from './components/Assert';
+import Assert from './components/Asset';
 import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';

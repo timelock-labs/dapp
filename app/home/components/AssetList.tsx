@@ -73,57 +73,19 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			{/* Asset List Items */}
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
 				{currentAssets.length > 0 && currentAssets.map((asset, index) => (
-					<div key={index} className='grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0'>
-						<div className='flex items-center space-x-3'>
-							<div className='relative w-9 h-9'>
-								{/* Adjusted size to match visual */}
-								{asset.logo && (
-									<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={36} height={36} className='rounded-full' />
-								)}
+					<div key={index} className='flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0'>
+						<div className='text-gray-800 font-medium text-base flex items-center gap-4'>
+							<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={36} height={36} className='rounded-full' />
+							<div className=' col  gap-2'>
+								<div>{asset.name} ({asset.symbol})</div>
+								<div>${asset.usd_price ? asset.usd_price : '0.00'}</div>
 							</div>
-							<div>
-								<p className='text-gray-800 font-medium text-base'>
-									{Object.entries(asset).map(([key, value], index) => {
-										let renderedValue = value;
 
-										if (typeof value === 'object') {
-											renderedValue = (
-												<pre className='text-xs break-all'>
-													{JSON.stringify(value, null, 2)}
-												</pre>
-											);
-										}
-
-										if (key === 'balance') {
-											renderedValue = (
-												<span className='text-xs'>
-													{new Intl.NumberFormat('en-US', {
-														minimumFractionDigits: 6,
-														maximumFractionDigits: 6,
-													}).format(parseFloat(value))}
-												</span>
-											);
-										}
-
-										if (key === 'usdPrice' || key === 'usdPrice24hrUsdChange') {
-											renderedValue = (
-												<span className='text-xs'>
-													${new Intl.NumberFormat('en-US', {
-														minimumFractionDigits: 2,
-														maximumFractionDigits: 2,
-													}).format(parseFloat(value))}
-												</span>
-											);
-										}
-
-										return (
-											<React.Fragment key={index}>
-												{key}: {renderedValue} {index !== Object.entries(asset).length - 1 ? <br /> : null}
-											</React.Fragment>
-										);
-									})}
-								</p>
-							</div>
+						</div>
+						<div>
+							<span className='text-gray-500 text-sm'>
+								${asset.balance_formatted ? asset.balance_formatted : '0.00'}
+							</span>
 						</div>
 					</div>
 				))}
