@@ -5,33 +5,26 @@ import AnimatedAssetValue from './AnimatedAssetValue';
 import AnimatedAmountValue from './AnimatedAmountValue';
 
 export interface Asset {
-	contract_decimals: number | null;
-	contract_name: string | null;
-	contract_ticker_symbol: string | null;
-	contract_address: string;
-	supports_erc: string[] | null;
-	logo_url: string;
-	contract_display_name: string | null;
-	logo_urls: {
-		token_logo_url: string;
-		protocol_logo_url: string | null;
-		chain_logo_url: string;
-	};
-	last_transferred_at: string | null;
-	block_height: number | null;
-	native_token: boolean;
-	type: string;
-	is_spam: boolean;
+	token_address: string;
+	name: string;
+	symbol: string;
+	logo: string;
+	thumbnail: string;
+	decimals: number;
 	balance: string;
-	balance_24h: string;
-	quote_rate: number | null;
-	quote_rate_24h: number | null;
-	quote: number | null;
-	pretty_quote: string | null;
-	quote_24h: number | null;
-	pretty_quote_24h: string | null;
-	protocol_metadata: unknown;
-	nft_data: unknown;
+	possible_spam: boolean;
+	verified_contract: boolean;
+	usd_price: number;
+	usd_price_24hr_percent_change: number;
+	usd_price_24hr_usd_change: number;
+	usd_value_24hr_usd_change: number;
+	usd_value: number;
+	portfolio_percentage: number;
+	balance_formatted: string;
+	native_token: boolean;
+	total_supply: number | null;
+	total_supply_formatted: string | null;
+	percentage_relative_to_total_supply: number | null;
 }
 
 interface AssetListProps {
@@ -77,37 +70,60 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 				<span className='text-right'>Amount/Value</span>
 			</div>
 
-			{JSON.stringify(assets)}
-
 			{/* Asset List Items */}
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
-				{currentAssets.map((asset, index) => (
+				{currentAssets.length > 0 && currentAssets.map((asset, index) => (
 					<div key={index} className='grid grid-cols-2 items-center py-3 border-b border-gray-100 last:border-b-0'>
 						<div className='flex items-center space-x-3'>
 							<div className='relative w-9 h-9'>
-								{' '}
 								{/* Adjusted size to match visual */}
-								{asset.logo_urls?.token_logo_url && (
-									<Image src={asset.logo_urls.token_logo_url} alt={asset.contract_display_name || asset.contract_name || 'Token'} width={36} height={36} className='rounded-full' />
-								)}
-								{asset.logo_urls?.chain_logo_url && (
-									<Image src={asset.logo_urls.chain_logo_url} alt='Chain' width={16} height={16} className='absolute bottom-0 right-0 rounded-full border border-white' />
+								{asset.logo && (
+									<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={36} height={36} className='rounded-full' />
 								)}
 							</div>
 							<div>
-								<p className='text-gray-800 font-medium text-base'>{asset.contract_display_name || asset.contract_name}</p>
-								<p className='text-gray-500 text-sm'>
-									<AnimatedAssetValue value={asset.quote_rate || 0} prefix='$' decimals={2} fallback='0.00' />
+								<p className='text-gray-800 font-medium text-base'>
+									{Object.entries(asset).map(([key, value], index) => {
+										let renderedValue = value;
+
+										if (typeof value === 'object') {
+											renderedValue = (
+												<pre className='text-xs break-all'>
+													{JSON.stringify(value, null, 2)}
+												</pre>
+											);
+										}
+
+										if (key === 'balance') {
+											renderedValue = (
+												<span className='text-xs'>
+													{new Intl.NumberFormat('en-US', {
+														minimumFractionDigits: 6,
+														maximumFractionDigits: 6,
+													}).format(parseFloat(value))}
+												</span>
+											);
+										}
+
+										if (key === 'usdPrice' || key === 'usdPrice24hrUsdChange') {
+											renderedValue = (
+												<span className='text-xs'>
+													${new Intl.NumberFormat('en-US', {
+														minimumFractionDigits: 2,
+														maximumFractionDigits: 2,
+													}).format(parseFloat(value))}
+												</span>
+											);
+										}
+
+										return (
+											<React.Fragment key={index}>
+												{key}: {renderedValue} {index !== Object.entries(asset).length - 1 ? <br /> : null}
+											</React.Fragment>
+										);
+									})}
 								</p>
 							</div>
-						</div>
-						<div className='text-right'>
-							<p className='text-gray-800 font-medium text-base'>
-								<AnimatedAmountValue value={parseFloat(asset.balance) || 0} maxDigits={8} />
-							</p>
-							<p className='text-gray-500 text-sm'>
-								<AnimatedAssetValue value={asset.quote || 0} prefix='$' decimals={2} fallback='0.00' />
-							</p>
 						</div>
 					</div>
 				))}

@@ -37,6 +37,10 @@ const nextConfig = {
 				protocol: 'https' as const,
 				hostname: 'www.datocms-assets.com',
 			},
+			{
+				protocol: 'https' as const,
+				hostname: 'cdn.moralis.io',
+			},
 		],
 	},
 };

@@ -6,6 +6,7 @@ import TotalAssetValue from './TotalAssetValue';
 import PendingTransactions from './PendingTransactions';
 import { useApi } from '@/hooks/useApi';
 import useMoralis from '@/hooks/useMoralis';
+import AssetList from './AssetList';
 
 
 interface AssertProps {
@@ -16,7 +17,7 @@ interface AssertProps {
 
 const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	const { request: getUerAssets } = useApi();
-	const [userAssets, setUserAssets] = useState()
+	const [userAssets, setUserAssets] = useState<any[]>([])
 
 	const  moralis = useMoralis();
 	const { getUserAssets } = moralis;
@@ -51,9 +52,6 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 
 	return (
 		<PageLayout title='Home'>
-			{JSON.stringify(timelocks, null, 2)}
-			{JSON.stringify(userAssets, null, 2)}
-					{userAssets}
 			{/* 使用 PageLayout 包裹 */}
 			<div className='flex flex-col space-y-6'>
 				{/* Top Section: Total Asset Value */}
@@ -65,8 +63,8 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 				<div className='grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow h-full'>
 					{/* Asset List */}
 					<div className='md:col-span-1 flex flex-col'>
-						{/* <AssetList assets={userAssets} /> */}
-				
+						<AssetList assets={userAssets} />
+					{/* {JSON.stringify(userAssets, null, 2)} */}
 					</div>
 
 					{/* Pending Transactions */}
