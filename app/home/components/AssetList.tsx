@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import AnimatedAssetValue from './AnimatedAssetValue';
-import AnimatedAmountValue from './AnimatedAmountValue';
 import { ethers } from 'ethers';
 
 export interface Asset {
