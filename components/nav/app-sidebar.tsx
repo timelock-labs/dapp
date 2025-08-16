@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House } from 'lucide-react';
+import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House ,Logs} from 'lucide-react';
 import { NavMain } from '@/components/nav/nav-main';
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, useSidebar } from '@/components/ui/sidebar';
@@ -26,15 +26,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: House,
 			},
 			{
+				title: t('sidebar.nav.timelock_contracts'),
+				url: 'timelocks',
+				icon: Clock,
+			},
+			{
 				title: t('sidebar.nav.transactions'),
 				url: 'transactions',
 				icon: ListTodo,
 			},
 			{
-				title: t('sidebar.nav.timelock_contracts'),
-				url: 'timelocks',
-				icon: Clock,
+				title: t('sidebar.nav.transactions_log'),
+				url: 'transactions-log',
+				icon: Logs,
 			},
+
 			{
 				title: t('sidebar.nav.abi_library'),
 				url: 'abi-lib',

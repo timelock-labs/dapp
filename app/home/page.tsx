@@ -16,7 +16,7 @@ export default function Home() {
 	const connectionStatus = useActiveWalletConnectionStatus();
 	const isConnected = connectionStatus === 'connected';
 	const [showContent, setShowContent] = useState(false);
-	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
+	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'asset'>('loading');
 	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
 
 	const { request: getTimelockList, isLoading } = useApi();
@@ -62,7 +62,7 @@ export default function Home() {
 		setShowContent(false);
 
 		const timer = setTimeout(() => {
-			setCurrentView(hasTimelocks ? 'assert' : 'create');
+			setCurrentView(hasTimelocks ? 'asset' : 'create');
 			setShowContent(true);
 		}, 200); // 短暂延迟让淡出动画完成
 
@@ -74,7 +74,7 @@ export default function Home() {
 		switch (currentView) {
 			case 'loading':
 				return <LoadingSkeleton />;
-			case 'assert':
+			case 'asset':
 				return <Assert timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
 			default:

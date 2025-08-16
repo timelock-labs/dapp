@@ -186,7 +186,6 @@ const TransactionEncoderPage: React.FC = () => {
 
 			toast.success('Transaction created successfully!');
 
-			// Navigate to transaction details or list
 			router.push('/transactions');
 		} catch (error) {
 			console.error('Failed to create transaction:', error);
