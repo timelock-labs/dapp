@@ -23,8 +23,8 @@ const PageCard = ({ abis, columns, setIsAddABIOpen }: { abis: ABIRow[]; columns:
 				<TableComponent<ABIRow>
 					columns={columns}
 					data={abis}
-					showPagination={false}
-					// itemsPerPage={5}
+					showPagination={true}
+					itemsPerPage={10}
 				/>
 			</div>
 		</div>
