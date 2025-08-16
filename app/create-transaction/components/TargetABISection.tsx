@@ -16,24 +16,24 @@ import { useApi } from '@/hooks/useApi';
 const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChange, functionValue, onFunctionChange, argumentValues, onArgumentChange }) => {
 	const t = useTranslations('CreateTransaction');
 	const [isAddABIOpen, setIsAddABIOpen] = useState(false);
-	const [abiList, setAbiList] = useState<any[]>([]); // Replace 'any' with your ABI type
+	const [abiList, setAbiList] = useState<Array<{ id: number; name: string; abi_content: string }>>([]);
 	const { request: getAbiList, isLoading } = useApi();
 	const { request: addAbi } = useApi();
 
 	// Fetch ABI list on mount
 	React.useEffect(() => {
+		const fetchAbiList = async () => {
+			try {
+				const { data } = await getAbiList('/api/v1/abi/list');
+				setAbiList(data?.abis || []);
+			} catch (error) {
+				console.error('Failed to fetch ABI list:', error);
+				toast.error(t('fetchABIError', { message: error instanceof Error ? error.message : 'Unknown error' }));
+			}
+		};
+		
 		fetchAbiList();
-	}, []);
-
-	const fetchAbiList = async () => {
-		try {
-			const { data } = await getAbiList('/api/v1/abi/list');
-			setAbiList(data?.abis || []);
-		} catch (error) {
-			console.error('Failed to fetch ABI list:', error);
-			toast.error(t('fetchABIError', { message: error instanceof Error ? error.message : 'Unknown error' }));
-		}
-	};
+	}, [getAbiList, t]);
 
 	// Convert ABI list to options format
 	const abiOptions = useMemo(() => {

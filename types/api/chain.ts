@@ -18,4 +18,5 @@ export interface Chain {
 	is_active: boolean;
 	created_at: Timestamp;
 	updated_at: Timestamp;
+	block_explorer_urls?: string;
 }

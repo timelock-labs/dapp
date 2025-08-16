@@ -71,11 +71,11 @@ const TransactionEncoderPage: React.FC = () => {
 		setTargetCallData(''); // Reset calldata when function or arguments change
 		if (!!functionValue && argumentValues.length > 0) {
 			try {
-				const types = functionValue
-					?.match(/\(([^)]*)\)/)?.[1]
-						.split(',')
-						.map((type: string) => type.trim())
-						.filter((type: string) => type.length > 0) || [];
+				const match = functionValue?.match(/\(([^)]*)\)/);
+				const types = match?.[1]
+					?.split(',')
+					?.map((type: string) => type.trim())
+					?.filter((type: string) => type.length > 0) || [];
 
 				const args = argumentValues.map((arg, idx) =>
 					types && types[idx] === 'address' ? arg

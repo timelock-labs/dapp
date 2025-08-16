@@ -21,6 +21,7 @@ export const ChainSchema = z.object({
 	logo_url: z.string(),
 	native_token: z.string(),
 	updated_at: z.string(),
+	block_explorer_urls: z.string().optional(),
 });
 
 export const TimelockContractSchema = z.object({

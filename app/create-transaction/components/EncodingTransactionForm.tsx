@@ -152,7 +152,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		// 只保留指定的三个函数
 		const allowedFunctions = ['cancelTransaction', 'executeTransaction', 'queueTransaction'];
 		const functions = TimelockCompundABI.filter(
-			item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure' && allowedFunctions.includes(item.name)
+			item => item.type === 'function' && item.stateMutability !== 'view' && item.stateMutability !== 'pure' && item.name && allowedFunctions.includes(item.name)
 		);
 
 		return functions.map(fn => {
