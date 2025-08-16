@@ -75,10 +75,13 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
 				{currentAssets.length > 0 && currentAssets.map((asset, index) => (
 					<div key={index} className='flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0'>
-						<div className='text-gray-800 font-medium text-base flex items-center gap-4'>
-							<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={36} height={36} className='rounded-full' />
-							<div className=' col  gap-2'>
-								<div>{asset.name} ({asset.symbol})</div>
+						<div className='flex items-center gap-3 text-sm'>
+							<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={24} height={24} className='rounded-full' />
+							<div className='col'>
+								<div className='flex gap-1 items-center'>
+									<span>{asset.symbol}</span>
+									<span className='text-gray-500 text-xs'>{asset.name}</span>
+									</div>
 								<div>${asset.usd_price ? asset.usd_price : '0.00'}</div>
 							</div>
 						</div>
