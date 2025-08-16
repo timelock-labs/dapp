@@ -51,6 +51,7 @@
 		"cancelSuccess": "Transaction cancelled successfully.",
 		"cancelError": "Failed to cancel transaction.",
 		"executeSuccess": "Transaction executed successfully.",
-		"executeError": "Failed to execute transaction."
+		"executeError": "Failed to execute transaction.",
+		"actions": "Actions"
 	}
 }

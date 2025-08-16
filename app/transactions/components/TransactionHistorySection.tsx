@@ -18,7 +18,7 @@ import AddSVG from '@/components/icons/add';
 import { formatDate, formatAddress } from '@/lib/utils';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 
-import CancelButton from "./CancelButton"
+import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
 
 // Define Transaction type specific to this table
@@ -80,7 +80,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			console.error('Failed to fetch transaction history:', error);
 			toast.error(t('fetchHistoryTxsError'));
 		}
-	}, [activeTab, t]);
+	}, [activeTab, getTransactionList, t]);
 
 	useEffect(() => {
 		fetchHistoryTransactions();
@@ -108,7 +108,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 				return (
 					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ?
+						{chainLogo ? (
 							<Image
 								src={chainLogo}
 								alt={chainName}
@@ -120,7 +120,9 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-							: <Network className='h-4 w-4 text-gray-700' />}
+						) : (
+							<Network className='h-4 w-4 text-gray-700' />
+						)}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>
 				);
@@ -171,11 +173,11 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('actions'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex space-x-2'>
-					{row.status === "ready" && <ExecuteButton timelock={row} />}
-					{(row.status === "waiting" || row.status == "ready") && <CancelButton timelock={row} />}
+					{row.status === 'ready' && <ExecuteButton timelock={row} />}
+					{(row.status === 'waiting' || row.status == 'ready') && <CancelButton timelock={row} />}
 				</div>
 			),
-		}
+		},
 	];
 
 	const handleExport = () => {
@@ -203,8 +205,8 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	};
 
 	return (
-		<div className={`rounded-xl bg-white border border-gray-200 flex flex-col h-[400px] px-6 ${className || ''}`}>
-			<div className='h-[152px] flex flex-col justify-between pt-6 pb-4'>
+		<div className={`rounded-xl bg-white border border-gray-200 flex flex-col min-h-[600px] px-6 ${className || ''}`}>
+			<div className='flex flex-col pt-6'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 					<button
@@ -217,18 +219,18 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 						<span>Create</span>
 					</button>
 				</div>
-				<div className='flex justify-between items-center'>
+				<div className='flex justify-between items-center mb-6'>
 					<div>
 						<TabbedNavigation tabs={historyTabs} activeTab={activeTab} onTabChange={handleTabChange} />
 					</div>
-					<div className='flex items-center space-x-3 pb-2'>
-						{/* <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' /> */}
-						{/* <ExportButton onClick={handleExport} /> */}
+					<div className='flex items-center space-x-3'>
+						<SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' />
+						<ExportButton onClick={handleExport} />
 					</div>
 				</div>
 			</div>
-			<div className='flex-1 overflow-hidden h-[300px]'>
-				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={false} itemsPerPage={10} />
+			<div className='flex-1 mb-4'>
+				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
 		</div>
 	);
