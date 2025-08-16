@@ -1,10 +1,8 @@
-import { notFound } from 'next/navigation';
-import { Locale, NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { routing } from '@/i18n/routing';
-import { Web3Provider } from '@/components/providers/web3-provider'; // Use the Providers from app/providers.tsx
-import { TokenRefresher } from '@/components/auth/token-refresher';
+import { Web3Provider } from '@/components/providers/web3-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import '@/app/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google'; // Import fonts here

@@ -203,7 +203,7 @@ const ABILibPage: React.FC = () => {
 						onView={() => handleViewABI(row)}
 						t={t}
 						isShared={row.is_shared}
-						buttonRef={{ current: buttonRefs.current[row.id] }}
+						buttonRef={buttonRefs.current[row.id] ? { current: buttonRefs.current[row.id]! } : undefined}
 					/>
 				</div>
 			),

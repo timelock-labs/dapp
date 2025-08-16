@@ -15,7 +15,7 @@ import { formatDate } from '@/lib/utils';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
-	const [pendingTxs, setPendingTxs] = useState<any[]>([]);
+	const [pendingTxs, setPendingTxs] = useState<Array<{ chain_id: number; contract_address: string; queue_tx_hash: string; created_at: string; eta: string; expired_at: string; status: string; chain_name: string }>>([]);
 
 	const { request: getPendingTransactions } = useApi();
 	const chains = useAuthStore(state => state.chains);
@@ -25,7 +25,7 @@ const PendingTransactions: React.FC = () => {
 			const { data:waitingData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
 			const { data:executedData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'ready' });
 
-			const transformedData: any[] = [...waitingData.flows,...executedData.flows].map((tx: any) => ({
+			const transformedData = [...waitingData.flows,...executedData.flows].map((tx: { chain_id: number; contract_address: string; queue_tx_hash: string; created_at: string; eta: string; expired_at: string; status: string; chain_name: string }) => ({
 				...tx,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
 			}));
@@ -34,7 +34,7 @@ const PendingTransactions: React.FC = () => {
 			console.error('Failed to fetch pending transactions:', error);
 			toast.error(t('fetchPendingTxsError'));
 		}
-	}, [t]);
+	}, [getPendingTransactions, t]);
 
 	useEffect(() => {
 		fetchPendingTransactions();
@@ -44,7 +44,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'chain',
 			header: t('chain'),
-			render: (row: any) => {
+			render: (row: { chain_id: number; contract_address: string; queue_tx_hash: string; created_at: string; eta: string; expired_at: string; status: string; chain_name: string }) => {
 				// 尝试通过 chain_name 找到对应的链
 				const chain = chains?.find(c => c.chain_id === row.chain_id || c.display_name === row.chain_name);
 				const chainLogo = chain?.logo_url || '';
@@ -73,7 +73,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'timelock_address',
 			header: t('timelockAddress'),
-			render: (row: any) => (
+			render: (row: { contract_address: string }) => (
 				<span className='font-mono text-sm' title={row.contract_address}>
 					{formatAddress(row.contract_address)}
 				</span>
@@ -82,7 +82,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'tx_hash',
 			header: t('txHash'),
-			render: (row: any) => (
+			render: (row: { queue_tx_hash: string }) => (
 				<span className='font-mono text-sm' title={row.queue_tx_hash}>
 					{formatAddress(row.queue_tx_hash)}
 				</span>
@@ -91,22 +91,22 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'created_at',
 			header: t('createdAt'),
-			render: (row: any) => <span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>,
+			render: (row: { created_at: string }) => <span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>,
 		},
 		{
 			key: 'eta',
 			header: t('eta'),
-			render: (row: any) => <span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>,
+			render: (row: { eta: string }) => <span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>,
 		},
 		{
 			key: 'expired_at',
 			header: t('expiredAt'),
-			render: (row: any) => <span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>,
+			render: (row: { expired_at: string }) => <span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>,
 		},
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: any) => <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>,
+			render: (row: { status: string }) => <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>,
 		},
 	];
 
@@ -116,7 +116,7 @@ const PendingTransactions: React.FC = () => {
 				<SectionHeader title='Pending Transactions' description='View your pending transactions' />
 			</div>
 			<div className='flex-1 overflow-hidden'>
-				<TableComponent<any> columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
+				<TableComponent columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
 			</div>
 		</div>
 	);

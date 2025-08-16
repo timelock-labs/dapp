@@ -70,7 +70,7 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 		if (connectionStatus === 'disconnected') {
 			router.push('/login');
 		}
-	}, [connectionStatus]);
+	}, [connectionStatus, router]);
 
 	return (
 		<div className={wrapperClass}>

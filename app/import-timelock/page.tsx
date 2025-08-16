@@ -40,6 +40,7 @@ const ImportTimelockPage: React.FC = () => {
 
 	useEffect(() => {
 		fetchChains();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -73,7 +74,7 @@ const ImportTimelockPage: React.FC = () => {
 			setDetectedParameters(null);
 			clearParameters();
 		}
-	}, [contractAddress]);
+	}, [contractAddress, clearParameters, detectedParameters]);
 
 	const handleNextStep = async () => {
 		if (!selectedChain) {

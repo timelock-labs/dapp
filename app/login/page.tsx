@@ -31,15 +31,15 @@ const TimeLockerSplitPage = () => {
 					signature: signature,
 					message: message,
 				});
-			} catch (error) {
+			} catch {
 				toast.error('Error signing in');
 			}
 		}
-	}, [isConnected, address]);
+	}, [isConnected, address, signMessage, walletConnect]);
 
 	useEffect(() => {
 		handleUserSignature();
-	}, [isConnected, address]);
+	}, [handleUserSignature]);
 
 	useEffect(() => {
 		if (apiResponse && apiResponse.success) {
@@ -52,12 +52,6 @@ const TimeLockerSplitPage = () => {
 			router.push('/home');
 		}
 	}, [apiResponse, login, router]);
-
-	useEffect(() => {
-		if (error) {
-			toast.error('Backend connection failed');
-		}
-	}, [error]);
 
 	const handlePrevSection = () => {
 		setCurrentSection(prev => (prev === 0 ? 1 : 0));
