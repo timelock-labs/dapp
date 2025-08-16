@@ -16,6 +16,7 @@ const EcosystemPage: React.FC = () => {
 
 	useEffect(() => {
 		fetchSponsors();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const fetchSponsors = async () => {

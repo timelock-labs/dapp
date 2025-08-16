@@ -14,10 +14,10 @@ import { useApi } from '@/hooks/useApi';
 
 const EmailNotificationPage: React.FC = () => {
 	const t = useTranslations('Notify');
-	const [mailboxes, setMailboxes] = useState<any[]>([]);
+	const [mailboxes, setMailboxes] = useState<Array<{ id: string; email: string; remark?: string; created_at: string; is_verified: boolean }>>([]);
 	const [isAddMailboxModalOpen, setIsAddMailboxModalOpen] = useState(false);
 	const [isEditMailboxModalOpen, setIsEditMailboxModalOpen] = useState(false);
-	const [editingMailbox, setEditingMailbox] = useState<any>(null);
+	const [editingMailbox, setEditingMailbox] = useState<{ id: string; email: string; remark?: string; created_at: string } | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<{
 		isOpen: boolean;
@@ -44,7 +44,7 @@ const EmailNotificationPage: React.FC = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, []);
+	}, [getEmailNotifications, t]);
 
 	useEffect(() => {
 		fetchEmailNotifications();
@@ -75,7 +75,7 @@ const EmailNotificationPage: React.FC = () => {
 		fetchEmailNotifications();
 	};
 
-	const handleEditMailbox = (mailbox: any) => {
+	const handleEditMailbox = (mailbox: { id: string; email: string; remark?: string; created_at: string }) => {
 		setEditingMailbox(mailbox);
 		setIsEditMailboxModalOpen(true);
 	};

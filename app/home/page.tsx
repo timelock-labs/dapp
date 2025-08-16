@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import Assert from './components/Assert';
 import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
@@ -29,7 +29,7 @@ export default function Home() {
 	const isConnected = connectionStatus === 'connected';
 	const [showContent, setShowContent] = useState(false);
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'assert'>('loading');
-	const [timelockData, setTimelockData] = useState<any>(null);
+	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
 
 	const { request: getTimelockList, isLoading } = useApi();
 
@@ -37,6 +37,7 @@ export default function Home() {
 		if (isConnected) {
 			fetchTimelockData();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected]);
 
 	const fetchTimelockData = async () => {

@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
-	onEdit: (mailbox: any) => void;
+	onEdit: (mailbox: { id: string; email: string; remark?: string; created_at: string }) => void;
 	id: number;
 	email: string;
 	remark?: string | null;
@@ -21,7 +21,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	};
 
 	const handleEditClick = () => {
-		const mailboxData: any = {
+		const mailboxData = {
 			id: id.toString(),
 			remark: remark,
 			email: email,
@@ -46,6 +46,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 			</div>
 			<div className='pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] space-x-2'>
 				<button
+					type="button"
 					onClick={handleEditClick}
 					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors'>
 					<span className='flex items-center gap-2 text-[#0A0A0A]'>

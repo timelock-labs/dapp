@@ -10,7 +10,7 @@ interface EditMailboxModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSuccess: () => void; // Callback to trigger re-fetch in parent
-	initialData: any | null; // Data of the mailbox to edit
+	initialData: { id: string; email: string; remark?: string } | null;
 }
 
 const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, onSuccess, initialData }) => {

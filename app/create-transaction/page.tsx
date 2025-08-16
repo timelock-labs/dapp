@@ -20,7 +20,7 @@ const TransactionEncoderPage: React.FC = () => {
 	const t = useTranslations('CreateTransaction');
 	const { sendTransaction } = useTimelockTransaction();
 	const { address } = useActiveAccount() || {};
-	const { id: chainId, name: chainName } = useActiveWalletChain() || {};
+	const { id: chainId } = useActiveWalletChain() || {};
 	const { allTimelocks } = useAuthStore();
 
 	// Form States
@@ -71,17 +71,17 @@ const TransactionEncoderPage: React.FC = () => {
 		setTargetCallData(''); // Reset calldata when function or arguments change
 		if (!!functionValue && argumentValues.length > 0) {
 			try {
-				const types = functionValue ?
-					.match(/\(([^)]*)\)/)?.[1]
+				const types = functionValue
+					?.match(/\(([^)]*)\)/)?.[1]
 						.split(',')
-						.map((type: any) => type.trim())
-						.filter((type: any) => type.length > 0) || [];
+						.map((type: string) => type.trim())
+						.filter((type: string) => type.length > 0) || [];
 
 				const args = argumentValues.map((arg, idx) =>
 					types && types[idx] === 'address' ? arg
 						: arg.startsWith('0x') ? arg
 							: ethers.utils.parseEther(arg)
-				)
+				);
 
 				if (types?.length === args.length) {
 					const calldata = ethers.utils.defaultAbiCoder.encode(
@@ -177,7 +177,7 @@ const TransactionEncoderPage: React.FC = () => {
 		try {
 			setIsSubmitting(true);
 
-			const txResult = await sendTransaction({
+			await sendTransaction({
 				// timelockAddress,
 				toAddress: timelockAddress,
 				calldata: timelockCalldata,

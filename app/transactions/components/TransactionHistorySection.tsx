@@ -100,7 +100,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		{
 			key: 'chain',
 			header: t('chain'),
-			render: (row: any) => {
+			render: (row: HistoryTxRow) => {
 				// 尝试通过 chain_name 找到对应的链
 				const chain = chains?.find(c => c.chain_id === row.chain_id || c.display_name === row.chain_name);
 				const chainLogo = chain?.logo_url || '';

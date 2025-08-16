@@ -17,7 +17,7 @@ const TimeLockerSplitPage = () => {
 
 	const connectionStatus = useActiveWalletConnectionStatus();
 	const isConnected = connectionStatus === 'connected';
-	const { data: apiResponse, request: walletConnect, error } = useApi();
+	const { data: apiResponse, request: walletConnect } = useApi();
 	const login = useAuthStore(state => state.login);
 	const router = useRouter();
 
