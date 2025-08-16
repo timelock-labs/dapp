@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -29,8 +28,6 @@ interface NavMainProps extends BaseComponentProps {
  * @returns JSX.Element
  */
 export function NavMain({ items, className }: NavMainProps) {
-	const locale = useLocale();
-
 	return (
 		<SidebarGroup className={className}>
 			<SidebarMenu>

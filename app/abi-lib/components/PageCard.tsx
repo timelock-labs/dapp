@@ -4,7 +4,7 @@ import { ABIRow } from '@/types';
 import { useTranslations } from 'next-intl';
 import AddSVG from '@/components/icons/add';
 
-const PageCard = ({ abis, columns, setIsAddABIOpen }: { abis: ABIRow[]; columns: any; setIsAddABIOpen: (open: boolean) => void }) => {
+const PageCard = ({ abis, columns, setIsAddABIOpen }: { abis: ABIRow[]; columns: Array<{ key: string; label: string; sortable?: boolean }>; setIsAddABIOpen: (open: boolean) => void }) => {
 	const t = useTranslations('ABI-Lib');
 
 	return (

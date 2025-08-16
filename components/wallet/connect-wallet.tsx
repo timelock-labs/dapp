@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
 import { client, supportedChains } from '@/lib/thirdweb';
 
-import { useActiveAccount, useActiveWalletConnectionStatus } from 'thirdweb/react';
+import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 
 const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
 

@@ -13,7 +13,7 @@ import { createErrorMessage, useAbortController } from '../../../hooks/useHookUt
 import { useWeb3React } from '../../../hooks/useWeb3React';
 
 // Type imports
-import type { Address, ContractStandard, ContractValidationResult, ImportTimelockRequest, TimelockParameters } from '@/types';
+import type { Address, ContractStandard, TimelockParameters } from '@/types';
 
 // Re-export types for backward compatibility
 export type { TimelockParameters };
@@ -193,7 +193,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 	/**
 	 * Get OpenZeppelin timelock parameters (placeholder for future implementation)
 	 */
-	const getOpenZeppelinParameters = useCallback(async (contractAddress: Address): Promise<Partial<TimelockParameters>> => {
+	const getOpenZeppelinParameters = useCallback(async (): Promise<Partial<TimelockParameters>> => {
 		// TODO: Implement OpenZeppelin parameter fetching
 		throw new Error('OpenZeppelin timelock import not yet implemented');
 	}, []);

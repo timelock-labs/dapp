@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import FeatureCard from '@/components/ui/FeatureCard';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import type { Partner } from '@/types/api';

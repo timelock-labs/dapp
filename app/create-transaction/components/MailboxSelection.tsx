@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useTranslations } from 'next-intl';
 import type { MailboxSelectionProps } from './types';
 import { useApi } from '@/hooks/useApi';
 
-const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, onMailboxChange }) => {
+const MailboxSelection: React.FC<MailboxSelectionProps> = () => {
 	const t = useTranslations('CreateTransaction');
 	const { request: getEmailNotifications } = useApi();
-	const [mailboxOptions, setMailboxOptions] = useState<any[]>([]);
+	const [mailboxOptions, setMailboxOptions] = useState<Array<{ id: number; email: string; email_remark?: string }>>([]);
 
 	useEffect(() => {
 		const fetchEmails = async () => {
@@ -21,7 +20,7 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = ({ selectedMailbox, on
 		};
 
 		fetchEmails();
-	}, []);
+	}, [getEmailNotifications]);
 
 	return (
 		// Change to vertical (top-bottom) layout
