@@ -75,7 +75,7 @@ export default function Home() {
 			case 'loading':
 				return <LoadingSkeleton />;
 			case 'assert':
-				return <Assert timelocks={timelockData.compound_timelocks} />;
+				return <Assert timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
 			default:
 				return <CreateProtocol />;

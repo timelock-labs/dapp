@@ -237,7 +237,7 @@ export const useTimelockImport = (config: TimelockImportConfig = {}) => {
 					if (standard === 'compound') {
 						params = await getCompoundParameters(contractAddress);
 					} else if (standard === 'openzeppelin') {
-						params = await getOpenZeppelinParameters(contractAddress);
+						params = await getOpenZeppelinParameters();
 					} else {
 						throw new Error(`Unsupported timelock standard: ${standard}`);
 					}

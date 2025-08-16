@@ -153,7 +153,7 @@ const ImportTimelockPage: React.FC = () => {
 						</div>
 						<div className='flex flex-col pl-8'>
 							<SelectInput label={t('selectChain')} value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder={t('selectChainPlaceholder')} />
-							<TextInput label={t('contractAddress')} value={contractAddress} onChange={e => setContractAddress(e)} placeholder={t('contractAddressPlaceholder')} />
+							<TextInput label={t('contractAddress')} value={contractAddress} onChange={(e: string) => setContractAddress(e)} placeholder={t('contractAddressPlaceholder')} />
 							<SelectInput
 								label={t('contractStandard')}
 								value={contractStandard}
