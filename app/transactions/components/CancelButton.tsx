@@ -27,24 +27,10 @@ const CancelButton = ({ timelock }) => {
 		const eta = etaTimestamp.getTime() / 1000; // Convert to seconds
 
 		try {
-			alert(
-				JSON.stringify(
-					{
-						target: timelock.target_address,
-						value: timelock.value,
-						// timelock.signature,
-						sig: 'approve(address,uint256)',
-						calldata: timelock.call_data_hex,
-						eta,
-					},
-					null,
-					2
-				)
-			);
 			const tx = await Timelock.cancelTransaction(
 				timelock.target_address, 
 				timelock.value, 
-				timelock.signature, 
+				timelock.function_signature, 
 				timelock.call_data_hex, 
 				eta
 			);
