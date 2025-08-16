@@ -22,6 +22,7 @@ const ABILibPage: React.FC = () => {
 	const t = useTranslations('ABI-Lib');
 	const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
+	const buttonRefs = useRef<{ [key: number]: HTMLButtonElement | null }>({});
 
 	const [isAddABIOpen, setIsAddABIOpen] = useState(false);
 	const [isViewABIOpen, setIsViewABIOpen] = useState(false);
@@ -185,27 +186,25 @@ const ABILibPage: React.FC = () => {
 			key: 'operations',
 			header: t('operations'), // Operations column
 			render: (row: ABIRow) => (
-				<div className='relative flex items-center space-x-2'>
-					<>
-						<div className='relative'>
-							<button
-								type='button'
-								onClick={() => handleEllipsisMenu(row.id)}
-								className='text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors'
-								aria-label='More options'
-								title='More options'>
-								<EllipsesSVG />
-							</button>
-							<ABIRowDropdown
-								isOpen={openDropdownId === row.id}
-								dropdownRef={dropdownRef}
-								onDelete={() => handleDeleteABI(row)}
-								onView={() => handleViewABI(row)}
-								t={t}
-								isShared={row.is_shared}
-							/>
-						</div>
-					</>
+				<div className='relative'>
+					<button
+						ref={(el) => { buttonRefs.current[row.id] = el; }}
+						type='button'
+						onClick={() => handleEllipsisMenu(row.id)}
+						className='text-gray-500 hover:text-gray-800 p-1 rounded-md hover:bg-gray-100 transition-colors'
+						aria-label='More options'
+						title='More options'>
+						<EllipsesSVG />
+					</button>
+					<ABIRowDropdown
+						isOpen={openDropdownId === row.id}
+						dropdownRef={dropdownRef}
+						onDelete={() => handleDeleteABI(row)}
+						onView={() => handleViewABI(row)}
+						t={t}
+						isShared={row.is_shared}
+						buttonRef={{ current: buttonRefs.current[row.id] }}
+					/>
 				</div>
 			),
 		},
