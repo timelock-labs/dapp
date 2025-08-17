@@ -153,9 +153,9 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					gasPrice: params.gasPrice || defaultGasPrice || gasEstimation?.gasPrice,
 				};
 
+				let toastId: string | number | undefined;
 				try {
 					// Show loading toast if enabled
-					let toastId: string | number | undefined;
 					if (showToasts) {
 						toastId = createToastNotification.loading('Please confirm transaction in your wallet...');
 					}
@@ -200,6 +200,10 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					}
 
 					throw new Error(message);
+				} finally {
+					if (showToasts && toastId) {
+						createToastNotification.dismiss(toastId);
+					}
 				}
 			});
 		},
