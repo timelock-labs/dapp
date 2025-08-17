@@ -3,6 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-re
 
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
 	return <nav role='navigation' aria-label='pagination' data-slot='pagination' className={cn('mx-auto flex w-full justify-center', className)} {...props} />;
@@ -40,10 +41,11 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
 }
 
 function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
+	const t = useTranslations('common');
 	return (
 		<PaginationLink aria-label='Go to previous page' size='default' className={cn('gap-1 px-2.5 sm:pl-2.5', className)} {...props}>
 			<ChevronLeftIcon />
-			<span className='hidden sm:block'>Previous</span>
+			<span className='hidden sm:block'>{t('previous')}</span>
 		</PaginationLink>
 	);
 }

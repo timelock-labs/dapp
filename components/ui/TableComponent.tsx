@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 
 // Define types for columns and data
@@ -27,6 +28,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 	const startIndex = (currentPage - 1) * itemsPerPage;
 	const endIndex = startIndex + itemsPerPage;
 	const currentItems = data.slice(startIndex, endIndex);
+	const t = useTranslations('common');
 
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
@@ -99,7 +101,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
 						</svg>
-						Previous
+						{t('previous')}
 					</button>
 					<span className='text-sm'>
 						<span className='text-black font-medium'>
@@ -118,7 +120,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 							cursor-pointer
               ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and disable clicks */
             `}>
-						Next
+						{t('next')}
 						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
 						</svg>

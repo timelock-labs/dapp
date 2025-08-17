@@ -22,5 +22,7 @@
 	"description": "Description",
 	"status": "Status",
 	"created_at": "Created At",
-	"updated_at": "Updated At"
+	"updated_at": "Updated At",
+	"previous":"Previous",
+	"next":"Next"
 }

@@ -41,7 +41,7 @@ interface HistoryTxRow {
  * @returns JSX.Element
  */
 const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) => {
-	const t = useTranslations('Transactions');
+	const t = useTranslations('Transactions_log');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const chains = useAuthStore(state => state.chains);
 
@@ -101,7 +101,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 				return (
 					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ? (
+						{chainLogo && (
 							<Image
 								src={chainLogo}
 								alt={chainName}
@@ -109,12 +109,9 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 								height={16}
 								className='rounded-full'
 								onError={e => {
-									console.error('Failed to load chain logo:', chainLogo);
 									e.currentTarget.style.display = 'none';
 								}}
 							/>
-						) : (
-							<></>
 						)}
 						<span className='text-gray-800 font-medium'>{chainName}</span>
 					</div>

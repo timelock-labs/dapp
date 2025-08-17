@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import AnimatedAssetValue from './AnimatedAssetValue';
 import { ethers } from 'ethers';
+import { useTranslations } from 'next-intl';
 
 export interface Asset {
 	token_address: string;
@@ -34,7 +35,7 @@ interface AssetListProps {
 const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 10; // Changed from 7 to 10
-
+	const t = useTranslations('common');
 	const totalItems = assets.length;
 	const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -109,7 +110,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
 					</svg>
-					Previous
+					{t('previous')}
 				</button>
 				{/* Dynamic pagination text */}
 				<span className='text-sm'>
@@ -133,7 +134,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
             hover:bg-gray-300 transition-colors
             ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}>
-					Next
+					{t('next')}
 					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
 					</svg>

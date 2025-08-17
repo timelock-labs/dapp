@@ -12,10 +12,12 @@ import timelocks from '@/app/timelocks/i18n/en.json';
 import transactions from '@/app/transactions/i18n/en.json';
 import notify from '@/app/notify/i18n/en.json';
 import ecosystem from '@/app/ecosystem/i18n/en.json';
+import transactionsLog from '@/app/transactions-log/i18n/en.json';
 
 export default {
 	// common 模块直接包含键值对，需要包装在 common 命名空间中
 	common,
+	...transactionsLog,
 
 	// 其他模块已经有正确的命名空间结构，直接展开
 	...navigation,
