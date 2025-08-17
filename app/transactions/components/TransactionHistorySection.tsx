@@ -215,7 +215,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 						onClick={() => {
 							router.push('/create-transaction');
 						}}
-						className='inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
+						className='cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
 						<AddSVG />
 						<span>Create</span>
 					</button>
