@@ -43,6 +43,7 @@
 			"time": "时间"
 		},
 		"submitting": "提交中...",
-		"sendTransactionButton": "发送交易"
+		"sendTransactionButton": "发送交易",
+		"fetchABIError": "获取ABI列表失败：{message}"
 	}
 }

@@ -43,6 +43,7 @@
 			"time": "Time"
 		},
 		"submitting": "Submitting...",
-		"sendTransactionButton": "Send Transaction"
+		"sendTransactionButton": "Send Transaction",
+		"fetchABIError": "Failed to fetch ABI list: {message}"
 	}
 }
