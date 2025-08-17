@@ -13,6 +13,7 @@ import copyToClipboard from '@/utils/copy';
 import PageLayout from '@/components/layout/PageLayout';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { ethers } from 'ethers';
+import SectionCard from '@/components/layout/SectionCard';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -168,35 +169,13 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		}
 	];
 
-	const handleExport = () => {
-		if (historyTxs.length === 0) {
-			toast.warning('No data to export');
-			return;
-		}
-
-		try {
-			const worksheet = XLSX.utils.json_to_sheet(historyTxs);
-			const workbook = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(workbook, worksheet, 'Transaction History');
-
-			// Generate filename with current date
-			const now = new Date();
-			const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
-			const filename = `transaction-history-${timestamp}.xlsx`;
-
-			XLSX.writeFile(workbook, filename);
-			toast.success('Transaction history exported successfully');
-		} catch (error) {
-			console.error('Export failed:', error);
-			toast.error('Failed to export transaction history');
-		}
-	};
-
 	return (
 		<PageLayout title={t('title')}>
+			<SectionCard>
 			<div className='flex-1 mb-4'>
 				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
+			</SectionCard>
 		</PageLayout>
 	);
 };

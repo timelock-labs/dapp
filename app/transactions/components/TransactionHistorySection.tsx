@@ -21,6 +21,7 @@ import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
 import copyToClipboard from '@/utils/copy';
+import SectionCard from '@/components/layout/SectionCard';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -206,7 +207,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 	};
 
 	return (
-		<div className={`rounded-xl bg-white border border-gray-200 flex flex-col min-h-[600px] px-6 ${className || ''}`}>
+	<SectionCard >
 			<div className='flex flex-col pt-6'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
@@ -233,7 +234,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			<div className='flex-1 mb-4'>
 				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
-		</div>
+	</SectionCard>
 	);
 };
 
