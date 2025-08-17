@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
 	return <div data-slot='sidebar-group' data-sidebar='group' className={cn('relative flex w-full min-w-0 flex-col p-2', className)} {...props} />;

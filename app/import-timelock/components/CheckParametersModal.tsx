@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
-import { formatTimeRemaining } from '@/lib/utils';
+import { formatTimeRemaining } from '@/utils/utils';
 
 // Define interface for the data this dialog will display
 interface CheckParametersDialogProps {

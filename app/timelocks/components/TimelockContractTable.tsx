@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import TableComponent from '@/components/ui/TableComponent';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useRouter, useParams } from 'next/navigation';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/utils';
 import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useApi } from '@/hooks/useApi';

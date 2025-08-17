@@ -5,9 +5,9 @@ import { createWallet } from 'thirdweb/wallets';
 import { memo, useEffect } from 'react';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
-import { client, supportedChains } from '@/lib/thirdweb';
+import { client, supportedChains } from '@/utils/thirdweb';
 
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 

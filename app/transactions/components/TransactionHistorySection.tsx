@@ -15,7 +15,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
 import AddSVG from '@/components/icons/add';
-import { formatDate, formatAddress } from '@/lib/utils';
+import { formatDate, formatAddress } from '@/utils/utils';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 
 import CancelButton from './CancelButton';

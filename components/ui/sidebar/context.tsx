@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useIsMobile } from '@/hooks/useMobile';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { cookieUtil } from '@/utils/cookieUtil';
 import { SidebarContextProps } from './types';
 import { SIDEBAR_COOKIE_NAME, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, SIDEBAR_KEYBOARD_SHORTCUT } from './constants';

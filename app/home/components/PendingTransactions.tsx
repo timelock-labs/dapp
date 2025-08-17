@@ -4,14 +4,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TableComponent from '@/components/ui/TableComponent';
 import { useTranslations } from 'next-intl';
-import { formatAddress } from '@/lib/utils';
+import { formatAddress } from '@/utils/utils';
 import { useApi } from '@/hooks/useApi';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/store/userStore';
 import { Network } from 'lucide-react';
 import Image from 'next/image';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/utils';
 import { RawTx, PendingTx } from '../types/types';
 
 const PendingTransactions: React.FC = () => {

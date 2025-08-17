@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import Image from 'next/image';
 import { useApi } from '@/hooks/useApi';
-import { formatDate, formatAddress } from '@/lib/utils';
+import { formatDate, formatAddress } from '@/utils/utils';
 import copyToClipboard from '@/utils/copy';
 import PageLayout from '@/components/layout/PageLayout';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';

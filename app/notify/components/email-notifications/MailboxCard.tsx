@@ -2,7 +2,7 @@ import React from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useTranslations } from 'next-intl';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/utils/utils';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
