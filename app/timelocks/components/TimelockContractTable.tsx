@@ -195,11 +195,6 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			},
 		},
 		{
-			key: 'created_at',
-			header: t('addedAt'),
-			render: (row: TimelockContractItem) => formatDate(row.created_at),
-		},
-		{
 			key: 'operations',
 			header: t('operations'),
 			render: (row: TimelockContractItem) => (
