@@ -226,7 +226,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 						<TabbedNavigation tabs={historyTabs} activeTab={activeTab} onTabChange={handleTabChange} />
 					</div>
 					<div className='flex items-center space-x-3'>
-						<SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' />
+						{/* <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' /> */}
 						<ExportButton onClick={handleExport} />
 					</div>
 				</div>

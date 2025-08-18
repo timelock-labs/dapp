@@ -99,6 +99,15 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 				const fullTimelock = allTimelocks.find(tl => tl.id.toString() === value);
 				if (fullTimelock) {
+					// First, switch the chain
+					if (fullTimelock.chain_id !== chainId) {
+						const chainObject = getChainObject(fullTimelock.chain_id);
+						if (chainObject) {
+							await switchChain(chainObject);
+						}
+					}
+
+					// Then, fetch the details
 					setIsLoadingDetails(true);
 					try {
 						await fetchTimelockDetail('/api/v1/timelock/detail', {
@@ -114,7 +123,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 				}
 			}
 		},
-		[allTimelocks, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions]
+		[allTimelocks, fetchTimelockDetail, onTimelockAddressChange, onTimelockTypeChange, timelockOptions, chainId, switchChain]
 	);
 
 	useEffect(() => {
