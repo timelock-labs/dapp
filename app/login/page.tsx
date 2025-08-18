@@ -38,11 +38,13 @@ const TimeLockerSplitPage = () => {
 				toast.error('Error signing in');
 			}
 		}
-	}, [isConnected, address, signMessage, walletConnect, hasSignedIn]);
+	}, [isConnected, address, signMessage]);
 
 	useEffect(() => {
-		handleUserSignature();
-	}, [handleUserSignature]);
+		if (isConnected) {
+			handleUserSignature();
+		}
+	}, [isConnected, handleUserSignature]);
 
 	useEffect(() => {
 		if (apiResponse && apiResponse.success) {
