@@ -1,33 +1,56 @@
-// 动态导入并合并所有中文模块
+// 统一的多语言配置 - 中文
+// 从统一的 local 目录导入所有模块
 import common from './zh/common.json';
-import login from '@/app/login/i18n/zh.json';
-import navigation from '@/components/navigation/i18n/zh.json';
-import abi from '@/app/abi-lib/i18n/zh.json';
-import createTimelock from '@/app/create-timelock/i18n/zh.json';
-import createTransaction from '@/app/create-transaction/i18n/zh.json';
-import importTimelock from '@/app/import-timelock/i18n/zh.json';
-import home from '@/app/home/i18n/zh.json';
-import timelocks from '@/app/timelocks/i18n/zh.json';
-import transactions from '@/app/transactions/i18n/zh.json';
-import notify from '@/app/notify/i18n/zh.json';
-import ecosystem from '@/app/ecosystem/i18n/zh.json';
-import transactionsLog from '@/app/transactions-log/i18n/zh.json';
+
+// 核心模块
+import home from './zh/home.json';
+import login from './zh/login.json';
+import navigation from './zh/navigation.json';
+
+// 功能模块
+import transactionsLog from './zh/transactions-log.json';
+import transactions from './zh/transactions.json';
+import timelocks from './zh/timelocks.json';
+import notify from './zh/notify.json';
+import importTimelock from './zh/import-timelock.json';
+import ecosystem from './zh/ecosystem.json';
+import createTransaction from './zh/create-transaction.json';
+import createTimelock from './zh/create-timelock.json';
+import abiLib from './zh/abi-lib.json';
+
+// 如果其他模块还未迁移，临时从原路径导入
+
+
+
+
+
+
+
+
 
 export default {
-	// common 模块直接包含键值对，需要包装在 common 命名空间中
+	// 公共配置
 	common,
-	...transactionsLog,
-
-	// 其他模块已经有正确的命名空间结构，直接展开
-	...navigation,
-	...abi,
+	
+	// 已迁移到统一结构的模块
+	...home,
 	...login,
+	...navigation,
+	...abiLib,
 	...createTimelock,
 	...createTransaction,
+	...ecosystem,
 	...importTimelock,
-	...home,
+	...notify,
 	...timelocks,
 	...transactions,
-	...notify,
-	...ecosystem,
+	...transactionsLog,
+
+
+
+
+
+
+
+
 };
