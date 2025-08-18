@@ -13,7 +13,7 @@ import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
 import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
-import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from './types/types';
+import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from '@/types';
 
 const CreateTimelockPage: React.FC = () => {
 	const t = useTranslations('CreateTimelock');

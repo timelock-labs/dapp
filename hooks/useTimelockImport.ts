@@ -7,10 +7,10 @@ import { useCallback, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 
 // Internal hooks
-import { useAsyncOperation } from '../../../hooks/useCommonHooks';
-import { useContractValidation, useWalletConnection } from '../../../hooks/useBlockchainHooks';
-import { createErrorMessage, useAbortController } from '../../../hooks/useHookUtils';
-import { useWeb3React } from '../../../hooks/useWeb3React';
+import { useAsyncOperation } from '@/hooks/useCommonHooks';
+import { useContractValidation, useWalletConnection } from '@/hooks/useBlockchainHooks';
+import { createErrorMessage, useAbortController } from '@/hooks/useHookUtils';
+import { useWeb3React } from '@/hooks/useWeb3React';
 
 // Type imports
 import type { Address, ContractStandard, TimelockParameters } from '@/types';

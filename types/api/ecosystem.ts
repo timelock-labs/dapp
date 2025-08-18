@@ -1,7 +1,3 @@
-/**
- * Partner-related API types
- */
-
 export interface Partner {
 	id: number;
 	name: string;

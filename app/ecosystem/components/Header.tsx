@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import bg_png from '../images/bg.png';
+import bg_png from '@/public/bg.png';
 
 const EcosystemSearchHeader: React.FC = () => {
 	const t = useTranslations('Ecosystem');

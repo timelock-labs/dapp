@@ -1,7 +1,7 @@
 import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslations } from 'next-intl';
-import type { EncodingPreviewProps } from './types';
+import type { EncodingPreviewProps } from '@/types';
 
 const EncodingPreview: React.FC<EncodingPreviewProps> = ({ previewContent }) => {
 	const t = useTranslations('CreateTransaction');

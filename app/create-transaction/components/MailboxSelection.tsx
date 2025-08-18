@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslations } from 'next-intl';
-import type { MailboxSelectionProps } from './types';
+import type { MailboxSelectionProps } from '@/types';
 import { useApi } from '@/hooks/useApi';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = () => {

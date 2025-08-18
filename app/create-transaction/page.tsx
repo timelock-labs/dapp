@@ -13,7 +13,7 @@ import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { Interface } from 'ethers/lib/utils';
-import generatePreview from './utils/generatePreview';
+import generatePreview from '@/utils/generatePreview';
 import { ethers } from 'ethers';
 const TransactionEncoderPage: React.FC = () => {
 	const router = useRouter();

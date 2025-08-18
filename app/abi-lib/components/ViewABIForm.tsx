@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
-import type { ViewABIFormProps } from '../types/types';
+import type { ViewABIFormProps } from '@/types';
 
 const ViewABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiContent }) => {
 	const t = useTranslations('ABI-Lib.viewForm');

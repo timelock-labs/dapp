@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ParameterDisplayRowProps } from '../types/types';
+import type { ParameterDisplayRowProps } from '@/types';
 
 const ParameterDisplayRow: React.FC<ParameterDisplayRowProps> = ({ label, value, children }) => (
 	<div className='mb-4'>

@@ -14,7 +14,7 @@ import StarSVG from '@/components/icons/star';
 import EllipsesSVG from '@/components/icons/ellipses';
 import ABIRowDropdown from './components/RowDropdown';
 
-import type { ABIRow, ABIContent } from './types/types';
+import type { ABIRow, ABIContent } from '@/types';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import PageCard from './components/PageCard';
 

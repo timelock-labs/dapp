@@ -67,6 +67,8 @@ export type {
 	Sponsor,
 	SponsorsData,
 	SponsorsApiResponse,
+	RawTx,
+	PendingTx,
 } from './api';
 
 // Blockchain and Web3 types
@@ -114,6 +116,7 @@ export type {
 	CreateTimelockFormState,
 	DeploymentResult,
 	CompoundTimelockParams,
+	SidebarContextProps,
 } from './components';
 
 // Form-related types

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ConfirmCreationDialogProps } from '../types/types';
+import type { ConfirmCreationDialogProps } from '@/types';
 import ParameterDisplayRow from './ParameterDisplayRow';
 
 const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {

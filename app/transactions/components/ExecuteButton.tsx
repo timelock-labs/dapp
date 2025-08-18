@@ -5,7 +5,7 @@ import { useActiveWalletChain } from 'thirdweb/react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Import the minimal ABI for the timelock contract
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
 
-const ExecuteButton = ({ timelock }) => {
+const ExecuteButton = ({ timelock }: { timelock: any }) => {
     const { id: chainId } = useActiveWalletChain() || {};
     const chains = useAuthStore(state => state.chains);
     const { signer } = useContractDeployment();

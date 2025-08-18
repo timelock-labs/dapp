@@ -11,7 +11,7 @@ interface TimelockOptionCardProps {
 	onClick?: () => void; // Optional click handler for interactivity
 }
 
-import create_bg_img from '../images/create_bg.png';
+import create_bg_img from '@/public/create_bg.png';
 
 const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 	title,

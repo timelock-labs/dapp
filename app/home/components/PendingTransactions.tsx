@@ -12,7 +12,7 @@ import { Network } from 'lucide-react';
 import Image from 'next/image';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { formatDate } from '@/utils/utils';
-import { RawTx, PendingTx } from '../types/types';
+import type { RawTx, PendingTx } from '@/types';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');

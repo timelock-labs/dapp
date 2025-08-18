@@ -19,7 +19,7 @@ export type { TimelockContract, TimelockContractItem, TimelockParameters, Import
 export type { Transaction, TransactionListResponse, TransactionStats, TransactionListFilters, PendingTransactionFilters } from './api/transaction';
 
 // Partner types
-export type { Partner } from './api/partner';
+export type { Partner } from './api/ecosystem';
 
 // ABI types
 export type { ABIItem, ABIListResponse } from './api/abi';
@@ -42,3 +42,6 @@ export type {
 
 // Sponsors types
 export type { Sponsor, SponsorsData, SponsorsApiResponse } from './api/sponsors';
+
+// Home types
+export type { RawTx, PendingTx } from './api/home';

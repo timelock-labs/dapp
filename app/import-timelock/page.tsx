@@ -9,7 +9,7 @@ import CheckParametersModal from './components/CheckParametersModal';
 import QuestionIcon from '@/public/QuestionIcon.svg';
 import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/userStore';
-import { useTimelockImport, TimelockParameters } from '@/app/import-timelock/api/useTimelockImport';
+import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport';
 import { getChainObject, ChainUtils } from '@/utils/chainUtils';
 import { toast } from 'sonner';
 import { ImportTimelockRequest } from '@/types';

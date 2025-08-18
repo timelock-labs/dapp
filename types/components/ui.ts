@@ -35,3 +35,13 @@ export interface InputProps extends React.ComponentProps<'input'> {
 export interface CardProps extends React.ComponentProps<'div'> {
 	className?: string;
 }
+
+export interface SidebarContextProps {
+	state: 'expanded' | 'collapsed';
+	open: boolean;
+	setOpen: (open: boolean) => void;
+	openMobile: boolean;
+	setOpenMobile: (open: boolean) => void;
+	isMobile: boolean;
+	toggleSidebar: () => void;
+};

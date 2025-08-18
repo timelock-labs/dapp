@@ -4,8 +4,8 @@ import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Assuming SectionHeader is in components/ui/
 import TimelockOptionCard from './TimelockOptionCard'; // Assuming TimelockOptionCard is in components/
 import { useRouter } from 'next/navigation';
-import create_bg_img from '../images/create_bg.png'; // Adjust the path as necessary
-import import_bg_img from '../images/import_bg.png'; // Adjust the path as necessary
+import create_bg_img from '@/public/create_bg.png'; // Adjust the path as necessary
+import import_bg_img from '@/public/import_bg.png'; // Adjust the path as necessary
 import { useTranslations } from 'next-intl';
 
 const AddTimelockContractSection: React.FC = () => {
