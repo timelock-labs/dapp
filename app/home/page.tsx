@@ -6,6 +6,9 @@ import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from './components/LoadingSkeleton';
+import PageLayout from '@/components/layout/PageLayout';
+import { useTranslations } from 'next-intl';
+
 
 // 页面内容包装器，提供淡入动画
 const PageWrapper = ({ children, isVisible }: { children: React.ReactNode; isVisible: boolean }) => (
@@ -15,6 +18,8 @@ const PageWrapper = ({ children, isVisible }: { children: React.ReactNode; isVis
 export default function Home() {
 	const connectionStatus = useActiveWalletConnectionStatus();
 	const isConnected = connectionStatus === 'connected';
+	const t = useTranslations('home_page');
+
 	const [showContent, setShowContent] = useState(false);
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'asset'>('loading');
 	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
@@ -73,7 +78,7 @@ export default function Home() {
 	const renderCurrentView = () => {
 		switch (currentView) {
 			case 'loading':
-				return <LoadingSkeleton />;
+				return <PageLayout title={t('create_protocol_title')}><LoadingSkeleton /></PageLayout>;
 			case 'asset':
 				return <Assert timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
@@ -84,7 +89,7 @@ export default function Home() {
 
 	return (
 		<div className='min-h-screen'>
-			<PageWrapper isVisible={showContent}>{renderCurrentView()}</PageWrapper>
+			{renderCurrentView()}
 		</div>
 	);
 }

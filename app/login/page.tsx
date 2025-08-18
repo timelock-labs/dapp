@@ -20,9 +20,11 @@ const TimeLockerSplitPage = () => {
 	const { data: apiResponse, request: walletConnect } = useApi();
 	const login = useAuthStore(state => state.login);
 	const router = useRouter();
+	const [hasSignedIn, setHasSignedIn] = useState(false);
 
 	const handleUserSignature = useCallback(async () => {
-		if (isConnected && address) {
+		if (isConnected && address && !hasSignedIn) {
+			setHasSignedIn(true);
 			const message = 'welcome to Timelocker!';
 			try {
 				const signature = await signMessage!({ message: message });
@@ -32,10 +34,11 @@ const TimeLockerSplitPage = () => {
 					message: message,
 				});
 			} catch {
+				setHasSignedIn(false);
 				toast.error('Error signing in');
 			}
 		}
-	}, [isConnected, address, signMessage, walletConnect]);
+	}, [isConnected, address, signMessage, walletConnect, hasSignedIn]);
 
 	useEffect(() => {
 		handleUserSignature();

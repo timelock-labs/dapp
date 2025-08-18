@@ -7,12 +7,13 @@ import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
-import { client, supportedChains } from '@/utils/thirdweb';
+import { ethereum, sepolia, polygon, polygonMumbai, bsc, optimism, optimismSepolia, base, baseSepolia, bscTestnet, arbitrum, arbitrumSepolia } from 'thirdweb/chains';
 
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
+import { useWeb3React } from '@/hooks/useWeb3React';
 
 const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
-
+const supportedChains = [ethereum, sepolia, polygon, polygonMumbai, bsc, bscTestnet, optimism, optimismSepolia, base, baseSepolia, arbitrum, arbitrumSepolia];
 interface ConnectWalletProps extends BaseComponentProps {
 	icon?: boolean;
 	fullWidth?: boolean;
@@ -63,6 +64,7 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 	const router = useRouter();
 
 	const wrapperClass = cn('connect-wallet-container', fullWidth ? 'w-full' : 'w-auto', className);
+	const { client} = useWeb3React();
 
 	const connectionStatus = useActiveWalletConnectionStatus();
 

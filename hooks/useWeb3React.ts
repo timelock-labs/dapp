@@ -20,11 +20,12 @@ export function useWeb3React(): {
 	connector: undefined;
 	signMessage: ({ message, originalMessage, chainId }: { message: string; originalMessage?: string | undefined; chainId?: number | undefined }) => Promise<`0x${string}`>;
 	sendTransaction: ({ to, data, value }: { to: string; data?: string | undefined; value?: string | number | bigint | undefined }) => Promise<any>;
+	client: ReturnType<typeof createThirdwebClient>;
 } {
+
 	const client = createThirdwebClient({
-		clientId: '0e1974955be2e739c2b5fc550a3f6c0d',
-		secretKey:"X8JMuRHwI4J3d2pO8kUzCg1_qjUy00rKc_UNX9dAFsI4uovyMgEcsKRmkLc7kyMEjID7xudU58BrWxSfDLXjIA",
-		
+		clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || '....',
+		secretKey: process.env.NEXT_PUBLIC_THIRDWEB_SECRET_KEY || '....',
 	});
 
 	const activeAccount = useActiveAccount();
@@ -98,5 +99,6 @@ export function useWeb3React(): {
 		connector: undefined,
 		signMessage,
 		sendTransaction,
+		client
 	};
 }
