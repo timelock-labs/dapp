@@ -23,10 +23,10 @@ export function useWeb3React(): {
 	client: ReturnType<typeof createThirdwebClient>;
 } {
 
-	const client = createThirdwebClient({
+	const client = useMemo(() => createThirdwebClient({
 		clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || '....',
 		secretKey: process.env.NEXT_PUBLIC_THIRDWEB_SECRET_KEY || '....',
-	});
+	  }), []); // 只创建一次
 
 	const activeAccount = useActiveAccount();
 
