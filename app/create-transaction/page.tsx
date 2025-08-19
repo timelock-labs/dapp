@@ -60,7 +60,6 @@ const TransactionEncoderPage: React.FC = () => {
 
 				const ethereumParamsCodec = new EthereumParamsCodec()
 				const { encodedData } = ethereumParamsCodec.encodeByFunctionSigAndParams(timelockMethod, [target, value, functionValue, targetCalldata, String(timeValue)])
-				alert(JSON.stringify(encodedData))
 				setTimelockCalldata(encodedData);
 			} catch (err) {
 				setTargetCallData('');

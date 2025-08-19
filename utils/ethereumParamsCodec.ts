@@ -159,7 +159,7 @@ export default class EthereumParamsCodec {
 
             return {
                 success: true,
-                encodedData: functionSelector.selector + encoded.slice(10),
+                encodedData: functionSelector.selector + encoded.slice(2),
                 details: {
                     paramTypes,
                     originalParams: params,
