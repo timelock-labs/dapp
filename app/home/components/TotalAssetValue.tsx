@@ -24,7 +24,7 @@ const TotalAssetValue: React.FC<TotalAssetValueProps> = ({ totalUsdValue }) => {
 	});
 
 	return (
-		<div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
+		<div className='bg-white p-6 rounded-lg border border-gray-200'>
 			<h2 className='text-gray-600 text-sm font-medium mb-1'>Total asset value</h2>
 			<div className='flex items-baseline space-x-2'>
 				<p className='text-3xl font-bold text-gray-900'>
