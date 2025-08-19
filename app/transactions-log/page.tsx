@@ -15,6 +15,7 @@ import { Copy } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ChainLabel from '@/components/web3/ChainLabel';
 import NativeToken from '@/components/web3/NativeToken';
+import HashLink from '@/components/web3/HashLink';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -104,17 +105,18 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			key: 'tx_hash',
 			header: t('txHash'),
 			render: (row: HistoryTxRow) => (
-				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>
-						{formatAddress(row.queue_tx_hash)}
-					</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.queue_tx_hash);
-						}}
-					/>
-				</div>
+				<HashLink hash={row.queue_tx_hash} chainId={row.chain_id} />
+				// <div className='flex items-center space-x-2'>
+				// 	<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>
+				// 		{formatAddress(row.queue_tx_hash)}
+				// 	</span>
+				// 	<Copy
+				// 		className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+				// 		onClick={() => {
+				// 			copyToClipboard(row.queue_tx_hash);
+				// 		}}
+				// 	/>
+				// </div>
 			),
 		},
 		{
