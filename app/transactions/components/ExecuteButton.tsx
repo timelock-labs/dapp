@@ -47,9 +47,9 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
     };
 
     return (
-       	<button className='cursor-pointer leading-5 bg-green-100 text-green-800 font-bold text-xs px-2 py-1 rounded-full hover:bg-red-300 transition-colors duration-200' onClick={handleCancel}>
-            Execute
-        </button>
+		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm cursor-pointer' onClick={handleCancel}>
+			Execute
+		</div>
     );
 };
 

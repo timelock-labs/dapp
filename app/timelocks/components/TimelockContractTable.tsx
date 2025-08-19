@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 import copyToClipboard from '@/utils/copy';
 import ChainLabel from '@/components/web3/ChainLabel';
+import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
@@ -111,31 +112,18 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 					return <span className='text-gray-500'>{t('none')}</span>;
 				}
 
-				const getRoleStyle = (role: string) => {
-					switch (role.toLowerCase()) {
-						case 'creator':
-							return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
-						case 'admin':
-							return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm';
-						case 'admincreator':
-							return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm';
-						default:
-							return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200 shadow-sm';
-					}
-				};
-
-				const getRoleDisplayName = (role: string) => {
-					switch (role.toLowerCase()) {
-						case 'admin':
-							return 'Admin';
-						case 'creator':
-							return 'Creator';
-						case 'admincreator':
-							return 'Admin & Creator';
-						default:
-							return role;
-					}
-				};
+				// const getRoleStyle = (role: string) => {
+				// 	switch (role.toLowerCase()) {
+				// 		case 'creator':
+				// 			return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
+				// 		case 'admin':
+				// 			return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm';
+				// 		case 'admincreator':
+				// 			return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm';
+				// 		default:
+				// 			return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200 shadow-sm';
+				// 	}
+				// };
 
 				return (
 					<div className='flex flex-wrap gap-2'>
@@ -143,9 +131,8 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 							permission !=="creator" && (
 							<span
 								key={index}
-								className={`px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 ${getRoleStyle(permission)}`}>
-								<span className='w-1.5 h-1.5 rounded-full bg-current opacity-60 mr-1.5'></span>
-								{getRoleDisplayName(permission)}
+								className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800`}>
+								{capitalizeFirstLetter(permission)}
 							</span>)
 						))}
 					</div>

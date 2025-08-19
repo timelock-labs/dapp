@@ -28,10 +28,10 @@ const CancelButton = ({ timelock }) => {
 
 		try {
 			const tx = await Timelock.cancelTransaction(
-				timelock.target_address, 
-				timelock.value, 
-				timelock.function_signature, 
-				timelock.call_data_hex, 
+				timelock.target_address,
+				timelock.value,
+				timelock.function_signature,
+				timelock.call_data_hex,
 				eta
 			);
 
@@ -44,9 +44,9 @@ const CancelButton = ({ timelock }) => {
 	};
 
 	return (
-		<button className='cursor-pointer leading-5 bg-red-100 text-red-800 font-bold text-xs px-2 py-1 rounded-full hover:bg-red-300 transition-colors duration-200' onClick={handleCancel}>
+		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-200 shadow-sm cursor-pointer' onClick={handleCancel}>
 			Cancel
-		</button>
+		</div>
 	);
 };
 
