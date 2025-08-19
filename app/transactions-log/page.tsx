@@ -86,6 +86,11 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		return paramsArr
 	};
 
+	const getNativeTokenSymbol = (chainId: number) => {
+		const chain = chains?.find(c => c.chain_id === chainId);
+		return chain?.native_currency_symbol;
+	};
+
 	const columns = [
 		{
 			key: 'chain',
@@ -132,7 +137,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
-						{row.function_signature}
+						{row.function_signature} 
 					</span>
 				</div>
 			),
@@ -157,7 +162,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
-						{row.value}
+						{row.value}  {getNativeTokenSymbol(row.chain_id)}
 					</span>
 				</div>
 			),

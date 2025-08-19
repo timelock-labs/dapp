@@ -32,7 +32,9 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	useEffect(() => {
 		if (chains.length === 0) {
 			fetchChains();
+	
 		}
+		console.log(JSON.stringify(chains))
 	}, [chains.length, fetchChains]);
 
 	// Memoize chain options to prevent unnecessary re-renders
