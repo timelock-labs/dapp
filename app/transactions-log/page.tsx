@@ -14,6 +14,7 @@ import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import { Copy } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ChainLabel from '@/components/web3/ChainLabel';
+import NativeToken from '@/components/web3/NativeToken';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -47,8 +48,6 @@ interface HistoryTxRow {
 const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	const t = useTranslations('Transactions_log');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
-	const chains = useAuthStore(state => state.chains);
-
 	const { request: getTransactionList } = useApi();
 
 	// Fetch transaction history
@@ -88,11 +87,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		const paramsArr = decodeResult.params
 
 		return paramsArr
-	};
-
-	const getNativeTokenSymbol = (chainId: number) => {
-		const chain = chains?.find(c => c.chain_id === chainId);
-		return chain?.native_currency_symbol;
 	};
 
 	const columns = [
@@ -160,7 +154,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
-						{row.value}  {getNativeTokenSymbol(row.chain_id)}
+						{row.value}  <NativeToken chainId={row.chain_id} />
 					</span>
 					<Copy
 						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'

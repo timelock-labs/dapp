@@ -57,7 +57,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	const t = useTranslations('Transactions');
 	const [activeTab, setActiveTab] = useState('all');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
-	const chains = useAuthStore(state => state.chains);
 
 	const { request: getTransactionList } = useApi();
 	const router = useRouter();

@@ -44,7 +44,6 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 	const router = useRouter();
 	const params = useParams();
 	const locale = params.locale as string;
-	const chains = useAuthStore(state => state.chains);
 
 	const { data: deleteResponse, request: deleteContract } = useApi();
 

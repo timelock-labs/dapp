@@ -20,7 +20,6 @@ const PendingTransactions: React.FC = () => {
 	const [pendingTxs, setPendingTxs] = useState<PendingTx[]>([]);
 
 	const { request: getPendingTransactions } = useApi();
-	const chains = useAuthStore(state => state.chains);
 
 	const fetchPendingTransactions = useCallback(async () => {
 		try {
