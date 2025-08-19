@@ -163,6 +163,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 					// Send the transaction
 					const result = await sendTx(txParams);
 
+
 					// Update toast with transaction hash
 					if (showToasts && toastId) {
 						createToastNotification.success(`Transaction sent: ${result.transactionHash.slice(0, 10)}...`, toastId);

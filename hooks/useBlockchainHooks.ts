@@ -156,6 +156,8 @@ export function useTransactionSender() {
 						value: params.value,
 					});
 
+					await tx.wait();
+
 					return {
 						transactionHash: tx.transactionHash,
 					};
