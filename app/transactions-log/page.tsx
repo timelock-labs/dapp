@@ -12,6 +12,7 @@ import copyToClipboard from '@/utils/copy';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { ethers } from 'ethers';
 import SectionCard from '@/components/layout/SectionCard';
+import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -73,15 +74,16 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 	const parseCalldata = (funcSig: string, calldata: string) => {
 		if (!funcSig || !calldata) return '';
-		const funcParams = funcSig
-			.split('(')[1]
-			.split(')')[0]
-			.split(',')
-			.map(p => p.trim());
+		const ethereumParamsCodec = new EthereumParamsCodec(funcSig);
 
-		const calldataParams = ethers.utils.defaultAbiCoder.decode(funcParams, calldata);
+		const decodeResult = ethereumParamsCodec.decodeParams(
+			funcSig,
+			calldata
+		);
 
-		return Object.fromEntries(funcParams.map((p, i) => [p, calldataParams[i]]));
+		const paramsArr = decodeResult.params
+
+		return paramsArr
 	};
 
 	const columns = [
@@ -140,10 +142,10 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('callDataHex'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex flex-col'>
-					{Object.entries(parseCalldata(row.function_signature, row.call_data_hex)).map(([key, value]) => (
-						<div key={key} className='flex text-sm'>
-							<div className='font-medium'>{key.toString()}:</div>
-							<div className='ml-1'>{value.toString()}</div>
+					{parseCalldata(row.function_signature, row.call_data_hex).map((item) => (
+						<div key={item.index} className='flex text-sm'>
+							<div className='font-medium'>{item.type}:</div>
+							<div className='ml-1'>{item.value}</div>
 						</div>
 					))}
 				</div>
