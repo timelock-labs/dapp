@@ -74,7 +74,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 	const parseCalldata = (funcSig: string, calldata: string) => {
 		if (!funcSig || !calldata) return '';
-		const ethereumParamsCodec = new EthereumParamsCodec(funcSig);
+		const ethereumParamsCodec = new EthereumParamsCodec();
 
 		const decodeResult = ethereumParamsCodec.decodeParams(
 			funcSig,

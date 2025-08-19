@@ -11,7 +11,7 @@ class EthereumParamsCodec {
      * @param {string} address - 原始地址
      * @returns {string} 标准化后的地址
      */
-    normalizeAddress(address) {
+    normalizeAddress(address: string) {
         try {
             return this.utils.getAddress(address.toLowerCase());
         } catch (error) {
@@ -24,7 +24,7 @@ class EthereumParamsCodec {
      * @param {string} functionSig - 函数签名，例如 "approve(address,uint256)"
      * @returns {Array} 参数类型数组
      */
-    parseParamTypes(functionSig) {
+    parseParamTypes(functionSig: string) {
         // 移除空格
         functionSig = functionSig.replace(/\s+/g, '');
 
@@ -45,7 +45,7 @@ class EthereumParamsCodec {
      * @param {Array} params - 原始参数值数组
      * @returns {Array} 处理后的参数值数组
      */
-    preprocessParams(paramTypes, params) {
+    preprocessParams(paramTypes: [], params: []): any[] {
         return params.map((param, index) => {
             const paramType = paramTypes[index];
             if (paramType === 'address' && typeof param === 'string') {
@@ -61,7 +61,7 @@ class EthereumParamsCodec {
      * @param {Array} params - 参数数组
      * @returns {object} 编码结果
      */
-    encodeParams(functionSig, params) {
+    encodeParams(functionSig:string, params:[]): any {
         try {
             const paramTypes = this.parseParamTypes(functionSig);
 
@@ -99,7 +99,7 @@ class EthereumParamsCodec {
      * @param {string} encodedData - 编码的参数数据
      * @returns {object} 解码结果
      */
-    decodeParams(functionSig, encodedData) {
+    decodeParams(functionSig:string, encodedData:string): any {
         try {
             const paramTypes = this.parseParamTypes(functionSig);
 
@@ -152,7 +152,7 @@ class EthereumParamsCodec {
      * @param {Array} params - 参数值数组
      * @returns {object} 编码结果
      */
-    encodeByTypes(paramTypes, params) {
+    encodeByTypes(paramTypes:[], params:[]): any {
         try {
             if (params.length !== paramTypes.length) {
                 throw new Error(`参数数量不匹配。期望 ${paramTypes.length} 个参数，实际 ${params.length} 个`);

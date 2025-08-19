@@ -14,6 +14,8 @@ import { toast } from 'sonner';
 import { Interface } from 'ethers/lib/utils';
 import generatePreview from '@/utils/generatePreview';
 import { ethers } from 'ethers';
+import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
+
 const TransactionEncoderPage: React.FC = () => {
 	const router = useRouter();
 	const t = useTranslations('CreateTransaction');
@@ -34,8 +36,8 @@ const TransactionEncoderPage: React.FC = () => {
 	const [argumentValues, setArgumentValues] = useState<string[]>([]);
 	const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [targetCalldata, setTargetCallData] = useState('');
 
+	const [targetCalldata, setTargetCallData] = useState('');
 	const [timelockCalldata, setTimelockCalldata] = useState('');
 
 	useEffect(() => {
@@ -52,13 +54,13 @@ const TransactionEncoderPage: React.FC = () => {
 		setTimelockCalldata('');
 		if (targetCalldata) {
 			try {
-				const iface = new Interface([`function ${timelockMethod}`]);
-				const functionName = timelockMethod.split('(')[0];
-				if (!functionName) {
+				if (!timelockMethod) {
 					throw new Error('Invalid timelock method');
 				}
-				const calldata = iface.encodeFunctionData(functionName, [target, value, functionValue, targetCalldata, String(timeValue)]);
-				setTimelockCalldata(calldata);
+
+				const ethereumParamsCodec = new EthereumParamsCodec()
+				const { encodedData } = ethereumParamsCodec.encodeParams(timelockMethod, [target, value, functionValue, targetCalldata, String(timeValue)])
+				setTimelockCalldata(encodedData);
 			} catch (err) {
 				setTargetCallData('');
 				console.error('Failed to encode calldata:', err);
@@ -70,28 +72,11 @@ const TransactionEncoderPage: React.FC = () => {
 		setTargetCallData(''); // Reset calldata when function or arguments change
 		if (!!functionValue && argumentValues.length > 0) {
 			try {
-				const match = functionValue?.match(/\(([^)]*)\)/);
-				const types = match?.[1]
-					?.split(',')
-					?.map((type: string) => type.trim())
-					?.filter((type: string) => type.length > 0) || [];
-
-				const args = argumentValues.map((arg, idx) =>
-					types && types[idx] === 'address' ? arg
-						: arg.startsWith('0x') ? arg
-							: ethers.utils.parseEther(arg)
-				);
-
-				if (types?.length === args.length) {
-					const calldata = ethers.utils.defaultAbiCoder.encode(
-						types || [],
-						args
-					);
-					setTargetCallData(calldata);
-				}
+				const ethereumParamsCodec = new EthereumParamsCodec();
+				const { encodedData } = ethereumParamsCodec.encodeParams(functionValue, argumentValues);
+				setTargetCallData(encodedData);
 			} catch (err) {
 				setTargetCallData('');
-				console.error('Failed to encode calldata:', err);
 			}
 		}
 	}, [functionValue, argumentValues]);
