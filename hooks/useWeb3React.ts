@@ -76,7 +76,7 @@ export function useWeb3React(): {
 				if (data !== undefined) {
 					hexData = data.startsWith('0x') ? (data as `0x${string}`) : (`0x${Buffer.from(data, 'utf8').toString('hex')}` as `0x${string}`);
 				}
-				 activeAccount.sendTransaction({
+				return await activeAccount.sendTransaction({
 					to,
 					data: hexData,
 					value,
