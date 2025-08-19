@@ -1,6 +1,6 @@
 {
     "Transactions_log": {
-        "title": "Transaction Log",
+        "title": "Transaction details",
         "chain": "Chain",
         "timelockAddress": "Timelock Address",
         "txHash": "Transaction Hash",

@@ -25,7 +25,7 @@ export default function PageLayout({ children, className }: BaseComponentProps) 
 	const pathname = usePathname();
 	const tAbiLib = useTranslations('ABI-Lib');
 	const tCreateTimelock = useTranslations('CreateTimelock');
-	const tHome = useTranslations('home_page');
+	const tHome = useTranslations('HomePage');
 	const tImportTimelock = useTranslations('ImportTimelock');
 	const tTransactions = useTranslations('Transactions');
 	const tTransactionsLog = useTranslations('Transactions_log');
@@ -42,7 +42,7 @@ export default function PageLayout({ children, className }: BaseComponentProps) 
 	const autoTitleMap: Record<string, string> = {
 		'abi-lib': tAbiLib('title'),
 		'create-timelock': tCreateTimelock('createTimelock'),
-		'home': tHome('create_protocol_title'),
+		'home': tHome('title'),
 		'import-timelock': tImportTimelock('title'),
 		'transactions': tTransactions('title'),
 		'transactions-log': tTransactionsLog('title'),

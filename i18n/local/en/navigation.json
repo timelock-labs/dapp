@@ -8,7 +8,8 @@
 			"ecosystem": "Ecosystem",
 			"home": "Home",
 			"transactions": "Transactions",
-			"transactions_log": "Logs"
+			"transactions_log": "Logs",
+			"create_transaction": "Create Transaction"
 		},
 		"projects": {
 			"title": "Projects",

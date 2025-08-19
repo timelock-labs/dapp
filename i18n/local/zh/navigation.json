@@ -8,7 +8,8 @@
 			"ecosystem": "生态系统",
 			"home": "首页",
 			"transactions": "交易管理",
-			"transactions_log": "交易日志"
+			"transactions_log": "交易日志",
+			"create_transaction": "创建交易"
 		},
 		"projects": {
 			"title": "项目",

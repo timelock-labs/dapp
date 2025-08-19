@@ -1,5 +1,5 @@
 import React from 'react';
-import { PencilIcon } from '@heroicons/react/24/outline';
+import { PencilIcon,TrashIcon} from '@heroicons/react/24/outline';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useTranslations } from 'next-intl';
 import { formatDate, formatDateWithYear } from '@/utils/utils';
@@ -51,15 +51,16 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 						{t('edit')}
 					</span>
 				</button>
-				<DeleteButton
-					onDelete={handleDeleteClick}
-					title='Are you sure you want to delete?'
-					confirmText={t('delete')}
-					cancelText={'Cancel'}
-					variant='default'
-					size='md'
-					className='w-[85px] h-[32px] border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 transition-colors flex items-center justify-center'
-				/>
+				<button
+					type="button"
+					onClick={handleDeleteClick}
+					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors'>
+					<span className='flex items-center gap-2 text-[#0A0A0A]'>
+						<TrashIcon className='w-4 h-4' />
+						{t('delete')}
+					</span>
+				</button>
+
 			</div>
 		</div>
 	);

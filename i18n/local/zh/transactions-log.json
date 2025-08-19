@@ -1,6 +1,6 @@
 {
     "Transactions_log": {
-        "title": "交易记录",
+        "title": "交易明细",
         "chain": "链",
         "timelockAddress": "Timelock地址",
         "txHash": "交易哈希",
