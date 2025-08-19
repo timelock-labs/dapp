@@ -27,7 +27,7 @@
 		"remark": "Remark",
 		"remarkPlaceholder": "Enter remark",
 		"details": "Details",
-		"confirmAdd": "Confirm Add",
+		"confirmAdd": "Add",
 		"selectContractStandard": "Select Contract Standard",
 		"compoundStandardLabel": "Compound Standard Timelock Contract",
 		"compoundStandardDescription": "Suitable for small business entry",

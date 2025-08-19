@@ -2,10 +2,10 @@ import { useAuthStore } from "@/store/userStore";
 import Image from "next/image";
 import { Network } from "lucide-react";
 
-export default function ChainLabel({ chainId }: { chainId: number }) {
+export default function ChainLabel({ chainId }: { chainId: number|string }) {
     const chains = useAuthStore(state => state.chains);
 
-    const chain = chains?.find(c => c.chain_id === chainId);
+    const chain = chains?.find(c => c.chain_id.toString() === chainId.toString());
     const chainLogo = chain?.logo_url;
     const chainName = chain?.display_name;
 

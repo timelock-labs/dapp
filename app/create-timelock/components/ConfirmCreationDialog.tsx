@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { ConfirmCreationDialogProps } from '@/types';
 import ParameterDisplayRow from './ParameterDisplayRow';
+import ChainLabel from '@/components/web3/ChainLabel';
+import HashLink from '@/components/web3/HashLink';
 
 const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {
 	const t = useTranslations('ConfirmCreationDialog');
@@ -63,12 +65,8 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 
 				<div className='flex flex-col gap-2 pr-10'>
 					<ParameterDisplayRow label={t('chainLabel')}>
-						<div className='flex items-center'>
-							{creationDetails.chainIcon}
-							<span className='ml-2'>{creationDetails.chainName}</span>
-						</div>
+						<ChainLabel chainId={creationDetails.chain_id} />
 					</ParameterDisplayRow>
-
 					<ParameterDisplayRow label={t('timelockAddressLabel')}>
 						<a
 							href={`${creationDetails.explorerUrl}/address/${creationDetails.timelockAddress}`}
@@ -80,9 +78,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 					</ParameterDisplayRow>
 
 					<ParameterDisplayRow label={t('transactionHashLabel')}>
-						<a href={`${creationDetails.explorerUrl}/tx/${creationDetails.transactionHash}`} target='_blank' rel='noopener noreferrer' className='text-blue-500 hover:underline'>
-							{creationDetails.transactionHash}
-						</a>
+						<HashLink className='text-blue-500 hover:underline' hash={creationDetails.transactionHash} chainId={creationDetails.chain_id} isShort={false} ></HashLink>
 					</ParameterDisplayRow>
 
 					<ParameterDisplayRow label={t('initiatingAddressLabel')}>{creationDetails.initiatingAddress}</ParameterDisplayRow>
@@ -94,9 +90,8 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 					</label>
 					<input
 						type='text'
-						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white text-gray-900 focus:ring-1 ${
-							remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-						}`}
+						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white text-gray-900 focus:ring-1 ${remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+							}`}
 						placeholder={t('contractRemarkPlaceholder')}
 						value={remark}
 						onChange={handleRemarkChange}
@@ -107,10 +102,10 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 
 				{/* Action Buttons */}
 				<div className='flex justify-end space-x-3 mt-6'>
-					<button type='button' onClick={onClose} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+					<button type='button' onClick={onClose} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50'>
 						{t('cancel')}
 					</button>
-					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer disabled:opacity-50'>
 						{t('confirmAdd')}
 					</button>
 				</div>

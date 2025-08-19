@@ -9,7 +9,7 @@
 		"contractRemarkPlaceholder": "请输入合约备注信息",
 		"contractRemarkRequired": "合约备注为必填项",
 		"cancel": "取消",
-		"confirmAdd": "确认添加"
+		"confirmAdd": "添加"
 	},
 	"Timelocks": {
 		"title": "时间锁",

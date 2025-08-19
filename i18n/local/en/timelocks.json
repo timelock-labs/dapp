@@ -9,7 +9,7 @@
 		"contractRemarkPlaceholder": "Please enter contract remark",
 		"contractRemarkRequired": "Contract remark is required",
 		"cancel": "Cancel",
-		"confirmAdd": "Confirm Add"
+		"confirmAdd": "Add"
 	},
 	"Timelocks": {
 		"title": "Timelocks",

@@ -84,6 +84,7 @@ export interface RadioButtonOptionProps extends BaseComponentProps {
  * Creation details for confirmation dialog
  */
 export interface CreationDetails {
+	chain_id: number | string;
 	chainName: string;
 	chainIcon: React.ReactNode;
 	timelockAddress: string;

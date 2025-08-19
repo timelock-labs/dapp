@@ -27,7 +27,7 @@
 		"remark": "备注",
 		"remarkPlaceholder": "请输入备注",
 		"details": "详情",
-		"confirmAdd": "确认添加",
+		"confirmAdd": "添加",
 		"selectContractStandard": "选择合约标准",
 		"compoundStandardLabel": "Compound 标准 Timelock 合约",
 		"compoundStandardDescription": "适合小型企业入门",

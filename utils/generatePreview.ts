@@ -88,7 +88,7 @@ const generatePreview = ({
 		'-------------------------------------------------------------',
 		`Timelock:          ${timelockAddress || 'Not selected'}`,
 		`Type:              ${type || 'No description'}`,
-		`Description:       ${description || 'No description'}`,
+		// `Description:       ${description || 'No description'}`,
 		`Mailboxes:         ${mailboxesDisplay}`,
 		`ETA (Time):        ${etaDisplay}`,
 		``,
