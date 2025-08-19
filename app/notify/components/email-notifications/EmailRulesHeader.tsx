@@ -6,7 +6,7 @@ const EmailRulesHeader: React.FC = () => {
 	const t = useTranslations('Notify.emailRulesHeader');
 
 	return (
-		<div className='bg-black text-white p-4 px-6 rounded-lg shadow-md relative overflow-hidden'>
+		<div className='bg-black text-white p-4 px-6 rounded-lg relative overflow-hidden'>
 			{/* Content: Title and Rules */}
 			<div className='relative z-10'>
 				{/* Title */}

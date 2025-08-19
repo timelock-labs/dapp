@@ -9,11 +9,12 @@ import copyToClipboard from '@/utils/copy';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
-import { Copy } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ChainLabel from '@/components/web3/ChainLabel';
 import NativeToken from '@/components/web3/NativeToken';
 import HashLink from '@/components/web3/HashLink';
+import { formatDate, formatDateWithYear } from '@/utils/utils';
+import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -112,12 +113,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
 						{row.function_signature}
 					</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.function_signature);
-						}}
-					/>
 				</div>
 			),
 		},
@@ -129,7 +124,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 					{parseCalldata(row.function_signature, row.call_data_hex).map((item) => (
 						<div key={item.index} className='flex text-sm'>
 							<div className='font-medium'>{item.type}:</div>
-							<div className='ml-1'>{item.value}</div>
+							<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(item.value)}>{item.value}</div>
 						</div>
 					))}
 				</div>
@@ -143,22 +138,25 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
 						{row.value}  <NativeToken chainId={row.chain_id} />
 					</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.value);
-						}}
-					/>
 				</div>
+			),
+		},
+		{
+			key: 'eta',
+			header: t('eta'),
+			render: (row: HistoryTxRow) => (
+				<span className='text-sm'>
+					{formatDate(row.eta)}
+				</span>
 			),
 		},
 		{
 			key: 'status',
 			header: t('status'),
 			render: (row: HistoryTxRow) => (
-				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
+				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{capitalizeFirstLetter(row.status)}</span>
 			),
-		},
+		}
 	];
 
 	return (

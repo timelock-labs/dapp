@@ -10,7 +10,7 @@ export default function ChainLabel({ chainId }: { chainId: number|string }) {
     const chainName = chain?.display_name;
 
     return (
-        <div className='flex justify-center items-center bg-gray-100 rounded-xl p-1'>
+        <div className='px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800'>
             {chainLogo ?
                 <Image
                     src={chainLogo}

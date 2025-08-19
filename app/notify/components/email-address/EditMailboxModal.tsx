@@ -64,7 +64,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-			<div className='bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col' style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
+			<div className='bg-white rounded-lg border border-gray-200 flex flex-col' style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
 				<div className='p-6'>
 					<SectionHeader title={t('title')} description={t('description')} />
 

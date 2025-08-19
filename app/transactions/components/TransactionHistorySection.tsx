@@ -5,13 +5,10 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
 import TableComponent from '@/components/ui/TableComponent';
-import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import * as XLSX from 'xlsx';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
-import { Network } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
 import AddSVG from '@/components/icons/add';
@@ -22,9 +19,9 @@ import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
 import copyToClipboard from '@/utils/copy';
 import SectionCard from '@/components/layout/SectionCard';
-import { Copy } from 'lucide-react';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
+import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -118,12 +115,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.contract_address);
-						}}
-					/>
 				</div>
 			),
 		},
@@ -151,7 +142,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			key: 'status',
 			header: t('status'),
 			render: (row: HistoryTxRow) => (
-				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
+				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{capitalizeFirstLetter(row.status)}</span>
 			),
 		},
 		{
@@ -195,23 +186,24 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			<div className='flex flex-col'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
-					<button
-						type='button'
-						onClick={() => {
-							router.push('/create-transaction');
-						}}
-						className='cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
-						<AddSVG />
-						<span>Create</span>
-					</button>
+
+					<div className='flex items-center space-x-3'>
+
+						<ExportButton onClick={handleExport} />
+						<button
+							type='button'
+							onClick={() => {
+								router.push('/create-transaction');
+							}}
+							className='cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
+							<AddSVG />
+							<span>{t("create")}</span>
+						</button>
+					</div>
 				</div>
 				<div className='flex justify-between items-center mb-6'>
 					<div>
 						<TabbedNavigation tabs={historyTabs} activeTab={activeTab} onTabChange={handleTabChange} />
-					</div>
-					<div className='flex items-center space-x-3'>
-						{/* <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder='Search' /> */}
-						<ExportButton onClick={handleExport} />
 					</div>
 				</div>
 			</div>

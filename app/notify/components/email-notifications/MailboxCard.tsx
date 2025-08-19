@@ -31,7 +31,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	};
 
 	return (
-		<div className='bg-white rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-auto'>
+		<div className='bg-white rounded-lg  border border-gray-200 flex flex-col justify-between h-auto'>
 			<div className='p-6'>
 				<h3 className='text-lg font-semibold text-gray-900 mb-1'>{email}</h3>
 				<p className='text-sm text-gray-500 mb-2'>{remark}</p>
@@ -45,7 +45,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 				<button
 					type="button"
 					onClick={handleEditClick}
-					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors'>
+					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md  text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
 					<span className='flex items-center gap-2 text-[#0A0A0A]'>
 						<PencilIcon className='w-4 h-4' />
 						{t('edit')}
@@ -54,7 +54,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 				<button
 					type="button"
 					onClick={handleDeleteClick}
-					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors'>
+					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md  text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
 					<span className='flex items-center gap-2 text-[#0A0A0A]'>
 						<TrashIcon className='w-4 h-4' />
 						{t('delete')}

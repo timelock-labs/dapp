@@ -11,6 +11,8 @@
 			"view_details": "查看详情",
 			"interface_details": "接口详情"
 		},
+		"export": "导出",
+		"create": "创建",
 		"remark": "备注",
 		"waiting": "等待中",
 		"ready": "待执行",

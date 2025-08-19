@@ -86,7 +86,7 @@ const EmailNotificationPage: React.FC = () => {
 
 	// Mailbox Card Skeleton Component
 	const MailboxCardSkeleton = () => (
-		<div className='bg-white rounded-lg border border-gray-200 p-6 shadow-sm'>
+		<div className='bg-white rounded-lg border border-gray-200 p-6'>
 			<div className='flex items-center justify-between mb-4'>
 				<Skeleton className='h-5 w-24' />
 				<div className='flex space-x-2'>

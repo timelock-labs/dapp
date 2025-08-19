@@ -11,6 +11,8 @@
 			"view_details": "View Details",
 			"interface_details": "Interface Details"
 		},
+		"export": "Export",
+		"create": "Create",
 		"remark": "Timelock Remark",
 		"waiting": "Waiting",
 		"ready": "Ready",

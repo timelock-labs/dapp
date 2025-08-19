@@ -44,7 +44,7 @@ const CancelButton = ({ timelock }) => {
 	};
 
 	return (
-		<button className='cursor-pointer bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors duration-200' onClick={handleCancel}>
+		<button className='cursor-pointer leading-5 bg-red-100 text-red-800 font-bold text-xs px-2 py-1 rounded-full hover:bg-red-300 transition-colors duration-200' onClick={handleCancel}>
 			Cancel
 		</button>
 	);

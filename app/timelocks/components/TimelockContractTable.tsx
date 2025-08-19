@@ -1,17 +1,13 @@
 'use client';
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TableComponent from '@/components/ui/TableComponent';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useRouter, useParams } from 'next/navigation';
-import { formatDate } from '@/utils/utils';
 import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
 import DeleteButton from '@/components/ui/DeleteButton';
 import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { Copy, Network } from 'lucide-react';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 import copyToClipboard from '@/utils/copy';
 import ChainLabel from '@/components/web3/ChainLabel';
@@ -91,14 +87,8 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			key: 'contract_address',
 			header: t('timelock'),
 			render: (row: TimelockContractItem) => (
-				<div className='flex items-center space-x-2'>
+				<div className='flex items-center space-x-2 cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>
 					<span className='text-sm'>{row.contract_address}</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.contract_address);
-						}}
-					/>
 				</div>
 			),
 		},

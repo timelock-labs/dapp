@@ -47,7 +47,7 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
     };
 
     return (
-        <button className='cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200' onClick={handleCancel}>
+       	<button className='cursor-pointer leading-5 bg-green-100 text-green-800 font-bold text-xs px-2 py-1 rounded-full hover:bg-red-300 transition-colors duration-200' onClick={handleCancel}>
             Execute
         </button>
     );
