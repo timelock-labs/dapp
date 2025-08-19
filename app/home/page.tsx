@@ -45,22 +45,19 @@ export default function Home() {
 	useEffect(() => {
 		if (!isConnected) {
 			setCurrentView('create');
-			setShowContent(true);
+
 			return;
 		}
 
 		if (isLoading) {
 			setCurrentView('loading');
-			setShowContent(true);
+
 			return;
 		}
 
-		// 数据加载完成后，先隐藏内容，然后切换视图，再显示
-		setShowContent(false);
-
 		const timer = setTimeout(() => {
 			setCurrentView(hasTimelocks ? 'asset' : 'create');
-			setShowContent(true);
+
 		}, 200); // 短暂延迟让淡出动画完成
 
 		return () => clearTimeout(timer);
@@ -70,11 +67,7 @@ export default function Home() {
 	const renderCurrentView = () => {
 		switch (currentView) {
 			case 'loading':
-				return (
-					<>
-						<LoadingSkeleton />
-					</>
-				);
+				return <LoadingSkeleton />;
 			case 'asset':
 				return <Assert timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
