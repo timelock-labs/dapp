@@ -227,7 +227,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 
 	return (
 	<SectionCard >
-			<div className='flex flex-col pt-6'>
+			<div className='flex flex-col'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 					<button

@@ -9,7 +9,7 @@ const PageCard = ({ abis, columns, setIsAddABIOpen }: { abis: ABIRow[]; columns:
 
 	return (
 		<div className='min-h-screen'>
-			<div className='mx-auto border border-gray-200 rounded-lg p-6 '>
+			<div className='mx-auto border-gray-200 rounded-lg '>
 				<div className='flex justify-between items-center mb-6'>
 					<SectionHeader title={t('storedABI')} description={t('storedABIDescription')} />
 					<button
