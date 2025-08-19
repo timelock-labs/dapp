@@ -116,7 +116,13 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			header: t('timelock'),
 			render: (row: TimelockContractItem) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+					<span className='text-sm'>{row.contract_address}</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.contract_address);
+						}}
+					/>
 				</div>
 			),
 		},

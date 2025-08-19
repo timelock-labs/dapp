@@ -5,7 +5,7 @@ function copyToClipboard(text: string) {
       // 现代浏览器支持
       return navigator.clipboard.writeText(text).then(() => {
         console.log("已复制到剪贴板:", text);
-        toast.success('Copied to clipboard');
+        toast.success('Copied to clipboard!');
       }).catch(err => {
         console.error("复制失败:", err);
         toast.error('Failed to copy to clipboard');
@@ -23,7 +23,7 @@ function copyToClipboard(text: string) {
       try {
         document.execCommand("copy");
         console.log("已复制到剪贴板:", text);
-        toast.success('Copied to clipboard');
+        toast.success('Copied to clipboard!');
       } catch (err) {
         console.error("复制失败:", err);
         toast.error('Failed to copy to clipboard');
