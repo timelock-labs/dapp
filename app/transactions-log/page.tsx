@@ -14,6 +14,7 @@ import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import { Copy } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
+import ChainLabel from '@/components/ui/ChainLabel';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -99,30 +100,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'chain',
 			header: t('chain'),
-			render: (row: HistoryTxRow) => {
-				// 尝试通过 chain_name 找到对应的链
-				const chain = chains?.find(c => c.chain_id === row.chain_id || c.display_name === row.chain_name);
-				const chainLogo = chain?.logo_url || '';
-				const chainName = chain?.display_name || row.chain_name;
-
-				return (
-					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo && (
-							<Image
-								src={chainLogo}
-								alt={chainName}
-								width={16}
-								height={16}
-								className='rounded-full'
-								onError={e => {
-									e.currentTarget.style.display = 'none';
-								}}
-							/>
-						)}
-						<span className='text-gray-800 font-medium'>{chainName}</span>
-					</div>
-				);
-			},
+			render: (row: HistoryTxRow) => <ChainLabel chainId={row.chain_id} />,
 		},
 		{
 			key: 'remark',

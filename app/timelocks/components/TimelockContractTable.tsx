@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { Copy, Network } from 'lucide-react';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 import copyToClipboard from '@/utils/copy';
+import ChainLabel from '@/components/ui/ChainLabel';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
@@ -80,31 +81,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'chain',
 			header: t('chain'),
-			render: (row: TimelockContractItem) => {
-				// 尝试通过 chain_name 找到对应的链
-				const chain = chains?.find(c => c.chain_name === row.chain_name || c.display_name === row.chain_name);
-				const chainLogo = chain?.logo_url || '';
-				const chainName = chain?.display_name || row.chain_name;
-
-				return (
-					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ?
-							<Image
-								src={chainLogo}
-								alt={chainName}
-								width={16}
-								height={16}
-								className='rounded-full'
-								onError={e => {
-									console.error('Failed to load chain logo:', chainLogo);
-									e.currentTarget.style.display = 'none';
-								}}
-							/>
-						:	<Network className='h-4 w-4 text-gray-700' />}
-						<span className='text-gray-800 font-medium'>{chainName}</span>
-					</div>
-				);
-			},
+			render: (row: TimelockContractItem) => <ChainLabel chainId={row.chain_id} />,
 		},
 		{
 			key: 'name',

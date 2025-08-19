@@ -13,6 +13,7 @@ import Image from 'next/image';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
+import ChainLabel from '@/components/ui/ChainLabel';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
@@ -23,10 +24,10 @@ const PendingTransactions: React.FC = () => {
 
 	const fetchPendingTransactions = useCallback(async () => {
 		try {
-			const { data:waitingData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
-			const { data:executedData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'ready' });
+			const { data: waitingData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'waiting' });
+			const { data: executedData } = await getPendingTransactions('/api/v1/flows/list', { page: 1, page_size: 50, standard: 'compound', status: 'ready' });
 
-			const transformedData = [...waitingData.flows,...executedData.flows].map((tx: RawTx) => ({
+			const transformedData = [...waitingData.flows, ...executedData.flows].map((tx: RawTx) => ({
 				...tx,
 				id: tx.queue_tx_hash,
 				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
@@ -46,31 +47,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'chain',
 			header: t('chain'),
-			render: (row: PendingTx) => {
-				// 尝试通过 chain_name 找到对应的链
-				const chain = chains?.find(c => c.chain_id === row.chain_id || c.display_name === row.chain_name);
-				const chainLogo = chain?.logo_url || '';
-				const chainName = chain?.display_name || row.chain_name;
-
-				return (
-					<div className='inline-flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1'>
-						{chainLogo ?
-							<Image
-								src={chainLogo}
-								alt={chainName}
-								width={16}
-								height={16}
-								className='rounded-full'
-								onError={e => {
-									console.error('Failed to load chain logo:', chainLogo);
-									e.currentTarget.style.display = 'none';
-								}}
-							/>
-						:	<Network className='h-4 w-4 text-gray-700' />}
-						<span className='text-gray-800 font-medium'>{chainName}</span>
-					</div>
-				);
-			},
+			render: (row: PendingTx) => <ChainLabel chainId={row.chain_id} />
 		},
 		{
 			key: 'timelock_address',
