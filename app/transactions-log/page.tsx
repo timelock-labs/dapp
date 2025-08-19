@@ -1,12 +1,10 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import TableComponent from '@/components/ui/TableComponent';
-import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { useApi } from '@/hooks/useApi';
-import { formatAddress } from '@/utils/utils';
 import copyToClipboard from '@/utils/copy';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import SectionCard from '@/components/layout/SectionCard';
@@ -104,20 +102,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'tx_hash',
 			header: t('txHash'),
-			render: (row: HistoryTxRow) => (
-				<HashLink hash={row.queue_tx_hash} chainId={row.chain_id} />
-				// <div className='flex items-center space-x-2'>
-				// 	<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>
-				// 		{formatAddress(row.queue_tx_hash)}
-				// 	</span>
-				// 	<Copy
-				// 		className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-				// 		onClick={() => {
-				// 			copyToClipboard(row.queue_tx_hash);
-				// 		}}
-				// 	/>
-				// </div>
-			),
+			render: (row: HistoryTxRow) => <HashLink hash={row.queue_tx_hash} chainId={row.chain_id} />,
 		},
 		{
 			key: 'function_signature',

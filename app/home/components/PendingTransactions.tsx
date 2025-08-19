@@ -4,16 +4,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TableComponent from '@/components/ui/TableComponent';
 import { useTranslations } from 'next-intl';
-import { formatAddress } from '@/utils/utils';
 import { useApi } from '@/hooks/useApi';
 import { toast } from 'sonner';
-import { useAuthStore } from '@/store/userStore';
-import { Network } from 'lucide-react';
-import Image from 'next/image';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
 import ChainLabel from '@/components/web3/ChainLabel';
+import HashLink from '@/components/web3/HashLink';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
@@ -60,11 +57,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'tx_hash',
 			header: t('txHash'),
-			render: (row: PendingTx) => (
-				<span className='font-mono text-sm' title={row.queue_tx_hash}>
-					{formatAddress(row.queue_tx_hash)}
-				</span>
-			),
+			render: (row: PendingTx) => <HashLink hash={row.queue_tx_hash} chainId={row.chain_id} />,
 		},
 		{
 			key: 'created_at',
