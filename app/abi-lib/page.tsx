@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import AddABIForm from './components/AddABIForm';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
@@ -213,7 +212,7 @@ const ABILibPage: React.FC = () => {
 	if (isLoading) return <LoadingSkeleton />;
 
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<PageCard abis={abis} columns={columns} setIsAddABIOpen={setIsAddABIOpen} />
 			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
 			<ViewABIForm
@@ -231,7 +230,7 @@ const ABILibPage: React.FC = () => {
 				cancelText={t('deleteDialog.cancelText')}
 				variant='destructive'
 			/>
-		</PageLayout>
+		</>
 	);
 };
 

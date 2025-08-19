@@ -7,7 +7,6 @@ import TextInput from '@/components/ui/TextInput'; // Assuming path
 import SelectInput from '@/components/ui/SelectInput'; // Assuming path
 import CheckParametersModal from './components/CheckParametersModal';
 import QuestionIcon from '@/public/QuestionIcon.svg';
-import PageLayout from '@/components/layout/PageLayout';
 import { useAuthStore } from '@/store/userStore';
 import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport';
 import { getChainObject, ChainUtils } from '@/utils/chainUtils';
@@ -144,7 +143,7 @@ const ImportTimelockPage: React.FC = () => {
 	}, [importTimelockData, router, t]);
 
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<div className=' bg-white p-8 flex flex-col '>
 				<div className='flex-grow bg-white'>
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 border-b border-gray-200'>
@@ -182,7 +181,7 @@ const ImportTimelockPage: React.FC = () => {
 					parameters={{ chainName: ChainUtils.getChainName(chains, selectedChain), ...detectedParameters }}
 				/>
 			</div>
-		</PageLayout>
+		</>
 	);
 };
 

@@ -6,7 +6,7 @@ import AddMailboxCard from './components/email-notifications/AddMailboxCard';
 import AddMailboxModal from './components/email-address/AddMailboxModal';
 import EditMailboxModal from './components/email-address/EditMailboxModal';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import PageLayout from '@/components/layout/PageLayout';
+
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -122,7 +122,7 @@ const EmailNotificationPage: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<PageLayout title={t('title')}>
+			<>
 				<div className='flex flex-col space-y-8'>
 					{/* Email Rules Header Skeleton */}
 					<div className='bg-blue-50 border border-blue-200 rounded-lg p-6'>
@@ -144,12 +144,12 @@ const EmailNotificationPage: React.FC = () => {
 						<AddMailboxCardSkeleton />
 					</div>
 				</div>
-			</PageLayout>
+			</>
 		);
 	}
 
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<div className='flex flex-col space-y-8'>
 				{/* Email Rules Header */}
 				<EmailRulesHeader />
@@ -192,7 +192,7 @@ const EmailNotificationPage: React.FC = () => {
 				cancelText={t('confirmDialog.cancelText')}
 				variant='destructive'
 			/>
-		</PageLayout>
+		</>
 	);
 };
 

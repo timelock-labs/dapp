@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import PageLayout from '@/components/layout/PageLayout';
 import EncodingTransactionForm from './components/EncodingTransactionForm';
 import EncodingPreview from './components/EncodingPreview';
 import MailboxSelection from './components/MailboxSelection';
@@ -196,7 +195,7 @@ const TransactionEncoderPage: React.FC = () => {
 	};
 
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<div className='min-h-screen bg-withe'>
 				<div className='mx-auto flex flex-col'>
 					<div className='flex justify-between gap-32'>
@@ -239,7 +238,7 @@ const TransactionEncoderPage: React.FC = () => {
 					{/* Submit button container */}
 				</div>
 			</div>
-		</PageLayout>
+		</>
 	);
 };
 

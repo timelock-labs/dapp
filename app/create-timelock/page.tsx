@@ -11,7 +11,6 @@ import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } fr
 import { useRouter } from 'next/navigation';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
-import PageLayout from '@/components/layout/PageLayout';
 import { getChainObject } from '@/utils/chainUtils';
 import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from '@/types';
 
@@ -135,7 +134,7 @@ const CreateTimelockPage: React.FC = () => {
 	};
 
 	return (
-		<PageLayout title={t('createTimelock')}>
+		<>
 			<div className='bg-white p-8'>
 				<div className='mx-auto flex flex-col space-y-8'>
 					{/* Main Form Area */}
@@ -154,7 +153,7 @@ const CreateTimelockPage: React.FC = () => {
 
 				<ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={() => setIsConfirmDialogOpen(false)} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
 			</div>
-		</PageLayout>
+		</>
 	);
 };
 export default CreateTimelockPage;

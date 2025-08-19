@@ -8,6 +8,8 @@ import '@/app/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google'; // Import fonts here
 import { Toaster } from 'sonner';
 import { cookies } from 'next/headers';
+import PageLayout from '@/components/layout/PageLayout';
+
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -21,14 +23,16 @@ const geistMono = Geist_Mono({
 
 type Props = {
 	children: ReactNode;
+	title: string;
 };
 
-export default async function RootLayout({ children }: Props) {
+export default async function RootLayout(props: Props) {
+	const { children, title } = props;
 	// 直接使用 defaultLocale
 	const cookieStore = await cookies();
 	const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
 	const messages = await getMessages({ locale });
-
+	console.log('title', title,props);
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<head>
@@ -38,7 +42,10 @@ export default async function RootLayout({ children }: Props) {
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
 					<Web3Provider>
 						<NextIntlClientProvider locale={locale} messages={messages}>
-							{children}
+							{/* {children} */}
+							<PageLayout title={title}>
+								{children}
+							</PageLayout>
 						</NextIntlClientProvider>
 					</Web3Provider>
 				</ThemeProvider>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import PageLayout from '@/components/layout/PageLayout';
 import WalletSection from './WalletSection';
 import HowTimelockWorks from './HowTimelockWorks';
 import HowTimelockProtocol from './HowTimelockProtocol';
@@ -58,9 +57,8 @@ const CreateProtocol: React.FC = () => {
 	];
 
 	return (
-		<PageLayout title={t('create_protocol_title')}>
-			{/* Main Content Area */}
-			<main className='container mx-auto'>
+
+		<main className='container mx-auto'>
 				{/* First Row Component */}
 				<div className='mb-12'>
 					<WalletSection />
@@ -82,7 +80,6 @@ const CreateProtocol: React.FC = () => {
 					</div>
 				</div>
 			</main>
-		</PageLayout>
 	);
 };
 

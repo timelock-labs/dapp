@@ -4,13 +4,11 @@ import TableComponent from '@/components/ui/TableComponent';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
-import * as XLSX from 'xlsx';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import Image from 'next/image';
 import { useApi } from '@/hooks/useApi';
 import { formatDate, formatAddress } from '@/utils/utils';
 import copyToClipboard from '@/utils/copy';
-import PageLayout from '@/components/layout/PageLayout';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { ethers } from 'ethers';
 import SectionCard from '@/components/layout/SectionCard';
@@ -48,7 +46,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 	const { request: getTransactionList } = useApi();
 
-
 	// Fetch transaction history
 	const fetchHistoryTransactions = useCallback(async () => {
 		try {
@@ -74,7 +71,6 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 		fetchHistoryTransactions();
 	}, [fetchHistoryTransactions]);
 
-
 	const parseCalldata = (funcSig: string, calldata: string) => {
 		if (!funcSig || !calldata) return '';
 		const funcParams = funcSig
@@ -85,9 +81,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 
 		const calldataParams = ethers.utils.defaultAbiCoder.decode(funcParams, calldata);
 
-		return Object.fromEntries(
-			funcParams.map((p, i) => [p, calldataParams[i]])
-		);
+		return Object.fromEntries(funcParams.map((p, i) => [p, calldataParams[i]]));
 	};
 
 	const columns = [
@@ -124,21 +118,25 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			header: t('txHash'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>{formatAddress(row.queue_tx_hash)}</span>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>
+						{formatAddress(row.queue_tx_hash)}
+					</span>
 				</div>
 			),
 		},
 		{
-			key: "function_signature",
+			key: 'function_signature',
 			header: t('functionSignature'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>{row.function_signature}</span>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
+						{row.function_signature}
+					</span>
 				</div>
-			)
+			),
 		},
 		{
-			key: "call_data_hex",
+			key: 'call_data_hex',
 			header: t('callDataHex'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex flex-col'>
@@ -149,16 +147,18 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 						</div>
 					))}
 				</div>
-			)
+			),
 		},
 		{
-			key: "value",
+			key: 'value',
 			header: t('value'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>{row.value}</span>
+					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
+						{row.value}
+					</span>
 				</div>
-			)
+			),
 		},
 		{
 			key: 'status',
@@ -166,17 +166,15 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			render: (row: HistoryTxRow) => (
 				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>
 			),
-		}
+		},
 	];
 
 	return (
-		<PageLayout title={t('title')}>
-			<SectionCard>
+		<SectionCard>
 			<div className='flex-1 mb-4'>
 				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
-			</SectionCard>
-		</PageLayout>
+		</SectionCard>
 	);
 };
 

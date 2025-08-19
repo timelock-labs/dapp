@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import EcosystemSearchHeader from './components/Header';
 import PartnersGrid from './components/PartnersGrid';
-import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
 import { useApi } from '@/hooks/useApi';
 import type { Partner } from '@/types';
@@ -28,14 +27,14 @@ const EcosystemPage: React.FC = () => {
 	};
 
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<div className='min-h-screen  '>
 				<div className='mx-auto flex flex-col space-y-8 pt-4'>
 					<EcosystemSearchHeader />
 					<PartnersGrid sponsors={sponsors} partners={partners} isLoading={isLoading} />
 				</div>
 			</div>
-		</PageLayout>
+		</>
 	);
 };
 

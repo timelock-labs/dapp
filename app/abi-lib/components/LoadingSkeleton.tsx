@@ -1,10 +1,6 @@
-import PageLayout from '@/components/layout/PageLayout';
-import { useTranslations } from 'next-intl';
-
 export default function LoadingSkeleton() {
-	const t = useTranslations('ABI-Lib');
 	return (
-		<PageLayout title={t('title')}>
+		<>
 			<div className='min-h-screen'>
 				<div className='mx-auto border border-gray-200 rounded-lg p-6'>
 					{/* Header skeleton */}
@@ -52,6 +48,6 @@ export default function LoadingSkeleton() {
 					</div>
 				</div>
 			</div>
-		</PageLayout>
+		</>
 	);
 }

@@ -44,25 +44,17 @@ const Timelocks: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<PageLayout title={t('title')}>
-				<div className='bg-white'>
-					<div className='mx-auto'>
-						<TableSkeleton rows={5} columns={7} showHeader={true} />
-					</div>
+			<div className='bg-white'>
+				<div className='mx-auto'>
+					<TableSkeleton rows={5} columns={7} showHeader={true} />
 				</div>
-			</PageLayout>
+			</div>
 		);
 	}
 
 	const hasTimelocks = allTimelocks.length > 0;
 
-	return (
-		<PageLayout title={t('title')}>
-			{hasTimelocks ?
-				<TimelockContractTable data={allTimelocks} onDataUpdate={refetchTimelocks} />
-			:	<AddTimelockContractSection />}
-		</PageLayout>
-	);
+	return <>{hasTimelocks ? <TimelockContractTable data={allTimelocks} onDataUpdate={refetchTimelocks} /> : <AddTimelockContractSection />}</>;
 };
 
 export default Timelocks;

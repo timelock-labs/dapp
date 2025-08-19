@@ -6,9 +6,7 @@ import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from './components/LoadingSkeleton';
-import PageLayout from '@/components/layout/PageLayout';
 import { useTranslations } from 'next-intl';
-
 
 // 页面内容包装器，提供淡入动画
 const PageWrapper = ({ children, isVisible }: { children: React.ReactNode; isVisible: boolean }) => (
@@ -44,7 +42,6 @@ export default function Home() {
 
 	const hasTimelocks = !!(timelockData && timelockData.total > 0);
 
-
 	useEffect(() => {
 		// getUserToken()
 	}, []);
@@ -78,7 +75,11 @@ export default function Home() {
 	const renderCurrentView = () => {
 		switch (currentView) {
 			case 'loading':
-				return <PageLayout title={t('create_protocol_title')}><LoadingSkeleton /></PageLayout>;
+				return (
+					<>
+						<LoadingSkeleton />
+					</>
+				);
 			case 'asset':
 				return <Assert timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
@@ -87,9 +88,5 @@ export default function Home() {
 		}
 	};
 
-	return (
-		<div className='min-h-screen'>
-			{renderCurrentView()}
-		</div>
-	);
+	return <div className='min-h-screen'>{renderCurrentView()}</div>;
 }
