@@ -196,7 +196,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				const formattedTime = formatSecondsToLocalizedTime(delay, locale === 'zh' ? 'zh' : 'en');
 				return (
 					<span className='font-mono'>
-						{delay.toLocaleString()} <span className='text-gray-500'>({formattedTime})</span>
+						{formattedTime}
 					</span>
 				);
 			},
