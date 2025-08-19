@@ -5,7 +5,7 @@ import AddABIForm from './components/AddABIForm';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useApi } from '@/hooks/useApi';
 import { toast } from 'sonner';
-import { formatDate } from '@/utils/utils';
+import { formatDateWithYear } from '@/utils/utils';
 
 import ViewABIForm from './components/ViewABIForm';
 
@@ -174,7 +174,7 @@ const ABILibPage: React.FC = () => {
 		{
 			key: 'created_at',
 			header: t('addedTime'),
-			render: (row: ABIRow) => formatDate(row.created_at),
+			render: (row: ABIRow) => formatDateWithYear(row.created_at),
 		},
 		{
 			key: 'type',
