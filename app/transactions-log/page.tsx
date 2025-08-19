@@ -126,22 +126,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'remark',
 			header: t('remark'),
-			render: (row: HistoryTxRow) => <span className={`text-sm`}>{row.contract_remark}</span>,
-		},
-		{
-			key: 'contract_address',
-			header: t('timelock'),
-			render: (row: HistoryTxRow) => (
-				<div className='flex items-center space-x-2'>
-					<span className='text-sm'>{row.contract_address}</span>
-					<Copy
-						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
-						onClick={() => {
-							copyToClipboard(row.contract_address);
-						}}
-					/>
-				</div>
-			),
+			render: (row: HistoryTxRow) => <span className="text-sm cursor-pointer" onClick={()=>copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
 		},
 		{
 			key: 'tx_hash',
