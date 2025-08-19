@@ -147,9 +147,9 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 
 				const getRoleStyle = (role: string) => {
 					switch (role.toLowerCase()) {
-						case 'admin':
-							return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
 						case 'creator':
+							return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
+						case 'admin':
 							return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm';
 						case 'admincreator':
 							return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm';
@@ -174,12 +174,13 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				return (
 					<div className='flex flex-wrap gap-2'>
 						{permissions.map((permission, index) => (
+							permission !=="creator" && (
 							<span
 								key={index}
 								className={`px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 ${getRoleStyle(permission)}`}>
 								<span className='w-1.5 h-1.5 rounded-full bg-current opacity-60 mr-1.5'></span>
 								{getRoleDisplayName(permission)}
-							</span>
+							</span>)
 						))}
 					</div>
 				);
