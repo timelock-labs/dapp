@@ -22,9 +22,7 @@ import { usePathname } from 'next/navigation';
  * @returns JSX.Element
  */
 export default function PageLayout({ children, className }: BaseComponentProps) {
-	// 根据当前路径自动推断标题（如果未显式传入 title）
 	const pathname = usePathname();
-
 	const tAbiLib = useTranslations('ABI-Lib');
 	const tCreateTimelock = useTranslations('CreateTimelock');
 	const tHome = useTranslations('home_page');

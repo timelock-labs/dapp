@@ -27,7 +27,7 @@ type Props = {
 
 export default async function RootLayout(props: Props) {
 	const { children } = props;
-	// 直接使用 defaultLocale
+	// use defaultLocale
 	const cookieStore = await cookies();
 	const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
 	const messages = await getMessages({ locale });
