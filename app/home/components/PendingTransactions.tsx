@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useApi } from '@/hooks/useApi';
 import { toast } from 'sonner';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
-import { formatDate } from '@/utils/utils';
+import { formatAddress, formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
