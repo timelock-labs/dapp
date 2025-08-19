@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { Copy, Network } from 'lucide-react';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 import copyToClipboard from '@/utils/copy';
-import ChainLabel from '@/components/ui/ChainLabel';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {

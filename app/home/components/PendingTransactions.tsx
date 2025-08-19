@@ -13,7 +13,7 @@ import Image from 'next/image';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import { formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
-import ChainLabel from '@/components/ui/ChainLabel';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');

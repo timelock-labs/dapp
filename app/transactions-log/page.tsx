@@ -5,7 +5,6 @@ import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
-import Image from 'next/image';
 import { useApi } from '@/hooks/useApi';
 import { formatAddress } from '@/utils/utils';
 import copyToClipboard from '@/utils/copy';
@@ -14,7 +13,7 @@ import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import { Copy } from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
-import ChainLabel from '@/components/ui/ChainLabel';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {

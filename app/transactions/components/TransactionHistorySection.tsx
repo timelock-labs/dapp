@@ -23,7 +23,7 @@ import ExecuteButton from './ExecuteButton';
 import copyToClipboard from '@/utils/copy';
 import SectionCard from '@/components/layout/SectionCard';
 import { Copy } from 'lucide-react';
-import ChainLabel from '@/components/ui/ChainLabel';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
