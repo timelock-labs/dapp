@@ -13,9 +13,6 @@ import '@/app/globals.css';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
-interface PageLayoutProps extends BaseComponentProps {
-	title: string;
-}
 
 
 /**
@@ -24,7 +21,7 @@ interface PageLayoutProps extends BaseComponentProps {
  * @param props - PageLayout component props
  * @returns JSX.Element
  */
-export default function PageLayout({ title, children, className }: PageLayoutProps) {
+export default function PageLayout({ children, className }: BaseComponentProps) {
 	// 根据当前路径自动推断标题（如果未显式传入 title）
 	const pathname = usePathname();
 
@@ -57,7 +54,15 @@ export default function PageLayout({ title, children, className }: PageLayoutPro
 		'create-transaction': tCreateTx('title'),
 	};
 
-	const effectiveTitle = title || autoTitleMap[pathKey] || title;
+	if (['login'].includes(pathKey)) {
+		return (
+			<div className={className}>
+				{children}
+			</div>
+		);
+	}
+
+	const effectiveTitle = autoTitleMap[pathKey] || ""
 
 	return (
 		<div className={className}>

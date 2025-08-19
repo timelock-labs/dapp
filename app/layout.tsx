@@ -32,7 +32,6 @@ export default async function RootLayout(props: Props) {
 	const cookieStore = await cookies();
 	const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
 	const messages = await getMessages({ locale });
-	console.log('title', title,props);
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<head>
@@ -42,8 +41,8 @@ export default async function RootLayout(props: Props) {
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
 					<Web3Provider>
 						<NextIntlClientProvider locale={locale} messages={messages}>
-							{/* {children} */}
-							<PageLayout title={title}>
+
+							<PageLayout>
 								{children}
 							</PageLayout>
 						</NextIntlClientProvider>
