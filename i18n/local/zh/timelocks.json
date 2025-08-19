@@ -39,6 +39,7 @@
 		"addTimelockDescription": "选择以下两种方式添加 Timelock 合约"
 	},
 	"TimelockTable": {
+		"name":"名称",
 		"title": "时间锁合约",
 		"description": "管理您现有的时间锁合约。",
 		"importExistingContract": "导入现有合约",

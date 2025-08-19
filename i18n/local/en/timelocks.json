@@ -39,6 +39,7 @@
 		"addTimelockDescription": "Add your timelock contract address for management."
 	},
 	"TimelockTable": {
+		"name":"Remark",
 		"title": "Timelock Contracts",
 		"description": "Manage your existing Timelock contracts.",
 		"importExistingContract": "Import Existing Contract",
