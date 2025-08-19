@@ -1,6 +1,7 @@
 {
     "Transactions_log": {
         "title": "Transaction details",
+        "transactionDetails": "Transaction details from chain logs, with a 1～2 minute delay.",
         "chain": "Chain",
         "remark": "Timelock Remark",
         "timelockAddress": "Timelock Address",

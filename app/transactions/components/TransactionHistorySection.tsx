@@ -226,7 +226,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	};
 
 	return (
-	<SectionCard >
+		<SectionCard >
 			<div className='flex flex-col'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
@@ -253,7 +253,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			<div className='flex-1 mb-4'>
 				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
-	</SectionCard>
+		</SectionCard>
 	);
 };
 

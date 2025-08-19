@@ -1,6 +1,7 @@
 {
     "Transactions_log": {
         "title": "交易明细",
+        "transactionDetails": "获取链上解码信息，会存在 1～2 分钟延迟",
         "chain": "链",
         "remark": "Timelock 备注",
         "timelockAddress": "Timelock地址",

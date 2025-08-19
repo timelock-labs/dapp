@@ -13,6 +13,7 @@ import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import { Copy } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -126,7 +127,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'remark',
 			header: t('remark'),
-			render: (row: HistoryTxRow) => <span className="text-sm cursor-pointer" onClick={()=>copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
+			render: (row: HistoryTxRow) => <span className="text-sm cursor-pointer" onClick={() => copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
 		},
 		{
 			key: 'tx_hash',
@@ -205,6 +206,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	return (
 		<SectionCard>
 			<div className='flex-1 mb-4'>
+				<SectionHeader title={t('title')} className='mb-6' description={t('transactionDetails')} />
 				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
 			</div>
 		</SectionCard>
