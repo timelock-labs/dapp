@@ -70,7 +70,7 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 
 	useEffect(() => {
 		if (connectionStatus === 'disconnected') {
-			router.push('/login');
+			router.replace('/login');
 		}
 	}, [connectionStatus, router]);
 
@@ -90,7 +90,7 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 				}}
 				onDisconnect={() => {
 					logout();
-					router.push('/login');
+					router.replace('/login');
 					onDisconnect?.();
 				}}
 			/>

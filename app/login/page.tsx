@@ -54,7 +54,7 @@ const TimeLockerSplitPage = () => {
 				refreshToken: apiResponse.data.refresh_token,
 				expiresAt: apiResponse.data.expires_at,
 			});
-			router.push('/home');
+			router.replace('/home');
 		}
 	}, [apiResponse, login, router]);
 
