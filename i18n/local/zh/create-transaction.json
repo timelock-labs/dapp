@@ -3,14 +3,14 @@
 		"title": "创建交易",
 		"encodingTransaction": {
 			"title": "编码交易",
-			"description": "描述",
+			"description": "将您填写的参数进行编码，生成交易数据",
 			"selectTimelock": "选择时间锁",
 			"selectTimelockMethod": "选择时间锁方法",
 			"timelockAddress": "时间锁地址 *",
 			"target": "目标地址",
 			"value": "数值",
 			"formDescription": "描述",
-			"descriptionPlaceholder": "使用英文描述该笔交易的用途，该描述将上链。",
+			"descriptionPlaceholder": "使用英文描述该笔交易的用途，该描述将上链",
 			"noTimelocksAvailable": "未发现 Timelock 合约，请先添加",
 			"selectTimelockPlaceholder": "请选择时间锁合约",
 			"selectTimelockMethodPlaceholder": "请选择方法",
@@ -24,8 +24,8 @@
 		},
 		"preview": {
 			"title": "编码预览",
-			"description": "在提交前预览您的交易编码。",
-			"noData": "暂无预览数据。"
+			"description": "在提交前预览您的交易编码",
+			"noData": "暂无预览数据"
 		},
 		"mailbox": {
 			"title": "监听邮箱",

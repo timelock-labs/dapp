@@ -20,7 +20,7 @@
 		"pending": "待处理",
 		"history": "历史",
 		"pendingTransactions": "待处理交易",
-		"transactionHistory": "交易历史",
+		"transactionHistory": "交易记录从链上日志获取，会存在 1～2 分钟延迟.",
 		"chain": "所在链",
 		"tagRemark": "标签备注",
 		"timelockAddress": "Timelock 地址",

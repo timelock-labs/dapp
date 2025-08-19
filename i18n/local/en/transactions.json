@@ -20,7 +20,7 @@
 		"pending": "Pending",
 		"history": "History",
 		"pendingTransactions": "Pending Transactions",
-		"transactionHistory": "Transaction History",
+		"transactionHistory": "Transaction history from chain logs, with a 1～2 minute delay.",
 		"chain": "Chain",
 		"tagRemark": "Tag Remark",
 		"timelockAddress": "Timelock Address",

@@ -3,7 +3,7 @@
 		"title": "Create Transaction",
 		"encodingTransaction": {
 			"title": "Encode Transaction",
-			"description": "Description",
+			"description": "Encode the parameters you fill in and generate transaction data.",
 			"selectTimelock": "Select Timelock",
 			"selectTimelockMethod": "Select Timelock Method",
 			"timelockAddress": "Timelock Address *",

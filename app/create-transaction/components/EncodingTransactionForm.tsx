@@ -206,7 +206,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 			<SectionHeader
 				title={t('encodingTransaction.title')}
 				description={t('encodingTransaction.description')}
-				icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
+				// icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 			/>
 			<div className='flex flex-col space-y-4 w-full'>
 				<div className='flex flex-row gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
