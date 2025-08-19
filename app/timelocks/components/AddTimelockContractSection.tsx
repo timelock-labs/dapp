@@ -22,10 +22,8 @@ const AddTimelockContractSection: React.FC = () => {
 
 	return (
 		<div className='bg-white '>
-			{' '}
 			{/* Wrapper with a light gray background */}
 			<div className='mx-auto'>
-				{' '}
 				{/* Max width container to center content */}
 				{/* Section Header */}
 				<SectionHeader title={t('addTimelock')} description={t('addTimelockDescription')} />

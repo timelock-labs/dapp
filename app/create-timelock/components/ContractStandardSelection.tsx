@@ -11,12 +11,6 @@ const STANDARD_OPTIONS: StandardOptionConfig[] = [
 	},
 ] as const;
 
-/**
- * Contract standard selection component with radio button options
- *
- * @param props - ContractStandardSelection component props
- * @returns JSX.Element
- */
 const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ selectedStandard }) => {
 	const t = useTranslations('CreateTimelock');
 
