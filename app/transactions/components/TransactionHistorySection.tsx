@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
-import SearchBar from '@/components/ui/SearchBar';
+// import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
 import TableComponent from '@/components/ui/TableComponent';
@@ -22,6 +22,7 @@ import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
 import copyToClipboard from '@/utils/copy';
 import SectionCard from '@/components/layout/SectionCard';
+import { Copy } from 'lucide-react';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -30,6 +31,8 @@ interface HistoryTxRow {
 	timelock_standard: ContractStandard;
 	chain_id: number;
 	contract_address: Address;
+	contract_remark: string;
+	function_signature: string;
 	status: TransactionStatus;
 	queue_tx_hash: Hash;
 	initiator_address: Address;
@@ -49,9 +52,8 @@ interface HistoryTxRow {
  * @param props - TransactionHistorySection component props
  * @returns JSX.Element
  */
-const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) => {
+const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	const t = useTranslations('Transactions');
-	const [searchQuery, setSearchQuery] = useState('');
 	const [activeTab, setActiveTab] = useState('all');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const chains = useAuthStore(state => state.chains);
@@ -131,11 +133,22 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			},
 		},
 		{
+			key: 'remark',
+			header: t('remark'),
+			render: (row: HistoryTxRow) => <span className={`text-sm`}>{row.contract_remark}</span>,
+		},
+		{
 			key: 'timelock_address',
 			header: t('timelockAddress'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.contract_address);
+						}}
+					/>
 				</div>
 			),
 		},
@@ -145,6 +158,12 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>{formatAddress(row.queue_tx_hash)}</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.queue_tx_hash);
+						}}
+					/>
 				</div>
 			),
 		},

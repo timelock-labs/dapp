@@ -18,5 +18,6 @@ export interface Chain {
 	is_active: boolean;
 	created_at: Timestamp;
 	updated_at: Timestamp;
+	native_currency_symbol: string;
 	block_explorer_urls?: string;
 }

@@ -7,12 +7,12 @@ import { useTranslations } from 'next-intl';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import Image from 'next/image';
 import { useApi } from '@/hooks/useApi';
-import { formatDate, formatAddress } from '@/utils/utils';
+import { formatAddress } from '@/utils/utils';
 import copyToClipboard from '@/utils/copy';
 import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
-import { ethers } from 'ethers';
 import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
+import { Copy } from 'lucide-react';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -21,6 +21,8 @@ interface HistoryTxRow {
 	timelock_standard: ContractStandard;
 	chain_id: number;
 	contract_address: Address;
+	contract_remark: string;
+	function_signature: string;
 	status: TransactionStatus;
 	queue_tx_hash: Hash;
 	initiator_address: Address;
@@ -40,7 +42,7 @@ interface HistoryTxRow {
  * @param props - TransactionHistorySection component props
  * @returns JSX.Element
  */
-const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) => {
+const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	const t = useTranslations('Transactions_log');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const chains = useAuthStore(state => state.chains);
@@ -121,6 +123,26 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			},
 		},
 		{
+			key: 'remark',
+			header: t('remark'),
+			render: (row: HistoryTxRow) => <span className={`text-sm`}>{row.contract_remark}</span>,
+		},
+		{
+			key: 'contract_address',
+			header: t('timelock'),
+			render: (row: HistoryTxRow) => (
+				<div className='flex items-center space-x-2'>
+					<span className='text-sm'>{row.contract_address}</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.contract_address);
+						}}
+					/>
+				</div>
+			),
+		},
+		{
 			key: 'tx_hash',
 			header: t('txHash'),
 			render: (row: HistoryTxRow) => (
@@ -128,6 +150,12 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.queue_tx_hash)}>
 						{formatAddress(row.queue_tx_hash)}
 					</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.queue_tx_hash);
+						}}
+					/>
 				</div>
 			),
 		},
@@ -137,8 +165,14 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
-						{row.function_signature} 
+						{row.function_signature}
 					</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.function_signature);
+						}}
+					/>
 				</div>
 			),
 		},
@@ -164,6 +198,12 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = ({ className }) 
 					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
 						{row.value}  {getNativeTokenSymbol(row.chain_id)}
 					</span>
+					<Copy
+						className='h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700'
+						onClick={() => {
+							copyToClipboard(row.value);
+						}}
+					/>
 				</div>
 			),
 		},

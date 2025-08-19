@@ -11,6 +11,7 @@
 			"view_details": "View Details",
 			"interface_details": "Interface Details"
 		},
+		"remark": "Timelock Remark",
 		"waiting": "Waiting",
 		"ready": "Ready",
 		"cancelled": "Cancelled",

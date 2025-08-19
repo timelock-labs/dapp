@@ -2,6 +2,7 @@
     "Transactions_log": {
         "title": "Transaction details",
         "chain": "Chain",
+        "remark": "Timelock Remark",
         "timelockAddress": "Timelock Address",
         "txHash": "Transaction Hash",
         "createdAt": "Create Time",
