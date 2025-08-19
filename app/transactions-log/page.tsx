@@ -34,6 +34,7 @@ interface HistoryTxRow {
 	created_at: Timestamp;
 	updated_at: Timestamp;
 	chainIcon: React.ReactNode;
+	function_signature: string;
 }
 
 /**
