@@ -23,11 +23,10 @@ const geistMono = Geist_Mono({
 
 type Props = {
 	children: ReactNode;
-	title: string;
 };
 
 export default async function RootLayout(props: Props) {
-	const { children, title } = props;
+	const { children } = props;
 	// 直接使用 defaultLocale
 	const cookieStore = await cookies();
 	const locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale;
