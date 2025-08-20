@@ -13,14 +13,14 @@ interface LogoProps extends BaseComponentProps {
  */
 const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
 	const sizeClasses = {
-		sm: 'w-[100px] h-[28px] text-[18px]',
-		md: 'w-[136.386px] h-[36px] text-[22px]',
-		lg: 'w-[160px] h-[44px] text-[26px]',
+		sm: 'text-[18px]',
+		md: 'text-[22px]',
+		lg: 'text-[26px]',
 	};
 
 	return (
-		<div className={`flex items-center rounded-lg font-righteous p-[10px] gap-[8px] bg-[#171717] ${sizeClasses[size]} ${className || ''}`}>
-			<span className='leading-[100%] logo-font text-white'>Timelocker</span>
+		<div className={`flex items-center w-fit px-2 py-1 justify-center rounded-md bg-black ${sizeClasses[size]} ${className || ''}`}>
+			<span className='logo-font text-white'>Timelocker</span>
 		</div>
 	);
 };

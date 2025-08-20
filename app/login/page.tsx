@@ -90,7 +90,7 @@ const TimeLockerSplitPage = () => {
 							<h2 className='text-xl font-medium'>{t('whyTimelock')}</h2>
 						:	<div className='text-center'>
 								<h2 className='text-xl font-medium'>{t('whyProtocol')}</h2>
-								{/* <p className='text-sm text-gray-300 mt-1'>{t('protocolSubtitle')}</p> */}
+			
 							</div>
 						}
 						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handleNextSection}>
