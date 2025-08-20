@@ -2,17 +2,18 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import SectionHeader from '@/components/ui/SectionHeader'; // Assuming path
-import TextInput from '@/components/ui/TextInput'; // Assuming path
-import SelectInput from '@/components/ui/SelectInput'; // Assuming path
+import SectionHeader from '@/components/ui/SectionHeader';
+import TextInput from '@/components/ui/TextInput';
+import ChainSelector from '@/components/web3/ChainSelector';
+import SelectInput from '@/components/ui/SelectInput';
 import CheckParametersModal from './components/CheckParametersModal';
 import QuestionIcon from '@/public/QuestionIcon.svg';
 import { useAuthStore } from '@/store/userStore';
 import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport';
-import { getChainObject, ChainUtils } from '@/utils/chainUtils';
+import { ChainUtils } from '@/utils/chainUtils';
 import { toast } from 'sonner';
 import { ImportTimelockRequest } from '@/types';
-import { useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
+import { useActiveWalletChain } from 'thirdweb/react';
 import { useRouter } from 'next/navigation';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { useApi } from '@/hooks/useApi';
@@ -28,8 +29,7 @@ const ImportTimelockPage: React.FC = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [detectedParameters, setDetectedParameters] = useState<TimelockParameters | null>(null);
 
-	const { chains, fetchChains } = useAuthStore();
-	const switchChain = useSwitchActiveWalletChain();
+	const { chains } = useAuthStore();
 	const { id: chainId } = useActiveWalletChain() || {};
 
 	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();
@@ -38,35 +38,16 @@ const ImportTimelockPage: React.FC = () => {
 	const router = useRouter();
 
 	useEffect(() => {
-		fetchChains();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (!selectedChain && chainId) {
 			setSelectedChain(chainId.toString());
 		}
 	}, [chainId, selectedChain]);
 
 	useEffect(() => {
-		if (selectedChain) {
-			const chainObject = getChainObject(parseInt(selectedChain));
-			if (chainObject) {
-				switchChain(chainObject);
-			}
-		}
-	}, [selectedChain, switchChain]);
-
-	useEffect(() => {
 		if (parameters && parameters.isValid) {
 			setDetectedParameters(parameters);
 		}
 	}, [parameters]);
-
-	const chainOptions = chains.map(chain => ({
-		value: chain.chain_id.toString(),
-		label: chain.display_name,
-	}));
 
 	useEffect(() => {
 		if (detectedParameters) {
@@ -151,7 +132,13 @@ const ImportTimelockPage: React.FC = () => {
 							<SectionHeader title={t('title')} description={t('description')} icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />} />
 						</div>
 						<div className='flex flex-col pl-8'>
-							<SelectInput label={t('selectChain')} value={selectedChain} onChange={setSelectedChain} options={chainOptions} placeholder={t('selectChainPlaceholder')} />
+							<ChainSelector
+								label={t('selectChain')}
+								value={selectedChain}
+								onChange={setSelectedChain}
+								placeholder={t('selectChainPlaceholder')}
+								autoSwitchChain={true}
+							/>
 							<TextInput label={t('contractAddress')} value={contractAddress} onChange={(e: string) => setContractAddress(e)} placeholder={t('contractAddressPlaceholder')} />
 							<SelectInput
 								label={t('contractStandard')}

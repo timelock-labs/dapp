@@ -2,15 +2,12 @@ import React, { useEffect, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import SectionHeader from '@/components/ui/SectionHeader';
-import SelectInput from '@/components/ui/SelectInput';
+import ChainSelector from '@/components/web3/ChainSelector';
 import TextInput from '@/components/ui/TextInput';
 import { Button } from '@/components/ui/button';
 import ContractStandardSelection from './ContractStandardSelection';
-import { useAuthStore } from '@/store/userStore';
 import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
-import type { CreateTimelockFormProps, ChainOption } from '@/types';
-
-const DEFAULT_CHAIN_LOGO = '/default-chain-logo.png';
+import type { CreateTimelockFormProps } from '@/types';
 
 export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	selectedChain,
@@ -24,27 +21,8 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	isLoading,
 }) => {
 	const t = useTranslations('CreateTimelock');
-	const { chains, fetchChains } = useAuthStore();
 	const params = useParams();
 	const locale = params.locale as string;
-
-	// Fetch chains on mount if not already loaded
-	useEffect(() => {
-		if (chains.length === 0) {
-			fetchChains();
-		}
-	}, [chains.length, fetchChains]);
-
-	// Memoize chain options to prevent unnecessary re-renders
-	const chainOptions = useMemo<ChainOption[]>(
-		() =>
-			chains.map(chain => ({
-				value: chain.chain_id.toString(),
-				label: chain.display_name,
-				logo: chain.logo_url || DEFAULT_CHAIN_LOGO,
-			})),
-		[chains]
-	);
 
 	const handleChainChange = useCallback(
 		(value: string) => {
@@ -54,8 +32,6 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	);
 
 	const selectedChainValue = selectedChain.toString();
-
-	const selectedChainLogo = useMemo(() => chainOptions.find(option => option.value === selectedChainValue)?.logo, [chainOptions, selectedChainValue]);
 
 	const formattedTime = useMemo(() => {
 		const seconds = parseInt(minDelay) || 0;
@@ -69,12 +45,10 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 			<div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6'>
 				{/* Select Chain */}
 				<div className='md:col-start-2 min-w-[548px]'>
-					<SelectInput
+					<ChainSelector
 						label={t('selectChain')}
 						value={selectedChainValue}
 						onChange={handleChainChange}
-						options={chainOptions}
-						logo={selectedChainLogo}
 						placeholder={t('selectChainPlaceholder')}
 					/>
 				</div>
