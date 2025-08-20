@@ -68,19 +68,13 @@ const TimeLockerSplitPage = () => {
 
 	return (
 		<div className='flex items-center justify-center h-screen bg-withe text-white'>
-			{/* Left Panel */}
 			<div className="flex flex-col w-[684px] h-[852px] p-10 rounded-xl border border-gray-800 mr-4 bg-[url('/logo-bg.png')] bg-cover bg-center bg-no-repeat">
-				{/* Header */}
 				<header className='mb-10'>
 					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">Timelocker</h1>
 				</header>
-
-				{/* Main Motto Section */}
 				<main className='text-center px-8 mb-8'>
 					<p className='text-4xl font-bold leading-tight logo-font'>{t('motto')}</p>
 				</main>
-
-				{/* Footer / Why use Timelock section */}
 				<footer className='flex-grow flex flex-col justify-end'>
 					<div className='flex justify-between items-center mb-8'>
 						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handlePrevSection}>
@@ -132,12 +126,11 @@ const TimeLockerSplitPage = () => {
 				</footer>
 			</div>
 
-			{/* Right Panel */}
 			<div className='flex flex-col w-[684px] h-[852px] p-10 bg-white rounded-xl ml-4 justify-center items-center'>
 				<div className='bg-white rounded-lg w-[360px]'>
 					<Logo />
 					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
-					<p className='  text-sm mb-8'>{t('connectWalletDescription')}</p>
+					<p className='text-sm mb-8 text-black'>{t('connectWalletDescription')}</p>
 					<ConnectWallet icon={false} fullWidth={true} />
 				</div>
 			</div>
