@@ -69,7 +69,8 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 					</thead>
 					{/* Table Body */}
 					<tbody className='bg-white divide-y divide-gray-100'>
-						{currentItems.map((row, rowIndex) => (
+						{currentItems.length > 0 ? (
+							currentItems.map((row, rowIndex) => (
 							<tr key={row.id}>
 								{/* Each row must have a unique 'id' */}
 								{columns.map(column => (
@@ -79,13 +80,19 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 									</td>
 								))}
 							</tr>
-						))}
+						))) : (
+							<tr>
+								<td colSpan={columns.length} className='px-2 py-4 whitespace-nowrap text-sm text-[#000000] text-center pt-12 text-gray-500'>
+									{t('noData')}
+								</td>
+							</tr>
+						)}
 					</tbody>
 				</table>
 			</div>
 
 			{/* Pagination Controls */}
-			{showPagination && (
+			{showPagination && totalPages > 1 && (
 				<div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-200'>
 					<button
 						onClick={handlePreviousPage}

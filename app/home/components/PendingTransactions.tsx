@@ -84,7 +84,7 @@ const PendingTransactions: React.FC = () => {
 	return (
 		<div className='bg-white rounded-xl p-6 border border-gray-200 flex flex-col h-full'>
 			<div className='mb-4'>
-				<SectionHeader title='Pending Transactions' description='View your pending transactions' />
+				<SectionHeader title={t('pendingTransactions')} description={t('transactionHistory')} />
 			</div>
 			<div className='flex-1 overflow-hidden'>
 				<TableComponent<PendingTx> columns={columns} data={pendingTxs} showPagination={true} itemsPerPage={10} />
