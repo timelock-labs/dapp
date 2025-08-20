@@ -36,16 +36,34 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 	}, [countdown]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+		console.log('handleChange', e.target.value);
 		const value = e.target.value;
-		if (!/^\d*$/.test(value)) return; // Only allow digits
-
+		
+		// Extract all digits
+		const digits = value.replace(/[^\d]/g, '').split('');
+		
+		if (digits.length === 0) {
+			// Handle deletion
+			const newCode = [...code];
+			newCode[index] = '';
+			setCode(newCode);
+			return;
+		}
+		
+		// Create new verification code array
 		const newCode = [...code];
-		newCode[index] = value.slice(-1); // Take only the last digit entered
+		
+		// Handle multiple digits input
+		for (let i = 0; i < digits.length && index + i < codeLength; i++) {
+			newCode[index + i] = digits[i] || '';
+		}
+		
 		setCode(newCode);
-
-		// Move to next input if a digit is entered
-		if (value && index < codeLength - 1 && inputRefs.current[index + 1]) {
-			inputRefs.current[index + 1]?.focus();
+		
+		// Move focus to the next empty input field
+		const nextEmptyIndex = newCode.findIndex((digit, idx) => !digit && idx > index);
+		if (nextEmptyIndex !== -1 && nextEmptyIndex < codeLength) {
+			inputRefs.current[nextEmptyIndex]?.focus();
 		}
 	};
 
@@ -85,6 +103,11 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 							value={code[i] || ''}
 							onChange={e => handleChange(e, i)}
 							onKeyDown={e => handleKeyDown(e, i)}
+							onPaste={e => {
+								e.preventDefault();
+								const pastedData = e.clipboardData.getData('text');
+								handleChange({ target: { value: pastedData } } as any, i);
+							}}
 							ref={el => {
 								inputRefs.current[i] = el as HTMLInputElement;
 							}}
