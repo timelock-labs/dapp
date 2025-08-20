@@ -12,7 +12,7 @@ const ExecuteButton = ({ timelock }: { timelock: Timelock }) => {
     const { id: chainId } = useActiveWalletChain() || {};
     const chains = useAuthStore(state => state.chains);
     const { signer } = useContractDeployment();
-    const t = useTranslations('transactions');
+    const t = useTranslations('Transactions');
 
     const handleExecute = async () => {
         if (chainId !== timelock.chain_id) {
