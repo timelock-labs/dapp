@@ -15,8 +15,16 @@ interface FeatureCardProps extends BaseComponentProps {
  * @returns JSX.Element
  */
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, link, className }) => {
+
+	const handleClick = () => {
+		if (link) {
+			window.open(link, '_blank');
+		}
+	};
+
+
 	return (
-		<div className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer ${className || ''}`}>
+		<div onClick={handleClick} className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer ${className || ''}`}>
 			<div className='flex justify-between items-center w-full mb-4'>
 				{/* Placeholder for icon, replace with actual icon components if available */}
 				<div className='w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center  '>
