@@ -11,10 +11,9 @@ import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
 
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { Interface } from 'ethers/lib/utils';
 import generatePreview from '@/utils/generatePreview';
-import { ethers } from 'ethers';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
+import { Send } from 'lucide-react';
 
 const TransactionEncoderPage: React.FC = () => {
 	const router = useRouter();
@@ -215,6 +214,7 @@ const TransactionEncoderPage: React.FC = () => {
 									onClick={handleSendTransaction}
 									disabled={isSubmitting}
 									className='cursor-pointer text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
+									<Send className='w-4 h-4 mr-2' />
 									{isSubmitting ? t('submitting') : t('sendTransactionButton')}
 								</button>
 							</div>
