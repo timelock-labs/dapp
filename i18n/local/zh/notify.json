@@ -60,7 +60,7 @@
 			"pleaseVerifyEmailFirst": "请先验证邮箱",
 			"mailboxAddedSuccessfully": "邮箱添加成功",
 			"addMailboxError": "邮箱添加失败：{message}",
-			"adding": "添加中...",
+			"adding": "已发送...",
 			"addAndSendCode": "添加并发送验证码",
 			"emailVerificationSuccess": "邮箱验证成功",
 			"emailVerificationError": "邮箱验证失败：{message}",
@@ -96,7 +96,8 @@
 			"pleaseEnterEmail": "请先输入邮箱地址",
 			"verificationCodeSent": "验证码发送成功",
 			"sendCodeError": "验证码发送失败：{message}",
-			"unknownError": "未知错误"
+			"unknownError": "未知错误",
+			"sent":"已发送"
 		}
 	}
 }

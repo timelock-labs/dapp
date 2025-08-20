@@ -60,7 +60,7 @@
 			"pleaseVerifyEmailFirst": "Please verify your email first",
 			"mailboxAddedSuccessfully": "Mailbox added successfully",
 			"addMailboxError": "Failed to add mailbox: {message}",
-			"adding": "Adding...",
+			"adding": "Sent...",
 			"addAndSendCode": "Add And Send Code",
 			"emailVerificationSuccess": "Email verification successful",
 			"emailVerificationError": "Email verification failed: {message}",
@@ -96,7 +96,9 @@
 			"pleaseEnterEmail": "Please enter email address first",
 			"verificationCodeSent": "Verification code sent successfully",
 			"sendCodeError": "Failed to send verification code: {message}",
-			"unknownError": "Unknown error"
+			"unknownError": "Unknown error",
+			"resendCode": "Resend Code",
+			"sent":"Sent"
 		}
 	}
 }
