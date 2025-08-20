@@ -73,7 +73,8 @@ const ImportTimelockPage: React.FC = () => {
 			setDetectedParameters(null);
 			clearParameters();
 		}
-	}, [contractAddress, clearParameters, detectedParameters]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [contractAddress, clearParameters]);
 
 	const handleNextStep = async () => {
 		if (!selectedChain) {
@@ -100,7 +101,7 @@ const ImportTimelockPage: React.FC = () => {
 			}
 
 			const detectedParams = await fetchTimelockParameters(contractAddress);
-
+			console.log('detectedParams ::::', detectedParams);
 			if (!detectedParams.isValid) {
 				toast.error(t('errors.failedToDetectParameters'));
 				return;
