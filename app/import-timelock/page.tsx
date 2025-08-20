@@ -168,7 +168,7 @@ const ImportTimelockPage: React.FC = () => {
 							type='button'
 							onClick={handleNextStep}
 							disabled={isDetecting || !selectedChain || !contractAddress || !contractStandard}
-							className='bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'>
+							className='bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed'>
 							{isDetecting ? t('detecting') : t('nextStep')}
 						</button>
 					</div>

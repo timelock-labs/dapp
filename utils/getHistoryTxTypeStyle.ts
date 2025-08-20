@@ -11,7 +11,7 @@ const getHistoryTxTypeStyle = (type: string) => {
 		case 'executed':
 			return 'bg-yellow-100 text-yellow-800';
 		default:
-			return 'bg-gray-200';
+			return 'bg-gray-100';
 	}
 };
 

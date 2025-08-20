@@ -105,7 +105,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 					className={`ml-4 text-sm px-4 py-2 rounded-lg font-semibold transition-colors duration-150
             ${
 							isSendingCode || countdown > 0 ?
-								'bg-gray-200   cursor-not-allowed'
+								'bg-gray-100   cursor-not-allowed'
 							:	'bg-gradient-to-r from-black via-gray-900 to-gray-700 text-white hover:from-gray-900 hover:to-black'
 						}
           `}>

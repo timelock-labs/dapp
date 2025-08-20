@@ -26,7 +26,7 @@ const PendingTransactions: React.FC = () => {
 			const transformedData = [...waitingData.flows, ...executedData.flows].map((tx: RawTx) => ({
 				...tx,
 				id: tx.queue_tx_hash,
-				chainIcon: <div className='w-4 h-4 bg-gray-300 rounded-full' />, // Placeholder icon
+				chainIcon: <div className='w-4 h-4 bg-gray-100 rounded-full' />, // Placeholder icon
 			}));
 			setPendingTxs(transformedData);
 		} catch (error) {

@@ -104,7 +104,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
             flex items-center space-x-1
             bg-white border border-grey-800  text-sm font-medium
             px-4 py-2 rounded-[10px]
-            hover:bg-gray-300 transition-colors
+            hover:bg-gray-100 transition-colors
             ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}>
 					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
@@ -131,7 +131,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
             flex items-center space-x-1
             bg-white border border-grey-800  text-sm font-medium
             px-4 py-2 rounded-[10px]
-            hover:bg-gray-300 transition-colors
+            hover:bg-gray-100 transition-colors
             ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
           `}>
 					{t('next')}

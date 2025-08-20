@@ -94,7 +94,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
               flex items-center space-x-1
               bg-white border border-grey-800 text-sm font-medium
               px-4 py-2 rounded-[10px]
-              hover:bg-gray-300 transition-colors
+              hover:bg-gray-100 transition-colors
 							cursor-pointer
               ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and disable clicks */
             `}>
@@ -116,7 +116,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
               flex items-center space-x-1
               bg-white border border-grey-800 text-sm font-medium
               px-4 py-2 rounded-[10px]
-              hover:bg-gray-300 transition-colors
+              hover:bg-gray-100 transition-colors
 							cursor-pointer
               ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and disable clicks */
             `}>
