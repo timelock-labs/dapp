@@ -74,7 +74,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 
 	return (
 		<div className='mb-6'>
-			<label className='block text-sm font-medium text-gray-700 mb-2'>{t('label')}</label>
+			<label className='block text-sm font-medium   mb-2'>{t('label')}</label>
 			<div className='flex items-center '>
 				<div className='flex gap-2'>
 					{Array.from({ length: codeLength }).map((_, i) => (
@@ -105,7 +105,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 					className={`ml-4 text-sm px-4 py-2 rounded-lg font-semibold transition-colors duration-150
             ${
 							isSendingCode || countdown > 0 ?
-								'bg-gray-200 text-gray-500 cursor-not-allowed'
+								'bg-gray-200   cursor-not-allowed'
 							:	'bg-gradient-to-r from-black via-gray-900 to-gray-700 text-white hover:from-gray-900 hover:to-black'
 						}
           `}>

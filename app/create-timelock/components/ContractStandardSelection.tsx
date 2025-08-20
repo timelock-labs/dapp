@@ -18,7 +18,7 @@ const ContractStandardSelection: React.FC<ContractStandardSelectionProps> = ({ s
 
 	return (
 		<div className='mb-4'>
-			<label className='block text-sm font-medium text-gray-700 mb-2'>{t('selectContractStandard')}</label>
+			<label className='block text-sm font-medium   mb-2'>{t('selectContractStandard')}</label>
 			<div className='space-y-4'>
 				{standardOptions.map(option => (
 					<RadioButtonOption

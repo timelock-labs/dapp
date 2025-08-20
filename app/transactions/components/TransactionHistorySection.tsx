@@ -126,17 +126,17 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'created_at',
 			header: t('createdAt'),
-			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>,
+			render: (row: HistoryTxRow) => <span className='text-sm  '>{formatDate(row.created_at)}</span>,
 		},
 		{
 			key: 'eta',
 			header: t('eta'),
-			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>,
+			render: (row: HistoryTxRow) => <span className='text-sm  '>{formatDate(row.eta)}</span>,
 		},
 		{
 			key: 'expired_at',
 			header: t('expiredAt'),
-			render: (row: HistoryTxRow) => <span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>,
+			render: (row: HistoryTxRow) => <span className='text-sm  '>{formatDate(row.expired_at)}</span>,
 		},
 		{
 			key: 'status',

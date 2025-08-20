@@ -60,11 +60,11 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 
 	return (
 		<div className='bg-white p-6 rounded-lg border border-gray-200 flex flex-col h-full'>
-			<h2 className='text-lg font-semibold text-gray-800 mb-4'>Asset</h2>
+			<h2 className='text-lg font-semibold mb-4'>Asset</h2>
 
-			{/* Table Header - text-gray-500 for gray color */}
+			{/* Table Header -   for gray color */}
 			<div
-				className='grid grid-cols-2 text-gray-500 
+				className='grid grid-cols-2   
       rounded-lg
       text-sm font-medium border-b border-gray-200 bg-gray-50 p-3'>
 				<span>Name/Price</span>
@@ -80,13 +80,13 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 							<div className='col'>
 								<div className='flex gap-1 items-center'>
 									<span>{asset.symbol}</span>
-									<span className='text-gray-500 text-xs'>{asset.name}</span>
+									<span className='  text-xs'>{asset.name}</span>
 									</div>
 								<div>${asset.usd_price ? asset.usd_price : '0.00'}</div>
 							</div>
 						</div>
 						<div>
-							<span className='text-gray-500 text-sm'>
+							<span className='  text-sm'>
 								{ethers.utils.formatUnits(asset.balance.toString(), asset.decimals)}
 							</span>
 						</div>
@@ -102,7 +102,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 					disabled={currentPage === 1} // Disable if on first page
 					className={`
             flex items-center space-x-1
-            bg-white border border-grey-800  text-gray-800 text-sm font-medium
+            bg-white border border-grey-800  text-sm font-medium
             px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
             ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
@@ -119,7 +119,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 						-
 						<AnimatedAssetValue value={currentRangeEnd} decimals={0} fallback='1' />
 					</span>{' '}
-					<span className='text-gray-600'>
+					<span className=' '>
 						of <AnimatedAssetValue value={totalItems} decimals={0} fallback='0' />
 					</span>
 				</span>
@@ -129,7 +129,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 					disabled={currentPage === totalPages} // Disable if on last page
 					className={`
             flex items-center space-x-1
-            bg-white border border-grey-800  text-gray-800 text-sm font-medium
+            bg-white border border-grey-800  text-sm font-medium
             px-4 py-2 rounded-[10px]
             hover:bg-gray-300 transition-colors
             ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */

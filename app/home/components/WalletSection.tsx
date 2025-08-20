@@ -16,8 +16,8 @@ const WalletSection: React.FC = () => {
 					<Image src={timelockewallet} alt='Timelock Wallet' width={20} height={16} className='w-5 h-4' />
 				</div>
 			</div>
-			<p className='text-xl font-semibold text-gray-800 mb-2 mt-4'>{t('noTimelockWallet')}</p>
-			<p className='text-gray-600 text-sm mb-6'>{t('description')}</p>
+			<p className='text-xl font-semibold mb-2 mt-4'>{t('noTimelockWallet')}</p>
+			<p className='  text-sm mb-6'>{t('description')}</p>
 			<Link href='/create-timelock'>
 				<button className='bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors cursor-pointer'>{t('createNew')}</button>
 			</Link>

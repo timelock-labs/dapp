@@ -141,7 +141,7 @@ const TimeLockerSplitPage = () => {
 					</div>
 
 					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
-					<p className='text-gray-600 text-sm mb-8'>{t('connectWalletDescription')}</p>
+					<p className='  text-sm mb-8'>{t('connectWalletDescription')}</p>
 					<ConnectWallet icon={false} fullWidth={true} />
 				</div>
 			</div>

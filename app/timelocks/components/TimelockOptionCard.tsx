@@ -5,7 +5,7 @@ interface TimelockOptionCardProps {
 	title: string;
 	description: string;
 	bgColor: string; // Tailwind class for background color (e.g., 'bg-black', 'bg-white')
-	textColor: string; // Tailwind class for text color (e.g., 'text-white', 'text-gray-900')
+	textColor: string; // Tailwind class for text color (e.g., 'text-white')
 	borderColor?: string; // Optional border color (e.g., 'border-gray-200' for the white card)
 	bgImage?: string; // Optional background image URL
 	onClick?: () => void; // Optional click handler for interactivity

@@ -155,7 +155,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 				{/* Dynamic function arguments */}
 				{selectedFunctionDetails && selectedFunctionDetails.inputs && Array.isArray(selectedFunctionDetails.inputs) && (
 					<div className='space-y-3'>
-						<h4 className='text-sm font-medium text-gray-700'>Function Arguments</h4>
+						<h4 className='text-sm font-medium  '>Function Arguments</h4>
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 							{(selectedFunctionDetails.inputs as Array<Record<string, unknown>>).map((input, index) => (
 								<TextInput

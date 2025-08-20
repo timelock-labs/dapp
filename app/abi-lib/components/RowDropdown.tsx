@@ -36,7 +36,7 @@ const ABIRowDropdown: React.FC<ABIRowDropdownProps> = ({ isOpen, dropdownRef, on
 					<span>{t('delete')}</span>
 				</button>
 			)}
-			<button type='button' onClick={onView} className='w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center space-x-2'>
+			<button type='button' onClick={onView} className='w-full text-left px-3 py-2 text-xs   hover:bg-gray-100 hover:text-black flex items-center space-x-2'>
 				<FileSVG />
 				<span>{t('viewABI')}</span>
 			</button>

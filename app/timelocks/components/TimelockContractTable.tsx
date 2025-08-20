@@ -109,7 +109,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				const permissions = (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions;
 
 				if (!permissions || permissions.length === 0) {
-					return <span className='text-gray-500'>{t('none')}</span>;
+					return <span className=' '>{t('none')}</span>;
 				}
 
 				// const getRoleStyle = (role: string) => {
@@ -184,7 +184,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 						<button
 							type='button'
 							onClick={handleImportContract}
-							className='bg-white text-gray-900 px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer'>
+							className='bg-white px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer'>
 							{t('importExistingContract')}
 						</button>
 						<button

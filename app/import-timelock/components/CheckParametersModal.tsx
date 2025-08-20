@@ -67,8 +67,8 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-4'>
-			<label className='block text-sm font-medium text-gray-700 mb-1'>{label}</label>
-			<div className='bg-gray-100 text-gray-900 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
+			<label className='block text-sm font-medium   mb-1'>{label}</label>
+			<div className='bg-gray-100 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
 		</div>
 	);
 
@@ -84,7 +84,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				tabIndex={-1} // Makes the dialog content focusable
 				className='bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
 			>
-				<h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
+				<h2 id={dialogTitleId} className='text-xl font-semibold mb-6'>
 					{t('title')}
 				</h2>
 				<div className='grid grid-cols-2 gap-4 mb-4'>
@@ -115,7 +115,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				</div>
 
 				<div className='mb-4'>
-					<label className='block text-sm font-medium text-gray-700 mb-1'>{t('abi')}</label>
+					<label className='block text-sm font-medium   mb-1'>{t('abi')}</label>
 					<textarea
 						readOnly
 						aria-label='ABI Content'
@@ -123,7 +123,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 						className='
               mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
               focus:outline-none focus:ring-blue-500 focus:border-blue-500
-              sm:text-sm bg-gray-100 text-gray-900
+              sm:text-sm bg-gray-100
             '
 						rows={8}
 					/>
@@ -133,7 +133,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 					<button
 						type='button'
 						onClick={handleCancel}
-						className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+						className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
 					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer'>

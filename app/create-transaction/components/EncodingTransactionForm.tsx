@@ -250,7 +250,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 
 					<div className='flex flex-col md:flex-row gap-4 items-end'>
 						<div className='flex-1'>
-							<label className='block text-sm font-medium text-gray-700 mb-1'>
+							<label className='block text-sm font-medium   mb-1'>
 								{t('targetABI.time')} {timeZone()}
 							</label>
 							<div className='flex gap-4 items-center'>

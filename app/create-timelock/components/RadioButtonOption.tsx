@@ -15,8 +15,8 @@ const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({ id, name, value, 
 		<label htmlFor={id} className={baseClasses}>
 			<input type='radio' id={id} name={name} value={value} checked={checked} disabled={disabled} className={radioClasses} aria-disabled={disabled} />
 			<div className='flex-1'>
-				<p className='text-gray-900 font-medium text-base'>{label}</p>
-				{description && <p className='text-gray-500 text-sm mt-1'>{description}</p>}
+				<p className='font-medium text-base'>{label}</p>
+				{description && <p className='  text-sm mt-1'>{description}</p>}
 			</div>
 		</label>
 	);

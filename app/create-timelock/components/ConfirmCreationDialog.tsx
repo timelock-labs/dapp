@@ -59,7 +59,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 				aria-labelledby={dialogTitleId}
 				tabIndex={-1}
 				className='bg-white p-6 rounded-lg w-full max-w-xl mx-4 relative outline-none'>
-				<h2 id={dialogTitleId} className='text-xl font-semibold text-gray-900 mb-6'>
+				<h2 id={dialogTitleId} className='text-xl font-semibold mb-6'>
 					{t('title')}
 				</h2>
 
@@ -85,12 +85,12 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 				</div>
 
 				<div className='my-4'>
-					<label className='block text-sm font-medium text-gray-700 mb-1'>
+					<label className='block text-sm font-medium   mb-1'>
 						{t('contractRemarkLabel')} <span className='text-red-500'>*</span>
 					</label>
 					<input
 						type='text'
-						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white text-gray-900 focus:ring-1 ${remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white focus:ring-1 ${remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
 							}`}
 						placeholder={t('contractRemarkPlaceholder')}
 						value={remark}
@@ -102,7 +102,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 
 				{/* Action Buttons */}
 				<div className='flex justify-end space-x-3 mt-6'>
-					<button type='button' onClick={onClose} className='bg-white text-gray-900 px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50'>
+					<button type='button' onClick={onClose} className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50'>
 						{t('cancel')}
 					</button>
 					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer disabled:opacity-50'>

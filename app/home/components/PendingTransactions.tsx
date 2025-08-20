@@ -62,17 +62,17 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'created_at',
 			header: t('createdAt'),
-			render: (row: PendingTx) => <span className='text-sm text-gray-600'>{formatDate(row.created_at)}</span>,
+			render: (row: PendingTx) => <span className='text-sm  '>{formatDate(row.created_at)}</span>,
 		},
 		{
 			key: 'eta',
 			header: t('eta'),
-			render: (row: PendingTx) => <span className='text-sm text-gray-600'>{formatDate(row.eta)}</span>,
+			render: (row: PendingTx) => <span className='text-sm  '>{formatDate(row.eta)}</span>,
 		},
 		{
 			key: 'expired_at',
 			header: t('expiredAt'),
-			render: (row: PendingTx) => <span className='text-sm text-gray-600'>{formatDate(row.expired_at)}</span>,
+			render: (row: PendingTx) => <span className='text-sm  '>{formatDate(row.expired_at)}</span>,
 		},
 		{
 			key: 'status',

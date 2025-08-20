@@ -44,7 +44,7 @@ const AddTimelockContractSection: React.FC = () => {
 						title={t('import_title')}
 						description={t('import_des')}
 						bgColor='bg-white'
-						textColor='text-gray-900'
+						textColor='text-black'
 						borderColor='border-gray-200' // Explicit border for visibility on white background
 						bgImage={import_bg_img.src} // Background image for the white card
 						onClick={handleImportContract}

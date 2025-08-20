@@ -70,8 +70,8 @@ const CreateProtocol: React.FC = () => {
 				</div>
 				{/* Third Row: Who is using it? and Feature Cards */}
 				<div className='mb-12'>
-					<h2 className='text-xl font-semibold text-gray-800 mb-6'>
-						{t('whos_using.title')} <span className='text-gray-500 text-base font-normal'>{t('whos_using.description')}</span>
+					<h2 className='text-xl font-semibold mb-6'>
+						{t('whos_using.title')} <span className='  text-base font-normal'>{t('whos_using.description')}</span>
 					</h2>
 					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 						{featureCards.map(card => (

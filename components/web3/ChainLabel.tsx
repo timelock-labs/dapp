@@ -10,7 +10,7 @@ export default function ChainLabel({ chainId }: { chainId: number|string }) {
     const chainName = chain?.display_name;
 
     return (
-        <div className='px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800'>
+        <div className='px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100'>
             {chainLogo ?
                 <Image
                     src={chainLogo}
@@ -23,7 +23,7 @@ export default function ChainLabel({ chainId }: { chainId: number|string }) {
                         e.currentTarget.style.display = 'none';
                     }}
                 />
-                : <Network className='h-4 w-4 text-gray-700' />}
+                : <Network className='h-4 w-4  ' />}
             <span className='font-medium'>{chainName}</span>
         </div>
     );

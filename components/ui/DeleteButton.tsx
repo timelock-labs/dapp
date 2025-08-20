@@ -67,7 +67,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 		}
 	};
 
-	const triggerClasses = variant === 'destructive' ? 'text-red-600 hover:text-red-700 hover:bg-red-50' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100';
+	const triggerClasses = variant === 'destructive' ? 'text-red-600 hover:text-red-700 hover:bg-red-50' : '  hover:text-black hover:bg-gray-100';
 
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -84,8 +84,8 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 			<PopoverContent className='w-80 p-4' align='end'>
 				<div className='space-y-4'>
 					<div>
-						<h4 className='font-medium text-gray-900'>{title}</h4>
-						<p className='text-sm text-gray-600 mt-1'>{description}</p>
+						<h4 className='font-medium'>{title}</h4>
+						<p className='text-sm   mt-1'>{description}</p>
 					</div>
 					<div className='flex justify-end space-x-2'>
 						<Button variant='outline' size='sm' onClick={handleCancel}>
