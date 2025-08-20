@@ -35,7 +35,8 @@ const TransactionEncoderPage: React.FC = () => {
 	const [argumentValues, setArgumentValues] = useState<string[]>([]);
 	const [selectedMailbox, setSelectedMailbox] = useState<string[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
+	// Preview State
+	const [previewContent, setPreviewContent] = useState('');
 	const [targetCalldata, setTargetCallData] = useState('');
 	const [timelockCalldata, setTimelockCalldata] = useState('');
 
@@ -80,8 +81,7 @@ const TransactionEncoderPage: React.FC = () => {
 		}
 	}, [functionValue, argumentValues]);
 
-	// Preview State
-	const [previewContent, setPreviewContent] = useState('');
+
 
 	// Handle argument changes
 	const handleArgumentChange = (index: number, value: string) => {
