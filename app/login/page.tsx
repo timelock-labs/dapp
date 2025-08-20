@@ -1,63 +1,14 @@
 'use client';
 
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Logo from '@/components/layout/Logo';
-import { ConnectWallet } from '@/components/wallet/connect-wallet';
-import { useActiveWalletConnectionStatus, useActiveAccount } from 'thirdweb/react';
-import { useApi } from '@/hooks/useApi';
-import { useAuthStore } from '@/store/userStore';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { LoginButton } from '@/components/wallet/login-button';
 
 
 const TimeLockerSplitPage = () => {
 	const t = useTranslations('walletLogin');
 	const [currentSection, setCurrentSection] = useState(0); // 0: first section, 1: second section
-	const { address, signMessage } = useActiveAccount() || {};
-
-	const connectionStatus = useActiveWalletConnectionStatus();
-	const isConnected = connectionStatus === 'connected';
-	const { data: apiResponse, request: walletConnect } = useApi();
-	const login = useAuthStore(state => state.login);
-	const router = useRouter();
-	const [hasSignedIn, setHasSignedIn] = useState(false);
-
-	const handleUserSignature = useCallback(async () => {
-		if (isConnected && address && !hasSignedIn) {
-			setHasSignedIn(true);
-			const message = t('welcomeMessage');
-			try {
-				const signature = await signMessage!({ message: message });
-				await walletConnect('/api/v1/auth/wallet-connect', {
-					wallet_address: address,
-					signature: signature,
-					message: message,
-				});
-			} catch {
-				setHasSignedIn(false);
-				toast.error(t('errorSigningIn'));
-			}
-		}
-	}, [isConnected, address, signMessage]);
-
-	useEffect(() => {
-		if (isConnected) {
-			handleUserSignature();
-		}
-	}, [isConnected, handleUserSignature]);
-
-	useEffect(() => {
-		if (apiResponse && apiResponse.success) {
-			login({
-				user: apiResponse.data.user,
-				accessToken: apiResponse.data.access_token,
-				refreshToken: apiResponse.data.refresh_token,
-				expiresAt: apiResponse.data.expires_at,
-			});
-			router.replace('/home');
-		}
-	}, [apiResponse, login, router]);
 
 	const handlePrevSection = () => {
 		setCurrentSection(prev => (prev === 0 ? 1 : 0));
@@ -132,7 +83,7 @@ const TimeLockerSplitPage = () => {
 					<Logo />
 					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
 					<p className='text-sm mb-8 text-black'>{t('connectWalletDescription')}</p>
-					<ConnectWallet icon={false} fullWidth={true} />
+					<LoginButton fullWidth={true} />
 				</div>
 			</div>
 		</div>

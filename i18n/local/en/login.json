@@ -45,7 +45,15 @@
 		"getStarted": "Get started",
 		"connectWalletDescription": "Connect your wallet to create a new Timelock Account or import an existing one.",
 		"errorSigningIn": "Error signing in",
-		"welcomeMessage": "welcome to Timelocker!"
+		"welcomeMessage": "welcome to Timelocker!",
+		"signToLogin": "Sign to Login",
+		"retrySignature": "Retry Signature",
+		"signing": "Signing...",
+		"loginSuccess": "Login Success",
+		"pleaseConnectWallet": "Please connect your wallet first",
+		"clickToSign": "Click the button to sign and complete the login",
+		"signatureFailedRetry": "Signature failed, please try again",
+		"autoSigning": "Automatically signing in..."
 
 	}
 } 

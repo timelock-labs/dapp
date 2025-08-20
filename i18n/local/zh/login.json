@@ -45,6 +45,14 @@
 		"getStarted": "开始使用",
 		"connectWalletDescription": "连接您的钱包以创建新的时间锁账户或导入现有账户。",
 		"errorSigningIn": "登录错误",
-		"welcomeMessage": "欢迎使用 Timelocker！"
+		"welcomeMessage": "欢迎使用 Timelocker！",
+		"signToLogin": "签名登录",
+		"retrySignature": "重新签名",
+		"signing": "签名中...",
+		"loginSuccess": "登录成功",
+		"pleaseConnectWallet": "请先连接您的钱包",
+		"clickToSign": "点击按钮进行签名以完成登录",
+		"signatureFailedRetry": "签名失败，请重新尝试",
+		"autoSigning": "自动登录中..."
 	}
 } 
