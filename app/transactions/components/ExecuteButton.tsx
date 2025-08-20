@@ -4,13 +4,14 @@ import { toast } from 'sonner';
 import { useActiveWalletChain } from 'thirdweb/react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Import the minimal ABI for the timelock contract
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
+import TableButton from '@/components/tableContent/TableButton';
 
 const ExecuteButton = ({ timelock }: { timelock: any }) => {
     const { id: chainId } = useActiveWalletChain() || {};
     const chains = useAuthStore(state => state.chains);
     const { signer } = useContractDeployment();
 
-    const handleCancel = async () => {
+    const handleExecute = async () => {
         if (chainId !== timelock.chain_id) {
             const currentChain = chains.find(chain => chain.chain_id === timelock.chain_id);
             toast.error(`Please switch to ${currentChain!.display_name} network to cancel this timelock.`);
@@ -27,7 +28,7 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
         const eta = etaTimestamp.getTime() / 1000; // Convert to seconds
 
         try {
-            const tx = await Timelock.cancelTransaction(
+            const tx = await Timelock.executeTransaction(
                 timelock.target_address,
                 timelock.value,
                 timelock.function_signature,
@@ -46,11 +47,8 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
         }
     };
 
-    return (
-		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 cursor-pointer' onClick={handleCancel}>
-			Execute
-		</div>
-    );
+    return <TableButton label='Execute' onClick={handleExecute} colorType='green' />
+
 };
 
 export default ExecuteButton;

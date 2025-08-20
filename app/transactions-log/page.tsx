@@ -15,6 +15,7 @@ import NativeToken from '@/components/web3/NativeToken';
 import HashLink from '@/components/web3/HashLink';
 import { formatDate, formatDateWithYear } from '@/utils/utils';
 import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
+import TableTag from '@/components/tableContent/TableTag';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -36,7 +37,6 @@ interface HistoryTxRow {
 	created_at: Timestamp;
 	updated_at: Timestamp;
 	chainIcon: React.ReactNode;
-	function_signature: string;
 }
 
 /**
@@ -153,9 +153,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: HistoryTxRow) => (
-				<span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{capitalizeFirstLetter(row.status)}</span>
-			),
+			render: (row: HistoryTxRow) => 	<TableTag label={row.status} statusType={row.status as any} />,
 		}
 	];
 
