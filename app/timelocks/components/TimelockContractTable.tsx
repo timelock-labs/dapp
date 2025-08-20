@@ -14,6 +14,7 @@ import ChainLabel from '@/components/web3/ChainLabel';
 import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 import { FilePlus, FileDown } from 'lucide-react';
 import AddressWarp from '@/components/web3/AddressWarp';
+import TableTag from '@/components/tableContent/TableTag';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
@@ -110,28 +111,16 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 					return <div>{t('none')}</div>;
 				}
 
-				// const getRoleStyle = (role: string) => {
-				// 	switch (role.toLowerCase()) {
-				// 		case 'creator':
-				// 			return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200';
-				// 		case 'admin':
-				// 			return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200';
-				// 		case 'admincreator':
-				// 			return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200';
-				// 		default:
-				// 			return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200';
-				// 	}
-				// };
-
 				return (
 					<div className='flex flex-wrap gap-2'>
 						{permissions.map((permission, index) => (
 							permission !== "creator" && (
-								<span
+								<TableTag
 									key={index}
-									className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800`}>
-									{capitalizeFirstLetter(permission)}
-								</span>)
+									label={permission}
+									colorType='green'
+								/>
+							)
 						))}
 					</div>
 				);

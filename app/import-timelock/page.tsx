@@ -101,7 +101,6 @@ const ImportTimelockPage: React.FC = () => {
 			}
 
 			const detectedParams = await fetchTimelockParameters(contractAddress);
-			console.log('detectedParams ::::', detectedParams);
 			if (!detectedParams.isValid) {
 				toast.error(t('errors.failedToDetectParameters'));
 				return;

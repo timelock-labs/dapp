@@ -7,6 +7,7 @@ import { NavMain } from '@/components/nav/nav-main';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, useSidebar } from '@/components/ui/sidebar';
 import LanguageSwitcher from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
+import Logo from '../layout/Logo';
 // import type { BaseComponentProps } from '@/types';
 
 /**
@@ -83,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible='icon' {...props}>
 			<SidebarHeader>
-				<div className='logo-font font-xl font-bold text-xl'>{t('sidebar.logo')}</div>
+				<Logo size='sm' />
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={sidebarData.navMain} />

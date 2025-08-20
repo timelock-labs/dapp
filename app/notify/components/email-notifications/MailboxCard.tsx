@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { formatDateWithYear } from '@/utils/utils';
 import { Mail } from 'lucide-react';
 import copyToClipboard from '@/utils/copy';
+import Tag from '@/components/tableContent/TableTag';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
@@ -41,16 +42,14 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	return (
 		<div className='bg-white rounded-lg  border border-gray-200 flex flex-col justify-between h-auto'>
 			<div className='p-6'>
-				<div className='text-lg flex items-center gap-2 font-semibold mb-1 cursor-pointer' onClick={()=>copyToClipboard(email)}>
+				<div className='text-lg flex items-center gap-2 font-semibold mb-1 cursor-pointer' onClick={() => copyToClipboard(email)}>
 					<div>
 						<Mail width={20} height={20} />
 					</div>
-					<div>
-						{email}
-					</div>
+					<div>{email}</div>
 				</div>
-				<p className='text-sm   mb-2'>{remark}</p>
-				<div className='text-xs   space-y-1'>
+				<div className='my-2'><Tag label={remark || '-'} colorType='green' /></div>
+				<div className='text-xs'>
 					<div>
 						<strong>Added At:</strong> {formatDateWithYear(created_at) || '-'}
 					</div>

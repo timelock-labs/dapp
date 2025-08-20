@@ -40,7 +40,6 @@ export default async function RootLayout(props: Props) {
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
 					<Web3Provider>
 						<NextIntlClientProvider locale={locale} messages={messages}>
-
 							<PageLayout>
 								{children}
 							</PageLayout>

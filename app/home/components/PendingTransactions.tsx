@@ -11,6 +11,7 @@ import { formatAddress, formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
+import TableTag from '@/components/tableContent/TableTag';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
@@ -77,7 +78,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: PendingTx) => <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle(row.status)}`}>{row.status}</span>,
+			render: (row: PendingTx) => <TableTag label={row.status} statusType={row.status as any} />,
 		},
 	];
 

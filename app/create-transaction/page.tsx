@@ -220,7 +220,6 @@ const TransactionEncoderPage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					{/* Submit button container */}
 				</div>
 			</div>
 		</>

@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useActiveWalletChain } from 'thirdweb/react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Import the minimal ABI for the timelock contract
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
+import TableButton from '@/components/tableContent/TableButton';
 
 const CancelButton = ({ timelock }) => {
 	const { id: chainId } = useActiveWalletChain() || {};
@@ -43,11 +44,8 @@ const CancelButton = ({ timelock }) => {
 		}
 	};
 
-	return (
-		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-200 cursor-pointer' onClick={handleCancel}>
-			Cancel
-		</div>
-	);
+	return <TableButton label='Cancel' onClick={handleCancel} colorType='red' />
+
 };
 
 export default CancelButton;
