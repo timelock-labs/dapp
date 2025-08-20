@@ -1,8 +1,7 @@
 import React from 'react';
-import { PencilIcon,TrashIcon} from '@heroicons/react/24/outline';
-import DeleteButton from '@/components/ui/DeleteButton';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
-import { formatDate, formatDateWithYear } from '@/utils/utils';
+import { formatDateWithYear } from '@/utils/utils';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
@@ -10,6 +9,13 @@ interface MailboxCardProps {
 	id: number;
 	email: string;
 	remark?: string | null;
+	created_at: string;
+}
+
+interface MailboxData {
+	id: string;
+	email: string;
+	remark?: string | undefined;
 	created_at: string;
 }
 
@@ -26,7 +32,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 			remark: remark,
 			email: email,
 			created_at: created_at,
-		};
+		} as MailboxData;
 		onEdit(mailboxData);
 	};
 
