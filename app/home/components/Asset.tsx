@@ -16,6 +16,7 @@ interface AssertProps {
 
 const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	const [userAssets, setUserAssets] = useState<any[]>([]);
+	const [totalUSD,setTotalUSD] = useState(0);
 	const {request: getFlowsCountReq} = useApi();
 
 	const [flow_count, setFlowCount] = useState({
@@ -64,13 +65,15 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 			}
 		}
 		setUserAssets(assetsList);
+		const usdValue = assetsList.reduce((total, asset) => total + asset.usd_value, 0);
+		setTotalUSD(usdValue);
 	};
 
 	return (
 
 		<div className='flex flex-col space-y-6'>
 			<div className='flex gap-6 justify-between items-center h-[120px]'>
-				<TotalAssetValue totalUsdValue={2} />
+				<TotalAssetValue totalUsdValue={totalUSD} />
 				<div className='flex gap-6 border border-gray-200 rounded-lg h-full'>
 					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
 						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>

@@ -17,13 +17,13 @@ const TotalAssetValue: React.FC<TotalAssetValueProps> = ({ totalUsdValue }) => {
 		separator: ',',
 	});
 
-	const percentageRef = useCountUp({
-		end: 15.11,
-		duration: 2,
-		decimals: 2,
-		suffix: '%',
-		prefix: '+',
-	});
+	// const percentageRef = useCountUp({
+	// 	end: 15.11,
+	// 	duration: 2,
+	// 	decimals: 2,
+	// 	suffix: '%',
+	// 	prefix: '+',
+	// });
 
 	return (
 		<div className='bg-white w-[33%] h-full p-6 rounded-lg border border-gray-200'>
@@ -32,9 +32,9 @@ const TotalAssetValue: React.FC<TotalAssetValueProps> = ({ totalUsdValue }) => {
 				<p className='text-3xl font-bold'>
 					<span ref={countUpRef}>$0.00</span>
 				</p>
-				<span className='text-green-500 text-sm font-semibold'>
+				{/* <span className='text-green-500 text-sm font-semibold'>
 					<span ref={percentageRef}>+0.00%</span>
-				</span>
+				</span> */}
 			</div>
 		</div>
 	);
