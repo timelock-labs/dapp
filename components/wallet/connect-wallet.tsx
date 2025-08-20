@@ -12,7 +12,6 @@ import {
 	sepolia,
 	polygon,
 	coreMainnet,
-	mode,
 	scroll,
 	linea,
 	bsc, 
@@ -30,6 +29,7 @@ import {
 	goat, 
 	hemi, 
 	plume, 
+	mode,
 	bitLayer 
 } from '@/utils/chainUtils';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';

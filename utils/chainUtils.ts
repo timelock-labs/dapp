@@ -13,12 +13,17 @@ import {
 	scroll, 
 	celo,
 	coreMainnet,
-	mode,
+	// mode,
 	defineChain 
 } from 'thirdweb/chains';
 import type { Chain, ChainIdMapping } from '@/types';
 
-
+const mode = defineChain({
+	id: 34443,
+	name: 'Ink',
+	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+	rpc: 'https://mode.drpc.org',
+});
 
 const ronin = defineChain({
 	id: 2020,
@@ -179,7 +184,8 @@ export {
 	goat, 
 	hemi, 
 	plume, 
-	bitLayer 
+	bitLayer,
+	mode
 };
 
 /**
