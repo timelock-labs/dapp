@@ -1,7 +1,6 @@
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
-
 function copyToClipboard(text: string | undefined) {
 
   const t = useTranslations('common');
