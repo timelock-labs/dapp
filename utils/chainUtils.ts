@@ -1,13 +1,24 @@
-import { ethereum, sepolia, polygon, bsc, bscTestnet, optimism, avalanche, base, arbitrum, gnosis, linea, zkSync, scroll, celo, defineChain } from 'thirdweb/chains';
+import { 
+	ethereum, 
+	sepolia, 
+	polygon, 
+	bsc, 
+	bscTestnet, 
+	optimism, 
+	avalanche, 
+	base, 
+	arbitrum,
+	linea, 
+	zkSync, 
+	scroll, 
+	celo,
+	coreMainnet,
+	mode,
+	defineChain 
+} from 'thirdweb/chains';
 import type { Chain, ChainIdMapping } from '@/types';
 
-// Define custom chains not available in thirdweb/chains
-const monadTestnet = defineChain({
-	id: 10143,
-	name: 'Monad Testnet',
-	nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
-	rpc: 'https://testnet-rpc.monad.xyz',
-});
+
 
 const ronin = defineChain({
 	id: 2020,
@@ -51,30 +62,125 @@ const worldChain = defineChain({
 	rpc: 'https://worldchain-mainnet.g.alchemy.com/public',
 });
 
+// Add the missing chains that were commented out
+const hashKey = defineChain({
+	id: 177,
+	name: 'HashKey Chain HSK',
+	nativeCurrency: { name: 'HSK', symbol: 'HSK', decimals: 18 },
+	rpc: 'https://hashkey.drpc.org',
+});
+
+const exSat = defineChain({
+	id: 7200,
+	name: 'exSat Network',
+	nativeCurrency: { name: 'exSat', symbol: 'XSAT', decimals: 18 },
+	rpc: 'https://rpc-sg.exsat.network',
+});
+
+const merlin = defineChain({
+	id: 4200,
+	name: 'Merlin Mainnet',
+	nativeCurrency: { name: 'Bitcoin', symbol: 'BTC', decimals: 18 },
+	rpc: 'https://rpc.zklink.io',
+});
+
+const zkLink = defineChain({
+	id: 810180,
+	name: 'zkLink Nova',
+	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+	rpc: 'https://rpc.zklink.io',
+});
+
+const aiLayer = defineChain({
+	id: 2649,
+	name: 'aiLayer',
+	nativeCurrency: { name: 'Bitcoin', symbol: 'BTC', decimals: 18 },
+	rpc: 'https://mainnet-rpc.ailayer.xyz',
+});
+
+const bsquare = defineChain({
+	id: 223,
+	name: 'B² Network',
+	nativeCurrency: { name: 'Bitcoin', symbol: 'BTC', decimals: 18 },
+	rpc: 'https://rpc.ankr.com/b2',
+});
+
+const goat = defineChain({
+	id: 2345,
+	name: 'GOAT Network',
+	nativeCurrency: { name: 'Bitcoin', symbol: 'GOAT', decimals: 18 },
+	rpc: 'https://rpc.ankr.com/goat_mainnet',
+});
+
+const hemi = defineChain({
+	id: 43111,
+	name: 'Hemi Network',
+	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+	rpc: 'https://hemi.drpc.org',
+});
+
+const plume = defineChain({
+	id: 98866,
+	name: 'Plume Network',
+	nativeCurrency: { name: 'Plume', symbol: 'PLUME', decimals: 18 },
+	rpc: 'https://rpc.plume.org',
+});
+
+const bitLayer = defineChain({
+	id: 200901,
+	name: 'Bitlayer',
+	nativeCurrency: { name: 'Bitcoin', symbol: 'BTC', decimals: 18 },
+	rpc: 'https://rpc.ankr.com/bitlayer',
+});
+
 // Map chain IDs to thirdweb chain objects
 export const CHAIN_ID_TO_CHAIN: ChainIdMapping = {
 	1: ethereum,
 	10: optimism,
 	56: bsc,
 	97: bscTestnet,
-	100: gnosis,
+	1116: coreMainnet,
 	130: unichain,
 	137: polygon,
+	177: hashKey,
+	223: bsquare,
 	324: zkSync,
 	480: worldChain,
 	534352: scroll,
 	2020: ronin,
+	4200: merlin,
 	5000: mantle,
 	8453: base,
-	10143: monadTestnet,
+	2649: aiLayer,
+	34443: mode,
 	11155111: sepolia,
 	42161: arbitrum,
 	42220: celo,
+	43111: hemi,
 	43114: avalanche,
+	2345: goat,
 	57073: ink,
 	59144: linea,
+	7200: exSat,
 	80094: berachain,
+	98866: plume,
+	200901: bitLayer,
+	810180: zkLink,
 } as const;
+
+// Export the custom chains so they can be used in other components
+export { 
+	hashKey, 
+	exSat, 
+	merlin, 
+	zkLink, 
+	aiLayer, 
+	bsquare, 
+	goat, 
+	hemi, 
+	plume, 
+	bitLayer 
+};
 
 /**
  * Get the thirdweb chain object for a given chain ID
