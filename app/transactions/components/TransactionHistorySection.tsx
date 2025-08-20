@@ -12,16 +12,13 @@ import type { Transaction, BaseComponentProps, TransactionStatus, ContractStanda
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
 import AddSVG from '@/components/icons/add';
-import { formatDate, formatAddress } from '@/utils/utils';
-import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
-
+import { formatDate } from '@/utils/utils';
 import CancelButton from './CancelButton';
 import ExecuteButton from './ExecuteButton';
 import copyToClipboard from '@/utils/copy';
 import SectionCard from '@/components/layout/SectionCard';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
-import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 import AddressWarp from '@/components/web3/AddressWarp';
 import TableTag from '@/components/tableContent/TableTag';
 
@@ -143,7 +140,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: HistoryTxRow) => <TableTag label={row.status} statusType={row.status as any} />,
+			render: (row: HistoryTxRow) => <TableTag label={row.status} statusType={row.status !== 'all' ? row.status : undefined} />,
 		},
 		{
 			key: 'actions',
