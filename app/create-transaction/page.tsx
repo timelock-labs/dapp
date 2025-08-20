@@ -178,50 +178,48 @@ const TransactionEncoderPage: React.FC = () => {
 	};
 
 	return (
-		<>
-			<div className='min-h-screen bg-withe'>
-				<div className='mx-auto flex flex-col'>
-					<div className='flex justify-between gap-32'>
-						<div className='w-1/2 w-max-[550px]'>
-							<EncodingTransactionForm
-								targetCalldata={targetCalldata}
-								timelockType={timelockType}
-								onTimelockTypeChange={setTimelockType}
-								timelockMethod={timelockMethod}
-								onTimelockMethodChange={setTimelockMethod}
-								onTimelockAddressChange={setTimelockAddress}
-								target={target}
-								onTargetChange={setTarget}
-								value={value}
-								onValueChange={setValue}
-								abiValue={abiValue}
-								onAbiChange={handleAbiChange}
-								functionValue={functionValue}
-								onFunctionChange={handleFunctionChange}
-								timeValue={timeValue}
-								onTimeChange={setTimeValue}
-								argumentValues={argumentValues}
-								onArgumentChange={handleArgumentChange}
-							/>
-						</div>
-						<div className='flex flex-col gap-4 w-1/2'>
-							<EncodingPreview previewContent={previewContent} />
-							<MailboxSelection selectedMailbox={selectedMailbox} onMailboxChange={setSelectedMailbox} />
-							<div className='mt-auto flex justify-end'>
-								<button
-									type='button'
-									onClick={handleSendTransaction}
-									disabled={isSubmitting}
-									className='cursor-pointer text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
-									<Send className='w-4 h-4 mr-2' />
-									{isSubmitting ? t('submitting') : t('sendTransactionButton')}
-								</button>
-							</div>
+		<div className='min-h-screen bg-withe'>
+			<div className='mx-auto flex flex-col'>
+				<div className='flex justify-between gap-32'>
+					<div className='w-1/2 w-max-[550px]'>
+						<EncodingTransactionForm
+							targetCalldata={targetCalldata}
+							timelockType={timelockType}
+							onTimelockTypeChange={setTimelockType}
+							timelockMethod={timelockMethod}
+							onTimelockMethodChange={setTimelockMethod}
+							onTimelockAddressChange={setTimelockAddress}
+							target={target}
+							onTargetChange={setTarget}
+							value={value}
+							onValueChange={setValue}
+							abiValue={abiValue}
+							onAbiChange={handleAbiChange}
+							functionValue={functionValue}
+							onFunctionChange={handleFunctionChange}
+							timeValue={timeValue}
+							onTimeChange={setTimeValue}
+							argumentValues={argumentValues}
+							onArgumentChange={handleArgumentChange}
+						/>
+					</div>
+					<div className='flex flex-col gap-4 w-1/2'>
+						<EncodingPreview previewContent={previewContent} />
+						<MailboxSelection selectedMailbox={selectedMailbox} onMailboxChange={setSelectedMailbox} />
+						<div className='mt-auto flex justify-end'>
+							<button
+								type='button'
+								onClick={handleSendTransaction}
+								disabled={isSubmitting}
+								className='cursor-pointer text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
+								<Send className='w-4 h-4 mr-2' />
+								{isSubmitting ? t('submitting') : t('sendTransactionButton')}
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

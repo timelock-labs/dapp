@@ -141,7 +141,7 @@ export function ChainSwitcher() {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild className=' cursor-pointer h-9'>
 				<Button variant='outline' size='sm' disabled={isSwitchingChain}>
-					<span className='mr-1'>{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name ?? ''} width={16} height={16} />}</span>
+					<span className='mr-1 rounded-full overflow-hidden'>{currentChain?.logo_url && <Image src={currentChain.logo_url} alt={currentChain.chain_name ?? ''} width={16} height={16} />}</span>
 					<span className='hidden sm:inline'>{currentChain?.display_name ?? 'Unsupported Chain'}</span>
 					<ChevronDown className='ml-2 h-3 w-3' />
 				</Button>
@@ -154,7 +154,7 @@ export function ChainSwitcher() {
 							onClick={() => handleChainSwitch(chain.chain_id)}
 							className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
 							disabled={isSwitchingChain}>
-							<span className='mr-1 text-lg'>
+							<span className='mr-1 rounded-full overflow-hidden'>
 								<Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} />
 							</span>
 							<div className='flex flex-col'>

@@ -18,7 +18,6 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 	const [isAddABIOpen, setIsAddABIOpen] = useState(false);
 	const [abiList, setAbiList] = useState<Array<{ id: number; name: string; abi_content: string }>>([]);
 	const { request: getAbiList, isLoading } = useApi();
-	const { request: addAbi } = useApi();
 
 	// Fetch ABI list on mount
 	React.useEffect(() => {
@@ -33,7 +32,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 		};
 		
 		fetchAbiList();
-	}, [getAbiList, t]);
+	}, [isAddABIOpen, t]);
 
 	// Convert ABI list to options format
 	const abiOptions = useMemo(() => {
@@ -109,17 +108,6 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 		}
 	}, [functionValue, abiList, abiValue]);
 
-	const handleAddABI = async (name: string, abi: string) => {
-		try {
-			await addAbi('/api/v1/abi', { name, description: '', abi });
-			toast.success(t('abiAddedSuccessfully'));
-			setIsAddABIOpen(false);
-		} catch (error: unknown) {
-			console.error('Failed to add ABI:', error);
-			const errorMessage = error instanceof Error ? error.message : 'Failed to add ABI';
-			toast.error(t('failedToAddABI', { message: errorMessage }));
-		}
-	};
 
 	return (
 		<div className='rounded-md'>
@@ -171,7 +159,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 				)}
 			</div>
 
-			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
+			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} />
 		</div>
 	);
 };

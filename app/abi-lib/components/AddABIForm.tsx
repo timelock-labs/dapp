@@ -9,12 +9,16 @@ import ABITextarea from '@/components/ui/ABITextarea';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 
 import type { AddABIFormProps } from '@/types';
+import { useApi } from '@/hooks/useApi';
+import { toast } from 'sonner';
 
-const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) => {
+const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose }) => {
 	const t = useTranslations('ABI-Lib.addForm');
 	const [name, setName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const [abi, setAbi] = useState<string>('');
+	const { request: addAbiReq } = useApi();
+	const { request: validateAbiReq } = useApi();
 
 	const handleCancel = () => {
 		setName('');
@@ -23,9 +27,36 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose, onAddABI }) =>
 		onClose();
 	};
 
-	const handleSave = () => {
+
+	const handleAddABI = async (name: string, description: string, abi_content: string) => {
+		try {
+			// First validate the ABI
+			const validateResult = await validateAbiReq('/api/v1/abi/validate', { abi_content });
+
+			if (!validateResult?.success || !validateResult.data?.is_valid) {
+				toast.error(
+					t('validateAbiError', {
+						message: validateResult?.error?.message || 'Invalid ABI format',
+					})
+				);
+				return;
+			}
+			await addAbiReq('/api/v1/abi', {
+				name,
+				description,
+				abi_content,
+			});
+		} catch (error) {
+			toast.error(
+				t('addAbiError', {
+					message: error instanceof Error ? error.message : 'Unknown error',
+				})
+			);
+		}
+	};
+	const handleSave = async () => {
 		if (name.trim() && description.trim() && abi.trim()) {
-			onAddABI(name, description, abi);
+			await handleAddABI(name, description, abi);
 			setName('');
 			setDescription('');
 			setAbi('');
