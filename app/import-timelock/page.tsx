@@ -91,8 +91,8 @@ const ImportTimelockPage: React.FC = () => {
 			setIsModalOpen(true);
 		} catch (error) {
 			console.error('Detection failed:', error);
-			const errorMessage = error instanceof Error ? error.message : t('errors.detectionFailed');
-			toast.error(errorMessage);
+			const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+			toast.error(t('errors.detectionFailed', { message: errorMessage }));
 		}
 	};
 
@@ -119,7 +119,7 @@ const ImportTimelockPage: React.FC = () => {
 			toast.success(t('success.importSuccess'));
 			router.push('/timelocks');
 		} else if (importTimelockData && !importTimelockData.success) {
-			toast.error('Failed to import timelock');
+			toast.error(t('failedToImportTimelock'));
 		}
 	}, [importTimelockData, router, t]);
 

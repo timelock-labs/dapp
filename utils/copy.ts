@@ -1,18 +1,21 @@
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
+
+const t = useTranslations('common');
 
 function copyToClipboard(text: string | undefined) {
   if (!text) {
-    toast.error('Failed to copy to clipboard');
+    toast.error(t('failedToCopyToClipboard'));
     return;
   }
   if (navigator.clipboard && window.isSecureContext) {
     // 现代浏览器支持
     return navigator.clipboard.writeText(text).then(() => {
       console.log("已复制到剪贴板:", text);
-      toast.success(`${text} Copied to clipboard!`);
+      toast.success(t('copySuccess', { text }));
     }).catch(err => {
       console.error("复制失败:", err);
-      toast.error('Failed to copy to clipboard');
+      toast.error(t('failedToCopyToClipboard'));
     });
   } else {
     // 兼容旧浏览器
@@ -27,10 +30,10 @@ function copyToClipboard(text: string | undefined) {
     try {
       document.execCommand("copy");
       console.log("已复制到剪贴板:", text);
-      toast.success(`${text} Copied to clipboard!`);
+      toast.success(t('copySuccess', { text }));
     } catch (err) {
       console.error("复制失败:", err);
-      toast.error('Failed to copy to clipboard');
+      toast.error(t('failedToCopyToClipboard'));
     }
 
     document.body.removeChild(textArea);

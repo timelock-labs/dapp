@@ -45,6 +45,13 @@
 		},
 		"submitting": "提交中...",
 		"sendTransactionButton": "发送交易",
-		"fetchABIError": "获取ABI列表失败：{message}"
+		"fetchABIError": "获取ABI列表失败：{message}",
+		"pleaseConnectWallet": "请先连接钱包",
+		"pleaseSelectNetwork": "请选择网络",
+		"pleaseFillInAllRequiredFields": "请填写所有必填字段",
+		"success": "交易创建成功！",
+		"failed": "创建交易失败: {message}",
+		"abiAddedSuccessfully": "ABI 添加成功！",
+		"failedToAddABI": "添加 ABI 失败: {message}"
 	}
 }

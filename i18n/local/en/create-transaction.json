@@ -45,6 +45,13 @@
 		},
 		"submitting": "Submitting...",
 		"sendTransactionButton": "Send Transaction",
-		"fetchABIError": "Failed to fetch ABI list: {message}"
+		"fetchABIError": "Failed to fetch ABI list: {message}",
+		"pleaseConnectWallet": "Please connect your wallet first",
+		"pleaseSelectNetwork": "Please select a network",
+		"pleaseFillInAllRequiredFields": "Please fill in all required fields",
+		"success": "Transaction created successfully!",
+		"failed": "Failed to create transaction: {message}",
+		"abiAddedSuccessfully": "ABI added successfully!",
+		"failedToAddABI": "Failed to add ABI: {message}"
 	}
 }

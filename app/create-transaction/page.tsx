@@ -142,18 +142,18 @@ const TransactionEncoderPage: React.FC = () => {
 
 	const handleSendTransaction = async () => {
 		if (!address) {
-			toast.error('Please connect your wallet first');
+			toast.error(t('pleaseConnectWallet'));
 			return;
 		}
 
 		if (!chainId) {
-			toast.error('Please select a network');
+			toast.error(t('pleaseSelectNetwork'));
 			return;
 		}
 
 		// Validate required fields
 		if (!timelockAddress || !target || !functionValue || !timeValue) {
-			toast.error('Please fill in all required fields');
+			toast.error(t('pleaseFillInAllRequiredFields'));
 			return;
 		}
 
@@ -167,12 +167,11 @@ const TransactionEncoderPage: React.FC = () => {
 				value: value || '0', // Default to '0' if not specified
 			});
 
-			toast.success('Transaction created successfully!');
+			toast.success(t('success'));
 
 			router.push('/transactions');
 		} catch (error) {
-			console.error('Failed to create transaction:', error);
-			toast.error((error as Error).message || 'Failed to create transaction');
+			toast.error(t('failed', { message: (error as Error).message || 'Failed to create transaction' }));
 		} finally {
 			setIsSubmitting(false);
 		}

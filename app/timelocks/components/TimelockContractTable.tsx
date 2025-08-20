@@ -11,7 +11,6 @@ import { toast } from 'sonner';
 import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/types';
 import copyToClipboard from '@/utils/copy';
 import ChainLabel from '@/components/web3/ChainLabel';
-import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
 import { FilePlus, FileDown } from 'lucide-react';
 import AddressWarp from '@/components/web3/AddressWarp';
 import TableTag from '@/components/tableContent/TableTag';
@@ -60,7 +59,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		await deleteContract(`/api/v1/timelock/delete`, {
 			standard,
 			contract_address: contract.contract_address,
-			chain_id: contract.chain_id,
+			chainId: contract.chain_id,
 		});
 	};
 

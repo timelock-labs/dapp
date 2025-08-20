@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
+
 const TimeLockerSplitPage = () => {
 	const t = useTranslations('walletLogin');
 	const [currentSection, setCurrentSection] = useState(0); // 0: first section, 1: second section
@@ -25,7 +26,7 @@ const TimeLockerSplitPage = () => {
 	const handleUserSignature = useCallback(async () => {
 		if (isConnected && address && !hasSignedIn) {
 			setHasSignedIn(true);
-			const message = 'welcome to Timelocker!';
+			const message = t('welcomeMessage');
 			try {
 				const signature = await signMessage!({ message: message });
 				await walletConnect('/api/v1/auth/wallet-connect', {
@@ -35,7 +36,7 @@ const TimeLockerSplitPage = () => {
 				});
 			} catch {
 				setHasSignedIn(false);
-				toast.error('Error signing in');
+				toast.error(t('errorSigningIn'));
 			}
 		}
 	}, [isConnected, address, signMessage]);

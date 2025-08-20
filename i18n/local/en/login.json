@@ -43,6 +43,9 @@
 			"comprehensiveMonitoring": "Comprehensive monitoring, timely push to your and security department's email accounts"
 		},
 		"getStarted": "Get started",
-		"connectWalletDescription": "Connect your wallet to create a new Timelock Account or import an existing one."
+		"connectWalletDescription": "Connect your wallet to create a new Timelock Account or import an existing one.",
+		"errorSigningIn": "Error signing in",
+		"welcomeMessage": "welcome to Timelocker!"
+
 	}
 } 

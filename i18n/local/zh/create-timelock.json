@@ -34,6 +34,11 @@
 		"openzeppelinStandardLabel": "OpenZeppelin 标准 Timelock 合约",
 		"openzeppelinStandardDescription": "适合成长型企业的高级功能",
 		"contractRemarkPlaceholder": "请输入备注",
-		"contractRemarkRequired": "备注为必填项"
+		"contractRemarkRequired": "备注为必填项",
+		"success": "Timelock 创建成功！",
+		"failed": "创建 Timelock 失败: {message}",
+		"pleaseSelectNetwork": "请选择网络",
+		"chainNotSupported": "链 ID {chainId} 不支持。请使用支持的网络。",
+		"failedToDeployTimelock": "部署 Timelock 失败: {message}"
 	}
 }

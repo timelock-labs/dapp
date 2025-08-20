@@ -19,6 +19,7 @@ export interface TimelockContract {
  */
 export interface TimelockContractItem {
 	id: number;
+	chain_id: number;
 	chain_name: string;
 	contract_address: Address;
 	admin?: Address;
@@ -80,6 +81,16 @@ export interface CreateTimelockRequestBody {
 	standard: ContractStandard;
 	contract_address: Address;
 	is_imported: boolean; // Indicates if this is an imported contract
+}
+
+export interface Timelock extends TimelockContractItem {
+	pending_admin: Address;
+	pending_admin_locktime: number;
+	eta: number;
+	target_address: Address;
+	value: number|string|any;
+	function_signature: string;
+	call_data_hex: string;
 }
 
 /**

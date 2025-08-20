@@ -112,12 +112,12 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 	const handleAddABI = async (name: string, abi: string) => {
 		try {
 			await addAbi('/api/v1/abi', { name, description: '', abi });
-			toast.success('ABI added successfully!');
+			toast.success(t('abiAddedSuccessfully'));
 			setIsAddABIOpen(false);
 		} catch (error: unknown) {
 			console.error('Failed to add ABI:', error);
 			const errorMessage = error instanceof Error ? error.message : 'Failed to add ABI';
-			toast.error(errorMessage);
+			toast.error(t('failedToAddABI', { message: errorMessage }));
 		}
 	};
 

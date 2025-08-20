@@ -34,6 +34,11 @@
 		"openzeppelinStandardLabel": "OpenZeppelin Standard Timelock Contract",
 		"openzeppelinStandardDescription": "Advanced features for growing businesses",
 		"contractRemarkPlaceholder": "Enter remark",
-		"contractRemarkRequired": "Contract remark is required"
+		"contractRemarkRequired": "Contract remark is required",
+		"success": "Timelock created successfully!",
+		"failed": "Failed to create timelock record: {message}",
+		"pleaseSelectNetwork": "Please select a network",
+		"chainNotSupported": "Chain ID {chainId} is not supported. Please use a supported network.",
+		"failedToDeployTimelock": "Failed to deploy timelock: {message}"
 	}
 }

@@ -60,19 +60,17 @@ const CreateTimelockPage: React.FC = () => {
 
 	useEffect(() => {
 		if (createTimelockData?.success) {
-			toast.success('Timelock created successfully!');
+			toast.success(t('success'));
 			router.push(`/timelocks`);
 		} else if (createTimelockData && !createTimelockData.success) {
-			toast.error('Failed to create timelock record', {
-				description: createTimelockData?.error?.message || 'Unknown error occurred',
-			});
+			toast.error(t('failed', { message: createTimelockData?.error?.message || 'Unknown error occurred' }));
 		}
 	}, [createTimelockData, router]);
 
 	const handleChainChange = useCallback(
 		(newChainId: number) => {
 			if (!newChainId) {
-				toast.error('Please select a network');
+				toast.error(t('pleaseSelectNetwork'));
 				return;
 			}
 
@@ -80,7 +78,7 @@ const CreateTimelockPage: React.FC = () => {
 			const chainObject = getChainObject(newChainId);
 
 			if (!chainObject) {
-				toast.error(`Chain ID ${newChainId} is not supported. Please use a supported network.`);
+				toast.error(t('chainNotSupported', { chainId: newChainId }));
 				return;
 			}
 			switchChain(chainObject);
@@ -117,9 +115,7 @@ const CreateTimelockPage: React.FC = () => {
 				setIsConfirmDialogOpen(true);
 			}
 		} catch (error) {
-			toast.error('Failed to deploy timelock', {
-				description: error instanceof Error ? error.message : 'Unknown error occurred',
-			});
+			toast.error(t('failed', { message: error instanceof Error ? error.message : 'Unknown error occurred' }));
 		}
 	};
 

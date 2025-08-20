@@ -25,5 +25,7 @@
 	"updated_at": "Updated At",
 	"previous":"Previous",
 	"next":"Next",
-	"noData":"No Data"
+	"noData":"No Data",
+	"failedToCopyToClipboard":"Failed to copy to clipboard",
+	"copySuccess":"{text} Copied to clipboard!"
 }

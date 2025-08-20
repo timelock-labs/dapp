@@ -55,6 +55,8 @@
 		"cancelError": "Failed to cancel transaction.",
 		"executeSuccess": "Transaction executed successfully.",
 		"executeError": "Failed to execute transaction.",
-		"actions": "Actions"
+		"actions": "Actions",
+		"pleaseSwitchToNetwork": "Please switch to {network} network to cancel this timelock.",
+		"failedToExecuteTimelock": "Failed to execute timelock transaction. Please try again."
 	}
 }

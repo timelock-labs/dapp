@@ -25,5 +25,7 @@
 	"updated_at": "更新时间",
 	"previous":"上一页",
 	"next":"下一页",
-	"noData":"暂无数据"
+	"noData":"暂无数据",
+	"failedToCopyToClipboard":"复制失败",
+	"copySuccess":"{text} 已复制到剪贴板！"
 }

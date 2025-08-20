@@ -18,7 +18,7 @@
 			"selectContractStandard": "Please select contract standard",
 			"invalidContractAddress": "Invalid contract address or not a contract",
 			"failedToDetectParameters": "Failed to detect valid timelock parameters",
-			"detectionFailed": "Detection failed",
+			"detectionFailed": "Detection failed: {message}",
 			"invalidTimelockParameters": "Invalid timelock parameters",
 			"contractExists": "Timelock contract already exists",
 			"validationFailed": "Parameter validation failed",
@@ -47,6 +47,7 @@
 			"abi": "ABI",
 			"cancel": "Cancel",
 			"confirm": "Confirm Import"
-		}
+		},
+		"failedToImportTimelock": "Failed to import timelock"
 	}
 }

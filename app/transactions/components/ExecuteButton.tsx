@@ -5,16 +5,19 @@ import { useActiveWalletChain } from 'thirdweb/react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Import the minimal ABI for the timelock contract
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
 import TableButton from '@/components/tableContent/TableButton';
+import { useTranslations } from 'next-intl';
+import { Timelock } from '@/types/api/timelock';
 
-const ExecuteButton = ({ timelock }: { timelock: any }) => {
+const ExecuteButton = ({ timelock }: { timelock: Timelock }) => {
     const { id: chainId } = useActiveWalletChain() || {};
     const chains = useAuthStore(state => state.chains);
     const { signer } = useContractDeployment();
+    const t = useTranslations('transactions');
 
     const handleExecute = async () => {
         if (chainId !== timelock.chain_id) {
             const currentChain = chains.find(chain => chain.chain_id === timelock.chain_id);
-            toast.error(`Please switch to ${currentChain!.display_name} network to cancel this timelock.`);
+            toast.error(t('pleaseSwitchToNetwork', { network: currentChain!.display_name }));
             return;
         }
 
@@ -40,10 +43,10 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
             );
 
             await tx.wait();
-            toast.success('Timelock transaction executed successfully!');
+            toast.success(t('executeSuccess'));
         } catch (error) {
             console.error('Error executing timelock:', error);
-            toast.error('Failed to execute timelock transaction. Please try again.');
+            toast.error(t('failedToExecuteTimelock'));
         }
     };
 
