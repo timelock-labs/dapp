@@ -11,6 +11,7 @@
 			"view_details": "查看详情",
 			"interface_details": "接口详情"
 		},
+		"eta":"预期执行时间",
 		"export": "导出",
 		"create": "创建",
 		"remark": "备注",
@@ -43,7 +44,6 @@
 		"standard": "标准",
 		"status": "状态",
 		"description": "描述",
-		"eta": "ETA",
 		"createdAt": "创建时间",
 		"viewDetail": "查看详情",
 		"cancel": "取消",

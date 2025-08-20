@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 
 function copyToClipboard(text: string | undefined) {
+
   if (!text) {
     toast.error('Failed to copy to clipboard');
     return;
