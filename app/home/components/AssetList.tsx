@@ -74,7 +74,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			{/* Asset List Items */}
 			<div className='flex-grow overflow-y-auto pr-2 custom-scrollbar'>
 				{currentAssets.length > 0 && currentAssets.map((asset, index) => (
-					<div key={index} className='flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0'>
+					<div key={index} className='flex justify-between items-center py-3 border-b border-gray-200 last:border-b-0'>
 						<div className='flex items-center gap-3 text-sm'>
 							<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={24} height={24} className='rounded-full' />
 							<div className='col'>

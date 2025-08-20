@@ -67,25 +67,24 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 		}
 	};
 
-	const triggerClasses = variant === 'destructive' ? 'text-red-600 hover:text-red-700 hover:bg-red-50' : '  hover:text-black hover:bg-gray-100';
-
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
 			<PopoverTrigger asChild>
 				<button
 					type='button'
 					disabled={disabled}
-					className={`${getSizeClasses()} ${triggerClasses} rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+					className={`${getSizeClasses()} cursor-pointer flex justify-center items-center rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
 					aria-label='Delete'
 					title='Delete'>
 					<TrashIcon className={getIconSize()} />
 				</button>
 			</PopoverTrigger>
+
 			<PopoverContent className='w-80 p-4' align='end'>
 				<div className='space-y-4'>
 					<div>
 						<h4 className='font-medium'>{title}</h4>
-						<p className='text-sm   mt-1'>{description}</p>
+						<p className='text-sm mt-1'>{description}</p>
 					</div>
 					<div className='flex justify-end space-x-2'>
 						<Button variant='outline' size='sm' onClick={handleCancel}>

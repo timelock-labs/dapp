@@ -82,7 +82,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'name',
 			header: t('name'),
-			render: (row: TimelockContractItem) => <span className={`text-sm ${getStatusBadgeStyle(row.status)}`}>{row.remark}</span>,
+			render: (row: TimelockContractItem) => <span className={`text-sm`}>{row.remark}</span>,
 		},
 		{
 			key: 'contract_address',
@@ -98,7 +98,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			header: t('owner'),
 			render: (row: TimelockContractItem) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.admin)}>{row.admin}</span>
+					<div className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.admin)}>{row.admin}</div>
 				</div>
 			),
 		},
@@ -107,9 +107,8 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			header: t('userPermissions'),
 			render: (row: TimelockContractItem) => {
 				const permissions = (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions;
-
 				if (!permissions || permissions.length === 0) {
-					return <span className=' '>{t('none')}</span>;
+					return <div>{t('none')}</div>;
 				}
 
 				// const getRoleStyle = (role: string) => {
