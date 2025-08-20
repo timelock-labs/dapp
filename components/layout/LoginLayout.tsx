@@ -18,7 +18,7 @@ export default function LoginLayout({ children, title, className }: LoginLayoutP
 				<div>
 					<h1 className='text-center text-3xl font-extrabold'>{title}</h1>
 				</div>
-				<div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>{children}</div>
+				<div className='bg-white py-8 px-4 sm:rounded-lg sm:px-10'>{children}</div>
 			</div>
 		</div>
 	);

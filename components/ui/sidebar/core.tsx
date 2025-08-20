@@ -93,7 +93,7 @@ export function Sidebar({
 				<div
 					data-sidebar='sidebar'
 					data-slot='sidebar-inner'
-					className='bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm'>
+					className='bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border'>
 					{children}
 				</div>
 			</div>
@@ -153,7 +153,7 @@ export function SidebarInset({ className, ...props }: React.ComponentProps<'main
 			data-slot='sidebar-inset'
 			className={cn(
 				'bg-background relative flex w-full flex-1 flex-col',
-				'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
+				'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
 				className
 			)}
 			{...props}
@@ -162,7 +162,7 @@ export function SidebarInset({ className, ...props }: React.ComponentProps<'main
 }
 
 export function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input>) {
-	return <Input data-slot='sidebar-input' data-sidebar='input' className={cn('bg-background h-8 w-full shadow-none', className)} {...props} />;
+	return <Input data-slot='sidebar-input' data-sidebar='input' className={cn('bg-background h-8 w-full', className)} {...props} />;
 }
 
 export function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
