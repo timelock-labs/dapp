@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
-import AddABIForm from './AddABIForm';
+import AddABIForm from '@/app/abi-lib/components/AddABIForm';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { TargetABISectionProps } from '@/types';
