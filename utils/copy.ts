@@ -1,9 +1,11 @@
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
-const t = useTranslations('common');
 
 function copyToClipboard(text: string | undefined) {
+
+  const t = useTranslations('common');
+
   if (!text) {
     toast.error(t('failedToCopyToClipboard'));
     return;
