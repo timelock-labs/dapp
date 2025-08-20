@@ -15,7 +15,7 @@ interface VerificationCodeInputProps {
 const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, onSendCode, onCodeChange, codeLength = 6, buttonText, disabledText, isFirstTime = true }) => {
 	const t = useTranslations('Notify.verificationCode');
 	const [code, setCode] = useState<string[]>(Array(codeLength).fill(''));
-	const inputRefs = useRef<HTMLInputElement[]>([]);
+	const inputRefs = useRef<HTMLInputElement[]>([]); 
 	const [countdown, setCountdown] = useState(0); // New state for countdown
 	const [isSendingCode, setIsSendingCode] = useState(false); // New state for button disable
 
@@ -111,7 +111,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
           `}>
 					{countdown > 0 ?
 						<span>
-							{disabledText || t('wait')} ({countdown}s)
+							{disabledText || t('sent')} ({countdown}s)
 						</span>
 					:	buttonText || (isFirstTime ? t('sendCode') : t('resendCode'))}
 				</button>
