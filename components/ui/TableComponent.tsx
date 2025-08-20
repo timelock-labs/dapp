@@ -92,7 +92,7 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 			</div>
 
 			{/* Pagination Controls */}
-			{showPagination && totalPages > 1 && (
+			{showPagination&& (
 				<div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-200'>
 					<button
 						onClick={handlePreviousPage}

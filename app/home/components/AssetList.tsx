@@ -1,4 +1,5 @@
-// components/AssetList.tsx
+'use client';
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 import AnimatedAssetValue from './AnimatedAssetValue';
@@ -96,53 +97,53 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			</div>
 
 			{/* Pagination */}
-			{
-				totalPages > 1 && (<div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-200'>
-					<button
-						type='button'
-						onClick={handlePreviousPage} // Add onClick handler
-						disabled={currentPage === 1} // Disable if on first page
-						className={`
+
+			<div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-200'>
+				<button
+					type='button'
+					onClick={handlePreviousPage} // Add onClick handler
+					disabled={currentPage === 1} // Disable if on first page
+					className={`
 				flex items-center space-x-1
 				bg-white border border-grey-800  text-sm font-medium
 				px-4 py-2 rounded-[10px]
 				hover:bg-gray-100 transition-colors
 				${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
 			  `}>
-						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
-						</svg>
-						{t('previous')}
-					</button>
-					{/* Dynamic pagination text */}
-					<span className='text-sm'>
-						<span className='text-black font-medium'>
-							<AnimatedAssetValue value={currentRangeStart} decimals={0} fallback='1' />
-							-
-							<AnimatedAssetValue value={currentRangeEnd} decimals={0} fallback='1' />
-						</span>{' '}
-						<span className=' '>
-							of <AnimatedAssetValue value={totalItems} decimals={0} fallback='0' />
-						</span>
+					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'></path>
+					</svg>
+					{t('previous')}
+				</button>
+				{/* Dynamic pagination text */}
+				<span className='text-sm'>
+					<span className='text-black font-medium'>
+						<AnimatedAssetValue value={currentRangeStart} decimals={0} fallback='1' />
+						-
+						<AnimatedAssetValue value={currentRangeEnd} decimals={0} fallback='1' />
+					</span>{' '}
+					<span className=' '>
+						of <AnimatedAssetValue value={totalItems} decimals={0} fallback='0' />
 					</span>
-					<button
-						type='button'
-						onClick={handleNextPage} // Add onClick handler
-						disabled={currentPage === totalPages} // Disable if on last page
-						className={`
+				</span>
+				<button
+					type='button'
+					onClick={handleNextPage} // Add onClick handler
+					disabled={currentPage === totalPages} // Disable if on last page
+					className={`
 				flex items-center space-x-1
 				bg-white border border-grey-800  text-sm font-medium
 				px-4 py-2 rounded-[10px]
 				hover:bg-gray-100 transition-colors
 				${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''} /* Dim and prevent clicks when disabled */
 			  `}>
-						{t('next')}
-						<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-							<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
-						</svg>
-					</button>
-				</div>)
-			}
+					{t('next')}
+					<svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M14 5l7 7m0 0l-7 7m7-7H3'></path>
+					</svg>
+				</button>
+			</div>
+
 
 		</div>
 	);
