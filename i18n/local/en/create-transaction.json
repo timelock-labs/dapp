@@ -41,7 +41,7 @@
 			"placeholder": "Select ABI",
 			"function": "Function",
 			"selectFunction": "Select Function",
-			"time": "Time"
+			"time": "Expected execution time"
 		},
 		"submitting": "Submitting...",
 		"sendTransactionButton": "Send Transaction",

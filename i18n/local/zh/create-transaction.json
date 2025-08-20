@@ -41,7 +41,7 @@
 			"placeholder": "请选择 ABI",
 			"function": "函数",
 			"selectFunction": "选择函数",
-			"time": "时间"
+			"time": "预期执行时间"
 		},
 		"submitting": "提交中...",
 		"sendTransactionButton": "发送交易",
