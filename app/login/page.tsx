@@ -88,9 +88,9 @@ const TimeLockerSplitPage = () => {
 						</span>
 						{currentSection === 0 ?
 							<h2 className='text-xl font-medium'>{t('whyTimelock')}</h2>
-						:	<div className='text-center'>
+							: <div className='text-center'>
 								<h2 className='text-xl font-medium'>{t('whyProtocol')}</h2>
-			
+
 							</div>
 						}
 						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handleNextSection}>
@@ -113,7 +113,7 @@ const TimeLockerSplitPage = () => {
 									{t('features.industryStandard')}
 								</div>
 							</>
-						:	<>
+							: <>
 								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
 									{t('protocolFeatures.importExisting')}
 								</div>
@@ -135,11 +135,7 @@ const TimeLockerSplitPage = () => {
 			{/* Right Panel */}
 			<div className='flex flex-col w-[684px] h-[852px] p-10 bg-white rounded-xl ml-4 justify-center items-center'>
 				<div className='bg-white rounded-lg w-[360px]'>
-					{/* Right Panel Header */}
-					<div className=''>
-						<Logo />
-					</div>
-
+					<Logo />
 					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
 					<p className='  text-sm mb-8'>{t('connectWalletDescription')}</p>
 					<ConnectWallet icon={false} fullWidth={true} />

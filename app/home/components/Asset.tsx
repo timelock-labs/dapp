@@ -6,6 +6,7 @@ import PendingTransactions from './PendingTransactions';
 import { useApi } from '@/hooks/useApi';
 import useMoralis from '@/hooks/useMoralis';
 import AssetList from './AssetList';
+import { CalendarOff, ClipboardCheck, ClockFading, Hourglass, Podcast, RefreshCwOff, Rss, WatchIcon } from 'lucide-react';
 
 interface AssertProps {
 	// Props interface for future extensibility
@@ -14,8 +15,25 @@ interface AssertProps {
 }
 
 const Assert: React.FC<AssertProps> = ({ timelocks }) => {
-	const { request: getUerAssets } = useApi();
 	const [userAssets, setUserAssets] = useState<any[]>([]);
+	const {request: getFlowsCountReq} = useApi();
+
+	const [flow_count, setFlowCount] = useState({
+		waiting: 0,
+		ready: 0,
+		executed: 0,
+		cancelled: 0,
+		expired: 0,
+	});
+
+	useEffect(() => {
+		fetchFlowsCount();
+	}, []);
+
+	const fetchFlowsCount = async () => {
+		const { data } = await getFlowsCountReq('/api/v1/flows/list/count');
+		setFlowCount(data.flow_count);
+	};
 
 	const moralis = useMoralis();
 	const { getUserAssets } = moralis;
@@ -51,20 +69,65 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	return (
 
 		<div className='flex flex-col space-y-6'>
-			{/* Top Section: Total Asset Value */}
-			<div className='w-full'>
+			<div className='flex gap-6 justify-between items-center h-[120px]'>
 				<TotalAssetValue totalUsdValue={2} />
+				<div className='flex gap-6 border border-gray-200 rounded-lg h-full'>
+					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
+							<div className='absolute right-[-20px] bottom-[-20px]  '>
+								<Hourglass width={60} height={60} color='rgba(0,0,0,.05)' />
+							</div>
+							<div className='text-xs font-medium text-gray-500'>Waiting Transaction</div>
+							<div className='text-5xl font-bold'>{flow_count.waiting}</div>
+						</div>
+					</div>
+
+					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
+							<div className='absolute right-[-20px] bottom-[-20px]  '>
+								<Podcast width={60} height={60} color='rgba(0,0,0,.05)' />
+							</div>
+							<div className='text-xs font-medium text-gray-500'>Ready Transaction</div>
+							<div className='text-5xl font-bold'>{flow_count.ready}</div>
+						</div>
+					</div>
+					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
+							<div className='absolute right-[-20px] bottom-[-20px]  '>
+								<ClipboardCheck width={60} height={60} color='rgba(0,0,0,.05)' />
+							</div>
+							<div className='text-xs font-medium text-gray-500'>Executed Transaction</div>
+							<div className='text-5xl font-bold'>{flow_count.executed}</div>
+						</div>
+					</div>
+
+					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
+							<div className='absolute right-[-20px] bottom-[-20px]  '>
+								<RefreshCwOff width={60} height={60} color='rgba(0,0,0,.05)' />
+							</div>
+							<div className='text-xs font-medium text-gray-500'>Cancelled Transaction</div>
+							<div className='text-5xl font-bold'>{flow_count.cancelled}</div>
+						</div>
+					</div>
+
+					<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
+							<div className='absolute right-[-20px] bottom-[-20px]  '>
+								<CalendarOff width={60} height={60} color='rgba(0,0,0,.05)' />
+							</div>
+							<div className='text-xs font-medium text-gray-500'>Expired Transaction</div>
+							<div className='text-5xl font-bold'>{flow_count.expired}</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
-			{/* Bottom Section: Asset List and Pending Transactions */}
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow h-full'>
-				{/* Asset List */}
 				<div className='md:col-span-1 flex flex-col'>
 					<AssetList assets={userAssets} />
-					{/* {JSON.stringify(userAssets, null, 2)} */}
 				</div>
 
-				{/* Pending Transactions */}
 				<div className='md:col-span-2 flex flex-col'>
 					<PendingTransactions />
 				</div>

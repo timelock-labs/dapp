@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Assert from './components/Asset';
+import Asset from './components/Asset';
 import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
@@ -13,15 +13,19 @@ export default function Home() {
 	const isConnected = connectionStatus === 'connected';
 	const t = useTranslations('home_page');
 
-	const [showContent, setShowContent] = useState(false);
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'asset'>('loading');
 	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
 
+	const [userProfileData, setUserProfileData] = useState<any>(null);
+
 	const { request: getTimelockList, isLoading } = useApi();
+	const { request: getUserProfile, isLoading: isLoadingUserProfile } = useApi();
+
 
 	useEffect(() => {
 		if (isConnected) {
 			fetchTimelockData();
+			fetchUserProfileData();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected]);
@@ -32,6 +36,16 @@ export default function Home() {
 			setTimelockData(data);
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);
+		}
+	};
+
+	const fetchUserProfileData = async () => {
+		try {
+			const { data } = await getUserProfile('/api/v1/auth/profile');
+			setUserProfileData(data);
+			alert(JSON.stringify(data, null, 2));
+		} catch (error) {
+			console.error('Failed to fetch user profile data:', error);
 		}
 	};
 
@@ -69,7 +83,7 @@ export default function Home() {
 			case 'loading':
 				return <LoadingSkeleton />;
 			case 'asset':
-				return <Assert timelocks={timelockData!.compound_timelocks} />;
+				return <Asset timelocks={timelockData!.compound_timelocks} />;
 			case 'create':
 			default:
 				return <CreateProtocol />;
