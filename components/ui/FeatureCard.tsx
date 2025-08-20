@@ -27,7 +27,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon, lin
 		<div onClick={handleClick} className={`bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer ${className || ''}`}>
 			<div className='flex justify-between items-center w-full mb-4'>
 				{/* Placeholder for icon, replace with actual icon components if available */}
-				<div className='w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center  '>
+				<div className='w-10 h-10 rounded-full flex items-center justify-center overflow-hidden'>
 					{icon || 'Icon'} {/* Fallback text if no icon prop */}
 				</div>
 				<a href={link} className='text-gray-400 hover:text-blue-500' target='_blank' rel='noopener noreferrer'>
