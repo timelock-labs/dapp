@@ -154,7 +154,7 @@ export function ChainSwitcher() {
 							onClick={() => handleChainSwitch(chain.chain_id)}
 							className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
 							disabled={isSwitchingChain}>
-							<span className='mr-1 text-lg'>
+							<span className='mr-1 rounded-full overflow-hidden'>
 								<Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} />
 							</span>
 							<div className='flex flex-col'>
