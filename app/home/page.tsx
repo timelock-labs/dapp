@@ -43,7 +43,6 @@ export default function Home() {
 		try {
 			const { data } = await getUserProfile('/api/v1/auth/profile');
 			setUserProfileData(data);
-			alert(JSON.stringify(data, null, 2));
 		} catch (error) {
 			console.error('Failed to fetch user profile data:', error);
 		}
