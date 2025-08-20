@@ -33,7 +33,8 @@
 			"selectLabel": "Select Configured Mailbox",
 			"selectPlaceholder": "Select configured mailbox",
 			"option1": "Mailbox 1",
-			"option2": "Mailbox 2"
+			"option2": "Mailbox 2",
+			"noMailbox": "No mailbox, please add it to the notification page"
 		},
 		"targetABI": {
 			"label": "Target ABI",

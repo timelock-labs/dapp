@@ -12,6 +12,7 @@ import type { TimelockContractItem, BaseComponentProps, VoidCallback } from '@/t
 import copyToClipboard from '@/utils/copy';
 import ChainLabel from '@/components/web3/ChainLabel';
 import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
+import { FilePlus, FileDown } from 'lucide-react';
 
 // Define the props for the component
 interface TimelockContractTableProps extends BaseComponentProps {
@@ -127,12 +128,12 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				return (
 					<div className='flex flex-wrap gap-2'>
 						{permissions.map((permission, index) => (
-							permission !=="creator" && (
-							<span
-								key={index}
-								className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800`}>
-								{capitalizeFirstLetter(permission)}
-							</span>)
+							permission !== "creator" && (
+								<span
+									key={index}
+									className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800`}>
+									{capitalizeFirstLetter(permission)}
+								</span>)
 						))}
 					</div>
 				);
@@ -183,13 +184,15 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 						<button
 							type='button'
 							onClick={handleImportContract}
-							className='bg-white px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer'>
+							className='bg-white px-4 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer flex items-center'>
+							<FileDown className='w-4 h-4 mr-2' />
 							{t('importExistingContract')}
 						</button>
 						<button
 							type='button'
 							onClick={handleCreateContract}
-							className='ml-2.5 bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors text-sm cursor-pointer'>
+							className='ml-2.5 bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors text-sm cursor-pointer flex items-center'>
+							<FilePlus className='w-4 h-4 mr-2' />
 							{t('createNewContract')}
 						</button>
 					</div>
