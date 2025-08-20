@@ -36,15 +36,15 @@ const ViewABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConte
 				<div className='grid gap-4 py-4 overflow-hidden'>
 					<div className='space-y-2'>
 						<Label>{t('nameLabel')}</Label>
-						<Input defaultValue={viewAbiContent.name} readOnly className='bg-gray-50 cursor-default' />
+						<Input defaultValue={viewAbiContent.name} readOnly className='bg-gray-50 cursor-default' autoFocus={false} tabIndex={-1}/>
 					</div>
 					<div className='space-y-2'>
 						<Label>{t('descriptionLabel')}</Label>
-						<Textarea defaultValue={viewAbiContent.description} readOnly className='bg-gray-50 cursor-default resize-none' />
+						<Textarea defaultValue={viewAbiContent.description} readOnly className='bg-gray-50 cursor-default resize-none'autoFocus={false} tabIndex={-1}/>
 					</div>
 					<div className='space-y-2'>
 						<Label>{t('interfaceDetails')}</Label>
-						<Textarea className='h-[300px] bg-gray-50 cursor-default resize-none font-mono text-sm' defaultValue={formatAbiContent(viewAbiContent.abi_content)} readOnly />
+						<Textarea className='h-[300px] bg-gray-50 cursor-default resize-none font-mono text-sm' defaultValue={formatAbiContent(viewAbiContent.abi_content)} readOnly autoFocus={false} tabIndex={-1}/>
 					</div>
 				</div>
 				<DialogFooter>
