@@ -61,7 +61,12 @@
 				"description": "一个创新的收益率交易协议。"
 			}
 		},
-		"create_protocol_title": "创建协议"
+		"create_protocol_title": "创建协议",
+		"waitingTransaction": "等待交易",
+		"readyTransaction": "就绪交易",
+		"executedTransaction": "已执行交易",
+		"expiredTransaction": "已过期交易",
+		"cancelledTransaction": "已取消交易"
 	},
 	"dashboard": {
 		"welcome": "欢迎使用时间锁界面",

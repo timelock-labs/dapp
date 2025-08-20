@@ -61,7 +61,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 	const currentRangeEnd = Math.min(endIndex, totalItems);
 
 	return (
-		<div className='bg-white p-6 rounded-lg border border-gray-200 flex flex-col h-full'>
+		<div className='bg-white p-6  rounded-lg border border-gray-200 flex flex-col h-full'>
 			<h2 className='text-lg font-semibold mb-4'>{tAssetList('asset')}</h2>
 
 			{/* Table Header -   for gray color */}

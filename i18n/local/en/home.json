@@ -61,7 +61,12 @@
 				"description": "An innovative yield-trading protocol."
 			}
 		},
-		"create_protocol_title": "Create Protocol"
+		"create_protocol_title": "Create Protocol",
+		"waitingTransaction": "Waiting Transaction",
+		"readyTransaction": "Ready Transaction",
+		"executedTransaction": "Executed Transaction",
+		"expiredTransaction": "Expired Transaction",
+		"cancelledTransaction": "Cancelled Transaction"
 	},
 	"dashboard": {
 		"welcome": "Welcome to Timelock UI",
@@ -82,4 +87,5 @@
 		"amountValue": "Amount/Value",
 		"totalAssetValue": "Total Asset Value"
 	}
+	
 } 
