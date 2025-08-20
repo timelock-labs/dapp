@@ -40,10 +40,10 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
             );
 
             await tx.wait();
-            toast.success('Timelock transaction cancelled successfully!');
+            toast.success('Timelock transaction executed successfully!');
         } catch (error) {
-            console.error('Error cancelling timelock:', error);
-            toast.error('Failed to cancel timelock transaction. Please try again.');
+            console.error('Error executing timelock:', error);
+            toast.error('Failed to execute timelock transaction. Please try again.');
         }
     };
 
