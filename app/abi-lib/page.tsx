@@ -31,16 +31,12 @@ const ABILibPage: React.FC = () => {
 	const [abiToDelete, setAbiToDelete] = useState<ABIRow | null>(null);
 	const [abis, setAbis] = useState<ABIRow[]>([]);
 	const { data: abiListsRes, request: fetchAbiList, isLoading } = useApi();
-
-	const { request: addAbiReq, data: addAbiRes } = useApi();
 	const { request: deleteAbiReq, data: deleteAbiRes } = useApi();
-	const { request: validateAbiReq } = useApi();
-
 	const [viewAbiContent, setViewAbiContent] = useState<ABIContent | null>(null);
 
 	const refreshAbiList = useCallback(() => {
 		fetchAbiList('/api/v1/abi/list');
-	}, [fetchAbiList]);
+	}, [isAddABIOpen]);
 
 	useEffect(() => {
 		refreshAbiList();
@@ -55,16 +51,6 @@ const ABILibPage: React.FC = () => {
 	}, [abiListsRes, t]);
 
 	useEffect(() => {
-		if (addAbiRes?.success) {
-			refreshAbiList();
-			setIsAddABIOpen(false);
-			toast.success(t('addAbiSuccess'));
-		} else if (addAbiRes && !addAbiRes.success) {
-			toast.error(t('addAbiError', { message: addAbiRes.error?.message || 'Unknown error' }));
-		}
-	}, [addAbiRes, refreshAbiList, t]);
-
-	useEffect(() => {
 		if (deleteAbiRes?.success) {
 			refreshAbiList();
 			setIsDeleteDialogOpen(false);
@@ -75,9 +61,6 @@ const ABILibPage: React.FC = () => {
 		}
 	}, [deleteAbiRes, refreshAbiList, t]);
 
-	// Remove validation useEffect since it's handled in handleAddABI
-
-	// Effect to handle clicks outside the dropdown
 	useEffect(() => {
 		if (openDropdownId) {
 			document.addEventListener('mousedown', handleClickOutside);
@@ -90,35 +73,6 @@ const ABILibPage: React.FC = () => {
 	const handleClickOutside = (event: MouseEvent) => {
 		if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 			setOpenDropdownId(null);
-		}
-	};
-
-	const handleAddABI = async (name: string, description: string, abi_content: string) => {
-		try {
-			// First validate the ABI
-			const validateResult = await validateAbiReq('/api/v1/abi/validate', { abi_content });
-
-			if (!validateResult?.success || !validateResult.data?.is_valid) {
-				toast.error(
-					t('validateAbiError', {
-						message: validateResult?.error?.message || 'Invalid ABI format',
-					})
-				);
-				return;
-			}
-
-			// If validation passes, add the ABI
-			await addAbiReq('/api/v1/abi', {
-				name,
-				description,
-				abi_content,
-			});
-		} catch (error) {
-			toast.error(
-				t('addAbiError', {
-					message: error instanceof Error ? error.message : 'Unknown error',
-				})
-			);
 		}
 	};
 
@@ -149,7 +103,6 @@ const ABILibPage: React.FC = () => {
 				id: abiToDelete.id,
 			});
 		} catch (error) {
-			// Error handling is done in the useEffect for deleteAbiRes
 			console.error('Delete ABI error:', error);
 		}
 	};
@@ -218,7 +171,7 @@ const ABILibPage: React.FC = () => {
 	return (
 		<>
 			<PageCard abis={abis} columns={columns} setIsAddABIOpen={setIsAddABIOpen} />
-			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} onAddABI={handleAddABI} />
+			<AddABIForm isOpen={isAddABIOpen} onClose={() => setIsAddABIOpen(false)} />
 			<ViewABIForm
 				isOpen={isViewABIOpen}
 				onClose={() => setIsViewABIOpen(false)}

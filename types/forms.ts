@@ -145,7 +145,6 @@ export interface ABIContent {
 export interface AddABIFormProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onAddABI: (name: string, description: string, abi_content: string) => void;
 }
 
 /**
