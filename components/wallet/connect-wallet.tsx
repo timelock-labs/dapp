@@ -7,13 +7,47 @@ import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/utils';
 import type { BaseComponentProps, VoidCallback } from '@/types';
-import { ethereum, sepolia, polygon, polygonMumbai, bsc, optimism, optimismSepolia, base, baseSepolia, bscTestnet, arbitrum, arbitrumSepolia } from 'thirdweb/chains';
+import { 
+	ethereum,
+	sepolia,
+	polygon,
+	// hashKey,
+	// exSat,
+	// merlin,
+	// zkLink,
+	// altLayer,
+	// bsquare,
+	// goat,
+	// hemi,
+	coreMainnet,
+	// plume,
+	mode,
+	// bitLayer,
+	scroll,
+	linea,
+	bsc, 
+	optimism, 
+	base, 
+	arbitrum, 
+} from 'thirdweb/chains';
 
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useWeb3React } from '@/hooks/useWeb3React';
 
 const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
-const supportedChains = [ethereum, sepolia, polygon, polygonMumbai, bsc, bscTestnet, optimism, optimismSepolia, base, baseSepolia, arbitrum, arbitrumSepolia];
+const supportedChains = [
+	ethereum, 
+	sepolia, 
+	polygon,
+	coreMainnet,
+	mode,
+	bsc, 
+	scroll,
+	linea,
+	optimism, 
+	base, 
+	arbitrum, 
+];
 interface ConnectWalletProps extends BaseComponentProps {
 	icon?: boolean;
 	fullWidth?: boolean;
@@ -64,7 +98,7 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 	const router = useRouter();
 
 	const wrapperClass = cn('connect-wallet-container', fullWidth ? 'w-full' : 'w-auto', className);
-	const { client} = useWeb3React();
+	const { client } = useWeb3React();
 
 	const connectionStatus = useActiveWalletConnectionStatus();
 
@@ -105,9 +139,9 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
-					${fullWidth ?
-						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
+					${fullWidth
+						? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+						: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
 				}
 
 				/* 悬停效果 */
@@ -125,9 +159,9 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
-					${fullWidth ?
-						`height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-					:	`height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
+					${fullWidth
+						? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
+						: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
 					box-sizing: border-box !important;
 				}
 
@@ -187,34 +221,14 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 				.connect-wallet-container .tw-connected-wallet__address {
 					text-align: center !important;
 					width: 100% !important;
-					font-family:
-						ui-sans-serif,
-						system-ui,
-						-apple-system,
-						BlinkMacSystemFont,
-						'Segoe UI',
-						Roboto,
-						'Helvetica Neue',
-						Arial,
-						'Noto Sans',
-						sans-serif !important;
+					font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
 				}
 
 				.connect-wallet-container .tw-connected-wallet__address span {
 					display: block !important;
 					text-align: center !important;
 					width: 100% !important;
-					font-family:
-						ui-sans-serif,
-						system-ui,
-						-apple-system,
-						BlinkMacSystemFont,
-						'Segoe UI',
-						Roboto,
-						'Helvetica Neue',
-						Arial,
-						'Noto Sans',
-						sans-serif !important;
+					font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
 				}
 			`}</style>
 		</div>
