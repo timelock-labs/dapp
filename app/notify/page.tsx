@@ -124,7 +124,6 @@ const EmailNotificationPage: React.FC = () => {
 		return (
 			<>
 				<div className='flex flex-col space-y-8'>
-					{/* Email Rules Header Skeleton */}
 					<div className='bg-blue-50 border border-blue-200 rounded-lg p-6'>
 						<div className='space-y-4'>
 							<Skeleton className='h-6 w-48' />
@@ -136,9 +135,7 @@ const EmailNotificationPage: React.FC = () => {
 						</div>
 					</div>
 
-					{/* Mailbox Cards Grid Skeleton */}
 					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-						{/* Show 2 mailbox card skeletons + 1 add card skeleton */}
 						<MailboxCardSkeleton />
 						<MailboxCardSkeleton />
 						<AddMailboxCardSkeleton />
@@ -151,10 +148,7 @@ const EmailNotificationPage: React.FC = () => {
 	return (
 		<>
 			<div className='flex flex-col space-y-8'>
-				{/* Email Rules Header */}
 				<EmailRulesHeader />
-
-				{/* Mailbox Cards Grid */}
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 					{mailboxes.map(
 						mailbox =>
@@ -170,7 +164,6 @@ const EmailNotificationPage: React.FC = () => {
 								/>
 							)
 					)}
-					{/* Add Mailbox Card */}
 					<AddMailboxCard onClick={() => setIsAddMailboxModalOpen(true)} />
 				</div>
 			</div>

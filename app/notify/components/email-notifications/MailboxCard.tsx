@@ -2,6 +2,8 @@ import React from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import { formatDateWithYear } from '@/utils/utils';
+import { Mail } from 'lucide-react';
+import copyToClipboard from '@/utils/copy';
 
 interface MailboxCardProps {
 	onDelete: (id: number, email: string) => void;
@@ -39,7 +41,14 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	return (
 		<div className='bg-white rounded-lg  border border-gray-200 flex flex-col justify-between h-auto'>
 			<div className='p-6'>
-				<h3 className='text-lg font-semibold text-gray-900 mb-1'>{email}</h3>
+				<div className='text-lg flex items-center gap-2 font-semibold mb-1 cursor-pointer' onClick={()=>copyToClipboard(email)}>
+					<div>
+						<Mail width={20} height={20} />
+					</div>
+					<div>
+						{email}
+					</div>
+				</div>
 				<p className='text-sm text-gray-500 mb-2'>{remark}</p>
 				<div className='text-xs text-gray-700 space-y-1'>
 					<div>
