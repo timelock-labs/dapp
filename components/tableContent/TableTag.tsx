@@ -3,7 +3,7 @@ import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 type ColorType = 'blue' | 'green' | 'red' | 'gray' | 'yellow' | 'default';
 type StatusType = 'waiting' | 'ready' | 'cancelled' | 'expired' | 'executed';
 
-export default function TableTag({ label, colorType, statusType }: { label: string | undefined, colorType?: ColorType, statusType?: StatusType }) {
+export default function TableTag({ label, colorType, statusType, Icon }: { label: string | undefined, colorType?: ColorType, statusType?: StatusType, Icon?: React.ReactNode }) {
 
     const getHistoryTxTypeStyle = () => {
         if (colorType) {
@@ -40,5 +40,8 @@ export default function TableTag({ label, colorType, statusType }: { label: stri
         }
     };
 
-    return <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle()}`}>{capitalizeFirstLetter(label || '')}</span>
+    return <div className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle()}`}>
+        {Icon && Icon}
+        {capitalizeFirstLetter(label || '')}
+    </div>
 }

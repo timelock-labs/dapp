@@ -6,15 +6,13 @@ import { useTranslations } from 'next-intl';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { useApi } from '@/hooks/useApi';
 import copyToClipboard from '@/utils/copy';
-import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
 import SectionCard from '@/components/layout/SectionCard';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import SectionHeader from '@/components/ui/SectionHeader';
 import ChainLabel from '@/components/web3/ChainLabel';
 import NativeToken from '@/components/web3/NativeToken';
 import HashLink from '@/components/web3/HashLink';
-import { formatDate, formatDateWithYear } from '@/utils/utils';
-import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
+import { formatDate } from '@/utils/utils';
 import TableTag from '@/components/tableContent/TableTag';
 
 // Define Transaction type specific to this table
