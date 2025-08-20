@@ -16,6 +16,7 @@ import ABIRowDropdown from './components/RowDropdown';
 import type { ABIRow, ABIContent } from '@/types';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import PageCard from './components/PageCard';
+import TableTag from '@/components/tableContent/TableTag';
 
 const ABILibPage: React.FC = () => {
 	const t = useTranslations('ABI-Lib');
@@ -179,7 +180,10 @@ const ABILibPage: React.FC = () => {
 		{
 			key: 'type',
 			header: t('abiType'),
-			render: (row: ABIRow) => <span>{row.is_shared ? t('platformShared') : t('userImported')}</span>,
+			render: (row: ABIRow) => <TableTag
+				label={row.is_shared ? t('platformShared') : t('userImported')}
+				colorType={row.is_shared ? 'default' : 'green'}
+			/>
 		},
 		{
 			key: 'operations',
