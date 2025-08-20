@@ -22,6 +22,7 @@ import SectionCard from '@/components/layout/SectionCard';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
 import capitalizeFirstLetter from '@/utils/capitalizeFirstLetter';
+import AddressWarp from '@/components/web3/AddressWarp';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
@@ -113,8 +114,8 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			key: 'timelock_address',
 			header: t('timelockAddress'),
 			render: (row: HistoryTxRow) => (
-				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>{row.contract_address}</span>
+				<div className='flex items-center space-x-2 cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>
+					<AddressWarp address={row.contract_address} />
 				</div>
 			),
 		},

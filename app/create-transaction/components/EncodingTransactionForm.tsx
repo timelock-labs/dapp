@@ -13,6 +13,7 @@ import TimelockCompundABI from '@/components/abi/TimelockCompound.json';
 import type { EncodingTransactionFormProps } from '@/types';
 import { getChainObject } from '@/utils/chainUtils';
 import TextAreaInput from '@/components/ui/TextAreaInput';
+import { ethers } from 'ethers';
 
 /**
  * Encoding transaction form component for creating timelock transactions
@@ -85,7 +86,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		}
 		return allTimelocks.map(timelock => ({
 			value: String(timelock.id),
-			label: `${timelock.remark || 'Timelock'} (${timelock.contract_address?.slice(0, 6)}...${timelock.contract_address?.slice(-4)})`,
+			label: `${timelock.remark || 'Timelock'}(${ethers.utils.getAddress(timelock.contract_address)})`,
 			address: timelock.contract_address ?? '',
 		}));
 	}, [allTimelocks]);
