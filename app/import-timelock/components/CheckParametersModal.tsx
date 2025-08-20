@@ -82,7 +82,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				aria-modal='true' // Indicates that the dialog blocks content behind it
 				aria-labelledby={dialogTitleId} // Links the dialog to its title for screen readers
 				tabIndex={-1} // Makes the dialog content focusable
-				className='bg-white p-6 rounded-lg shadow-xl w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
+				className='bg-white p-6 rounded-lg w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
 			>
 				<h2 id={dialogTitleId} className='text-xl font-semibold mb-6'>
 					{t('title')}
@@ -121,7 +121,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 						aria-label='ABI Content'
 						value={abiContent}
 						className='
-              mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+              mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md
               focus:outline-none focus:ring-blue-500 focus:border-blue-500
               sm:text-sm bg-gray-100
             '

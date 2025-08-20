@@ -44,7 +44,7 @@ const CancelButton = ({ timelock }) => {
 	};
 
 	return (
-		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-200 shadow-sm cursor-pointer' onClick={handleCancel}>
+		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-200 cursor-pointer' onClick={handleCancel}>
 			Cancel
 		</div>
 	);

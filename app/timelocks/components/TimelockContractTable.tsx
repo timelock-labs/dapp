@@ -113,13 +113,13 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				// const getRoleStyle = (role: string) => {
 				// 	switch (role.toLowerCase()) {
 				// 		case 'creator':
-				// 			return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200 shadow-sm';
+				// 			return 'bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-200';
 				// 		case 'admin':
-				// 			return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm';
+				// 			return 'bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200';
 				// 		case 'admincreator':
-				// 			return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm';
+				// 			return 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 border border-indigo-200';
 				// 		default:
-				// 			return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200 shadow-sm';
+				// 			return 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-600 border border-slate-200';
 				// 	}
 				// };
 

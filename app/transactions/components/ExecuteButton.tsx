@@ -47,7 +47,7 @@ const ExecuteButton = ({ timelock }: { timelock: any }) => {
     };
 
     return (
-		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm cursor-pointer' onClick={handleCancel}>
+		<div className='px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border border-emerald-200 cursor-pointer' onClick={handleCancel}>
 			Execute
 		</div>
     );

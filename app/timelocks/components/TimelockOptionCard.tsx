@@ -26,11 +26,11 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 		<div
 			className={`
         ${bgColor} ${textColor}
-        rounded-lg shadow-md
+        rounded-lg
         p-8  /* Card styling */
         flex flex-col justify-end /* Aligns content to the bottom as in the image */
         min-h-[300px] /* Ensures consistent height for both cards */
-        cursor-pointer hover:shadow-lg transition-shadow duration-200 /* Hover effect */
+        cursor-pointer hover:shadow-md transition-shadow duration-200 /* Hover effect */
       `}
 			onClick={onClick}
 			style={{
