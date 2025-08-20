@@ -33,7 +33,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ logo, label, value, onChange,
 				{/* The appearance-none class removes the default browser arrow.
             Padding (especially pr-10) is adjusted to make space for the custom arrow. */}
 				<div className='flex items-center'>
-					{logo && <Image src={logo} alt='Logo' width={24} height={24} className='h-6 w-6 mr-2' />}
+					{logo && <Image className='rounded-full overflow-hidden h-6 w-6 mr-2' src={logo} alt='Logo' width={24} height={24}  />}
 					<select
 						id={`select-${label}`}
 						className={`block w-full pl-3 pr-8 py-2 border ${
