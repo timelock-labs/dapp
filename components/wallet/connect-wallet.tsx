@@ -11,18 +11,8 @@ import {
 	ethereum,
 	sepolia,
 	polygon,
-	// hashKey,
-	// exSat,
-	// merlin,
-	// zkLink,
-	// altLayer,
-	// bsquare,
-	// goat,
-	// hemi,
 	coreMainnet,
-	// plume,
 	mode,
-	// bitLayer,
 	scroll,
 	linea,
 	bsc, 
@@ -30,7 +20,18 @@ import {
 	base, 
 	arbitrum, 
 } from 'thirdweb/chains';
-
+import { 
+	hashKey, 
+	exSat, 
+	merlin, 
+	zkLink, 
+	aiLayer, 
+	bsquare, 
+	goat, 
+	hemi, 
+	plume, 
+	bitLayer 
+} from '@/utils/chainUtils';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useWeb3React } from '@/hooks/useWeb3React';
 
@@ -47,6 +48,16 @@ const supportedChains = [
 	optimism, 
 	base, 
 	arbitrum, 
+	hashKey,
+	exSat,
+	merlin,
+	zkLink,
+	aiLayer,
+	bsquare,
+	goat,
+	hemi,
+	plume,
+	bitLayer,
 ];
 interface ConnectWalletProps extends BaseComponentProps {
 	icon?: boolean;
