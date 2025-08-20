@@ -3,6 +3,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslations } from 'next-intl';
 import type { MailboxSelectionProps } from '@/types';
 import { useApi } from '@/hooks/useApi';
+import { Mail } from 'lucide-react';
 
 const MailboxSelection: React.FC<MailboxSelectionProps> = () => {
 	const t = useTranslations('CreateTransaction');
@@ -30,18 +31,17 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = () => {
 				<SectionHeader title={t('mailbox.title')} description={t('mailbox.description')} />
 			</div>
 
-			{/* Bottom: Checkbox Options */}
-			<div>
-				<div className='flex flex-wrap gap-2'>
-					{mailboxOptions.map(option => (
-						<div key={option.id} className='flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-[#F5F5F5] h-8'>
-							<label htmlFor={String(option.id)} className='text-sm text-gray-700 cursor-pointer flex-1'>
-								{option.email_remark || option.email}
-							</label>
+			<div className='flex flex-wrap gap-2'>
+				{mailboxOptions.map(option => (
+					<div key={option.id} className='flex items-center border borer-gray-300 space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-gray-100'>
+						<div className='text-sm cursor-pointer flex justify-center items-center'>
+							<div><Mail className='mr-1' height={16} width={16} /></div>
+							<div className='leading-5'>{option.email_remark || option.email}</div>
 						</div>
-					))}
-				</div>
+					</div>
+				))}
 			</div>
+
 		</div>
 	);
 };
