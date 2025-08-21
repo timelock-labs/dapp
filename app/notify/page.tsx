@@ -1,11 +1,12 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
-import EmailRulesHeader from './components/email-notifications/EmailRulesHeader';
-import MailboxCard from './components/email-notifications/MailboxCard';
-import AddMailboxCard from './components/email-notifications/AddMailboxCard';
-import AddMailboxModal from './components/email-address/AddMailboxModal';
-import EditMailboxModal from './components/email-address/EditMailboxModal';
+import EmailRulesHeader from './components/email/email-notifications/EmailRulesHeader';
+import MailboxCard from './components/email/email-notifications/MailboxCard';
+import AddMailboxCard from './components/email/email-notifications/AddMailboxCard';
+import AddMailboxModal from './components/email/email-address/AddMailboxModal';
+import EditMailboxModal from './components/email/email-address/EditMailboxModal';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import Channel from './components/channel';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'next-intl';
@@ -122,32 +123,32 @@ const EmailNotificationPage: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<>
-				<div className='flex flex-col space-y-8'>
-					<div className='bg-blue-50 border border-blue-200 rounded-lg p-6'>
-						<div className='space-y-4'>
-							<Skeleton className='h-6 w-48' />
-							<div className='space-y-2'>
-								<Skeleton className='h-4 w-full' />
-								<Skeleton className='h-4 w-3/4' />
-								<Skeleton className='h-4 w-5/6' />
-							</div>
+			<div className='flex flex-col space-y-8'>
+				<div className='bg-blue-50 border border-blue-200 rounded-lg p-6'>
+					<div className='space-y-4'>
+						<Skeleton className='h-6 w-48' />
+						<div className='space-y-2'>
+							<Skeleton className='h-4 w-full' />
+							<Skeleton className='h-4 w-3/4' />
+							<Skeleton className='h-4 w-5/6' />
 						</div>
 					</div>
-
-					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-						<MailboxCardSkeleton />
-						<MailboxCardSkeleton />
-						<AddMailboxCardSkeleton />
-					</div>
 				</div>
-			</>
+
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+					<MailboxCardSkeleton />
+					<MailboxCardSkeleton />
+					<AddMailboxCardSkeleton />
+				</div>
+			</div>
 		);
 	}
 
 	return (
-		<>
+		<div className='flex flex-col space-y-8'>
+			<Channel />
 			<div className='flex flex-col space-y-8'>
+				<div className='text-2xl font-bold mb-6'>邮箱通知</div>
 				<EmailRulesHeader />
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 					{mailboxes.map(
@@ -185,7 +186,7 @@ const EmailNotificationPage: React.FC = () => {
 				cancelText={t('confirmDialog.cancelText')}
 				variant='destructive'
 			/>
-		</>
+		</div>
 	);
 };
 
