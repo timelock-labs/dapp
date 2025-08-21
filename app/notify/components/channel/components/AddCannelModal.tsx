@@ -15,7 +15,7 @@ import FeishuIcon from '../images/feishu.png';
 import LarkIcon from '../images/lark.png';
 import TelegramIcon from '../images/telegram.png';
 
-interface AddMailboxModalProps {
+interface AddCannelModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSuccess: () => void; // Callback to trigger re-fetch in parent
@@ -42,13 +42,12 @@ const channelList = [
 	}
 ]
 
-const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSuccess }) => {
+const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSuccess }) => {
 	const t = useTranslations('Notify.addMailbox');
 	const [emailAddress, setEmailAddress] = useState('');
 	const [emailRemark, setEmailRemark] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
 	const [isFirstTime, setIsFirstTime] = useState(true);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const { request: sendVerificationCode } = useApi();
 	const { request: verifyEmail } = useApi();
 	const [currentChannel, setCurrentChannel] = useState(channelList[0]);
@@ -198,4 +197,4 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	);
 };
 
-export default AddMailboxModal;
+export default AddCannelModal;

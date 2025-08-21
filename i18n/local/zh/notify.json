@@ -1,6 +1,6 @@
 {
 	"Notify": {
-		"title": "邮箱通知",
+		"title": "通知",
 		"fetchEmailListSuccess": "邮箱列表获取成功。",
 		"fetchEmailListError": "获取邮箱列表失败：{message}",
 		"confirmDeleteMailbox": "确定要删除 {email} 吗？",

@@ -1,6 +1,6 @@
 {
 	"Notify": {
-		"title": "Email Notifications",
+		"title": "Notifications",
 		"fetchEmailListSuccess": "Email list fetched successfully.",
 		"fetchEmailListError": "Failed to fetch email list: {message}",
 		"confirmDeleteMailbox": "Are you sure you want to delete {email}?",
