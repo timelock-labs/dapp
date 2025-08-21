@@ -82,6 +82,7 @@
 		"createNew": "创建"
 	},
 	"assetList": {
+		"chain":"链",
 		"asset": "资产",
 		"namePrice": "名称/价格",
 		"amountValue": "数量/价值",

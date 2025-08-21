@@ -54,11 +54,12 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 		let assetsList = [];
 		for (const timelock of timelocks) {
 			try {
-				const assets = await getUserAssets(timelock.chain_id, timelock.contract_address);
+				let assets = await getUserAssets(timelock.chain_id, timelock.contract_address);
 				console.log(`Fetched assets for timelock: ${JSON.stringify(timelock)}`, assets);
 				if (assets && assets.length > 0) {
 					// Process assets as needed
-					assetsList.push(...assets);
+					let assetsWithTimelock = assets.map(asset => ({ ...asset, ...timelock }));
+					assetsList.push(...assetsWithTimelock);
 				} else {
 					console.warn(`No assets found for timelock: ${JSON.stringify(timelock)}`);
 				}

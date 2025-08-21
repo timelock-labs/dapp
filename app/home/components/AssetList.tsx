@@ -5,6 +5,7 @@ import Image from 'next/image';
 import AnimatedAssetValue from './AnimatedAssetValue';
 import { ethers } from 'ethers';
 import { useTranslations } from 'next-intl';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 export interface Asset {
 	token_address: string;
@@ -65,12 +66,10 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 			<h2 className='text-lg font-semibold mb-4'>{tAssetList('asset')}</h2>
 
 			{/* Table Header -   for gray color */}
-			<div
-				className='grid grid-cols-2   
-      rounded-lg
-      text-sm font-medium border-b border-gray-200 bg-gray-50 p-3'>
-				<span>{tAssetList('namePrice')}</span>
-				<span className='text-right'>{tAssetList('amountValue')}</span>
+			<div className='flex justify-between items-center rounded-lg text-sm font-medium border-b border-gray-200 bg-gray-50 p-3'>
+				<div>{tAssetList('chain')}</div>
+				<div>{tAssetList('namePrice')}</div>
+				<div className='text-right'>{tAssetList('amountValue')}</div>
 			</div>
 
 			{/* Asset List Items */}
@@ -78,6 +77,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 				{currentAssets.length > 0 && currentAssets.map((asset, index) => (
 					<div key={index} className='flex justify-between items-center py-3 border-b border-gray-200 last:border-b-0'>
 						<div className='flex items-center gap-3 text-sm'>
+							<ChainLabel chainId={asset.chain_id} />
 							<Image src={asset.logo} alt={asset.name || asset.symbol || 'Token'} width={24} height={24} className='rounded-full' />
 							<div className='col'>
 								<div className='flex gap-1 items-center'>
