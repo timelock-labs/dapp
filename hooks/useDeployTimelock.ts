@@ -13,7 +13,7 @@ import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock
 // Internal hooks
 import { useAsyncOperation } from './useCommonHooks';
 import { useContractDeployment } from './useBlockchainHooks';
-import { createErrorMessage, validateRequiredFields } from './useHookUtils';
+import { validateRequiredFields } from './useHookUtils';
 import { useTranslations } from 'next-intl';
 
 // Type imports
@@ -91,19 +91,14 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 					}
 				}
 
-				try {
-					// Deploy the contract
-					const result = await deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [params.admin, BigInt(params.minDelay)], deploymentOptions);
+				// Deploy the contract
+				const result = await deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [params.admin, BigInt(params.minDelay)], deploymentOptions);
 
-					return {
-						...result,
-						standard: 'compound' as ContractStandard,
-						parameters: params,
-					};
-				} catch (error) {
-					const message = createErrorMessage(error, t('failedToDeployCompoundTimelock'));
-					throw new Error(message);
-				}
+				return {
+					...result,
+					standard: 'compound' as ContractStandard,
+					parameters: params,
+				};
 			});
 		},
 		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions]

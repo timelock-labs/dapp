@@ -13,7 +13,7 @@ import { ethers } from 'ethers';
 
 // Internal hooks
 import { useAsyncOperation } from './useCommonHooks';
-import { createErrorMessage, useAbortController } from './useHookUtils';
+import { useAbortController } from './useHookUtils';
 import { useWeb3React } from './useWeb3React';
 
 // Type imports

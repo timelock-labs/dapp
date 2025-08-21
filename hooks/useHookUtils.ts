@@ -13,8 +13,8 @@ import type { VoidCallback, AsyncCallback, ApiRequestOptions, HttpMethod } from 
  * Utility for creating consistent error messages
  */
 export const createErrorMessage = (error: unknown, defaultMessage = 'An error occurred'): string => {
-	if (error instanceof Error) {
-		return error.message;
+	if (error instanceof Object && 'message' in error) {
+		return (error as any).message;
 	}
 	if (typeof error === 'string') {
 		return error;

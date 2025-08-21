@@ -6,6 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import type { VoidCallback, AsyncCallback, LoadingState } from '@/types';
+import { createErrorMessage } from '../useHookUtils';
 
 export function useLoadingState(initialLoading = false): LoadingState & {
 	setLoading: (loading: boolean) => void;
@@ -35,9 +36,9 @@ export function useLoadingState(initialLoading = false): LoadingState & {
 				const result = await asyncFn();
 				return result;
 			} catch (err) {
-				const error = err instanceof Error ? err : new Error('Unknown error occurred');
-				setError(error);
-				throw error;
+				const errorMessage = createErrorMessage(err);
+				setError(new Error(errorMessage));
+				throw errorMessage;
 			} finally {
 				setIsLoading(false);
 			}

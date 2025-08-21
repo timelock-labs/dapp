@@ -130,7 +130,6 @@ export function useWeb3ErrorHandler(config: Web3ErrorHandlerConfig = {}) {
 	const parseError = useCallback(
 		(error: unknown): ParsedWeb3Error => {
 			const errorMessage = createErrorMessage(error);
-
 			// Check against known error patterns
 			for (const [type, errorConfig] of Object.entries(WEB3_ERROR_PATTERNS)) {
 				const isMatch = errorConfig.patterns.some(pattern => pattern.test(errorMessage));
