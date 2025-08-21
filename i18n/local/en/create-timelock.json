@@ -1,6 +1,6 @@
 {
 	"CreateTimelock": {
-		"createTimelock": "Create Timelock",
+		"createTimelock": "Create Contract",
 		"createTimelockDescription": "Select the appropriate standard to create your Timelock.",
 		"selectChain": "Select Chain",
 		"selectChainPlaceholder": "Please select a chain",
