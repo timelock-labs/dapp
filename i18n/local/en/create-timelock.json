@@ -30,7 +30,7 @@
 		"confirmAdd": "Add",
 		"selectContractStandard": "Select Contract Standard",
 		"compoundStandardLabel": "Compound Standard Timelock Contract",
-		"compoundStandardDescription": "Suitable for small business entry",
+		"compoundStandardDescription": "Long-proven open source contract specifications",
 		"openzeppelinStandardLabel": "OpenZeppelin Standard Timelock Contract",
 		"openzeppelinStandardDescription": "Advanced features for growing businesses",
 		"contractRemarkPlaceholder": "Enter remark",
