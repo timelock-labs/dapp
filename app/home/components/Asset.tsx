@@ -79,7 +79,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 					<TotalAssetValue totalUsdValue={totalUSD} />
 				</div>
 				<div className='md:col-span-2 flex flex-col'>
-					<div className='flex justify-between gap-6 border border-gray-200 rounded-lg h-full'>
+					<div className='flex justify-around gap-6 border border-gray-200 rounded-lg h-full'>
 						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>

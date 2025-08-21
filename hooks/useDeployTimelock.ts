@@ -14,6 +14,7 @@ import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock
 import { useAsyncOperation } from './useCommonHooks';
 import { useContractDeployment } from './useBlockchainHooks';
 import { createErrorMessage, validateRequiredFields } from './useHookUtils';
+import { useTranslations } from 'next-intl';
 
 // Type imports
 import type { CompoundTimelockParams, ContractStandard, DeploymentResult, OpenZeppelinTimelockParams } from '@/types';
@@ -40,11 +41,12 @@ interface TimelockDeploymentConfig {
 export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 	const { validateParams = true, gasLimit, gasPrice } = config;
 	const { deployContract, isLoading, error, reset } = useContractDeployment();
+	const t = useTranslations('common');
 
 	// Separate async operation for parameter validation
 	const { execute: executeWithValidation, isLoading: isValidating } = useAsyncOperation({
-		loadingMessage: 'Validating deployment parameters...',
-		errorMessage: 'Parameter validation failed',
+		loadingMessage: t('validatingDeploymentParameters'),
+		errorMessage: t('parameterValidationFailed'),
 		showToasts: false,
 	});
 
@@ -64,12 +66,12 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 		const errors = validateRequiredFields(params, ['admin', 'minDelay']);
 
 		if (params.minDelay < 0) {
-			errors.push('Minimum delay must be non-negative');
+			errors.push(t('minimumDelayMustBeNonNegative'));
 		}
 
 		if (params.minDelay > 30 * 24 * 60 * 60) {
 			// 30 days in seconds
-			errors.push('Minimum delay cannot exceed 30 days');
+			errors.push(t('minimumDelayCannotExceed30Days'));
 		}
 
 		return errors;
@@ -85,7 +87,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 				if (validateParams) {
 					const validationErrors = validateCompoundParams(params);
 					if (validationErrors.length > 0) {
-						throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+						throw new Error(t('validationFailed', { message: validationErrors.join(', ') }));
 					}
 				}
 
@@ -99,7 +101,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 						parameters: params,
 					};
 				} catch (error) {
-					const message = createErrorMessage(error, 'Failed to deploy Compound timelock');
+					const message = createErrorMessage(error, t('failedToDeployCompoundTimelock'));
 					throw new Error(message);
 				}
 			});
@@ -115,7 +117,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 			return executeWithValidation(async () => {
 				// TODO: Implement OpenZeppelin timelock deployment
 				// This is a placeholder for future implementation
-				throw new Error('OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.');
+				throw new Error(t('openZeppelinTimelockDeploymentNotImplemented'));
 			});
 		},
 		[executeWithValidation]
@@ -136,7 +138,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 				};
 			}
 
-			throw new Error(`Cost estimation not available for ${standard} timelock`);
+			throw new Error(t('costEstimationNotAvailableForTimelock', { standard }));
 		},
 		[gasLimit, gasPrice]
 	);

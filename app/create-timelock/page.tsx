@@ -95,28 +95,25 @@ const CreateTimelockPage: React.FC = () => {
 	}, []);
 
 	const handleCreate = async () => {
-		try {
-			const params: CompoundTimelockParams = {
-				minDelay: parseInt(formState.minDelay),
-				admin: (formState.owner || walletAddress) as `0x${string}`,
-			};
-			const { contractAddress, transactionHash } = await deployCompoundTimelock(params);
+		const params: CompoundTimelockParams = {
+			minDelay: parseInt(formState.minDelay),
+			admin: (formState.owner || walletAddress) as `0x${string}`,
+		};
+		const { contractAddress, transactionHash } = await deployCompoundTimelock(params);
 
-			if (contractAddress && transactionHash) {
-				setDialogDetails({
-					chain_id: formState.selectedChain,
-					chainName: selectedChainData?.display_name || 'Unsupport Chain',
-					chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
-					timelockAddress: contractAddress,
-					initiatingAddress: formState.owner as string,
-					transactionHash,
-					explorerUrl: selectedChainData?.block_explorer_urls as string,
-				});
-				setIsConfirmDialogOpen(true);
-			}
-		} catch (error) {
-			toast.error(t('failed', { message: error instanceof Error ? error.message : 'Unknown error occurred' }));
+		if (contractAddress && transactionHash) {
+			setDialogDetails({
+				chain_id: formState.selectedChain,
+				chainName: selectedChainData?.display_name || 'Unsupport Chain',
+				chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
+				timelockAddress: contractAddress,
+				initiatingAddress: formState.owner as string,
+				transactionHash,
+				explorerUrl: selectedChainData?.block_explorer_urls as string,
+			});
+			setIsConfirmDialogOpen(true);
 		}
+
 	};
 
 	const handleConfirmDialogConfirm = async (remarkFromDialog: string) => {

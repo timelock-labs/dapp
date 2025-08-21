@@ -14,9 +14,9 @@ import { useActiveAccount } from 'thirdweb/react';
 
 // Internal hooks
 import { useAsyncOperation } from './useCommonHooks';
-import { createErrorMessage } from './useHookUtils';
 import { useWeb3ErrorHandler } from './useWeb3ErrorHandler';
 import { useWeb3React } from './useWeb3React';
+import { useTranslations } from 'next-intl';
 
 // Type imports
 import type { Address, ContractValidationResult, DeploymentResult, TransactionResult } from '@/types';
@@ -29,12 +29,12 @@ import type { Address, ContractValidationResult, DeploymentResult, TransactionRe
 export function useWalletConnection() {
 	const activeAccount = useActiveAccount();
 	const { account, isActive, chainId, chainMetadata } = useWeb3React();
-
+	const t = useTranslations('common');
 	const isConnected = isActive && !!account;
 
 	const requireConnection = useCallback(() => {
 		if (!isConnected) {
-			throw new Error('Please connect your wallet first');
+			throw new Error(t('pleaseConnectWalletFirst'));
 		}
 	}, [isConnected]);
 
@@ -55,12 +55,13 @@ export function useWalletConnection() {
  */
 export function useContractDeployment() {
 	const { requireConnection } = useWalletConnection();
+	const t = useTranslations('common');
 	const { signer } = useWeb3React();
 	const { handleError } = useWeb3ErrorHandler();
 	const { execute, isLoading, error, reset } = useAsyncOperation({
-		loadingMessage: 'Deploying contract...',
-		successMessage: 'Contract deployed successfully!',
-		errorMessage: 'Contract deployment failed',
+		loadingMessage: t('deployingContract'),
+		successMessage: t('contractDeployedSuccessfully'),
+		errorMessage: t('contractDeploymentFailed'),
 	});
 
 	const deployContract = useCallback(
@@ -76,7 +77,7 @@ export function useContractDeployment() {
 			requireConnection();
 
 			if (!signer) {
-				throw new Error('Signer not available');
+				throw new Error(t('signerNotAvailable'));
 			}
 
 			return execute(
@@ -86,7 +87,7 @@ export function useContractDeployment() {
 						const validBytecode = bytecode.startsWith('0x') ? bytecode : `0x${bytecode}`;
 
 						if (validBytecode.length < 100) {
-							throw new Error('Bytecode appears to be invalid or too short');
+							throw new Error(t('bytecodeInvalidOrTooShort'));
 						}
 
 						// Create contract factory
@@ -100,7 +101,7 @@ export function useContractDeployment() {
 						const receipt = await deployTx.wait();
 
 						if (!receipt?.contractAddress || receipt.status === 0) {
-							throw new Error('Contract deployment failed or contract address not found');
+							throw new Error(t('contractDeploymentFailedOrContractAddressNotFound'));
 						}
 
 						return {
@@ -108,13 +109,13 @@ export function useContractDeployment() {
 							contractAddress: receipt.contractAddress as Address,
 						};
 					} catch (error) {
-						handleError(error, 'Contract deployment');
+						handleError(error, t('contractDeploymentFailed'));
 						throw error;
 					}
 				},
 				{
-					loading: 'Deploying timelock contract... Please confirm in your wallet.',
-					success: 'Contract deployed successfully!',
+					loading: t('deployingContract'),
+					success: t('contractDeployedSuccessfully'),
 				}
 			);
 		},
@@ -137,11 +138,12 @@ export function useContractDeployment() {
  */
 export function useTransactionSender() {
 	const { requireConnection } = useWalletConnection();
+	const t = useTranslations('common');
 	const { sendTransaction: sendTx } = useWeb3React();
 	const { execute, isLoading, error, reset } = useAsyncOperation({
-		loadingMessage: 'Sending transaction...',
-		successMessage: 'Transaction sent successfully!',
-		errorMessage: 'Transaction failed',
+		loadingMessage: t('sendingTransaction'),
+		successMessage: t('transactionSentSuccessfully'),
+		errorMessage: t('transactionFailed'),
 	});
 
 	const sendTransaction = useCallback(
@@ -161,8 +163,8 @@ export function useTransactionSender() {
 					};
 				},
 				{
-					loading: 'Sending transaction... Please confirm in your wallet.',
-					success: 'Transaction sent successfully!',
+					loading: t('sendingTransaction'),
+					success: t('transactionSentSuccessfully'),
 				}
 			);
 		},
@@ -184,6 +186,7 @@ export function useTransactionSender() {
  */
 export function useContractValidation() {
 	const { provider } = useWeb3React();
+	const t = useTranslations('common');
 
 	const validateAddress = useCallback(
 		async (address: string): Promise<boolean> => {
@@ -193,7 +196,7 @@ export function useContractValidation() {
 				}
 
 				if (!provider) {
-					throw new Error('Provider not available');
+					throw new Error(t('providerNotAvailable'));
 				}
 
 				const code = await provider.getCode(address);
@@ -218,7 +221,7 @@ export function useContractValidation() {
 					return {
 						isValid: false,
 						standard: null,
-						error: 'Invalid contract address',
+						error: t('invalidContractAddress'),
 					};
 				}
 
@@ -228,7 +231,7 @@ export function useContractValidation() {
 					return {
 						isValid: false,
 						standard: null,
-						error: 'No contract found at this address',
+						error: t('noContractFoundAtThisAddress'),
 					};
 				}
 
@@ -258,14 +261,14 @@ export function useContractValidation() {
 					return {
 						isValid: false,
 						standard: null,
-						error: 'Contract does not match expected interface',
+						error: t('contractDoesNotMatchExpectedInterface'),
 					};
 				}
 			} catch (error) {
 				return {
 					isValid: false,
 					standard: null,
-					error: error instanceof Error ? error.message : 'Validation failed',
+					error: t('validationFailed', { message: error instanceof Error ? error.message : 'Unknown error occurred' }),
 				};
 			}
 		},
@@ -275,7 +278,7 @@ export function useContractValidation() {
 	const getContractInfo = useCallback(
 		async (address: Address) => {
 			if (!provider) {
-				throw new Error('Provider not available');
+				throw new Error(t('providerNotAvailable'));
 			}
 
 			const [code, balance] = await Promise.all([provider.getCode(address), provider.getBalance(address)]);
@@ -306,6 +309,7 @@ export function useContractValidation() {
 export function useContractInteraction(contractAddress: Address | null, abi: ethers.ContractInterface) {
 	const { provider, signer } = useWeb3React();
 	const [contract, setContract] = useState<ethers.Contract | null>(null);
+	const t = useTranslations('common');
 
 	// Create contract instance when address and provider are available
 	useEffect(() => {
@@ -328,11 +332,11 @@ export function useContractInteraction(contractAddress: Address | null, abi: eth
 			}
 		) => {
 			if (!contract) {
-				throw new Error('Contract not initialized');
+				throw new Error(t('contractNotInitialized'));
 			}
 
 			if (!contract.functions[methodName]) {
-				throw new Error(`Method ${methodName} not found in contract`);
+				throw new Error(t('methodNotFoundInContract', { methodName }));
 			}
 
 			return contract.functions[methodName](...args, options);
@@ -343,11 +347,11 @@ export function useContractInteraction(contractAddress: Address | null, abi: eth
 	const readMethod = useCallback(
 		async (methodName: string, args: unknown[] = []) => {
 			if (!contract) {
-				throw new Error('Contract not initialized');
+				throw new Error(t('contractNotInitialized'));
 			}
 
 			if (!contract.functions[methodName]) {
-				throw new Error(`Method ${methodName} not found in contract`);
+				throw new Error(t('methodNotFoundInContract', { methodName }));
 			}
 
 			return contract.functions[methodName](...args);
@@ -370,11 +374,12 @@ export function useContractInteraction(contractAddress: Address | null, abi: eth
  */
 export function useGasEstimation() {
 	const { provider } = useWeb3React();
+	const t = useTranslations('common');
 
 	const estimateGas = useCallback(
 		async (transaction: { to: Address; data?: string; value?: string; from?: Address }) => {
 			if (!provider) {
-				throw new Error('Provider not available');
+				throw new Error(t('providerNotAvailable'));
 			}
 
 			try {
@@ -388,7 +393,7 @@ export function useGasEstimation() {
 				};
 			} catch (error) {
 				console.error('Gas estimation failed:', error);
-				throw new Error('Failed to estimate gas');
+				throw new Error(t('failedToEstimateGas'));
 			}
 		},
 		[provider]
@@ -405,6 +410,7 @@ export function useGasEstimation() {
  * @returns Object containing address utility methods
  */
 export function useAddressUtils() {
+	const t = useTranslations('common');
 	const formatAddress = useCallback((address: string, length = 6): string => {
 		if (!address || !ethers.utils.isAddress(address)) {
 			return '';
@@ -419,7 +425,7 @@ export function useAddressUtils() {
 
 	const checksumAddress = useCallback((address: string): string => {
 		if (!ethers.utils.isAddress(address)) {
-			throw new Error('Invalid address');
+			throw new Error(t('invalidAddress'));
 		}
 
 		return ethers.utils.getAddress(address);
