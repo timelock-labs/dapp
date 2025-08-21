@@ -22,7 +22,7 @@ const CreateTimelockPage: React.FC = () => {
 	const [formState, setFormState] = useState<CreateTimelockFormState>({
 		selectedChain: 1,
 		selectedStandard: 'compound',
-		minDelay: '259200',
+		minDelay: '172800',
 		owner: '',
 	});
 
