@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { formatTimeRemaining } from '@/utils/utils';
+import AddressWarp from '@/components/web3/AddressWarp';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 // Define interface for the data this dialog will display
 interface CheckParametersDialogProps {
@@ -11,6 +13,7 @@ interface CheckParametersDialogProps {
 	onConfirm: (abiContent: string) => void; // Callback on confirm, passes updated ABI content
 	abiText: string;
 	parameters: {
+		chainId: string;
 		chainName: string;
 		chainIcon?: React.ReactNode;
 		isValid: boolean;
@@ -68,7 +71,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-4'>
 			<label className='block text-sm font-medium   mb-1'>{label}</label>
-			<div className='bg-gray-100 px-3 py-2 rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
+			<div className='rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
 		</div>
 	);
 
@@ -89,13 +92,11 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				</h2>
 				<div className='grid grid-cols-2 gap-4 mb-4'>
 					<ParameterDisplayRow label={t('chain')}>
-						{parameters.chainIcon}
-						<span className='ml-2'>{parameters.chainName}</span>
+						<ChainLabel chainId={parameters.chainId} />
 					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('isValid')}>{parameters.isValid ? t('yes') : t('no')}</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('contractStandard')}>{parameters.standard}</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('contractAddress')}>
-						<span className='break-all'>{parameters.contractAddress}</span>
+						<AddressWarp address={parameters.contractAddress} />
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('minDelay')}>
 						{parameters.minDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.minDelay)})

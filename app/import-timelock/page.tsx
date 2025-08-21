@@ -28,6 +28,7 @@ const ImportTimelockPage: React.FC = () => {
 	const [remarks, setRemarks] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [detectedParameters, setDetectedParameters] = useState<TimelockParameters | null>(null);
+	const [currentChinId, setCurrentChinId] = useState('');
 
 	const { chains } = useAuthStore();
 	const { id: chainId } = useActiveWalletChain() || {};
@@ -123,6 +124,10 @@ const ImportTimelockPage: React.FC = () => {
 		}
 	}, [importTimelockData, router, t]);
 
+	useEffect(()=>{
+		setCurrentChinId(chainId.toString() || '')
+	},[detectedParameters])
+
 	return (
 		<>
 			<div className=' bg-white p-8 flex flex-col '>
@@ -165,7 +170,7 @@ const ImportTimelockPage: React.FC = () => {
 					onClose={() => setIsModalOpen(false)}
 					onConfirm={handleConfirmParams}
 					abiText={JSON.stringify(compoundTimelockAbi, null, 2)}
-					parameters={{ chainName: ChainUtils.getChainName(chains, selectedChain), ...detectedParameters }}
+					parameters={{ chainId: currentChinId, ...detectedParameters }}
 				/>
 			</div>
 		</>

@@ -6,6 +6,7 @@ import type { ConfirmCreationDialogProps } from '@/types';
 import ParameterDisplayRow from './ParameterDisplayRow';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
+import AddressWarp from '@/components/web3/AddressWarp';
 
 const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, onClose, onConfirm, creationDetails }) => {
 	const t = useTranslations('ConfirmCreationDialog');
@@ -68,17 +69,11 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 						<ChainLabel chainId={creationDetails.chain_id} />
 					</ParameterDisplayRow>
 					<ParameterDisplayRow label={t('timelockAddressLabel')}>
-						<a
-							href={`${creationDetails.explorerUrl}/address/${creationDetails.timelockAddress}`}
-							target='_blank'
-							rel='noopener noreferrer'
-							className='text-blue-500 hover:underline'>
-							{creationDetails.timelockAddress}
-						</a>
+						<AddressWarp address={creationDetails.timelockAddress} />
 					</ParameterDisplayRow>
 
 					<ParameterDisplayRow label={t('transactionHashLabel')}>
-						<HashLink className='text-blue-500 hover:underline' hash={creationDetails.transactionHash} chainId={creationDetails.chain_id} isShort={false} ></HashLink>
+						<HashLink className='text-sm' hash={creationDetails.transactionHash} chainId={creationDetails.chain_id} isShort={false} ></HashLink>
 					</ParameterDisplayRow>
 
 					<ParameterDisplayRow label={t('initiatingAddressLabel')}>{creationDetails.initiatingAddress}</ParameterDisplayRow>
