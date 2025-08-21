@@ -33,7 +33,7 @@ const ViewABIForm: React.FC<ViewABIFormProps> = ({ isOpen, onClose, viewAbiConte
 				<DialogHeader>
 					<DialogTitle>{t('title')}</DialogTitle>
 				</DialogHeader>
-				<div className='grid gap-4 py-4 overflow-hidden'>
+				<div className='grid gap-4 overflow-hidden'>
 					<div className='space-y-2'>
 						<Label>{t('nameLabel')}</Label>
 						<Input defaultValue={viewAbiContent.name} readOnly className='bg-gray-50 cursor-default' autoFocus={false} tabIndex={-1}/>

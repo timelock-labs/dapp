@@ -76,7 +76,7 @@ const AddABIForm: React.FC<AddABIFormProps> = ({ isOpen, onClose }) => {
 					<DialogTitle>{t('title')}</DialogTitle>
 					<DialogDescription>{t('description')}</DialogDescription>
 				</DialogHeader>
-				<div className='grid gap-4 py-4 overflow-hidden'>
+				<div className='grid gap-4 overflow-hidden'>
 					{/* Name Input Field - Vertical Layout */}
 					<div className='space-y-2'>
 						<Label htmlFor='abiName'>{t('nameLabel')}</Label>
