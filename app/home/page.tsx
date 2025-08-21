@@ -7,6 +7,9 @@ import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { useTranslations } from 'next-intl';
+import { useAuthStore } from '@/store/userStore';
+import { TimelockContractItem } from '@/types';
+
 
 export default function Home() {
 	const connectionStatus = useActiveWalletConnectionStatus();
@@ -18,8 +21,9 @@ export default function Home() {
 
 	const [userProfileData, setUserProfileData] = useState<any>(null);
 
-	const { request: getTimelockList, isLoading } = useApi();
+	const { request: getTimelockList, isLoading, data: timelockListResponse } = useApi();
 	const { request: getUserProfile, isLoading: isLoadingUserProfile } = useApi();
+	const {  setAllTimelocks } = useAuthStore();
 
 
 	useEffect(() => {
@@ -29,6 +33,27 @@ export default function Home() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected]);
+
+
+	useEffect(() => {
+		if (timelockListResponse && timelockListResponse.success && timelockListResponse.data) {
+			const compoundTimelocks: TimelockContractItem[] = timelockListResponse.data.compound_timelocks.map(
+				(timelock: TimelockContractItem): TimelockContractItem => ({
+					...timelock,
+					standard: 'compound' as const,
+				})
+			);
+			const openzeppelinTimelocks: TimelockContractItem[] = timelockListResponse.data.openzeppelin_timelocks.map(
+				(timelock: TimelockContractItem): TimelockContractItem => ({
+					...timelock,
+					standard: 'openzeppelin' as const,
+				})
+			);
+			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
+			setAllTimelocks(combinedTimelocks as any);
+		}
+	}, [timelockListResponse, setAllTimelocks]);
+
 
 	const fetchTimelockData = async () => {
 		try {

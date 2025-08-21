@@ -38,7 +38,7 @@ const Timelocks: React.FC = () => {
 				})
 			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
-			setAllTimelocks(combinedTimelocks);
+			setAllTimelocks(combinedTimelocks as any);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 
