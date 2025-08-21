@@ -1,7 +1,7 @@
 {
 	"ImportTimelock": {
-		"title": "Import Timelock",
-		"description": "View and update your personal details and account information.",
+		"title": "Import Contract",
+		"description": "Add your existing Timelock contract",
 		"selectChain": "Select Chain",
 		"selectChainPlaceholder": "Select Chain",
 		"contractAddress": "Contract Address",
@@ -46,7 +46,7 @@
 			"seconds": " seconds",
 			"abi": "ABI",
 			"cancel": "Cancel",
-			"confirm": "Confirm Import"
+			"confirm": "Import"
 		},
 		"failedToImportTimelock": "Failed to import timelock"
 	}

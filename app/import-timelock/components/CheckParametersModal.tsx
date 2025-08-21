@@ -5,6 +5,7 @@ import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
 import { formatTimeRemaining } from '@/utils/utils';
 import AddressWarp from '@/components/web3/AddressWarp';
 import ChainLabel from '@/components/web3/ChainLabel';
+import TableTag from '@/components/tableContent/TableTag';
 
 // Define interface for the data this dialog will display
 interface CheckParametersDialogProps {
@@ -69,9 +70,9 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	};
 
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
-		<div className='mb-4'>
-			<label className='block text-sm font-medium   mb-1'>{label}</label>
-			<div className='rounded-md inline-flex items-center text-sm font-mono'>{children}</div>
+		<div className='mb-6'>
+			<label className='block text-sm font-bold'>{label}</label>
+			<div className='rounded-md inline-flex items-center text-sm'>{children}</div>
 		</div>
 	);
 
@@ -80,43 +81,47 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
 			<div
-				ref={dialogRef} // Attach ref for focus management
-				role='dialog' // ARIA role for dialog
-				aria-modal='true' // Indicates that the dialog blocks content behind it
-				aria-labelledby={dialogTitleId} // Links the dialog to its title for screen readers
-				tabIndex={-1} // Makes the dialog content focusable
-				className='bg-white p-6 rounded-lg w-full max-w-4xl mx-4 relative outline-none' // outline-none removes focus outline
+				ref={dialogRef}
+				role='dialog'
+				aria-modal='true'
+				aria-labelledby={dialogTitleId}
+				tabIndex={-1}
+				className='bg-white p-6 rounded-lg max-w-[800px] mx-4 relative outline-none'
 			>
 				<h2 id={dialogTitleId} className='text-xl font-semibold mb-6'>
 					{t('title')}
 				</h2>
-				<div className='grid grid-cols-2 gap-4 mb-4'>
-					<ParameterDisplayRow label={t('chain')}>
-						<ChainLabel chainId={parameters.chainId} />
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('contractStandard')}>{parameters.standard}</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('contractAddress')}>
-						<AddressWarp address={parameters.contractAddress} />
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('minDelay')}>
-						{parameters.minDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.minDelay)})
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('admin')}>
-						<span className='break-all'>{parameters.admin}</span>
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('gracePeriod')}>
-						{parameters.gracePeriod.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.gracePeriod)})
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('minimumDelay')}>
-						{parameters.minimumDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.minimumDelay)})
-					</ParameterDisplayRow>
-					<ParameterDisplayRow label={t('maximumDelay')}>
-						{parameters.maximumDelay.toLocaleString()} {t('seconds')} ({formatTimeRemaining(parameters.maximumDelay)})
-					</ParameterDisplayRow>
+				<div className='flex gap-8 mb-4'>
+					<div>
+						<ParameterDisplayRow label={t('chain')}>
+							<ChainLabel chainId={parameters.chainId} />
+						</ParameterDisplayRow>
+						<ParameterDisplayRow label={t('contractStandard')}>
+							<TableTag label={parameters.standard} colorType='default' />
+						</ParameterDisplayRow>
+						<ParameterDisplayRow label={t('contractAddress')}>
+							<AddressWarp address={parameters.contractAddress} />
+						</ParameterDisplayRow>
+						<ParameterDisplayRow label={t('admin')}>
+							<AddressWarp address={parameters.admin} />
+						</ParameterDisplayRow>
+					</div>
+					<div className='w-[150px] mr-[80px]'>
+						<ParameterDisplayRow label={t('minDelay')}>
+							<TableTag label={formatTimeRemaining(parameters.minDelay)} colorType='default' />
+						</ParameterDisplayRow>
+
+						<ParameterDisplayRow label={t('gracePeriod')}>
+							<TableTag label={formatTimeRemaining(parameters.gracePeriod)} colorType='default' />
+						</ParameterDisplayRow>
+						<ParameterDisplayRow label={t('maximumDelay')}>
+							<TableTag label={formatTimeRemaining(parameters.maximumDelay)} colorType='default' />
+						</ParameterDisplayRow>
+					</div>
 				</div>
 
 				<div className='mb-4'>
-					<label className='block text-sm font-medium   mb-1'>{t('abi')}</label>
+					<label className='block text-sm font-bold mb-1'>{t('abi')}</label>
 					<textarea
 						readOnly
 						aria-label='ABI Content'
