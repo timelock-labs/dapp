@@ -26,7 +26,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, placehold
 				type={type}
 				className={`mt-1 block w-full px-3 py-2 border ${
 					error ? 'border-red-500' : 'border-gray-300'
-				} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+				} rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm ${
 					disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
 				} ${className}`}
 				placeholder={placeholder || label}

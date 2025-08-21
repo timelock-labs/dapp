@@ -85,7 +85,7 @@ const ConfirmCreationDialog: React.FC<ConfirmCreationDialogProps> = ({ isOpen, o
 					</label>
 					<input
 						type='text'
-						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white focus:ring-1 ${remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+						className={`mt-1 block w-[510px] px-3 py-2 rounded-md border bg-white focus:ring-1 ${remark.length === 0 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-black focus:ring-black'
 							}`}
 						placeholder={t('contractRemarkPlaceholder')}
 						value={remark}
