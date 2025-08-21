@@ -12,6 +12,7 @@ import type { RawTx, PendingTx } from '@/types';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
 import TableTag from '@/components/tableContent/TableTag';
+import AddressWarp from '@/components/web3/AddressWarp';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
@@ -50,9 +51,7 @@ const PendingTransactions: React.FC = () => {
 			key: 'timelock_address',
 			header: t('timelockAddress'),
 			render: (row: PendingTx) => (
-				<span className='font-mono text-sm' title={row.contract_address}>
-					{formatAddress(row.contract_address)}
-				</span>
+			<AddressWarp address={row.contract_address} isShort={true} />
 			),
 		},
 		{
