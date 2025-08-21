@@ -1,6 +1,7 @@
 {
 	"Notify": {
 		"title": "Notifications",
+		"description": "Configure your email notifications to receive timelock notifications.",
 		"fetchEmailListSuccess": "Email list fetched successfully.",
 		"fetchEmailListError": "Failed to fetch email list: {message}",
 		"confirmDeleteMailbox": "Are you sure you want to delete {email}?",

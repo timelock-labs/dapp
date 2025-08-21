@@ -1,6 +1,7 @@
 {
 	"Notify": {
 		"title": "通知",
+		"description": "配置您的邮箱通知以接收时间锁通知。",
 		"fetchEmailListSuccess": "邮箱列表获取成功。",
 		"fetchEmailListError": "获取邮箱列表失败：{message}",
 		"confirmDeleteMailbox": "确定要删除 {email} 吗？",
