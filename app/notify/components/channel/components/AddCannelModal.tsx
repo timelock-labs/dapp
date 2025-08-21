@@ -10,7 +10,10 @@ import { ChevronDown, Folder, Forward, MoreHorizontal, Plus, Trash2 } from 'luci
 import { SidebarMenuAction } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+
 import FeishuIcon from '../images/feishu.png';
+import LarkIcon from '../images/lark.png';
+import TelegramIcon from '../images/telegram.png';
 
 interface AddMailboxModalProps {
 	isOpen: boolean;
@@ -20,14 +23,22 @@ interface AddMailboxModalProps {
 
 const channelList = [
 	{
-		id: 1,
-		name: 'Email',
-		icon: 'https://cdn.moralis.io/eth/0x.png',
+		type: 'feishu',
+		name: 'Feishu',
+		icon: FeishuIcon.src,
+		configLabel: 'https://open.larksuite.com/open-apis/bot/v2/hook/xxxx-xxxx-xxxx-xxxx',
 	},
 	{
-		id: 2,
-		name: 'Feishu',
-		icon: FeishuIcon.src
+		type: 'lark',
+		name: 'Lark',
+		icon: LarkIcon.src,
+		configLabel: 'https://open.larksuite.com/open-apis/bot/v2/hook/xxxx-xxxx-xxxx-xxxx',
+	},
+	{
+		type: 'telegram',
+		name: 'Telegram',
+		icon: TelegramIcon.src,
+		configLabel: 'xxxxxx:xxxxxxxxxxxxxxxxxxxxxxx',
 	}
 ]
 
@@ -139,20 +150,20 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 						<div className='block text-sm font-medium mb-1'>渠道</div>
 						<div>
 							<DropdownMenu>
-								<DropdownMenuTrigger asChild className=' cursor-pointer h-9'>
+								<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-38'>
 									<Button variant='outline' size='sm'>
-										<span className='mr-1 rounded-full overflow-hidden'>
+										<div className='flex gap-2 rounded-full overflow-hidden'>
 											{currentChannel?.icon && <Image src={currentChannel.icon} alt={currentChannel.name ?? ''} width={20} height={20} />}
-										</span>
-										<span className='hidden sm:inline'>{currentChannel?.name ?? 'Unsupported Chain'}</span>
+											<div className='hidden sm:inline'>{currentChannel?.name ?? 'Unsupported Chain'}</div>
+										</div>
 										<ChevronDown className='ml-2 h-3 w-3' />
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className='w-32 bg-white border border-gray-200 p-2 flex flex-col gap-2 rounded-md' align='end'>
+								<DropdownMenuContent className='w-38 bg-white border border-gray-200 p-2 flex flex-col gap-2 rounded-md' align='end'>
 									{Array.isArray(channelList) &&
 										channelList.map(channel => (
 											<DropdownMenuItem
-												key={channel.id}
+												key={channel.type}
 												onClick={() => setCurrentChannel(channel)}
 												className={`flex gap-2 items-center cursor-pointer`}>
 												<div className='flex gap-2'>
@@ -166,7 +177,8 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 							
 						</div>
 					</div>
-					<TextInput label="渠道备注" value={emailRemark} onChange={setEmailRemark} placeholder="渠道备注" />
+					<TextInput label="备注" value={emailRemark} onChange={setEmailRemark} placeholder="渠道备注" />
+					<TextInput label="配置" value={emailRemark} onChange={setEmailRemark} placeholder={currentChannel?.configLabel} />
 				</div>
 
 
