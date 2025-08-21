@@ -82,6 +82,7 @@
 		"createNew": "Create new"
 	},
 	"assetList": {
+		"chain":"Chain",
 		"asset": "Asset",
 		"namePrice": "Name/Price",
 		"amountValue": "Amount/Value",
