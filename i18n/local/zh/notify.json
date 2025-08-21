@@ -99,6 +99,12 @@
 			"sendCodeError": "验证码发送失败：{message}",
 			"unknownError": "未知错误",
 			"sent":"已发送"
+		},
+		"channel":{
+			"title":"频道",
+			"description":"配置您的频道通知以接收时间锁通知。",
+			"edit":"编辑",
+			"delete":"删除"
 		}
 	}
 }
