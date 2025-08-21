@@ -145,9 +145,9 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }} // Added maxHeight and overflowY
 			>
 				<div className='p-6'>
-					<SectionHeader title={t('title')} description={t('description')} />
+					<SectionHeader title="添加通知渠道" description="请获取您的渠道配置，填入备注和配置即可" />
 					<div className="flex flex-col mb-4">
-						<div className='block text-sm font-medium mb-1'>渠道</div>
+						<div className='block text-sm font-medium mb-1'>方式</div>
 						<div>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-38'>
