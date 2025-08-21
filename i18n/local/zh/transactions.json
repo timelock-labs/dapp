@@ -56,7 +56,8 @@
 		"executeSuccess": "交易执行成功。",
 		"executeError": "交易执行失败。",
 		"actions": "操作",
-		"pleaseSwitchToNetwork": "请切换到 {network} 网络以取消此时间锁。",
+		"pleaseSwitchToNetworkToCancel": "请切换到 {network} 网络以取消此时间锁。",
+		"pleaseSwitchToNetworkToExecute": "请切换到 {network} 网络以执行此时间锁。",
 		"failedToExecuteTimelock": "执行时间锁失败。请重试。"
 	}
 }

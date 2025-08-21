@@ -17,7 +17,7 @@ const CancelButton = ({ timelock }: { timelock: Timelock }) => {
 	const handleCancel = async () => {
 		if (chainId !== timelock.chain_id) {
 			const currentChain = chains.find(chain => chain.chain_id === timelock.chain_id);
-			toast.error(t('pleaseSwitchToNetwork', { network: currentChain!.display_name }));
+			toast.error(t('pleaseSwitchToNetworkToCancel', { network: currentChain!.display_name }));
 			return;
 		}
 
