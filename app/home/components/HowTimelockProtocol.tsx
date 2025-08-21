@@ -13,7 +13,7 @@ const HowTimelockProtocol: React.FC = () => {
 			<p className='  text-sm mb-6 leading-relaxed group-hover:text-gray-200 transition-colors duration-300'>{t('description')}</p>
 			<a
 				href='https://timelock.gitbook.io/timelock/'
-				className='inline-flex items-center justify-center bg-white text-black py-2 px-4 rounded-md text-sm font-semibold border border-gray-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300'>
+				className='inline-flex items-center justify-center bg-white text-black py-2 px-4 rounded-md text-sm font-semibold border border-gray-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition-all duration-300'>
 				{t('read_more')}
 				<svg className='ml-2 w-4 h-4 transform transition-transform duration-300' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 					<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M17 8l4 4m0 0l-4 4m4-4H3'></path>

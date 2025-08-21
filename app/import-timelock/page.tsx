@@ -125,6 +125,9 @@ const ImportTimelockPage: React.FC = () => {
 	}, [importTimelockData, router, t]);
 
 	useEffect(()=>{
+		if(!chainId){
+			return;
+		}
 		setCurrentChinId(chainId.toString() || '')
 	},[detectedParameters])
 

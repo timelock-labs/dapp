@@ -1,7 +1,7 @@
 {
 	"ImportTimelock": {
-		"title": "导入 Timelock",
-		"description": "查看和更新您的个人详细信息和账户信息。",
+		"title": "导入合约",
+		"description": "新增您已有的 Timelock 合约",
 		"selectChain": "选择所在链",
 		"selectChainPlaceholder": "选择所在链",
 		"contractAddress": "合约地址",
@@ -46,7 +46,7 @@
 			"seconds": "秒",
 			"abi": "ABI",
 			"cancel": "取消",
-			"confirm": "确认添加"
+			"confirm": "添加"
 		}
 	}
 }

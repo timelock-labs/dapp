@@ -1,6 +1,6 @@
 {
 	"CreateTimelock": {
-		"createTimelock": "Create Timelock",
+		"createTimelock": "Create Contract",
 		"createTimelockDescription": "Select the appropriate standard to create your Timelock.",
 		"selectChain": "Select Chain",
 		"selectChainPlaceholder": "Please select a chain",
@@ -12,7 +12,7 @@
 		"executorsPlaceholder": "Enter executor addresses",
 		"admin": "Admin Address",
 		"adminPlaceholder": "Enter admin address",
-		"deployContract": "Deploy Contract",
+		"deployContract": "Deploy",
 		"deploying": "Deploying...",
 		"firstTimeUser": {
 			"title": "First time using Timelock Protocol?",

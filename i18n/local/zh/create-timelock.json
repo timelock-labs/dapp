@@ -1,6 +1,6 @@
 {
 	"CreateTimelock": {
-		"createTimelock": "创建时间锁",
+		"createTimelock": "创建合约",
 		"createTimelockDescription": "选择合适的标准创建属于您的 Timelock。",
 		"selectChain": "选择链",
 		"selectChainPlaceholder": "请选择链",
@@ -12,7 +12,7 @@
 		"executorsPlaceholder": "请输入执行者地址",
 		"admin": "管理员地址",
 		"adminPlaceholder": "请输入管理员地址",
-		"deployContract": "部署合约",
+		"deployContract": "部署",
 		"deploying": "部署中...",
 		"firstTimeUser": {
 			"title": "第一次使用 Timelock Protocol？",
