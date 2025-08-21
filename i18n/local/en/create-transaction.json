@@ -52,6 +52,21 @@
 		"success": "Transaction created successfully!",
 		"failed": "Failed to create transaction: {message}",
 		"abiAddedSuccessfully": "ABI added successfully!",
-		"failedToAddABI": "Failed to add ABI: {message}"
+		"failedToAddABI": "Failed to add ABI: {message}",
+		"estimatingGas": "Estimating gas...",
+		"gasEstimationFailed": "Gas estimation failed",
+		"sendingTransaction": "Sending transaction...",
+		"transactionSentSuccessfully": "Transaction sent successfully!",
+		"transactionFailed": "Transaction failed",
+		"invalidTargetAddress": "Invalid target address",
+		"invalidCalldataFormat": "Invalid calldata format",
+		"invalidTransactionValue": "Invalid transaction value",
+		"invalidParameters": "Invalid parameters: {message}",
+		"pleaseConfirmTransactionInYourWallet": "Please confirm transaction in your wallet...",
+		"transactionSent": "Transaction sent: {hash}...",
+		"transactionConfirmed": "Transaction confirmed!",
+		"transactionRejectedByUser": "Transaction was rejected by user",
+		"insufficientFundsForTransaction": "Insufficient funds for transaction",
+		"transactionFailedDueToGasIssues": "Transaction failed due to gas issues. Try increasing gas limit."
 	}
 }

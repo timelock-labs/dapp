@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import generatePreview from '@/utils/generatePreview';
 import EthereumParamsCodec from '@/utils/ethereumParamsCodec';
 import { Send } from 'lucide-react';
+import { createErrorMessage } from '@/hooks/useHookUtils';
 
 const TransactionEncoderPage: React.FC = () => {
 	const router = useRouter();
@@ -171,7 +172,8 @@ const TransactionEncoderPage: React.FC = () => {
 
 			router.push('/transactions');
 		} catch (error) {
-			toast.error(t('failed', { message: (error as Error).message || 'Failed to create transaction' }));
+			console.error('error', error);
+			toast.error(t('failed', { message: createErrorMessage(error)}));
 		} finally {
 			setIsSubmitting(false);
 		}

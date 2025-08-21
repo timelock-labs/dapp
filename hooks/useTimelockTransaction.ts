@@ -10,6 +10,7 @@ import { ethers } from 'ethers';
 import { useGasEstimation, useTransactionSender, useWalletConnection } from './useBlockchainHooks';
 import { useAsyncOperation } from './useCommonHooks';
 import { createErrorMessage, createToastNotification } from './useHookUtils';
+import { useTranslations } from 'next-intl';
 
 // Type imports
 import type { Address, GasEstimation, TransactionResult } from '@/types';
@@ -59,20 +60,20 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 	const { requireConnection, isConnected } = useWalletConnection();
 	const { sendTransaction: sendTx, isLoading: isSending, error: sendError, reset: resetSender } = useTransactionSender();
 	const { estimateGas } = useGasEstimation();
-
+	const t = useTranslations('CreateTransaction');
 	// Async operation for gas estimation
 	const { execute: executeWithGasEstimation, isLoading: isEstimatingGas } = useAsyncOperation({
-		loadingMessage: 'Estimating gas...',
-		errorMessage: 'Gas estimation failed',
+		loadingMessage: t('estimatingGas'),
+		errorMessage: t('gasEstimationFailed'),
 		showToasts: false,
 	});
 
 	// Async operation for transaction sending
 	const { execute: executeTransaction, isLoading: isExecuting } = useAsyncOperation({
-		loadingMessage: 'Sending transaction...',
-		successMessage: 'Transaction sent successfully!',
-		errorMessage: 'Transaction failed',
-		showToasts,
+		loadingMessage: t('sendingTransaction'),
+		successMessage: t('transactionSentSuccessfully'),
+		errorMessage: t('transactionFailed'),
+		showToasts: false,
 	});
 
 	/**
@@ -82,18 +83,18 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 		const errors: string[] = [];
 
 		if (!params.toAddress || !ethers.utils.isAddress(params.toAddress)) {
-			errors.push('Invalid target address');
+			errors.push(t('invalidTargetAddress'));
 		}
 
 		if (!params.calldata || !params.calldata.startsWith('0x')) {
-			errors.push('Invalid calldata format');
+			errors.push(t('invalidCalldataFormat'));
 		}
 
 		if (params.value !== undefined) {
 			try {
 				ethers.BigNumber.from(params.value);
 			} catch {
-				errors.push('Invalid transaction value');
+				errors.push(t('invalidTransactionValue'));
 			}
 		}
 
@@ -130,7 +131,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 				// Validate parameters
 				const validationErrors = validateTransactionParams(params);
 				if (validationErrors.length > 0) {
-					throw new Error(`Invalid parameters: ${validationErrors.join(', ')}`);
+					throw new Error(t('invalidParameters', { message: validationErrors.join(', ') }));
 				}
 
 				let gasEstimation: GasEstimation | undefined;
@@ -157,7 +158,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 				try {
 					// Show loading toast if enabled
 					if (showToasts) {
-						toastId = createToastNotification.loading('Please confirm transaction in your wallet...');
+						toastId = createToastNotification.loading(t('pleaseConfirmTransactionInYourWallet'));
 					}
 
 					// Send the transaction
@@ -166,7 +167,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 
 					// Update toast with transaction hash
 					if (showToasts && toastId) {
-						createToastNotification.success(`Transaction sent: ${result.transactionHash.slice(0, 10)}...`, toastId);
+						createToastNotification.success(t('transactionSent', { hash: result.transactionHash.slice(0, 10) }), toastId);
 					}
 
 					// Wait for confirmation if enabled
@@ -177,7 +178,7 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 
 					// Show success toast
 					if (showToasts && toastId) {
-						createToastNotification.success('Transaction confirmed!', toastId);
+						createToastNotification.success(t('transactionConfirmed'), toastId);
 					}
 
 					return {
@@ -185,19 +186,19 @@ export const useTimelockTransaction = (config: TimelockTransactionConfig = {}) =
 						gasEstimation,
 					};
 				} catch (error) {
-					const message = createErrorMessage(error, 'Transaction failed');
+					const message = createErrorMessage(error, t('transactionFailed'));
 
 					// Handle specific error cases
 					if (message.includes('user rejected') || message.includes('denied')) {
-						throw new Error('Transaction was rejected by user');
+						throw new Error(t('transactionRejectedByUser'));
 					}
 
 					if (message.includes('insufficient funds')) {
-						throw new Error('Insufficient funds for transaction');
+						throw new Error(t('insufficientFundsForTransaction'));
 					}
 
 					if (message.includes('gas')) {
-						throw new Error('Transaction failed due to gas issues. Try increasing gas limit.');
+						throw new Error(t('transactionFailedDueToGasIssues'));
 					}
 
 					throw new Error(message);

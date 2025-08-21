@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TableComponent from '@/components/ui/TableComponent';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
+import { formatUnits } from 'ethers/lib/utils';
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { useApi } from '@/hooks/useApi';
 import copyToClipboard from '@/utils/copy';
@@ -76,7 +77,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	}, [fetchHistoryTransactions]);
 
 	const parseCalldata = (funcSig: string, calldata: string) => {
-		if (!funcSig || !calldata) return '';
+		if (!funcSig || !calldata) return [];
 		const ethereumParamsCodec = new EthereumParamsCodec();
 
 		const decodeResult = ethereumParamsCodec.decodeParams(
@@ -84,9 +85,12 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			calldata
 		);
 
-		const paramsArr = decodeResult.params
+		if (!decodeResult.success) {
+			console.error('Failed to decode params:', decodeResult.error);
+			return [];
+		}
 
-		return paramsArr
+		return decodeResult.params;
 	};
 
 	const columns = [
@@ -124,19 +128,31 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 					{parseCalldata(row.function_signature, row.call_data_hex).map((item: any) => {
 						if (item.type === 'uint256') {
 
-							if (item.value.toString().length > 10) {
-								return <div key={item.index} className='flex text-sm'>
-									<div className='font-medium'>{item.type}:</div>
-									<div className='ml-1 cursor-pointer' >
-										{item.value}
+							const value = item.value.toString();
+							if (value.length > 18) {
+								const formatted = formatUnits(value, 18);
+								const [wholePart, decimalPart] = formatted.split('.');
+								const scientificNotation = `${wholePart}×10`;
+								
+								return (
+									<div key={item.index} className='flex text-sm'>
+										<div className='font-medium'>{item.type}:</div>
+										<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(value)}>
+											{scientificNotation}
+											<sup>18</sup>
+										</div>
 									</div>
-								</div>
+								);
 							}
 
-							return <div key={item.index} className='flex text-sm'>
-								<div className='font-medium'>{item.type}:</div>
-								<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(item.value)}>{item.value}</div>
-							</div>
+							return (
+								<div key={item.index} className='flex text-sm'>
+									<div className='font-medium'>{item.type}:</div>
+									<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(value)}>
+										{value}
+									</div>
+								</div>
+							);
 						}
 
 

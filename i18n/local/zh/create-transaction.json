@@ -52,6 +52,21 @@
 		"success": "交易创建成功！",
 		"failed": "创建交易失败: {message}",
 		"abiAddedSuccessfully": "ABI 添加成功！",
-		"failedToAddABI": "添加 ABI 失败: {message}"
+		"failedToAddABI": "添加 ABI 失败: {message}",
+		"estimatingGas": "估算 gas...",
+		"gasEstimationFailed": "估算 gas 失败",
+		"sendingTransaction": "发送交易...",
+		"transactionSentSuccessfully": "交易发送成功！",
+		"transactionFailed": "交易失败",
+		"invalidTargetAddress": "无效的目标地址",
+		"invalidCalldataFormat": "无效的编码数据",
+		"invalidTransactionValue": "无效的交易数值",
+		"invalidParameters": "无效的参数: {message}",
+		"pleaseConfirmTransactionInYourWallet": "请在钱包中确认交易...",
+		"transactionSent": "交易发送: {hash}...",
+		"transactionConfirmed": "交易确认！",
+		"transactionRejectedByUser": "交易被用户拒绝",
+		"insufficientFundsForTransaction": "交易资金不足",
+		"transactionFailedDueToGasIssues": "交易因 gas 问题失败。请尝试增加 gas 限制。"
 	}
 }
