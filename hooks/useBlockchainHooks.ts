@@ -144,6 +144,7 @@ export function useTransactionSender() {
 		loadingMessage: t('sendingTransaction'),
 		successMessage: t('transactionSentSuccessfully'),
 		errorMessage: t('transactionFailed'),
+		showToasts: false,
 	});
 
 	const sendTransaction = useCallback(

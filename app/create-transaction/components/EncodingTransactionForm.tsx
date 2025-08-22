@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback,useRef  } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
 import TextInput from '@/components/ui/TextInput';
@@ -54,6 +54,8 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 	const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 	const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
 	const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
+	const [dropdownWidth, setDropdownWidth] = useState<number>(0);
+	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	const { id: chainId } = useActiveWalletChain() || {};
 	const switchChain = useSwitchActiveWalletChain();
@@ -154,6 +156,12 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		if (currentTimelockDetails?.chain_id) handleTimelockMethodChange();
 	}, [currentTimelockDetails, handleTimelockMethodChange]);
 
+	useEffect(() => {
+		if (triggerRef.current) {
+			setDropdownWidth(triggerRef.current.offsetWidth);
+		}
+	}, []);
+
 	const timelockMethodOptions = useMemo(() => {
 		if (!timelockType || !allTimelocks || allTimelocks.length === 0) {
 			return [];
@@ -225,11 +233,14 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 					<div className='flex-1 z-50'>
 						<div className='block text-sm font-medium mb-1'>{t('encodingTransaction.selectTimelock')}</div>
 						<DropdownMenu>
-							<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-full'>
-								<Button variant='outline' size='sm'>
-									<div className='flex gap-2 rounded-full overflow-hidden'>
+							<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-full' style={{ width: '100%' }}>
+								<Button ref={triggerRef} variant='outline' size='sm'>
+									<div className='flex gap-2 rounded-full'>
 										{timelockType && <div className='flex gap-2 justify-center items-center'>
-											{timelockType && <ChainLabel chainId={getTimelockDetails(timelockType)?.chain_id} />}
+											{(() => {
+												const details = timelockType ? getTimelockDetails(timelockType) : null;
+												return details?.chain_id ? <ChainLabel chainId={details.chain_id} /> : null;
+											})()}
 											<span className='font-medium'>
 												<AddressWarp address={getTimelockDetails(timelockType)?.contract_address} />
 											</span>
@@ -242,8 +253,12 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 									<ChevronDown className='ml-2 h-3 w-3' />
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className='bg-white border border-gray-200 p-2 flex flex-col rounded-md ' align='end'>
-								{Array.isArray(timelockOptions) &&
+							<DropdownMenuContent style={{ width: `${dropdownWidth}px` }} className='bg-white border border-gray-200 p-2 flex flex-col rounded-md' align='end' side='bottom' >
+								{(!Array.isArray(timelockOptions) || timelockOptions.length === 0) ? (
+									<div className={`flex pr-8 py-1 px-1 hover:bg-gray-50 items-center cursor-pointer border-none`}>
+										<span className='text-gray-800 text-xs'> {t('encodingTransaction.noTimelocksAvailable')}</span>
+									</div>
+								) : (
 									timelockOptions.map(timelock => {
 										const timelockDetails = getTimelockDetails(timelock.value)
 
@@ -252,12 +267,13 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 											onClick={() => handleTimelockChange(timelock.value)}
 											className={`flex pr-8 py-1 px-1 hover:bg-gray-50 items-center cursor-pointer border-none`}>
 											<div className='flex gap-2 justify-center items-center font-medium text-sm'>
-												{timelockDetails?.chain_id && <ChainLabel chainId={timelockDetails?.chain_id} />}
+												{timelockDetails?.chain_id && <ChainLabel chainId={timelockDetails.chain_id} />}
 												<AddressWarp address={timelockDetails?.contract_address} />
 												<span className='text-gray-800 text-xs'> {timelockDetails?.remark}</span>
 											</div>
 										</DropdownMenuItem>
-									})}
+									})
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
