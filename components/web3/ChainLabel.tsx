@@ -15,7 +15,7 @@ export default function ChainLabel({ chainId }: { chainId: number|string }) {
         alt={chainName || ''}
         width={16}
         height={16}
-        className='rounded-full overflow-hidden'
+        className='rounded-full overflow-hidden w-full h-full'
         onError={e => {
             console.error('Failed to load chain logo:', chainLogo);
             e.currentTarget.style.display = 'none';

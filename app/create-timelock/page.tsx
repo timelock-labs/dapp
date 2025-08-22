@@ -47,7 +47,7 @@ const CreateTimelockPage: React.FC = () => {
 	const selectedChainData = useMemo(() => chains.find(chain => chain.chain_id === formState.selectedChain), [chains, formState.selectedChain]);
 
 	useEffect(() => {
-		if (chainId) {
+		if (chainId && chainId !== formState.selectedChain) {
 			setFormState(prev => ({ ...prev, selectedChain: chainId }));
 		}
 	}, [chainId]);

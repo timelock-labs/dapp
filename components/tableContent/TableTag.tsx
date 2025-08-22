@@ -40,8 +40,8 @@ export default function TableTag({ label, colorType, statusType, Icon }: { label
         }
     };
 
-    return <div className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle()}`}>
+    return <div className={`flex justify-center items-center px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle()}`}>
         {Icon && Icon}
-        {capitalizeFirstLetter(label || '')}
+        <div className="ml-[3px]">{capitalizeFirstLetter(label || '')}</div>
     </div>
 }
