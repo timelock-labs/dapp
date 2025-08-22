@@ -221,7 +221,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 			/>
 			<div className='flex flex-col space-y-4 w-full'>
 				<div className='flex flex-col gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
-					<div className='flex-1'>
+					<div className='flex-1 z-50'>
 						<div className='block text-sm font-medium mb-1'>{t('encodingTransaction.selectTimelock')}</div>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-full'>
@@ -255,7 +255,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
-					<div className='flex-1'>
+					<div>
 						<SelectInput
 							label={t('encodingTransaction.selectTimelockMethod')}
 							value={timelockMethod}
