@@ -36,28 +36,66 @@ import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useWeb3React } from '@/hooks/useWeb3React';
 
 const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
+// 链图标映射 - 使用更可靠的 CDN 源
+const CHAIN_ICONS: Record<number, { url: string; width: number; height: number; format: string }> = {
+	1: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png', width: 32, height: 32, format: 'png' },
+	10: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/11840.png', width: 32, height: 32, format: 'png' },
+	56: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/1839.png', width: 32, height: 32, format: 'png' },
+	137: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/3890.png', width: 32, height: 32, format: 'png' },
+	324: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/24091.png', width: 32, height: 32, format: 'png' },
+	8453: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/11840.png', width: 32, height: 32, format: 'png' },
+	42161: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/11841.png', width: 32, height: 32, format: 'png' },
+	43114: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/5805.png', width: 32, height: 32, format: 'png' },
+	59144: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/27657.png', width: 32, height: 32, format: 'png' },
+	534352: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/26998.png', width: 32, height: 32, format: 'png' },
+	11155111: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png', width: 32, height: 32, format: 'png' },
+	1116: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/23254.png', width: 32, height: 32, format: 'png' },
+	42220: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/5567.png', width: 32, height: 32, format: 'png' },
+	34443: { url: 'https://app.mode.network/logo.png', width: 32, height: 32, format: 'png' },
+	// Custom chains - using placeholder icons for now
+	177: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	223: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	2345: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	2649: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	4200: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	7200: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	43111: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png', width: 32, height: 32, format: 'png' },
+	98866: { url: 'https://cryptologos.cc/logos/ethereum-eth-logo.png', width: 32, height: 32, format: 'png' },
+	200901: { url: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png', width: 32, height: 32, format: 'png' },
+	810180: { url: 'https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png', width: 32, height: 32, format: 'png' },
+};
+
+// 为链添加图标的辅助函数
+function addIconToChain(chain: object, chainId: number) {
+	const icon = CHAIN_ICONS[chainId];
+	if (icon) {
+		return { ...chain, icon };
+	}
+	return chain;
+}
+
 const supportedChains = [
-	ethereum, 
-	sepolia, 
-	polygon,
-	coreMainnet,
-	mode,
-	bsc, 
-	scroll,
-	linea,
-	optimism, 
-	base, 
-	arbitrum, 
-	hashKey,
-	exSat,
-	merlin,
-	zkLink,
-	aiLayer,
-	bsquare,
-	goat,
-	hemi,
-	plume,
-	bitLayer,
+	addIconToChain(ethereum, 1), 
+	addIconToChain(sepolia, 11155111), 
+	addIconToChain(polygon, 137),
+	addIconToChain(coreMainnet, 1116),
+	addIconToChain(mode, 34443),
+	addIconToChain(bsc, 56), 
+	addIconToChain(scroll, 534352),
+	addIconToChain(linea, 59144),
+	addIconToChain(optimism, 10), 
+	addIconToChain(base, 8453), 
+	addIconToChain(arbitrum, 42161), 
+	addIconToChain(hashKey, 177),
+	addIconToChain(exSat, 7200),
+	addIconToChain(merlin, 4200),
+	addIconToChain(zkLink, 810180),
+	addIconToChain(aiLayer, 2649),
+	addIconToChain(bsquare, 223),
+	addIconToChain(goat, 2345),
+	addIconToChain(hemi, 43111),
+	addIconToChain(plume, 98866),
+	addIconToChain(bitLayer, 200901),
 ];
 interface ConnectWalletProps extends BaseComponentProps {
 	icon?: boolean;
