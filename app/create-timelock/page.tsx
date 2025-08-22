@@ -20,7 +20,7 @@ const CreateTimelockPage: React.FC = () => {
 	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
 	const [formState, setFormState] = useState<CreateTimelockFormState>({
-		selectedChain: 1,
+		selectedChain: 0,
 		selectedStandard: 'compound',
 		minDelay: '172800',
 		owner: '',
