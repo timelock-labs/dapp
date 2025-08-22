@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import ChainIcon from '@/components/web3/ChainIcon';
 import ChainLabel from '@/components/web3/ChainLabel';
+import AddressWarp from '@/components/web3/AddressWarp';
 
 /**
  * Encoding transaction form component for creating timelock transactions
@@ -227,11 +228,16 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 							<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-full'>
 								<Button variant='outline' size='sm'>
 									<div className='flex gap-2 rounded-full overflow-hidden'>
-										<div className='flex gap-2 justify-center items-center'>
+										{timelockType && <div className='flex gap-2 justify-center items-center'>
 											{timelockType && <ChainLabel chainId={getTimelockDetails(timelockType)?.chain_id} />}
-											<span className='font-medium'>{getTimelockDetails(timelockType)?.contract_address}</span>
+											<span className='font-medium'>
+												<AddressWarp address={getTimelockDetails(timelockType)?.contract_address} />
+											</span>
 											<span className='text-gray-800 text-xs'> {getTimelockDetails(timelockType)?.remark}</span>
-										</div>
+										</div>}
+										{!timelockType && <div className='flex gap-2 justify-center items-center' style={{ fontWeight: 'normal' }}>
+											{t('encodingTransaction.selectTimelock')}
+										</div>}
 									</div>
 									<ChevronDown className='ml-2 h-3 w-3' />
 								</Button>
@@ -245,9 +251,9 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 											key={timelock.value}
 											onClick={() => handleTimelockChange(timelock.value)}
 											className={`flex pr-8 py-1 px-1 hover:bg-gray-50 items-center cursor-pointer border-none`}>
-											<div className='flex gap-2 justify-center items-center font-medium'>
+											<div className='flex gap-2 justify-center items-center font-medium text-sm'>
 												{timelockDetails?.chain_id && <ChainLabel chainId={timelockDetails?.chain_id} />}
-												<span>{timelockDetails?.contract_address}</span>
+												<AddressWarp address={timelockDetails?.contract_address} />
 												<span className='text-gray-800 text-xs'> {timelockDetails?.remark}</span>
 											</div>
 										</DropdownMenuItem>
