@@ -14,6 +14,11 @@ import type { EncodingTransactionFormProps } from '@/types';
 import { getChainObject } from '@/utils/chainUtils';
 import TextAreaInput from '@/components/ui/TextAreaInput';
 import { ethers } from 'ethers';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
+import ChainIcon from '@/components/web3/ChainIcon';
+import ChainLabel from '@/components/web3/ChainLabel';
 
 /**
  * Encoding transaction form component for creating timelock transactions
@@ -202,29 +207,53 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 		return `${year}-${month}-${day}T${hours}:${minutes}`;
 	}
 
+	const getTimelockDetails = (timelockId: string) => {
+		const c = allTimelocks.find(item => Number(item.id) === Number(timelockId))
+		return c
+	}
+
 	return (
 		<div className='bg-white pt-6 flex flex-col gap-8 items-start'>
 			<SectionHeader
 				title={t('encodingTransaction.title')}
 				description={t('encodingTransaction.description')}
-				// icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
+			// icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 			/>
 			<div className='flex flex-col space-y-4 w-full'>
-				<div className='flex flex-row gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
+				<div className='flex flex-col gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
 					<div className='flex-1'>
-						<SelectInput
-							label={t('encodingTransaction.selectTimelock')}
-							value={timelockType}
-							onChange={handleTimelockChange}
-							options={timelockOptions}
-							placeholder={
-								isLoadingDetails
-									? t('encodingTransaction.loadingTimelockDetails')
-									: allTimelocks.length === 0
-									? t('encodingTransaction.noTimelocksAvailable')
-									: t('encodingTransaction.selectTimelockPlaceholder')
-							}
-						/>
+						<div className='block text-sm font-medium mb-1'>{t('encodingTransaction.selectTimelock')}</div>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-full'>
+								<Button variant='outline' size='sm'>
+									<div className='flex gap-2 rounded-full overflow-hidden'>
+										<div className='flex gap-2 justify-center items-center'>
+											{timelockType && <ChainLabel chainId={getTimelockDetails(timelockType)?.chain_id} />}
+											<span className='font-medium'>{getTimelockDetails(timelockType)?.contract_address}</span>
+											<span className='text-gray-800 text-xs'> {getTimelockDetails(timelockType)?.remark}</span>
+										</div>
+									</div>
+									<ChevronDown className='ml-2 h-3 w-3' />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className='bg-white border border-gray-200 p-2 flex flex-col rounded-md ' align='end'>
+								{Array.isArray(timelockOptions) &&
+									timelockOptions.map(timelock => {
+										const timelockDetails = getTimelockDetails(timelock.value)
+
+										return <DropdownMenuItem
+											key={timelock.value}
+											onClick={() => handleTimelockChange(timelock.value)}
+											className={`flex pr-8 py-1 px-1 hover:bg-gray-50 items-center cursor-pointer border-none`}>
+											<div className='flex gap-2 justify-center items-center font-medium'>
+												{timelockDetails?.chain_id && <ChainLabel chainId={timelockDetails?.chain_id} />}
+												<span>{timelockDetails?.contract_address}</span>
+												<span className='text-gray-800 text-xs'> {timelockDetails?.remark}</span>
+											</div>
+										</DropdownMenuItem>
+									})}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 					<div className='flex-1'>
 						<SelectInput
@@ -243,7 +272,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 					<TextAreaInput
 						label={t('encodingTransaction.calldata')}
 						value={targetCalldata}
-						onChange={() => {}}
+						onChange={() => { }}
 						placeholder={t('encodingTransaction.calldataPlaceholder')}
 						disabled={true}
 						rows={3}
