@@ -30,7 +30,7 @@ import abiLib from './zh/abi-lib.json';
 
 export default {
 	// 公共配置
-	common,
+	...common,
 	
 	// 已迁移到统一结构的模块
 	...home,
