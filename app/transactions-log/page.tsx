@@ -129,7 +129,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 							const value = item.value.toString();
 							if (value.length > 18) {
 								const formatted = formatUnits(value, 18);
-								const [wholePart, decimalPart] = formatted.split('.');
+								const [wholePart, _] = formatted.split('.');
 								const scientificNotation = `${wholePart}×10`;
 								
 								return (

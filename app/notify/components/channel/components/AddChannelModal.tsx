@@ -5,9 +5,8 @@ import TextInput from '@/components/ui/TextInput'; // Adjust path
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useApi } from '@/hooks/useApi';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { ChevronDown, Folder, Forward, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
-import { SidebarMenuAction } from '@/components/ui/sidebar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -47,8 +46,7 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 	const [emailAddress, setEmailAddress] = useState('');
 	const [emailRemark, setEmailRemark] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
-	const [isFirstTime, setIsFirstTime] = useState(true);
-	const { request: sendVerificationCode } = useApi();
+	const [_, setIsFirstTime] = useState(true);
 	const { request: verifyEmail } = useApi();
 	const [currentChannel, setCurrentChannel] = useState(channelList[0]);
 
@@ -57,31 +55,6 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 
 	}, [verificationCode, emailAddress, verifyEmail, t]);
 
-	const handleVerificationCodeChange = (code: string) => {
-		setVerificationCode(code);
-	};
-
-	const handleSendCode = async () => {
-		if (!emailAddress || !emailRemark) {
-			toast.error(t('emailAndRemarkRequired'));
-			return;
-		}
-
-
-		try {
-			try {
-				await sendVerificationCode('/api/v1/emails/send-verification', { email: emailAddress, remark: emailRemark });
-				toast.success(t('verificationCodeSent'));
-			} catch { }
-		} catch (error) {
-			console.error('Failed to send verification code:', error);
-			toast.error(
-				t('addMailboxError', {
-					message: error instanceof Error ? error.message : t('unknownError'),
-				})
-			);
-		}
-	};
 
 	const handleCancel = () => {
 		onClose(); // Call the onClose prop

@@ -32,7 +32,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 		};
 		
 		fetchAbiList();
-	}, [isAddABIOpen, t]);
+	}, [isAddABIOpen, t, getAbiList]);
 
 	// Convert ABI list to options format
 	const abiOptions = useMemo(() => {
