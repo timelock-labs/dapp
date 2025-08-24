@@ -7,7 +7,22 @@ import type { useTranslations } from 'next-intl';
 type Translator = ReturnType<typeof useTranslations>;
 
 // A global variable to hold the translator function.
-let global_t: Translator = (key: string) => key; // Default fallback returns the key itself
+// Create a fallback translator that implements all required methods
+const createFallbackTranslator = (): Translator => {
+	const fallbackFn = ((key: string) => key) as unknown as Translator;
+	
+	// Add missing methods to match the Translator interface
+	Object.assign(fallbackFn, {
+		rich: (key: string) => key,
+		markup: (key: string) => key,
+		raw: (key: string) => key,
+		has: () => false,
+	});
+	
+	return fallbackFn;
+};
+
+let global_t: Translator = createFallbackTranslator();
 
 /**
  * Sets the global translator function.

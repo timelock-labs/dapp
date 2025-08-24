@@ -60,8 +60,13 @@ const TransactionEncoderPage: React.FC = () => {
 				}
 
 				const ethereumParamsCodec = new EthereumParamsCodec()
-				const { encodedData } = ethereumParamsCodec.encodeByFunctionSigAndParams(timelockMethod, [target, value, functionValue, targetCalldata, String(timeValue)])
-				setTimelockCalldata(encodedData);
+				const result = ethereumParamsCodec.encodeByFunctionSigAndParams(timelockMethod, [target, value, functionValue, targetCalldata, String(timeValue)])
+				if (result.success) {
+					setTimelockCalldata(result.encodedData);
+				} else {
+					console.error('Failed to encode params:', result.error);
+					setTimelockCalldata('');
+				}
 			} catch (err) {
 				setTargetCallData('');
 				console.error('Failed to encode calldata:', err);
@@ -74,8 +79,13 @@ const TransactionEncoderPage: React.FC = () => {
 		if (!!functionValue && argumentValues.length > 0) {
 			try {
 				const ethereumParamsCodec = new EthereumParamsCodec();
-				const { encodedData } = ethereumParamsCodec.encodeParams(functionValue, argumentValues);
-				setTargetCallData(encodedData);
+				const result = ethereumParamsCodec.encodeParams(functionValue, argumentValues);
+				if (result.success) {
+					setTargetCallData(result.encodedData);
+				} else {
+					console.error('Failed to encode params:', result.error);
+					setTargetCallData('');
+				}
 			} catch {
 				setTargetCallData('');
 			}

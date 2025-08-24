@@ -64,7 +64,6 @@ export type {
 	ResendCodeRequest,
 	EmergencyReplyRequest,
 	EmailNotificationFilters,
-	Sponsor,
 	SponsorsData,
 	SponsorsApiResponse,
 	RawTx,

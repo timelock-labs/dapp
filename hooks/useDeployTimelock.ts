@@ -108,7 +108,8 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 	 * Deploy OpenZeppelin timelock contract (placeholder for future implementation)
 	 */
 	const deployOpenZeppelinTimelock = useCallback(
-		async (params: OpenZeppelinTimelockParams): Promise<DeploymentResult> => {
+		// async (_params: OpenZeppelinTimelockParams): Promise<DeploymentResult> => {
+		async (): Promise<DeploymentResult> => {
 			return executeWithValidation(async () => {
 				// TODO: Implement OpenZeppelin timelock deployment
 				// This is a placeholder for future implementation

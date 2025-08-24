@@ -37,6 +37,7 @@ function copyToClipboard(text: string | undefined) {
 
     document.body.removeChild(textArea);
   }
+  return;
 }
 
 

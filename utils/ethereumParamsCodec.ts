@@ -29,8 +29,8 @@ type GetFunctionSelectorResult =
     | { success: false; error: string };
 
 export default class EthereumParamsCodec {
-    private utils: ethers.utils;
-    private coder: ethers.utils.AbiCoder;
+    private utils: typeof ethers.utils;
+    private coder: typeof ethers.utils.defaultAbiCoder;
 
     constructor() {
         this.utils = ethers.utils;
@@ -40,7 +40,7 @@ export default class EthereumParamsCodec {
     normalizeAddress(address: string): string {
         try {
             return this.utils.getAddress(address.toLowerCase());
-        } catch (error) {
+        } catch {
             throw new Error(`Invalid address format: ${address}`);
         }
     }
@@ -95,7 +95,7 @@ export default class EthereumParamsCodec {
                 },
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 
@@ -118,7 +118,7 @@ export default class EthereumParamsCodec {
                 let value = decoded[i];
 
                 // Convert number types to string to avoid precision issues
-                if (paramType.includes('uint') || paramType.includes('int')) {
+                if (paramType!.includes('uint') || paramType!.includes('int')) {
                     value = value.toString();
                 }
 
@@ -131,7 +131,7 @@ export default class EthereumParamsCodec {
 
             return {
                 success: true,
-                params,
+                params: params as Param[],
                 details: {
                     paramTypes,
                     originalData: encodedData,
@@ -139,7 +139,7 @@ export default class EthereumParamsCodec {
                 },
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 
@@ -159,7 +159,7 @@ export default class EthereumParamsCodec {
 
             return {
                 success: true,
-                encodedData: functionSelector.selector + encoded.slice(2),
+                encodedData: functionSelector.success ? functionSelector.selector + encoded.slice(2) : '',
                 details: {
                     paramTypes,
                     originalParams: params,
@@ -168,7 +168,7 @@ export default class EthereumParamsCodec {
                 },
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 
@@ -195,7 +195,7 @@ export default class EthereumParamsCodec {
                 },
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 
@@ -216,7 +216,7 @@ export default class EthereumParamsCodec {
                 let value = decoded[i];
 
                 // Convert number types to string
-                if (paramType.includes('uint') || paramType.includes('int')) {
+                if (paramType!.includes('uint') || paramType!.includes('int')) {
                     value = value.toString();
                 }
 
@@ -229,7 +229,7 @@ export default class EthereumParamsCodec {
 
             return {
                 success: true,
-                params,
+                params: params as Param[],
                 details: {
                     paramTypes,
                     originalData: encodedData,
@@ -237,7 +237,7 @@ export default class EthereumParamsCodec {
                 },
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 
@@ -253,7 +253,7 @@ export default class EthereumParamsCodec {
                 functionSignature: signature,
             };
         } catch (error) {
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
         }
     }
 }
