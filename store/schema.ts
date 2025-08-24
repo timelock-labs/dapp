@@ -1,6 +1,6 @@
 // Store schema definitions using centralized types
 import { z } from 'zod';
-import type { User, Chain, TimelockContract, AuthState } from '@/types';
+import type { User, Chain } from '@/types';
 
 // 定义用户数据结构
 export const UserSchema = z.object({
@@ -20,6 +20,7 @@ export const ChainSchema = z.object({
 	is_testnet: z.boolean(),
 	logo_url: z.string(),
 	native_token: z.string(),
+	native_currency_symbol: z.string(),
 	updated_at: z.string(),
 	block_explorer_urls: z.string().optional(),
 });

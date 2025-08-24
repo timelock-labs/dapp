@@ -71,7 +71,7 @@ export const useAuthStore = create<AppState & AppActions>()(
 					} else {
 						set({ chains: [] }); // Ensure chains is always an array on error
 					}
-				} catch (error) {
+				} catch  {
 					set({ chains: [] }); // Ensure chains is always an array on error
 				}
 			},

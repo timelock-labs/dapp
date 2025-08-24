@@ -16,6 +16,7 @@ export interface ApiError {
 /**
  * Generic API response wrapper
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ApiResponse<T = any> {
 	data: T | null;
 	success: boolean;
@@ -27,6 +28,7 @@ export interface ApiResponse<T = any> {
  */
 export interface ApiRequestOptions {
 	headers?: Record<string, string>;
+	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 }
 
 /**

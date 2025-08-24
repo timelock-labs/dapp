@@ -1,3 +1,4 @@
+import React from 'react';
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 
 type ColorType = 'blue' | 'green' | 'red' | 'gray' | 'yellow' | 'default';
@@ -38,6 +39,8 @@ export default function TableTag({ label, colorType, statusType, Icon }: { label
                     return 'bg-gray-100 text-gray-800 border border-gray-200';
             }
         }
+        // Default fallback when neither colorType nor statusType is provided
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
     };
 
     return <div className={`flex justify-center items-center px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getHistoryTxTypeStyle()}`}>
