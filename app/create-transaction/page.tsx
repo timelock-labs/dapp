@@ -76,7 +76,7 @@ const TransactionEncoderPage: React.FC = () => {
 				const ethereumParamsCodec = new EthereumParamsCodec();
 				const { encodedData } = ethereumParamsCodec.encodeParams(functionValue, argumentValues);
 				setTargetCallData(encodedData);
-			} catch (err) {
+			} catch {
 				setTargetCallData('');
 			}
 		}

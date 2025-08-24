@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { useMemo, useState, useEffect, useCallback,useRef  } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SelectInput from '@/components/ui/SelectInput';
@@ -7,7 +6,6 @@ import TargetABISection from './TargetABISection';
 import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { useApi } from '@/hooks/useApi';
-import QuestionIcon from '@/public/QuestionIcon.svg';
 import { useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
 import TimelockCompundABI from '@/components/abi/TimelockCompound.json';
 import type { EncodingTransactionFormProps } from '@/types';
@@ -17,7 +15,6 @@ import { ethers } from 'ethers';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
-import ChainIcon from '@/components/web3/ChainIcon';
 import ChainLabel from '@/components/web3/ChainLabel';
 import AddressWarp from '@/components/web3/AddressWarp';
 
@@ -51,7 +48,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 	const t = useTranslations('CreateTransaction');
 	const { allTimelocks } = useAuthStore();
 	const { data: timelockDetailResponse, request: fetchTimelockDetail } = useApi();
-	const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+	const [, setIsLoadingDetails] = useState(false);
 	const [validationErrors, setValidationErrors] = useState<{ target?: string; value?: string }>({});
 	const [currentTimelockDetails, setCurrentTimelockDetails] = useState<Record<string, unknown> | null>(null);
 	const [dropdownWidth, setDropdownWidth] = useState<number>(0);

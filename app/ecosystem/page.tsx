@@ -2,12 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import EcosystemSearchHeader from './components/Header';
 import PartnersGrid from './components/PartnersGrid';
-import { useTranslations } from 'next-intl';
+
 import { useApi } from '@/hooks/useApi';
 import type { Partner } from '@/types';
 
 const EcosystemPage: React.FC = () => {
-	const t = useTranslations('Ecosystem');
 	const [sponsors, setSponsors] = useState<Partner[]>([]);
 	const [partners, setPartners] = useState<Partner[]>([]);
 

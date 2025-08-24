@@ -15,8 +15,6 @@ import NativeToken from '@/components/web3/NativeToken';
 import HashLink from '@/components/web3/HashLink';
 import { formatDate } from '@/utils/utils';
 import TableTag from '@/components/tableContent/TableTag';
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
-import { Tooltip } from '@/components/ui/tooltip';
 
 // Define Transaction type specific to this table
 interface HistoryTxRow {
