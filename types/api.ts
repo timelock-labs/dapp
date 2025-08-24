@@ -41,7 +41,7 @@ export type {
 } from './api/notification';
 
 // Sponsors types
-export type { Sponsor, SponsorsData, SponsorsApiResponse } from './api/sponsors';
+export type { SponsorsData, SponsorsApiResponse } from './api/sponsors';
 
 // Home types
 export type { RawTx, PendingTx } from './api/home';

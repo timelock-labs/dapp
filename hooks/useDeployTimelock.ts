@@ -122,7 +122,8 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 	 * Get deployment cost estimation
 	 */
 	const estimateDeploymentCost = useCallback(
-		async (standard: ContractStandard, params: CompoundTimelockParams | OpenZeppelinTimelockParams) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		async (standard: ContractStandard, _params: CompoundTimelockParams | OpenZeppelinTimelockParams) => {
 			if (standard === 'compound') {
 				// This would typically use gas estimation
 				// For now, return a placeholder

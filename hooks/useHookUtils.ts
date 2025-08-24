@@ -194,7 +194,7 @@ export const createQueryState = <T>(data: T | null, error: Error | null, isLoadi
 /**
  * Utility for validating required fields
  */
-export const validateRequiredFields = <T extends Record<string, unknown>>(data: T, requiredFields: (keyof T)[]): string[] => {
+export const validateRequiredFields = <T extends object>(data: T, requiredFields: (keyof T)[]): string[] => {
 	const errors: string[] = [];
 
 	requiredFields.forEach(field => {

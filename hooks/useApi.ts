@@ -43,6 +43,7 @@ export function useApi(): UseApiReturn {
 				setIsLoading(false);
 
 				return data;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {
 				if (error.response?.status === 401) {
 					router.push('/login');
