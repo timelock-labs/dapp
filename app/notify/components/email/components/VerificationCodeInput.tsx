@@ -106,7 +106,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 							onPaste={e => {
 								e.preventDefault();
 								const pastedData = e.clipboardData.getData('text');
-								handleChange({ target: { value: pastedData } } as any, i);
+								handleChange({ target: { value: pastedData } } as React.ChangeEvent<HTMLInputElement>, i);
 							}}
 							ref={el => {
 								inputRefs.current[i] = el as HTMLInputElement;

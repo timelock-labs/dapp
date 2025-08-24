@@ -9,7 +9,8 @@ import AssetList from './AssetList';
 import { CalendarOff, ClipboardCheck, Hourglass, Podcast, RefreshCwOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useQueries } from '@tanstack/react-query';
-import { TimelockContractItem, Asset as AssetType } from '@/types';
+import { TimelockContractItem } from '@/types';
+import { Asset as AssetType } from './AssetList';
 
 
 interface AssertProps {
@@ -42,7 +43,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	const assetQueries = useQueries({
 		queries: (timelocks ?? []).map(timelock => ({
 			queryKey: ['userAssets', timelock.chain_id, timelock.contract_address],
-			queryFn: () => getUserAssets(timelock.chain_id, timelock.contract_address),
+			queryFn: () => getUserAssets(timelock.chain_id.toString(), timelock.contract_address),
 			staleTime: 5 * 60 * 1000, // 5 minutes
 			enabled: !!timelock.chain_id && !!timelock.contract_address,
 		})),
@@ -53,11 +54,12 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 		assetQueries.forEach((query, index) => {
 			if (query.isSuccess && query.data) {
 				const timelock = timelocks[index];
-				const assetsWithTimelock = query.data.map((asset: AssetType) => ({ ...asset, ...timelock }));
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				const assetsWithTimelock = query.data.map((asset: any) => ({ ...asset, ...timelock })) as AssetType[];
 				assetsList.push(...assetsWithTimelock);
 			}
 		});
-		const usdValue = assetsList.reduce((total, asset) => total + (asset as any).usd_price, 0);
+		const usdValue = assetsList.reduce((total, asset) => total + asset.usd_price, 0);
 		return { userAssets: assetsList, totalUSD: usdValue };
 	}, [assetQueries, timelocks]);
 

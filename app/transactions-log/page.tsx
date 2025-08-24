@@ -123,13 +123,13 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 			header: t('callDataHex'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex flex-col'>
-					{parseCalldata(row.function_signature, row.call_data_hex).map((item: any) => {
+					{parseCalldata(row.function_signature, row.call_data_hex).map((item: { type: string; value: unknown; index: number }) => {
 						if (item.type === 'uint256') {
 
-							const value = item.value.toString();
+							const value = String(item.value);
 							if (value.length > 18) {
 								const formatted = formatUnits(value, 18);
-								const [wholePart, _] = formatted.split('.');
+								const [wholePart, ] = formatted.split('.');
 								const scientificNotation = `${wholePart}×10`;
 								
 								return (
@@ -156,7 +156,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 
 						return <div key={item.index} className='flex text-sm'>
 							<div className='font-medium'>{item.type}:</div>
-							<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(item.value)}>{item.value}</div>
+							<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(String(item.value))}>{String(item.value)}</div>
 						</div>
 
 
@@ -187,7 +187,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: HistoryTxRow) => <TableTag label={row.status} statusType={row.status as any} />,
+			render: (row: HistoryTxRow) => <TableTag label={row.status} statusType={row.status === 'all' ? undefined : row.status} />,
 		}
 	];
 

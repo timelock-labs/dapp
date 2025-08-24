@@ -46,7 +46,7 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 	const [emailAddress, setEmailAddress] = useState('');
 	const [emailRemark, setEmailRemark] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
-	const [_, setIsFirstTime] = useState(true);
+	const [, setIsFirstTime] = useState(true);
 	const { request: verifyEmail } = useApi();
 	const [currentChannel, setCurrentChannel] = useState(channelList[0]);
 
