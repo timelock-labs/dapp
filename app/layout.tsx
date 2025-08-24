@@ -9,6 +9,7 @@ import { Geist, Geist_Mono } from 'next/font/google'; // Import fonts here
 import { Toaster } from 'sonner';
 import { cookies } from 'next/headers';
 import PageLayout from '@/components/layout/PageLayout';
+import I18nInitializer from '@/components/providers/I18nInitializer';
 
 
 const geistSans = Geist({
@@ -40,6 +41,7 @@ export default async function RootLayout(props: Props) {
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
 					<Web3Provider>
 						<NextIntlClientProvider locale={locale} messages={messages}>
+							<I18nInitializer />
 							<PageLayout>
 								{children}
 							</PageLayout>

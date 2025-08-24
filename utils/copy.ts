@@ -1,8 +1,8 @@
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
+import { getGlobalTranslator } from './i18n-helper';
 
 function copyToClipboard(text: string | undefined) {
-  const t = useTranslations('common');
+  const t = getGlobalTranslator();
   if (!text) {
     toast.error(t('failedToCopyToClipboard'));
     return;
