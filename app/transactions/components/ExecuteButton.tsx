@@ -6,9 +6,20 @@ import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Impo
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
 import TableButton from '@/components/tableContent/TableButton';
 import { useTranslations } from 'next-intl';
-import { Timelock } from '@/types/api/timelock';
 
-const ExecuteButton = ({ timelock }: { timelock: Timelock }) => {
+
+// Define a type that includes the necessary fields for execution
+interface ExecutableTimelock {
+	chain_id: number;
+	contract_address: string;
+	eta: string | number;
+	target_address: string;
+	value: string | number;
+	function_signature: string;
+	call_data_hex: string;
+}
+
+const ExecuteButton = ({ timelock }: { timelock: ExecutableTimelock }) => {
     const { id: chainId } = useActiveWalletChain() || {};
     const chains = useAuthStore(state => state.chains);
     const { signer } = useContractDeployment();
@@ -38,7 +49,7 @@ const ExecuteButton = ({ timelock }: { timelock: Timelock }) => {
                 timelock.call_data_hex,
                 eta
                 , {
-                    value: ethers.utils.parseEther(timelock.value || '0') // Ensure value is set correctly
+                    value: ethers.utils.parseEther(String(timelock.value || '0')) // Ensure value is set correctly
                 }
             );
 

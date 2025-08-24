@@ -35,7 +35,8 @@ const Timelocks: React.FC = () => {
 				})
 			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
-			setAllTimelocks(combinedTimelocks);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			setAllTimelocks(combinedTimelocks as any);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 

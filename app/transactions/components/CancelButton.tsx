@@ -5,10 +5,21 @@ import { useActiveWalletChain } from 'thirdweb/react';
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock'; // Import the minimal ABI for the timelock contract
 import { useContractDeployment } from '@/hooks/useBlockchainHooks';
 import TableButton from '@/components/tableContent/TableButton';
-import { Timelock } from '@/types/api/timelock';
+
 import { useTranslations } from 'next-intl';
 
-const CancelButton = ({ timelock }: { timelock: Timelock }) => {
+// Define a type that includes the necessary fields for cancellation
+interface CancellableTimelock {
+	chain_id: number;
+	contract_address: string;
+	eta: string | number;
+	target_address: string;
+	value: string | number;
+	function_signature: string;
+	call_data_hex: string;
+}
+
+const CancelButton = ({ timelock }: { timelock: CancellableTimelock }) => {
 	const { id: chainId } = useActiveWalletChain() || {};
 	const chains = useAuthStore(state => state.chains);
 	const { signer } = useContractDeployment();

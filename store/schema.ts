@@ -38,6 +38,7 @@ export const TimelockContractSchema = z.object({
 	maximum_delay: z.number(),
 	remark: z.string(),
 	status: z.string(),
+	standard: z.string(), // Add the missing standard field
 	is_imported: z.boolean(),
 	created_at: z.string(),
 	updated_at: z.string(),
