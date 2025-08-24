@@ -6,7 +6,6 @@ import CreateProtocol from './components/CreateProtocol';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from './components/LoadingSkeleton';
-import { useTranslations } from 'next-intl';
 import { useAuthStore } from '@/store/userStore';
 import { TimelockContractItem } from '@/types';
 
@@ -14,22 +13,17 @@ import { TimelockContractItem } from '@/types';
 export default function Home() {
 	const connectionStatus = useActiveWalletConnectionStatus();
 	const isConnected = connectionStatus === 'connected';
-	const t = useTranslations('home_page');
 
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'asset'>('loading');
 	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
 
-	const [userProfileData, setUserProfileData] = useState<any>(null);
-
 	const { request: getTimelockList, isLoading, data: timelockListResponse } = useApi();
-	const { request: getUserProfile, isLoading: isLoadingUserProfile } = useApi();
 	const {  setAllTimelocks } = useAuthStore();
 
 
 	useEffect(() => {
 		if (isConnected) {
 			fetchTimelockData();
-			fetchUserProfileData();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected]);
@@ -50,7 +44,7 @@ export default function Home() {
 				})
 			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
-			setAllTimelocks(combinedTimelocks as any);
+			setAllTimelocks(combinedTimelocks);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 
@@ -61,15 +55,6 @@ export default function Home() {
 			setTimelockData(data);
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);
-		}
-	};
-
-	const fetchUserProfileData = async () => {
-		try {
-			const { data } = await getUserProfile('/api/v1/auth/profile');
-			setUserProfileData(data);
-		} catch (error) {
-			console.error('Failed to fetch user profile data:', error);
 		}
 	};
 

@@ -1,13 +1,10 @@
-// components/email-notifications/AddMailboxCard.tsx
 import React from 'react';
-import { useTranslations } from 'next-intl';
 
-interface AddMailboxCardProps {
+interface AddChannelCardProps {
     onClick: () => void;
 }
 
-const AddMailboxCard: React.FC<AddMailboxCardProps> = ({ onClick }) => {
-    const t = useTranslations('Notify.addMailboxCard');
+const AddChannelCard: React.FC<AddChannelCardProps> = ({ onClick }) => {
 
     return (
         <button
@@ -26,4 +23,4 @@ const AddMailboxCard: React.FC<AddMailboxCardProps> = ({ onClick }) => {
     );
 };
 
-export default AddMailboxCard;
+export default AddChannelCard;

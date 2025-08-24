@@ -1,4 +1,3 @@
-'use client';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
@@ -8,9 +7,7 @@ import ChainSelector from '@/components/web3/ChainSelector';
 import SelectInput from '@/components/ui/SelectInput';
 import CheckParametersModal from './components/CheckParametersModal';
 import QuestionIcon from '@/public/QuestionIcon.svg';
-import { useAuthStore } from '@/store/userStore';
 import { useTimelockImport, TimelockParameters } from '@/hooks/useTimelockImport';
-import { ChainUtils } from '@/utils/chainUtils';
 import { toast } from 'sonner';
 import { ImportTimelockRequest } from '@/types';
 import { useActiveWalletChain } from 'thirdweb/react';
@@ -30,7 +27,6 @@ const ImportTimelockPage: React.FC = () => {
 	const [detectedParameters, setDetectedParameters] = useState<TimelockParameters | null>(null);
 	const [currentChinId, setCurrentChinId] = useState('');
 
-	const { chains } = useAuthStore();
 	const { id: chainId } = useActiveWalletChain() || {};
 
 	const { isLoading: isDetecting, parameters, fetchTimelockParameters, validateContractAddress, clearParameters } = useTimelockImport();

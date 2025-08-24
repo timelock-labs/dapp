@@ -21,17 +21,6 @@ interface TimelockContractTableProps extends BaseComponentProps {
 	onDataUpdate?: VoidCallback;
 }
 
-const getStatusBadgeStyle = (status: string) => {
-	switch (status.toLowerCase()) {
-		case 'active':
-			return 'text-emerald-600 font-medium';
-		case 'pending':
-			return 'text-amber-600 font-medium';
-		default:
-			return 'text-slate-600 font-medium';
-	}
-};
-
 /**
  * Timelock contract table component with CRUD operations
  *

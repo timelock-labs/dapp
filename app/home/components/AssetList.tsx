@@ -1,12 +1,8 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import AnimatedAssetValue from './AnimatedAssetValue';
 import { ethers } from 'ethers';
 import { useTranslations } from 'next-intl';
 import ChainLabel from '@/components/web3/ChainLabel';
-import { TimelockContractItem } from '@/types';
 import TableComponent from '@/components/ui/TableComponent';
 
 export interface Asset {
@@ -30,6 +26,7 @@ export interface Asset {
 	total_supply: number | null;
 	total_supply_formatted: string | null;
 	percentage_relative_to_total_supply: number | null;
+	chain_id: number;
 }
 
 interface AssetListProps {
@@ -37,31 +34,7 @@ interface AssetListProps {
 }
 
 const AssetList: React.FC<AssetListProps> = ({ assets }) => {
-	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 10; // Changed from 7 to 10
-	const t = useTranslations('common');
 	const tAssetList = useTranslations('assetList');
-	const totalItems = assets.length;
-	const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-	const startIndex = (currentPage - 1) * itemsPerPage;
-	const endIndex = startIndex + itemsPerPage;
-	const currentAssets = assets.slice(startIndex, endIndex);
-
-	const handlePreviousPage = () => {
-		if (currentPage > 1) {
-			setCurrentPage(currentPage - 1);
-		}
-	};
-
-	const handleNextPage = () => {
-		if (currentPage < totalPages) {
-			setCurrentPage(currentPage + 1);
-		}
-	};
-
-	const currentRangeStart = startIndex + 1;
-	const currentRangeEnd = Math.min(endIndex, totalItems);
 
 	const columns = [
 		{
@@ -99,7 +72,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 	return (
 		<div className='bg-white p-6  rounded-lg border border-gray-200 flex flex-col h-full'>
 
-			<TableComponent<any> columns={columns} data={currentAssets} showPagination={true} itemsPerPage={5} />
+			<TableComponent<Asset> columns={columns} data={assets} showPagination={true} itemsPerPage={5} />
 
 		</div>
 	);

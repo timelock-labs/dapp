@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import PageLayout from '@/components/layout/PageLayout';
 import AddTimelockContractSection from './components/AddTimelockContractSection';
 import TimelockContractTable from './components/TimelockContractTable';
 import TableSkeleton from '@/components/ui/TableSkeleton';
@@ -11,7 +9,6 @@ import { useAuthStore } from '@/store/userStore';
 import type { TimelockContractItem } from '@/types';
 
 const Timelocks: React.FC = () => {
-	const t = useTranslations('TimelockTable');
 	const { data: timelockListResponse, request: fetchTimelockList, isLoading } = useApi();
 	const { allTimelocks, setAllTimelocks } = useAuthStore();
 
@@ -38,7 +35,7 @@ const Timelocks: React.FC = () => {
 				})
 			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
-			setAllTimelocks(combinedTimelocks as any);
+			setAllTimelocks(combinedTimelocks);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 

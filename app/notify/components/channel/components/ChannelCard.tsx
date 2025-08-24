@@ -2,7 +2,6 @@ import React from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'next-intl';
 import { formatDateWithYear } from '@/utils/utils';
-import { Mail } from 'lucide-react';
 import copyToClipboard from '@/utils/copy';
 import Tag from '@/components/tableContent/TableTag';
 import Image from 'next/image';

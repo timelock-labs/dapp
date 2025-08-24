@@ -1,17 +1,14 @@
-import CannelCard from "./components/CannelCard";
-import AddCannelModal from "./components/AddCannelModal";
+import AddChannelCard from "./components/AddChannelCard";
+import AddChannelModal from "./components/AddChannelModal";
 import { useEffect, useState } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { useTranslations } from "next-intl";
 import ChannelCard from "./components/ChannelCard";
-import { useApi } from "@/hooks/useApi";
 
 export default function Channel() {
     const t = useTranslations('Notify.channel');
-    const [isAddCannelModalOpen, setIsAddCannelModalOpen] = useState(false);
+    const [isAddChannelModalOpen, setIsAddChannelModalOpen] = useState(false);
     const [channels, setChannels] = useState<Array<{ id: string; type: string; remark?: string; created_at: string; }>>([]);
-    const [deleteConfirmDialog, setDeleteConfirmDialog] = useState<{ isOpen: boolean; type: string; id: number }>({ isOpen: false, type: '', id: 0 });
-    const { request: deleteChannel } = useApi();
 
     useEffect(() => {
         setChannels([
@@ -26,11 +23,11 @@ export default function Channel() {
     }, []);
 
 
-    const handleDeleteMailbox = (id: number, type: string) => {
+    const handleDeleteMailbox = (id: string) => {
         setChannels(channels.filter(channel => channel.id !== id));
     };
     const handleEditMailbox = (channel: { id: string; type: string; remark?: string; created_at: string }) => {
-        setChannels(channels.map(channel => (channel.id === channel.id ? channel : channel)));
+        setChannels(channels.map(c => (c.id === channel.id ? channel : c)));
     };
 
     return (
@@ -44,15 +41,15 @@ export default function Channel() {
                         onDelete={handleDeleteMailbox}
                         onEdit={handleEditMailbox}
                         key={channel.id}
-                        id={parseInt(channel.id)}
+                        id={channel.id}
                         type={channel.type}
                         remark={channel.remark}
                         created_at={channel.created_at}
                     />
                 ))}
-                <CannelCard onClick={() => setIsAddCannelModalOpen(true)} />
+                <AddChannelCard onClick={() => setIsAddChannelModalOpen(true)} />
             </div>
-            <AddCannelModal isOpen={isAddCannelModalOpen} onClose={() => setIsAddCannelModalOpen(false)} onSuccess={() => setIsAddCannelModalOpen(false)} />
+            <AddChannelModal isOpen={isAddChannelModalOpen} onClose={() => setIsAddChannelModalOpen(false)} onSuccess={() => setIsAddChannelModalOpen(false)} />
         </div>
     );
 }

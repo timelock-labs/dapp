@@ -1,18 +1,17 @@
-// components/PendingTransactions.tsx
-'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TableComponent from '@/components/ui/TableComponent';
 import { useTranslations } from 'next-intl';
 import { useApi } from '@/hooks/useApi';
 import { toast } from 'sonner';
-import getHistoryTxTypeStyle from '@/utils/getHistoryTxTypeStyle';
-import { formatAddress, formatDate } from '@/utils/utils';
+import { formatDate } from '@/utils/utils';
 import type { RawTx, PendingTx } from '@/types';
 import ChainLabel from '@/components/web3/ChainLabel';
 import HashLink from '@/components/web3/HashLink';
 import TableTag from '@/components/tableContent/TableTag';
 import AddressWarp from '@/components/web3/AddressWarp';
+
+type StatusType = 'waiting' | 'ready' | 'cancelled' | 'expired' | 'executed';
 
 const PendingTransactions: React.FC = () => {
 	const t = useTranslations('Transactions');
@@ -77,7 +76,7 @@ const PendingTransactions: React.FC = () => {
 		{
 			key: 'status',
 			header: t('status'),
-			render: (row: PendingTx) => <TableTag label={row.status} statusType={row.status as any} />,
+			render: (row: PendingTx) => <TableTag label={row.status} statusType={row.status as StatusType} />,
 		},
 	];
 
