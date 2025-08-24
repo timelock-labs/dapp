@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TotalAssetValue from './TotalAssetValue';
 import PendingTransactions from './PendingTransactions';
 import { useApi } from '@/hooks/useApi';
@@ -8,6 +8,7 @@ import useMoralis from '@/hooks/useMoralis';
 import AssetList from './AssetList';
 import { CalendarOff, ClipboardCheck, Hourglass, Podcast, RefreshCwOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useQueries } from '@tanstack/react-query';
 
 interface AssertProps {
 	// Props interface for future extensibility
@@ -17,9 +18,8 @@ interface AssertProps {
 
 const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	const t = useTranslations('home_page');
-	const [userAssets, setUserAssets] = useState<any[]>([]);
-	const [totalUSD, setTotalUSD] = useState(0);
 	const { request: getFlowsCountReq } = useApi();
+	const { getUserAssets } = useMoralis();
 
 	const [flow_count, setFlowCount] = useState({
 		waiting: 0,
@@ -30,50 +30,36 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 	});
 
 	useEffect(() => {
+		const fetchFlowsCount = async () => {
+			const { data } = await getFlowsCountReq('/api/v1/flows/list/count');
+			setFlowCount(data.flow_count);
+		};
 		fetchFlowsCount();
-	}, []);
+	}, [getFlowsCountReq]);
 
-	const fetchFlowsCount = async () => {
-		const { data } = await getFlowsCountReq('/api/v1/flows/list/count');
-		setFlowCount(data.flow_count);
-	};
+	const assetQueries = useQueries({
+		queries: (timelocks ?? []).map(timelock => ({
+			queryKey: ['userAssets', timelock.chain_id, timelock.contract_address],
+			queryFn: () => getUserAssets(timelock.chain_id, timelock.contract_address),
+			staleTime: 5 * 60 * 1000, // 5 minutes
+			enabled: !!timelock.chain_id && !!timelock.contract_address,
+		})),
+	});
 
-	const moralis = useMoralis();
-	const { getUserAssets } = moralis;
-
-	useEffect(() => {
-		fetchUserAssets();
-	}, []);
-
-	const fetchUserAssets = async () => {
-		if (!timelocks || timelocks.length === 0) {
-			console.warn('No timelocks provided');
-			return;
-		}
-		// Assuming timelocks is an array of objects with chain_id and contract_address properties
-		let assetsList = [];
-		for (const timelock of timelocks) {
-			try {
-				let assets = await getUserAssets(timelock.chain_id, timelock.contract_address);
-				console.log(`Fetched assets for timelock: ${JSON.stringify(timelock)}`, assets);
-				if (assets && assets.length > 0) {
-					// Process assets as needed
-					let assetsWithTimelock = assets.map(asset => ({ ...asset, ...timelock }));
-					assetsList.push(...assetsWithTimelock);
-				} else {
-					console.warn(`No assets found for timelock: ${JSON.stringify(timelock)}`);
-				}
-			} catch (error) {
-				console.error('Failed to fetch user assets:', error);
+	const { userAssets, totalUSD } = useMemo(() => {
+		const assetsList: any[] = [];
+		assetQueries.forEach((query, index) => {
+			if (query.isSuccess && query.data) {
+				const timelock = timelocks[index];
+				const assetsWithTimelock = query.data.map((asset: any) => ({ ...asset, ...timelock }));
+				assetsList.push(...assetsWithTimelock);
 			}
-		}
-		setUserAssets(assetsList);
+		});
 		const usdValue = assetsList.reduce((total, asset) => total + asset.usd_value, 0);
-		setTotalUSD(usdValue);
-	};
+		return { userAssets: assetsList, totalUSD: usdValue };
+	}, [assetQueries, timelocks]);
 
 	return (
-
 		<div className='flex flex-col space-y-6'>
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow h-[120px]'>
 				<div className='md:col-span-1 flex flex-col'>
