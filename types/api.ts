@@ -13,27 +13,13 @@ export type { User, AuthState } from './api/user';
 export type { Chain } from './api/chain';
 
 // Timelock types
-export type { 
-  TimelockContract,
-  TimelockContractItem,
-  TimelockParameters, 
-  ImportTimelockRequest, 
-  CreateTimelockRequestBody, 
-  TimelockApiResponse 
-} from './api/timelock';
+export type { TimelockContract, TimelockContractItem, TimelockParameters, ImportTimelockRequest, CreateTimelockRequestBody, TimelockApiResponse } from './api/timelock';
 
 // Transaction types
-export type { 
-  Transaction, 
-  TransactionListResponse, 
-  TransactionStats,
-  CreateTransactionRequest,
-  TransactionListFilters,
-  PendingTransactionFilters 
-} from './api/transaction';
+export type { Transaction, TransactionListResponse, TransactionStats, TransactionListFilters, PendingTransactionFilters } from './api/transaction';
 
 // Partner types
-export type { Partner } from './api/partner';
+export type { Partner } from './api/ecosystem';
 
 // ABI types
 export type { ABIItem, ABIListResponse } from './api/abi';
@@ -42,21 +28,20 @@ export type { ABIItem, ABIListResponse } from './api/abi';
 export type { Asset, AssetsData, UseAssetsApiReturn } from './api/assets';
 
 // Notification types
-export type { 
-  EmailNotification,
-  EmailNotificationListResponse,
-  EmailLog,
-  CreateEmailNotificationRequest,
-  UpdateEmailNotificationRequest,
-  VerifyEmailRequest,
-  ResendCodeRequest,
-  EmergencyReplyRequest,
-  EmailNotificationFilters
+export type {
+	EmailNotification,
+	EmailNotificationListResponse,
+	EmailLog,
+	CreateEmailNotificationRequest,
+	UpdateEmailNotificationRequest,
+	VerifyEmailRequest,
+	ResendCodeRequest,
+	EmergencyReplyRequest,
+	EmailNotificationFilters,
 } from './api/notification';
 
 // Sponsors types
-export type { 
-  Sponsor,
-  SponsorsData,
-  SponsorsApiResponse
-} from './api/sponsors';
+export type { SponsorsData, SponsorsApiResponse } from './api/sponsors';
+
+// Home types
+export type { RawTx, PendingTx } from './api/home';

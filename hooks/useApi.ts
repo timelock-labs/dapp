@@ -4,53 +4,58 @@ import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '@/store/userStore';
 import type { ApiRequestOptions, UseApiReturn, ApiResponse } from '@/types';
-
+import { useRouter } from 'next/navigation';
 
 export function useApi(): UseApiReturn {
-  const [data, setData] = useState<ApiResponse>({ data: null, success: false });
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const accessToken = useAuthStore((state) => state.accessToken); // Get accessToken from useAuthStore
+	const [data, setData] = useState<ApiResponse | null>(null);
+	const [error, setError] = useState<Error | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const router = useRouter();
 
-  const request = useCallback(async (url: string, options: ApiRequestOptions = {}, retryCount: number = 0) => {
-    setIsLoading(true);
-    setError(null);
+	const accessToken = useAuthStore(state => state.accessToken);
 
-    // Use relative URLs to leverage Next.js API rewrites
-    const fullUrl = url.startsWith('http') ? url : (url.startsWith('/api') ? url : `/api${url.startsWith('/') ? '' : '/'}${url}`);
+	const request = useCallback(
+		async (url: string, body?: object, options: ApiRequestOptions = {}) => {
+			setIsLoading(true);
+			setError(null);
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
+			const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+			const fullUrl = `${baseUrl}${url}`;
 
-    // Add Authorization header for all requests except the login endpoint
-    if (url !== '/api/v1/auth/wallet-connect' && accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
-    }
+			const headers: Record<string, string> = {
+				...options.headers,
+			};
 
-    try {
-      try {
-        const response = await axios.request({
-          url: fullUrl,
-          method: options.method || 'GET',
-          headers: headers,
-          data: options.body
-        });
+			if (url !== '/api/v1/auth/wallet-connect' && accessToken) {
+				headers['Authorization'] = `Bearer ${accessToken}`;
+			}
 
-        setData(response.data);
-        return response.data;
-      } catch (error: any) {
-        console.log(error.response?.data, 'errorData');
-        throw error;
-      }
-    } catch (err: any) {
-      setError(err);
-      throw err; // Re-throw error so components can catch it if needed
-    } finally {
-      setIsLoading(false);
-    }
-  }, [accessToken]); // Add accessToken to dependency array
+			try {
+				const { data } = await axios.request({
+					url: fullUrl,
+					method: 'POST',
+					headers: headers,
+					data: body,
+					...options,
+				});
 
-  return { data, error, isLoading, request };
+				setData(data);
+				setIsLoading(false);
+
+				return data;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (error: any) {
+				if (error.response?.status === 401) {
+					router.push('/login');
+					return;
+				}
+				alert('Error:\n' + `URL: ${fullUrl}\n` + `Headers: ${JSON.stringify(headers, null, 2)}\n` + `Body: ${JSON.stringify(body, null, 2)}\n` + `Error: ${error.message}`);
+				setError(error);
+				throw error;
+			}
+		},
+		[accessToken]
+	);
+
+	return { data, error, isLoading, request };
 }
