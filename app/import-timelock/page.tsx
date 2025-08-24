@@ -126,6 +126,7 @@ const ImportTimelockPage: React.FC = () => {
 			return;
 		}
 		setCurrentChinId(chainId.toString() || '')
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[detectedParameters])
 
 	return (
@@ -170,7 +171,8 @@ const ImportTimelockPage: React.FC = () => {
 					onClose={() => setIsModalOpen(false)}
 					onConfirm={handleConfirmParams}
 					abiText={JSON.stringify(compoundTimelockAbi, null, 2)}
-					parameters={{ chainId: currentChinId, ...detectedParameters }}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					parameters={{ chainId: currentChinId, ...detectedParameters! as any }}
 				/>
 			</div>
 		</>

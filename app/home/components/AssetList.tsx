@@ -27,6 +27,7 @@ export interface Asset {
 	total_supply_formatted: string | null;
 	percentage_relative_to_total_supply: number | null;
 	chain_id: number;
+	id: string | number;
 }
 
 interface AssetListProps {

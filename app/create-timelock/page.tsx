@@ -50,6 +50,7 @@ const CreateTimelockPage: React.FC = () => {
 		if (chainId && chainId !== formState.selectedChain) {
 			setFormState(prev => ({ ...prev, selectedChain: chainId }));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chainId]);
 
 	useEffect(() => {
@@ -65,7 +66,7 @@ const CreateTimelockPage: React.FC = () => {
 		} else if (createTimelockData && !createTimelockData.success) {
 			toast.error(t('failed', { message: createTimelockData?.error?.message || 'Unknown error occurred' }));
 		}
-	}, [createTimelockData, router]);
+	}, [createTimelockData, router, t]);
 
 	const handleChainChange = useCallback(
 		(newChainId: number) => {
@@ -83,7 +84,7 @@ const CreateTimelockPage: React.FC = () => {
 			}
 			switchChain(chainObject);
 		},
-		[switchChain]
+		[switchChain, t]
 	);
 
 	const handleMinDelayChange = useCallback((minDelay: string) => {

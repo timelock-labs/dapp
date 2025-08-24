@@ -15,7 +15,7 @@ export default function Home() {
 	const isConnected = connectionStatus === 'connected';
 
 	const [currentView, setCurrentView] = useState<'loading' | 'create' | 'asset'>('loading');
-	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: Array<{ chain_id: number; contract_address: string }> } | null>(null);
+	const [timelockData, setTimelockData] = useState<{ total: number; compound_timelocks: TimelockContractItem[] } | null>(null);
 
 	const { request: getTimelockList, isLoading, data: timelockListResponse } = useApi();
 	const {  setAllTimelocks } = useAuthStore();
@@ -44,7 +44,8 @@ export default function Home() {
 				})
 			);
 			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
-			setAllTimelocks(combinedTimelocks);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			setAllTimelocks(combinedTimelocks as any);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 
@@ -52,7 +53,15 @@ export default function Home() {
 	const fetchTimelockData = async () => {
 		try {
 			const { data } = await getTimelockList('/api/v1/timelock/list', { page: 1, page_size: 10 });
-			setTimelockData(data);
+			// Transform the API response to match our expected types
+			const transformedData = {
+				...data,
+				compound_timelocks: data.compound_timelocks.map((timelock: TimelockContractItem) => ({
+					...timelock,
+					standard: 'compound' as const,
+				}))
+			};
+			setTimelockData(transformedData);
 		} catch (error) {
 			console.error('Failed to fetch timelock data:', error);
 		}

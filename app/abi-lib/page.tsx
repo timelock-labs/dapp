@@ -36,6 +36,7 @@ const ABILibPage: React.FC = () => {
 
 	const refreshAbiList = useCallback(() => {
 		fetchAbiList('/api/v1/abi/list');
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isAddABIOpen]);
 
 	useEffect(() => {

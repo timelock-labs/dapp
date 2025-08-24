@@ -21,8 +21,11 @@ interface channelData {
 import feishu from '../images/feishu.png';
 import lark from '../images/lark.png';
 import telegram from '../images/telegram.png';
+import { StaticImageData } from 'next/image';
 
-const channelIcon = {
+type ChannelType = 'feishu' | 'lark' | 'telegram';
+
+const channelIcon: Record<ChannelType, StaticImageData> = {
 	feishu,
 	lark,
 	telegram,
@@ -32,7 +35,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({ id, type, remark, created_at,
 	const t = useTranslations('Notify.channel');
 
 	const handleDeleteClick = () => {
-		onDelete(id, type);
+		onDelete(Number(id), type);
 	};
 
 	const handleEditClick = () => {
@@ -58,7 +61,9 @@ const ChannelCard: React.FC<ChannelCardProps> = ({ id, type, remark, created_at,
 				</div>
 			</div>
 			<div className='absolute top-[25px] right-[25px]'>
-				<Image src={channelIcon[type].src} alt={type} width={40} height={40} />
+				{channelIcon[type as ChannelType] && (
+					<Image src={channelIcon[type as ChannelType]} alt={type} width={40} height={40} />
+				)}
 			</div>
 			<div className='pt-4 pr-4 border-t border-gray-200 flex justify-end h-[64px] space-x-2'>
 				<button
