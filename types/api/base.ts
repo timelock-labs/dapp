@@ -2,8 +2,6 @@
  * Base API types and interfaces
  */
 
-import type { HttpMethod } from '../common';
-
 /**
  * Generic API error structure
  */
@@ -38,5 +36,5 @@ export interface UseApiReturn {
 	data: ApiResponse | null;
 	error: Error | null;
 	isLoading: boolean;
-	request: (url: string, body?: object, options?: ApiRequestOptions) => Promise<any>;
+	request: (url: string, body?: object, options?: ApiRequestOptions) => Promise<ApiResponse>;
 }

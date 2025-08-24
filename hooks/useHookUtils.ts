@@ -14,6 +14,7 @@ import type { VoidCallback, AsyncCallback, ApiRequestOptions, HttpMethod } from 
  */
 export const createErrorMessage = (error: unknown, defaultMessage = 'An error occurred'): string => {
 	if (error instanceof Object && 'message' in error) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (error as any).message;
 	}
 	if (typeof error === 'string') {
@@ -42,6 +43,7 @@ export const createApiEndpoint = (baseEndpoint: string, params?: Record<string, 
 /**
  * Utility for creating dynamic API endpoints with variables
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createDynamicEndpoint = <T extends Record<string, any>>(template: string | ((variables: T) => string), variables: T): string => {
 	return typeof template === 'function' ? template(variables) : template;
 };
@@ -84,9 +86,9 @@ export const createToastNotification = {
 };
 
 /**
- * Utility for debouncing function calls
+ * Hook for debouncing function calls
  */
-export const createDebouncedCallback = <T extends (...args: any[]) => any>(callback: T, delay: number): T => {
+export const useDebouncedCallback = <T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T => {
 	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
 	return useCallback(
@@ -104,9 +106,9 @@ export const createDebouncedCallback = <T extends (...args: any[]) => any>(callb
 };
 
 /**
- * Utility for throttling function calls
+ * Hook for throttling function calls
  */
-export const createThrottledCallback = <T extends (...args: any[]) => any>(callback: T, delay: number): T => {
+export const useThrottledCallback = <T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T => {
 	const lastCallRef = useRef<number>(0);
 	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -192,7 +194,7 @@ export const createQueryState = <T>(data: T | null, error: Error | null, isLoadi
 /**
  * Utility for validating required fields
  */
-export const validateRequiredFields = <T extends Record<string, any>>(data: T, requiredFields: (keyof T)[]): string[] => {
+export const validateRequiredFields = <T extends Record<string, unknown>>(data: T, requiredFields: (keyof T)[]): string[] => {
 	const errors: string[] = [];
 
 	requiredFields.forEach(field => {
@@ -212,15 +214,15 @@ export const formatApiError = (error: unknown): { message: string; code?: string
 	if (error instanceof Error) {
 		return {
 			message: error.message,
-			code: (error as any).code,
+			code: String((error as { code?: string | number }).code || ''),
 		};
 	}
 
 	if (typeof error === 'object' && error !== null) {
-		const errorObj = error as any;
+		const errorObj = error as { message?: string; error?: string; code?: string | number };
 		return {
 			message: errorObj.message || errorObj.error || 'Unknown error occurred',
-			code: errorObj.code,
+			code: String(errorObj.code),
 		};
 	}
 
@@ -288,7 +290,7 @@ export const createOptimisticUpdate = <T>(currentData: T | null, optimisticData:
 /**
  * Utility for creating cache keys
  */
-export const createCacheKey = (prefix: string, params?: Record<string, any>): string => {
+export const createCacheKey = (prefix: string, params?: Record<string, unknown>): string => {
 	if (!params) return prefix;
 
 	const sortedParams = Object.keys(params)
@@ -298,7 +300,7 @@ export const createCacheKey = (prefix: string, params?: Record<string, any>): st
 				acc[key] = params[key];
 				return acc;
 			},
-			{} as Record<string, any>
+			{} as Record<string, unknown>
 		);
 
 	return `${prefix}:${JSON.stringify(sortedParams)}`;
@@ -307,7 +309,7 @@ export const createCacheKey = (prefix: string, params?: Record<string, any>): st
 /**
  * Utility for deep comparison of objects (for dependency arrays)
  */
-export const deepEqual = (a: any, b: any): boolean => {
+export const deepEqual = (a: unknown, b: unknown): boolean => {
 	if (a === b) return true;
 
 	if (a == null || b == null) return false;
@@ -323,7 +325,7 @@ export const deepEqual = (a: any, b: any): boolean => {
 
 	for (const key of keysA) {
 		if (!keysB.includes(key)) return false;
-		if (!deepEqual(a[key], b[key])) return false;
+		if (!deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) return false;
 	}
 
 	return true;
@@ -332,7 +334,7 @@ export const deepEqual = (a: any, b: any): boolean => {
 /**
  * Utility for creating stable references
  */
-export const useStableCallback = <T extends (...args: any[]) => unknown>(callback: T): T => {
+export const useStableCallback = <T extends (...args: unknown[]) => unknown>(callback: T): T => {
 	const callbackRef = useRef<T>(callback);
 
 	useEffect(() => {
