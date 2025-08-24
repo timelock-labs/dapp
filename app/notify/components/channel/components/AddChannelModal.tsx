@@ -38,11 +38,11 @@ const channelList = [
 		name: 'Telegram',
 		icon: TelegramIcon.src,
 		configLabel: 'xxxxxx:xxxxxxxxxxxxxxxxxxxxxxx',
-	}
-]
+	},
+];
 
 const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSuccess }) => {
-	const t = useTranslations('Notify.addMailbox');
+	const t = useTranslations('Notify.addChannelModal');
 	const [emailAddress, setEmailAddress] = useState('');
 	const [emailRemark, setEmailRemark] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
@@ -51,10 +51,7 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 	const [currentChannel, setCurrentChannel] = useState(channelList[0]);
 
 	// Debounce email verification
-	useEffect(() => {
-
-	}, [verificationCode, emailAddress, verifyEmail, t]);
-
+	useEffect(() => {}, [verificationCode, emailAddress, verifyEmail, t]);
 
 	const handleCancel = () => {
 		onClose(); // Call the onClose prop
@@ -65,7 +62,6 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 	};
 
 	const handleSave = async () => {
-
 		if (verificationCode.length === 6 && emailAddress) {
 			try {
 				await verifyEmail('/api/v1/emails/verify', {
@@ -82,12 +78,11 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 					})
 				);
 			}
-
 		}
 
 		try {
 			// Email notification was already created in handleSendCode, just need to confirm verification
-			toast.success(t('mailboxAddedSuccessfully'));
+			toast.success(t('channelAddedSuccessfully'));
 			onSuccess();
 			onClose();
 			// Reset form state
@@ -97,7 +92,7 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 		} catch (error) {
 			console.error('Failed to save mailbox:', error);
 			toast.error(
-				t('saveMailboxError', {
+				t('saveChannelError', {
 					message: error instanceof Error ? error.message : t('unknownError'),
 				})
 			);
@@ -108,8 +103,6 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 		return null; // Don't render anything if the modal is not open
 	}
 
-
-
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 '>
 			<div
@@ -117,9 +110,9 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }} // Added maxHeight and overflowY
 			>
 				<div className='p-6'>
-					<SectionHeader title="添加通知渠道" description="请获取您的渠道配置，填入备注和配置即可" />
-					<div className="flex flex-col mb-4">
-						<div className='block text-sm font-medium mb-1'>方式</div>
+					<SectionHeader title={t('title')} description={t('description')} />
+					<div className='flex flex-col mb-4'>
+						<div className='block text-sm font-medium mb-1'>{t('method')}</div>
 						<div>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild className='flex justify-between items-center cursor-pointer h-9 w-38'>
@@ -134,10 +127,7 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 								<DropdownMenuContent className='w-38 bg-white border border-gray-200 p-2 flex flex-col gap-2 rounded-md' align='end'>
 									{Array.isArray(channelList) &&
 										channelList.map(channel => (
-											<DropdownMenuItem
-												key={channel.type}
-												onClick={() => setCurrentChannel(channel)}
-												className={`flex gap-2 items-center cursor-pointer`}>
+											<DropdownMenuItem key={channel.type} onClick={() => setCurrentChannel(channel)} className={`flex gap-2 items-center cursor-pointer`}>
 												<div className='flex gap-2'>
 													<Image className='rounded-full overflow-hidden h-[20px] w-[20px]' src={channel.icon} alt={channel.name} width={20} height={20} />
 													<span className='font-medium text-sm'>{channel.name}</span>
@@ -146,19 +136,14 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 										))}
 								</DropdownMenuContent>
 							</DropdownMenu>
-							
 						</div>
 					</div>
-					<TextInput label="备注" value={emailRemark} onChange={setEmailRemark} placeholder="渠道备注" />
-					<TextInput label="配置" value={emailRemark} onChange={setEmailRemark} placeholder={currentChannel?.configLabel} />
+					<TextInput label={t('remark')} value={emailRemark} onChange={setEmailRemark} placeholder={t('remarkPlaceholder')} />
+					<TextInput label={t('config')} value={emailRemark} onChange={setEmailRemark} placeholder={currentChannel?.configLabel} />
 				</div>
 
-
 				<div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
-					<button
-						type='button'
-						onClick={handleCancel}
-						className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+					<button type='button' onClick={handleCancel} className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
 					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>

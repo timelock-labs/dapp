@@ -53,7 +53,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({ id, type, remark, created_at,
 				<div className='my-2'><Tag label={remark || '-'} colorType='green' /></div>
 				<div className='text-xs'>
 					<div>
-						<strong>Added At:</strong> {formatDateWithYear(created_at) || '-'}
+						<strong>{t('addedAt')}:</strong> {formatDateWithYear(created_at) || '-'}
 					</div>
 				</div>
 			</div>
