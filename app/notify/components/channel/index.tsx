@@ -23,10 +23,10 @@ export default function Channel() {
     }, []);
 
 
-    const handleDeleteMailbox = (id: string) => {
+    const handleDeleteChannellbox = (id: string) => {
         setChannels(channels.filter(channel => channel.id !== id));
     };
-    const handleEditMailbox = (channel: { id: string; type: string; remark?: string; created_at: string }) => {
+    const handleEditChannellbox = (channel: { id: string; type: string; remark?: string; created_at: string }) => {
         setChannels(channels.map(c => (c.id === channel.id ? channel : c)));
     };
 
@@ -38,8 +38,8 @@ export default function Channel() {
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
                 {channels.map(channel => (
                     <ChannelCard
-                        onDelete={handleDeleteMailbox}
-                        onEdit={handleEditMailbox}
+                        onDelete={handleDeleteChannellbox}
+                        onEdit={handleEditChannellbox}
                         key={channel.id}
                         id={channel.id}
                         type={channel.type}

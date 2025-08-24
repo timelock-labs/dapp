@@ -6,7 +6,7 @@ import copyToClipboard from '@/utils/copy';
 import Tag from '@/components/tableContent/TableTag';
 import Image from 'next/image';
 interface ChannelCardProps {
-	onDelete: (id: number, email: string) => void;
+	onDelete: (id: string) => void;
 	onEdit: (channel: channelData) => void;
 	id: string;
 	type: string;
@@ -35,12 +35,12 @@ const ChannelCard: React.FC<ChannelCardProps> = ({ id, type, remark, created_at,
 	const t = useTranslations('Notify.channel');
 
 	const handleDeleteClick = () => {
-		onDelete(Number(id), type);
+		onDelete(id);
 	};
 
 	const handleEditClick = () => {
 		const channelData = {
-			id: id.toString(),
+			id: id,
 			remark: remark,
 			created_at: created_at,
 			type: type,
