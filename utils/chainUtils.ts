@@ -20,16 +20,16 @@ import type { Chain, ChainIdMapping } from '@/types';
 
 const mode = defineChain({
 	id: 34443,
-	name: 'Ink',
+	name: 'Mode',
 	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-	rpc: 'https://mode.drpc.org',
+	rpc: 'https://mainnet.mode.network',
 });
 
 const ronin = defineChain({
 	id: 2020,
 	name: 'Ronin',
 	nativeCurrency: { name: 'RON', symbol: 'RON', decimals: 18 },
-	rpc: 'https://ronin.drpc.org',
+	rpc: 'https://api.roninchain.com/rpc',
 });
 
 const mantle = defineChain({
@@ -72,7 +72,7 @@ const hashKey = defineChain({
 	id: 177,
 	name: 'HashKey Chain HSK',
 	nativeCurrency: { name: 'HSK', symbol: 'HSK', decimals: 18 },
-	rpc: 'https://hashkey.drpc.org',
+	rpc: 'https://mainnet.hsk.xyz',
 });
 
 const exSat = defineChain({
@@ -121,7 +121,7 @@ const hemi = defineChain({
 	id: 43111,
 	name: 'Hemi Network',
 	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-	rpc: 'https://hemi.drpc.org',
+	rpc: 'https://rpc.hemi.network/rpc',
 });
 
 const plume = defineChain({
