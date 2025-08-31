@@ -137,7 +137,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				wallet_address: address,
 				signature: signature,
 				message: message,
-				wallet_type: isSafeWallet ? 'safe' : 'regular', // Include wallet type for backend
 			});
 			
 		} catch (error) {
