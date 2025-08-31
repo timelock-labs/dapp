@@ -59,10 +59,11 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	// 根据钱包连接状态和其他条件确定当前状态
 	const currentState = React.useMemo((): LoginState => {
 		if (!isConnected) return 'disconnected';
-		if (apiLoading || loginState === 'signing') return 'signing';
 		if (apiResponse?.success) return 'signed';
-		// 钱包已连接但签名失败，显示重试按钮
-		if (signatureAttempted) return 'connected';
+		// 优先检查 loginState，只有在真正签名中时才显示 signing
+		if (loginState === 'signing' && apiLoading) return 'signing';
+		// 如果 loginState 是 connected，即使 apiLoading，也要显示错误状态
+		if (loginState === 'connected' || signatureAttempted) return 'connected';
 		// 钱包已连接且未签名，显示签名中状态
 		return 'signing';
 	}, [isConnected, apiLoading, loginState, apiResponse?.success, signatureAttempted]);
@@ -79,11 +80,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		
 		const message = t('welcomeMessage');
 		
-		console.log('=== Starting Signature Process ===');
 		console.log('isSafeWallet:', isSafeWallet);
-		console.log('wallet:', wallet);
-		console.log('address:', address);
-		console.log('===============================');
 		
 		try {
 			let signature: string;
@@ -127,9 +124,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					return;
 				}
 			} else {
-				console.log('🔑 Processing regular wallet signature...');
 				signature = await signMessage({ message });
-				console.log('✅ Regular wallet signature successful');
 			}
 			
 			// Send the signature to the backend
@@ -143,12 +138,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 			console.error('Signature error:', error);
 			setLoginState('connected');
 			
-			// Enhanced error handling based on wallet type
-			if (isSafeWallet) {
-				toast.error(t('safeWalletLoginError') || 'Safe wallet login failed');
-			} else {
-				toast.error(t('errorSigningIn'));
-			}
+			toast.error(t('errorSigningIn'));
 		}
 	}, [isConnected, address, signMessage, walletConnect, t, isSafeWallet, wallet, activeChain]);
 
