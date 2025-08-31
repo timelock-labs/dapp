@@ -35,7 +35,15 @@ import {
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useWeb3React } from '@/hooks/useWeb3React';
 
-const wallets = [createWallet('io.metamask'), createWallet('com.coinbase.wallet'), createWallet('com.okex.wallet'), createWallet('global.safe'), createWallet('com.safepal')];
+const wallets = [
+	createWallet('io.metamask'), 
+	createWallet('com.coinbase.wallet'), 
+	createWallet('com.okex.wallet'), 
+	createWallet('global.safe'),
+	createWallet('com.safepal'),
+	createWallet("walletConnect"),
+];
+
 const supportedChains = [
 	ethereum, 
 	sepolia, 
