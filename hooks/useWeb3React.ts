@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { ethers5Adapter } from 'thirdweb/adapters/ethers5';
 import { useActiveAccount, useActiveWalletChain, useActiveWalletConnectionStatus, useConnect, useEnsName } from 'thirdweb/react';
 import { createThirdwebClient } from 'thirdweb';
@@ -35,9 +35,33 @@ export function useWeb3React(): {
 
 	const { isConnecting } = useConnect();
 
+	// 优化 ENS 查询 - 添加防抖和更长的缓存
+	const ensQueryRef = useRef<NodeJS.Timeout | null>(null);
+	const [shouldQueryEns, setShouldQueryEns] = useState(false);
+
+	// 防抖 ENS 查询
+	useEffect(() => {
+		if (activeAccount?.address) {
+			if (ensQueryRef.current) {
+				clearTimeout(ensQueryRef.current);
+			}
+			ensQueryRef.current = setTimeout(() => {
+				setShouldQueryEns(true);
+			}, 1000); // 1秒防抖
+		} else {
+			setShouldQueryEns(false);
+		}
+
+		return () => {
+			if (ensQueryRef.current) {
+				clearTimeout(ensQueryRef.current);
+			}
+		};
+	}, [activeAccount?.address]);
+
 	const { data } = useEnsName({
 		client: client,
-		address: activeAccount?.address,
+		address: shouldQueryEns ? activeAccount?.address : undefined,
 	});
 
 	const provider = useMemo(() => {
@@ -59,6 +83,7 @@ export function useWeb3React(): {
 			});
 		},
 		enabled: !!activeChain && !!activeAccount,
+		retry: 1,
 	});
 
 	const signMessage =

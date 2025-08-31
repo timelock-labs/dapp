@@ -7,7 +7,7 @@ const nextConfig = {
 		return [
 			{
 				source: '/api/:path*',
-				destination: 'http://16.163.43.186:8080/api/:path*',
+				destination: 'https://test.timelock.live/api/:path*',
 			},
 		];
 	},
