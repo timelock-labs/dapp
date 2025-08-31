@@ -36,7 +36,6 @@ async function signWithMessageHash(
   message: string
 ): Promise<SafeSignatureResult> {
   try {
-    console.log('🔐 Trying message hash method...');
     
     // 计算消息哈希
     const messageHash = await sdk.safe.calculateMessageHash(message);
@@ -45,7 +44,7 @@ async function signWithMessageHash(
     // 使用消息哈希作为签名标识
     const signature = `safe-hash-${messageHash}`;
     
-    console.log('✅ Message hash signature successful');
+    console.log('✅ Message hash signature successful', signature);
     return {
       signature,
       method: 'safe_messageHash',
@@ -68,12 +67,6 @@ async function signWithMessageHash(
  */
 export async function signWithSafe(options: SafeSignatureOptions): Promise<SafeSignatureResult> {
   const { message, address, chainId = 1 } = options;
-  
-  console.log('=== Safe Wallet Signature Process ===');
-  console.log('message:', message);
-  console.log('address:', address);
-  console.log('chainId:', chainId);
-  console.log('=====================================');
   
   const sdk = createSafeSDK();
   

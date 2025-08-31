@@ -86,8 +86,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 			let signature: string;
 			
 			if (isSafeWallet) {
-				console.log('🔒 Processing Safe wallet signature...');
-				
 				try {
 					// 使用专门的 Safe 签名工具
 					const safeSignResult = await signWithSafe({
@@ -98,7 +96,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					
 					if (safeSignResult.success && safeSignResult.signature) {
 						signature = safeSignResult.signature;
-						console.log(`✅ Safe wallet signature successful using ${safeSignResult.method}`);
 					} else {
 						throw new Error(safeSignResult.error || 'Safe signature failed');
 					}
