@@ -6,7 +6,13 @@ import PendingTransactions from './PendingTransactions';
 import { useApi } from '@/hooks/useApi';
 import useMoralis from '@/hooks/useMoralis';
 import AssetList from './AssetList';
-import { CalendarOff, ClipboardCheck, Hourglass, Podcast, RefreshCwOff } from 'lucide-react';
+import { 
+	CalendarOff, 
+	ClipboardCheck, 
+	Hourglass, 
+	Podcast, 
+	RefreshCwOff 
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useQueries } from '@tanstack/react-query';
 import { TimelockContractItem } from '@/types';

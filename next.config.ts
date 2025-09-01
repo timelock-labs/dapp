@@ -1,8 +1,32 @@
 import createNextIntlPlugin from 'next-intl/plugin';
+import bundleAnalyzer from '@next/bundle-analyzer';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+const withBundleAnalyzer = bundleAnalyzer({
+	enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig = {
+	// 性能优化配置
+	compiler: {
+		// 移除console.log (生产环境)
+		removeConsole: process.env.NODE_ENV === 'production',
+	},
+	// 实验性功能
+	experimental: {
+		// 优化包导入
+		optimizePackageImports: [
+			'@radix-ui/react-avatar',
+			'@radix-ui/react-dialog',
+			'@radix-ui/react-dropdown-menu',
+			'@radix-ui/react-popover',
+			'@radix-ui/react-select',
+			'@radix-ui/react-tabs',
+			'@radix-ui/react-tooltip',
+			'@heroicons/react',
+			'lucide-react'
+		],
+	},
 	async rewrites() {
 		return [
 			{
@@ -45,4 +69,4 @@ const nextConfig = {
 	},
 };
 
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

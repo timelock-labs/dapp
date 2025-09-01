@@ -18,11 +18,15 @@ import I18nInitializer from '@/components/providers/I18nInitializer';
 const geistSans = Geist({
 	variable: '--font-geist-sans',
 	subsets: ['latin'],
+	display: 'swap', // 优化字体加载性能
+	preload: true,
 });
 
 const geistMono = Geist_Mono({
 	variable: '--font-geist-mono',
 	subsets: ['latin'],
+	display: 'swap', // 优化字体加载性能
+	preload: false, // 非主要字体延迟加载
 });
 
 type Props = {
@@ -39,6 +43,14 @@ export default async function RootLayout(props: Props) {
 		<html lang={locale} suppressHydrationWarning>
 			<head>
 				<title>Timelocker</title>
+				{/* 预加载关键字体以提升性能 */}
+				<link
+					rel="preload"
+					href="/righteous-regular.ttf"
+					as="font"
+					type="font/ttf"
+					crossOrigin="anonymous"
+				/>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>

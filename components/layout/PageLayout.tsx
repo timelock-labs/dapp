@@ -8,7 +8,6 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { ChainSwitcher } from '@/components/wallet/chain-switcher';
 import { ConnectWallet } from '@/components/wallet/connect-wallet';
 import type { BaseComponentProps } from '@/types';
-import '@/app/globals.css';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 

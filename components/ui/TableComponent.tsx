@@ -3,13 +3,15 @@ import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 
 // Define types for columns and data
-interface Column<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface Column<T = any> {
 	key: string; // Unique key for the column, used to access data from row object
 	header: string; // Header text to display in the table
 	render?: (row: T, rowIndex: number) => React.ReactNode; // Optional custom renderer for cells
 }
 
-interface GenericTableProps<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface GenericTableProps<T = any> {
 	title?: string; // Optional title for the table card (e.g., "Pending Transactions")
 	columns: Column<T>[]; // Array of column definitions
 	data: T[]; // Array of row data objects
@@ -19,7 +21,8 @@ interface GenericTableProps<T> {
 }
 
 // Using a generic type `T` for the row data. `T` must extend an object with an 'id' for keying.
-function TableComponent<T extends { id: string | number }>({ title, columns, data, showPagination = true, itemsPerPage = 999999, headerActions }: GenericTableProps<T>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function TableComponent<T extends { id: string | number } = any>({ title, columns, data, showPagination = true, itemsPerPage = 999999, headerActions }: GenericTableProps<T>) {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const totalItems = data.length;
@@ -139,3 +142,4 @@ function TableComponent<T extends { id: string | number }>({ title, columns, dat
 }
 
 export default TableComponent;
+export type { Column, GenericTableProps };

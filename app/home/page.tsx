@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Asset from './components/Asset';
-import CreateProtocol from './components/CreateProtocol';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { useAuthStore } from '@/store/userStore';
 import { TimelockContractItem } from '@/types';
+
+// 懒加载组件以减少初始bundle大小
+const Asset = lazy(() => import('./components/Asset'));
+const CreateProtocol = lazy(() => import('./components/CreateProtocol'));
 
 
 export default function Home() {
@@ -101,10 +103,18 @@ export default function Home() {
 			case 'loading':
 				return <LoadingSkeleton />;
 			case 'asset':
-				return <Asset timelocks={timelockData!.compound_timelocks} />;
+				return (
+					<Suspense fallback={<LoadingSkeleton />}>
+						<Asset timelocks={timelockData!.compound_timelocks} />
+					</Suspense>
+				);
 			case 'create':
 			default:
-				return <CreateProtocol />;
+				return (
+					<Suspense fallback={<LoadingSkeleton />}>
+						<CreateProtocol />
+					</Suspense>
+				);
 		}
 	};
 
