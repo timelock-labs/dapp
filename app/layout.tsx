@@ -4,6 +4,9 @@ import { ReactNode } from 'react';
 import { routing } from '@/i18n/routing';
 import { Web3Provider } from '@/components/providers/web3-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/app/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google'; // Import fonts here
 import { Toaster } from 'sonner';
@@ -49,6 +52,8 @@ export default async function RootLayout(props: Props) {
 					</Web3Provider>
 				</ThemeProvider>
 				<Toaster position='top-center' />
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
