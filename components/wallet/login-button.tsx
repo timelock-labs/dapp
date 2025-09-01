@@ -5,11 +5,12 @@ import { useTranslations } from 'next-intl';
 import { ConnectWallet } from './connect-wallet';
 import { Button } from '@/components/ui/button';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useActiveWalletConnectionStatus, useActiveAccount } from 'thirdweb/react';
+import { useActiveWalletConnectionStatus, useActiveAccount, useActiveWallet, useActiveWalletChain } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { signWithSafe } from '@/utils/safeSignature';
 
 /**
  * 登录按钮状态枚举
@@ -31,7 +32,22 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const t = useTranslations('walletLogin');
 	const { address, signMessage } = useActiveAccount() || {};
 	const connectionStatus = useActiveWalletConnectionStatus();
+	const wallet = useActiveWallet();
+	const activeChain = useActiveWalletChain();
 	const isConnected = connectionStatus === 'connected';
+	
+	// Detect Safe wallet using thirdweb's detection
+	const isSafeWallet = React.useMemo(() => {
+		if (!wallet) return false;
+		
+		// Check thirdweb wallet ID
+		const walletId = wallet.id;
+		const isSafe = walletId === 'global.safe';
+		console.log('isSafeWallet:', isSafe);
+		console.log('================================');
+		
+		return isSafe;
+	}, [wallet]);
 	
 	const { data: apiResponse, request: walletConnect, isLoading: apiLoading } = useApi();
 	const login = useAuthStore(state => state.login);
@@ -43,10 +59,11 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	// 根据钱包连接状态和其他条件确定当前状态
 	const currentState = React.useMemo((): LoginState => {
 		if (!isConnected) return 'disconnected';
-		if (apiLoading || loginState === 'signing') return 'signing';
 		if (apiResponse?.success) return 'signed';
-		// 钱包已连接但签名失败，显示重试按钮
-		if (signatureAttempted) return 'connected';
+		// 优先检查 loginState，只有在真正签名中时才显示 signing
+		if (loginState === 'signing' && apiLoading) return 'signing';
+		// 如果 loginState 是 connected，即使 apiLoading，也要显示错误状态
+		if (loginState === 'connected' || signatureAttempted) return 'connected';
 		// 钱包已连接且未签名，显示签名中状态
 		return 'signing';
 	}, [isConnected, apiLoading, loginState, apiResponse?.success, signatureAttempted]);
@@ -63,20 +80,64 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		
 		const message = t('welcomeMessage');
 		
+		console.log('isSafeWallet:', isSafeWallet);
+		
 		try {
-			const signature = await signMessage({ message });
+			let signature: string;
 			
+			if (isSafeWallet) {
+				try {
+					// 使用专门的 Safe 签名工具
+					const safeSignResult = await signWithSafe({
+						message,
+						address,
+						chainId: activeChain?.id || 1
+					});
+					
+					if (safeSignResult.success && safeSignResult.signature) {
+						signature = safeSignResult.signature;
+					} else {
+						throw new Error(safeSignResult.error || 'Safe signature failed');
+					}
+					
+				} catch (safeError) {
+					console.error('Safe wallet authentication failed:', safeError);
+					
+					// Safe-specific error handling
+					const errorMessage = safeError instanceof Error ? safeError.message : 'Unknown error';
+					if (errorMessage.includes('rejected') || errorMessage.includes('denied') || errorMessage.includes('user') || errorMessage.includes('cancel')) {
+						toast.error(t('safeWalletSignatureRejected') || 'Safe wallet signature was rejected by user');
+					} else if (errorMessage.includes('timeout')) {
+						toast.error(t('safeWalletSignatureTimeout') || 'Safe wallet signature timed out. Please check your Safe interface.');
+					} else if (errorMessage.includes('not available') || errorMessage.includes('SDK')) {
+						toast.error(t('safeWalletSDKError') || 'Safe wallet SDK not available. Please ensure you\'re in a Safe App environment.');
+					} else if (errorMessage.includes('Strategy timeout')) {
+						toast.error(t('safeWalletStrategyTimeout') || 'Safe wallet confirmation timed out. Please try again.');
+					} else {
+						toast.error(t('safeWalletSignatureError') || `Safe wallet authentication failed: ${errorMessage}`);
+					}
+					
+					setLoginState('connected');
+					return;
+				}
+			} else {
+				signature = await signMessage({ message });
+			}
+			
+			// Send the signature to the backend
 			await walletConnect('/api/v1/auth/wallet-connect', {
 				wallet_address: address,
 				signature: signature,
 				message: message,
 			});
+			
 		} catch (error) {
 			console.error('Signature error:', error);
 			setLoginState('connected');
+			
 			toast.error(t('errorSigningIn'));
 		}
-	}, [isConnected, address, signMessage, walletConnect, t]);
+	}, [isConnected, address, signMessage, walletConnect, t, isSafeWallet, wallet, activeChain]);
 
 	// 处理钱包连接成功
 	const handleWalletConnect = useCallback(() => {
