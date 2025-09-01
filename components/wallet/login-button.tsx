@@ -35,6 +35,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	
 	const { data: apiResponse, request: walletConnect, isLoading: apiLoading } = useApi();
 	const login = useAuthStore(state => state.login);
+	const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 	const router = useRouter();
 	
 	const [loginState, setLoginState] = useState<LoginState>('disconnected');
@@ -42,6 +43,8 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 根据钱包连接状态和其他条件确定当前状态
 	const currentState = React.useMemo((): LoginState => {
+		// 如果用户已经认证，显示已完成状态
+		if (isAuthenticated) return 'signed';
 		if (!isConnected) return 'disconnected';
 		if (apiLoading || loginState === 'signing') return 'signing';
 		if (apiResponse?.success) return 'signed';
@@ -49,7 +52,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		if (signatureAttempted) return 'connected';
 		// 钱包已连接且未签名，显示签名中状态
 		return 'signing';
-	}, [isConnected, apiLoading, loginState, apiResponse?.success, signatureAttempted]);
+	}, [isAuthenticated, isConnected, apiLoading, loginState, apiResponse?.success, signatureAttempted]);
 
 	// 处理用户签名
 	const handleSignature = useCallback(async () => {
@@ -88,15 +91,31 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const handleWalletDisconnect = useCallback(() => {
 		setLoginState('disconnected');
 		setSignatureAttempted(false);
-	}, []);
+		// 如果用户已经认证，执行登出操作
+		if (isAuthenticated) {
+			const logout = useAuthStore.getState().logout;
+			logout();
+		}
+	}, [isAuthenticated]);
 
 	// 监听钱包连接状态，自动触发签名
 	React.useEffect(() => {
+		// 如果用户已经认证，直接跳转到首页
+		if (isAuthenticated) {
+			router.replace('/home');
+			return;
+		}
+		
 		if (isConnected && address && !signatureAttempted && !apiLoading && !apiResponse?.success) {
+			console.log('isConnected', isConnected);
+			console.log('address', address);
+			console.log('signatureAttempted', signatureAttempted);
+			console.log('apiLoading', apiLoading);
+			console.log('apiResponse', apiResponse);
 			// 钱包已连接且未尝试过签名，自动开始签名
 			handleSignature();
 		}
-	}, [isConnected, address, signatureAttempted, apiLoading, apiResponse?.success, handleSignature]);
+	}, [isConnected, address, signatureAttempted, apiLoading, apiResponse?.success, isAuthenticated, handleSignature, router]);
 
 	// 处理 API 响应
 	React.useEffect(() => {
