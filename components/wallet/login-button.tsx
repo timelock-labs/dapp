@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { ConnectWallet } from './connect-wallet';
 import { Button } from '@/components/ui/button';
@@ -35,77 +35,106 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const wallet = useActiveWallet();
 	const activeChain = useActiveWalletChain();
 	const isConnected = connectionStatus === 'connected';
-	
+
 	// Detect Safe wallet using thirdweb's detection
-	const isSafeWallet = React.useMemo(() => {
+	const isSafeWallet = useMemo(() => {
 		if (!wallet) return false;
-		
+
 		// Check thirdweb wallet ID
 		const walletId = wallet.id;
 		const isSafe = walletId === 'global.safe';
 		console.log('isSafeWallet:', isSafe);
 		console.log('================================');
-		
+
 		return isSafe;
 	}, [wallet]);
-	
+
 	const { data: apiResponse, request: walletConnect, isLoading: apiLoading } = useApi();
 	const login = useAuthStore(state => state.login);
 	const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 	const router = useRouter();
-	
+
 	const [loginState, setLoginState] = useState<LoginState>('disconnected');
 	const [signatureAttempted, setSignatureAttempted] = useState(false);
 
 	// 根据钱包连接状态和其他条件确定当前状态
-	const currentState = React.useMemo((): LoginState => {
+	const currentState = useMemo((): LoginState => {
 		// 如果用户已经认证，显示已完成状态
-		if (isAuthenticated) return 'signed';
 		if (!isConnected) return 'disconnected';
 		if (apiResponse?.success) return 'signed';
 		// 优先检查 loginState，只有在真正签名中时才显示 signing
 		if (loginState === 'signing' && apiLoading) return 'signing';
 		// 如果 loginState 是 connected，即使 apiLoading，也要显示错误状态
 		if (loginState === 'connected' || signatureAttempted) return 'connected';
+		if (isAuthenticated) return 'signed';
+
 		// 钱包已连接且未签名，显示签名中状态
 		return 'signing';
 	}, [isAuthenticated, isConnected, apiLoading, loginState, apiResponse?.success, signatureAttempted]);
 
-	// 处理用户签名
+	// 防抖处理的 ref
+	const debounceRef = useRef<NodeJS.Timeout | null>(null);
+	const isSigningRef = useRef(false);
+
+	// 处理用户签名（带防抖处理）
 	const handleSignature = useCallback(async () => {
 		if (!isConnected || !address || !signMessage) {
 			toast.error(t('pleaseConnectWallet'));
 			return;
 		}
 
-		setLoginState('signing');
-		setSignatureAttempted(true);
-		
+		// 防抖处理：如果正在签名中，直接返回
+		if (isSigningRef.current) {
+			console.log('签名正在进行中，忽略重复点击');
+			return;
+		}
+
+		// 清除之前的防抖定时器
+		if (debounceRef.current) {
+			clearTimeout(debounceRef.current);
+		}
+
+		// 设置防抖定时器
+		debounceRef.current = setTimeout(async () => {
+			isSigningRef.current = true;
+			setLoginState('signing');
+			setSignatureAttempted(true);
+
+			try {
+				await performSignature();
+			} finally {
+				isSigningRef.current = false;
+			}
+		}, 300); // 300ms 防抖延迟
+	}, [isConnected, address, signMessage, t]);
+
+	// 实际执行签名的函数
+	const performSignature = useCallback(async () => {
 		const message = t('welcomeMessage');
-		
+
 		console.log('isSafeWallet:', isSafeWallet);
-		
+
 		try {
 			let signature: string;
-			
+
 			if (isSafeWallet) {
 				try {
 					// 使用专门的 Safe 签名工具
 					const safeSignResult = await signWithSafe({
 						message,
-						address,
+						address: address!,
 						chainId: activeChain?.id || 1
 					});
-					
+
 					if (safeSignResult.success && safeSignResult.signature) {
 						signature = safeSignResult.signature;
 					} else {
 						throw new Error(safeSignResult.error || 'Safe signature failed');
 					}
-					
+
 				} catch (safeError) {
 					console.error('Safe wallet authentication failed:', safeError);
-					
+
 					// Safe-specific error handling
 					const errorMessage = safeError instanceof Error ? safeError.message : 'Unknown error';
 					if (errorMessage.includes('rejected') || errorMessage.includes('denied') || errorMessage.includes('user') || errorMessage.includes('cancel')) {
@@ -119,26 +148,31 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					} else {
 						toast.error(t('safeWalletSignatureError') || `Safe wallet authentication failed: ${errorMessage}`);
 					}
-					
+
 					setLoginState('connected');
 					return;
 				}
 			} else {
+				if (!signMessage) {
+					throw new Error('signMessage is not available');
+				}
 				signature = await signMessage({ message });
 			}
-			
+
 			// Send the signature to the backend
 			await walletConnect('/api/v1/auth/wallet-connect', {
 				wallet_address: address,
 				signature: signature,
 				message: message,
 			});
-			
+
 		} catch (error) {
 			console.error('Signature error:', error);
 			setLoginState('connected');
-			
+
 			toast.error(t('errorSigningIn'));
+		} finally {
+			isSigningRef.current = false;
 		}
 	}, [isConnected, address, signMessage, walletConnect, t, isSafeWallet, wallet, activeChain]);
 
@@ -160,13 +194,20 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	}, [isAuthenticated]);
 
 	// 监听钱包连接状态，自动触发签名
-	React.useEffect(() => {
+	useEffect(() => {
+		console.log('isConnected', isConnected);
+		console.log('address', address);
+		console.log('signatureAttempted', signatureAttempted);
+		console.log('apiLoading', apiLoading);
+		console.log('apiResponse', apiResponse);
+		console.log('isAuthenticated', isAuthenticated);
+		
 		// 如果用户已经认证，直接跳转到首页
-		if (isAuthenticated) {
+		if (isAuthenticated && isConnected && address) {
 			router.replace('/home');
 			return;
 		}
-		
+
 		if (isConnected && address && !signatureAttempted && !apiLoading && !apiResponse?.success) {
 			console.log('isConnected', isConnected);
 			console.log('address', address);
@@ -179,7 +220,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	}, [isConnected, address, signatureAttempted, apiLoading, apiResponse?.success, isAuthenticated, handleSignature, router]);
 
 	// 处理 API 响应
-	React.useEffect(() => {
+	useEffect(() => {
 		if (apiResponse?.success) {
 			setLoginState('signed');
 			login({
@@ -188,7 +229,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				refreshToken: apiResponse.data.refresh_token,
 				expiresAt: apiResponse.data.expires_at,
 			});
-			
+
 			// 短暂延迟后跳转，让用户看到成功状态
 			setTimeout(() => {
 				router.replace('/home');
@@ -208,7 +249,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 						onDisconnect={handleWalletDisconnect}
 					/>
 				);
-			
+
 			case 'connected':
 				return (
 					<Button
@@ -219,7 +260,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 						{t('retrySignature')}
 					</Button>
 				);
-			
+
 			case 'signing':
 				return (
 					<Button
@@ -230,7 +271,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 						{t('signing')}
 					</Button>
 				);
-			
+
 			case 'signed':
 				return (
 					<Button
@@ -240,7 +281,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 						✓ {t('loginSuccess')}
 					</Button>
 				);
-			
+
 			default:
 				return null;
 		}
@@ -249,7 +290,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	return (
 		<div className="w-full">
 			{renderButton()}
-			
+
 			{/* 状态说明文本 */}
 			{currentState === 'connected' && signatureAttempted && (
 				<p className="text-xs text-gray-500 mt-2 text-center">
