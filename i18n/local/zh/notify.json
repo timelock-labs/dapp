@@ -105,8 +105,11 @@
 			"description": "配置您的频道通知以接收时间锁通知。",
 			"edit": "编辑",
 			"delete": "删除",
-			"addChannel": "添加渠道",
-			"addedAt": "添加时间"
+			"addChannel": "添加频道",
+			"addedAt": "添加时间",
+			"loading": "加载中...",
+			"channelDeletedSuccessfully": "频道删除成功",
+			"deleteChannelError": "删除频道失败"
 		},
 		"addChannelModal": {
 			"title": "添加通知渠道",
@@ -115,8 +118,10 @@
 			"remark": "备注",
 			"remarkPlaceholder": "渠道备注",
 			"config": "配置",
+			"configRequired": "配置为必填项",
 			"channelAddedSuccessfully": "渠道添加成功",
 			"saveChannelError": "保存渠道失败: {message}",
+			"unknownError": "未知错误",
 			"cancel": "取消",
 			"save": "保存"
 		}

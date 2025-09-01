@@ -1,5 +1,5 @@
-// components/email-address/AddEmailAddressForm.tsx
-import React, { useState, useEffect } from 'react';
+// components/channel/AddChannelModal.tsx
+import React, { useState } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader'; // Adjust path
 import TextInput from '@/components/ui/TextInput'; // Adjust path
 import { useTranslations } from 'next-intl';
@@ -43,59 +43,46 @@ const channelList = [
 
 const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSuccess }) => {
 	const t = useTranslations('Notify.addChannelModal');
-	const [emailAddress, setEmailAddress] = useState('');
-	const [emailRemark, setEmailRemark] = useState('');
-	const [verificationCode, setVerificationCode] = useState('');
-	const [, setIsFirstTime] = useState(true);
-	const { request: verifyEmail } = useApi();
+	const [channelConfig, setChannelConfig] = useState('');
+	const [channelRemark, setChannelRemark] = useState('');
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { request: addChannelApi } = useApi();
 	const [currentChannel, setCurrentChannel] = useState(channelList[0]);
 
-	// Debounce email verification
-	useEffect(() => {}, [verificationCode, emailAddress, verifyEmail, t]);
-
 	const handleCancel = () => {
-		onClose(); // Call the onClose prop
+		onClose();
 		// Reset form state
-		setEmailAddress('');
-		setEmailRemark('');
-		setVerificationCode('');
+		setChannelConfig('');
+		setChannelRemark('');
 	};
 
 	const handleSave = async () => {
-		if (verificationCode.length === 6 && emailAddress) {
-			try {
-				await verifyEmail('/api/v1/emails/verify', {
-					email: emailAddress,
-					code: verificationCode,
-				});
-				setIsFirstTime(false);
-				toast.success(t('emailVerificationSuccess'));
-			} catch (error) {
-				console.error('Email verification failed:', error);
-				toast.error(
-					t('emailVerificationError', {
-						message: error instanceof Error ? error.message : t('unknownError'),
-					})
-				);
-			}
+		if (!channelConfig.trim()) {
+			toast.error(t('configRequired'));
+			return;
 		}
 
 		try {
-			// Email notification was already created in handleSendCode, just need to confirm verification
+			setIsSubmitting(true);
+			await addChannelApi('/api/v1/notifications/create', {
+				type: currentChannel?.type || 'feishu',
+				config: channelConfig,
+				remark: channelRemark || undefined,
+			});
 			toast.success(t('channelAddedSuccessfully'));
 			onSuccess();
-			onClose();
 			// Reset form state
-			setEmailAddress('');
-			setEmailRemark('');
-			setVerificationCode('');
+			setChannelConfig('');
+			setChannelRemark('');
 		} catch (error) {
-			console.error('Failed to save mailbox:', error);
+			console.error('Failed to add channel:', error);
 			toast.error(
 				t('saveChannelError', {
 					message: error instanceof Error ? error.message : t('unknownError'),
 				})
 			);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -138,15 +125,15 @@ const AddCannelModal: React.FC<AddCannelModalProps> = ({ isOpen, onClose, onSucc
 							</DropdownMenu>
 						</div>
 					</div>
-					<TextInput label={t('remark')} value={emailRemark} onChange={setEmailRemark} placeholder={t('remarkPlaceholder')} />
-					<TextInput label={t('config')} value={emailRemark} onChange={setEmailRemark} placeholder={currentChannel?.configLabel} />
+					<TextInput label={t('remark')} value={channelRemark} onChange={setChannelRemark} placeholder={t('remarkPlaceholder')} />
+					<TextInput label={t('config')} value={channelConfig} onChange={setChannelConfig} placeholder={currentChannel?.configLabel} />
 				</div>
 
 				<div className='flex justify-end space-x-3 mt-auto p-6 border-t border-gray-200'>
 					<button type='button' onClick={handleCancel} className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
-					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleSave} disabled={isSubmitting} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'>
 						{t('save')}
 					</button>
 				</div>

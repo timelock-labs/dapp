@@ -7,15 +7,20 @@ import Tag from '@/components/tableContent/TableTag';
 import Image from 'next/image';
 interface ChannelCardProps {
 	onDelete: (id: string) => void;
-	onEdit: (channel: channelData) => void;
-	id: string;
-	type: string;
-	remark?: string;
-	created_at: string;
+	onEdit: (channel: ChannelData) => void;
+	channelData: ChannelData;
 }
 
-interface channelData {
-	id: string; type: string; remark?: string; created_at: string;
+interface ChannelData {
+    "created_at": string,
+    "id": string,
+    "is_active": boolean,
+    "name": string,
+    "secret": string,
+    "updated_at": string,
+    "user_address": string,
+    "webhook_url": string,
+    "channel": string
 }
 
 import feishu from '../images/feishu.png';
@@ -31,20 +36,15 @@ const channelIcon: Record<ChannelType, StaticImageData> = {
 	telegram,
 };
 
-const ChannelCard: React.FC<ChannelCardProps> = ({ id, type, remark, created_at, onDelete, onEdit }) => {
+const ChannelCard: React.FC<ChannelCardProps> = ({ channelData, onDelete, onEdit }) => {
 	const t = useTranslations('Notify.channel');
+	const { id, channel:type, name:remark, created_at } = channelData;
 
 	const handleDeleteClick = () => {
 		onDelete(id);
 	};
 
 	const handleEditClick = () => {
-		const channelData = {
-			id: id,
-			remark: remark,
-			created_at: created_at,
-			type: type,
-		} as channelData;
 		onEdit(channelData);
 	};
 
