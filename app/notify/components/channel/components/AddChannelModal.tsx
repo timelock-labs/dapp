@@ -240,7 +240,7 @@ const AddChannelModal: React.FC<AddChannelModalProps> = ({ isOpen, onClose, onSu
 					) : (
 						<>
 							<TextInput label='Webhook URL' value={webhook_url} onChange={setWebhook_url} placeholder={currentChannel?.configLabel} />
-							<TextInput label='Secret' value={secret} onChange={setSecret} />
+							<TextInput label={`Secret ${t('optional')}`} value={secret} onChange={setSecret} placeholder="*****" className='bg-gray-50'/>
 						</>
 					)}
 				</div>

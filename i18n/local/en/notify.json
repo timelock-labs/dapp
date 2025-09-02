@@ -129,7 +129,8 @@
 			"saveLoading": "Saving...",
 			"channelUpdatedSuccessfully": "Channel updated successfully",
 			"channelName": "Name",
-			"channelNameRequired": "Channel name is required"
+			"channelNameRequired": "Channel name is required",
+			"optional": "（可选）"
 		}
 	}
 }
