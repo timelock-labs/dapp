@@ -28,7 +28,9 @@ export function useApi(): UseApiReturn {
 				...options.headers,
 			};
 
-			if (url !== '/api/v1/auth/wallet-connect' && accessToken) {
+			// Don't add Authorization header for authentication endpoints
+			const authEndpoints = ['/api/v1/auth/nonce', '/api/v1/auth/wallet-connect'];
+			if (!authEndpoints.includes(url) && accessToken) {
 				headers['Authorization'] = `Bearer ${accessToken}`;
 			}
 
