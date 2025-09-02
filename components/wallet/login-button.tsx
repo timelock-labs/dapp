@@ -210,19 +210,8 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 监听钱包连接状态，自动触发签名
 	useEffect(() => {
-		console.log('isConnected', isConnected);
-		console.log('address', address);
-		console.log('signatureAttempted', signatureAttempted);
-		console.log('apiLoading', apiLoading);
-		console.log('apiResponse', apiResponse);
-		console.log('isAuthenticated', isAuthenticated);
 		
 		if (isConnected && address && !signatureAttempted && !apiLoading && !apiResponse?.success) {
-			console.log('isConnected', isConnected);
-			console.log('address', address);
-			console.log('signatureAttempted', signatureAttempted);
-			console.log('apiLoading', apiLoading);
-			console.log('apiResponse', apiResponse);
 			// 钱包已连接且未尝试过签名，自动开始签名
 			handleSignature();
 		}
