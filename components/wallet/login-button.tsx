@@ -4,13 +4,13 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { useTranslations } from 'next-intl';
 import { ConnectWallet } from './connect-wallet';
 import { Button } from '@/components/ui/button';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useActiveWalletConnectionStatus, useActiveAccount, useActiveWallet, useActiveWalletChain } from 'thirdweb/react';
 import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { signWithSafe } from '@/utils/safeSignature';
+import { Loader2 } from 'lucide-react';
 
 /**
  * 登录按钮状态枚举
@@ -271,7 +271,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 						disabled
 						className="w-full h-12 bg-black text-white font-medium rounded-md opacity-80"
 					>
-						<LoadingSpinner className="w-4 h-4 mr-2" />
+						<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 						{t('signing')}
 					</Button>
 				);
