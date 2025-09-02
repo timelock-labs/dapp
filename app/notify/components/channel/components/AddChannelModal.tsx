@@ -30,8 +30,8 @@ interface Channel {
 	user_address: string;
 	webhook_url: string;
 	channel: string;
-	bot_token: string;
-	chat_id: string;
+	bot_token?: string;
+	chat_id?: string;
 }
 
 export interface ChannelItem {
