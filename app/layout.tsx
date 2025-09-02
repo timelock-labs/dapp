@@ -4,6 +4,9 @@ import { ReactNode } from 'react';
 import { routing } from '@/i18n/routing';
 import { Web3Provider } from '@/components/providers/web3-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@/app/globals.css';
 import { Geist, Geist_Mono } from 'next/font/google'; // Import fonts here
 import { Toaster } from 'sonner';
@@ -15,11 +18,15 @@ import I18nInitializer from '@/components/providers/I18nInitializer';
 const geistSans = Geist({
 	variable: '--font-geist-sans',
 	subsets: ['latin'],
+	display: 'swap', // 优化字体加载性能
+	preload: true,
 });
 
 const geistMono = Geist_Mono({
 	variable: '--font-geist-mono',
 	subsets: ['latin'],
+	display: 'swap', // 优化字体加载性能
+	preload: false, // 非主要字体延迟加载
 });
 
 type Props = {
@@ -36,6 +43,14 @@ export default async function RootLayout(props: Props) {
 		<html lang={locale} suppressHydrationWarning>
 			<head>
 				<title>Timelocker</title>
+				{/* 预加载关键字体以提升性能 */}
+				<link
+					rel="preload"
+					href="/righteous-regular.ttf"
+					as="font"
+					type="font/ttf"
+					crossOrigin="anonymous"
+				/>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<ThemeProvider attribute='class' defaultTheme='lightTheme' enableSystem>
@@ -49,6 +64,8 @@ export default async function RootLayout(props: Props) {
 					</Web3Provider>
 				</ThemeProvider>
 				<Toaster position='top-center' />
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);

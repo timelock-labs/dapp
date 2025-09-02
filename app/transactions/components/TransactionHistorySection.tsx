@@ -1,13 +1,16 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 // import SearchBar from '@/components/ui/SearchBar';
 import ExportButton from '@/components/ui/ExportButton';
 import TabbedNavigation from './TabbedNavigation';
-import TableComponent from '@/components/ui/TableComponent';
+import TableSkeleton from '@/components/ui/TableSkeleton';
+
+// 懒加载TableComponent以减少初始bundle大小
+const TableComponent = lazy(() => import('@/components/ui/TableComponent'));
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
-import * as XLSX from 'xlsx';
+// 动态导入XLSX库以减少初始bundle大小
 import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
@@ -106,7 +109,11 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		{
 			key: 'remark',
 			header: t('remark'),
-			render: (row: HistoryTxRow) => <span className="text-sm cursor-pointer" onClick={() => copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
+			render: (row: HistoryTxRow) => (
+				<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.contract_address)}>
+					{row.contract_remark}
+				</span>
+			),
 		},
 		{
 			key: 'timelock_address',
@@ -154,13 +161,16 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 		},
 	];
 
-	const handleExport = () => {
+	const handleExport = async () => {
 		if (historyTxs.length === 0) {
 			toast.warning('No data to export');
 			return;
 		}
 
 		try {
+			// 动态导入XLSX库
+			const XLSX = await import('xlsx');
+
 			const worksheet = XLSX.utils.json_to_sheet(historyTxs);
 			const workbook = XLSX.utils.book_new();
 			XLSX.utils.book_append_sheet(workbook, worksheet, 'Transaction History');
@@ -179,13 +189,12 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 	};
 
 	return (
-		<SectionCard >
+		<SectionCard>
 			<div className='flex flex-col'>
 				<div className='flex justify-between items-center mb-4'>
 					<SectionHeader title={t('history')} description={t('transactionHistory')} />
 
 					<div className='flex items-center space-x-3'>
-
 						<ExportButton onClick={handleExport} />
 						<button
 							type='button'
@@ -194,7 +203,7 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 							}}
 							className='cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black'>
 							<AddSVG />
-							<span>{t("create")}</span>
+							<span>{t('create')}</span>
 						</button>
 					</div>
 				</div>
@@ -205,7 +214,10 @@ const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
 				</div>
 			</div>
 			<div className='flex-1 mb-4'>
-				<TableComponent<HistoryTxRow> columns={columns} data={historyTxs} showPagination={true} itemsPerPage={10} />
+				<Suspense fallback={<TableSkeleton rows={10} columns={8} showHeader={false} />}>
+					{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+					<TableComponent columns={columns as any} data={historyTxs} showPagination={true} itemsPerPage={10} />
+				</Suspense>
 			</div>
 		</SectionCard>
 	);

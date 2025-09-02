@@ -13,6 +13,8 @@ export function useApi(): UseApiReturn {
 	const router = useRouter();
 
 	const accessToken = useAuthStore(state => state.accessToken);
+	const logout = useAuthStore(state => state.logout);
+
 
 	const request = useCallback(
 		async (url: string, body?: object, options: ApiRequestOptions = {}) => {
@@ -47,6 +49,7 @@ export function useApi(): UseApiReturn {
 			} catch (error: any) {
 				if (error.response?.status === 401) {
 					router.push('/login');
+					logout();
 					return;
 				}
 				alert('Error:\n' + `URL: ${fullUrl}\n` + `Headers: ${JSON.stringify(headers, null, 2)}\n` + `Body: ${JSON.stringify(body, null, 2)}\n` + `Error: ${error.message}`);

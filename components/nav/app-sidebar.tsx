@@ -1,7 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { Clock, Frame, ListTodo, BellDot, FileCode, Shield, Box, House ,Logs,BadgePlus } from 'lucide-react';
+import { 
+	Clock, 
+	Frame, 
+	ListTodo, 
+	BellDot, 
+	FileCode, 
+	Shield, 
+	Box, 
+	House, 
+	Logs, 
+	BadgePlus 
+} from 'lucide-react';
 import { NavMain } from '@/components/nav/nav-main';
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, useSidebar } from '@/components/ui/sidebar';

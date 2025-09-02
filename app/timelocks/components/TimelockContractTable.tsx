@@ -1,7 +1,11 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useTranslations } from 'next-intl';
-import TableComponent from '@/components/ui/TableComponent';
+import TableSkeleton from '@/components/ui/TableSkeleton';
+
+// 懒加载TableComponent以减少初始bundle大小
+const TableComponent = lazy(() => import('@/components/ui/TableComponent'));
+import type { Column } from '@/components/ui/TableComponent';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useRouter, useParams } from 'next/navigation';
 import { formatSecondsToLocalizedTime } from '@/utils/timeUtils';
@@ -65,7 +69,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		}
 	}, [deleteResponse, onDataUpdate, t]);
 
-	const columns = [
+	const columns: Column<TimelockContractItem>[] = [
 		{
 			key: 'chain',
 			header: t('chain'),
@@ -88,8 +92,11 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 		{
 			key: 'admin',
 			header: t('owner'),
-			render: (row: TimelockContractItem) => 	<div className='cursor-pointer' onClick={() => copyToClipboard(row.admin)}><AddressWarp address={row.admin} /></div>
-			
+			render: (row: TimelockContractItem) => (
+				<div className='cursor-pointer' onClick={() => copyToClipboard(row.admin)}>
+					<AddressWarp address={row.admin} />
+				</div>
+			),
 		},
 		{
 			key: 'user_permissions',
@@ -102,15 +109,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 
 				return (
 					<div className='flex flex-wrap gap-2'>
-						{permissions.map((permission, index) => (
-							permission !== "creator" && (
-								<TableTag
-									key={index}
-									label={permission}
-									colorType='green'
-								/>
-							)
-						))}
+						{permissions.map((permission, index) => permission !== 'creator' && <TableTag key={index} label={permission} colorType='green' />)}
 					</div>
 				);
 			},
@@ -123,11 +122,7 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 				if (!delay) return '-';
 
 				const formattedTime = formatSecondsToLocalizedTime(delay, locale === 'zh' ? 'zh' : 'en');
-				return (
-					<span className='font-mono'>
-						{formattedTime}
-					</span>
-				);
+				return <span className='font-mono'>{formattedTime}</span>;
 			},
 		},
 		{
@@ -171,7 +166,10 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 						</button>
 					</div>
 				</div>
-				<TableComponent<TimelockContractItem> columns={columns} data={data} showPagination={true} itemsPerPage={5} />
+				<Suspense fallback={<TableSkeleton rows={5} columns={6} showHeader={false} />}>
+					{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+					<TableComponent columns={columns as any} data={data} showPagination={true} itemsPerPage={5} />
+				</Suspense>
 			</div>
 		</div>
 	);
