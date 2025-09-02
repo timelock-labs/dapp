@@ -114,6 +114,7 @@
 		},
 		"addChannelModal": {
 			"title": "Add Notification Channel",
+			"editTitle": "Edit Notification Channel",
 			"description": "Please obtain your channel configuration, fill in the remarks and configuration to complete.",
 			"method": "Method",
 			"remark": "Remark",
@@ -124,7 +125,11 @@
 			"saveChannelError": "Failed to save channel: {message}",
 			"unknownError": "Unknown error",
 			"cancel": "Cancel",
-			"save": "Save"
+			"save": "Save",
+			"saveLoading": "Saving...",
+			"channelUpdatedSuccessfully": "Channel updated successfully",
+			"channelName": "Name",
+			"channelNameRequired": "Channel name is required"
 		}
 	}
 }
