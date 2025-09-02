@@ -247,7 +247,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				return (
 					<Button
 						onClick={handleSignature}
-						className="w-full h-12 bg-black text-white font-medium rounded-md transition-colors"
+						className="w-full h-12  text-black font-medium rounded-md transition-colors"
 						disabled={false}
 					>
 						{t('retrySignature')}
@@ -258,7 +258,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				return (
 					<Button
 						disabled
-						className="w-full h-12 bg-black text-white font-medium rounded-md opacity-80"
+						className="w-full h-12 text-black font-medium rounded-md opacity-80"
 					>
 						<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 						{t('signing')}

@@ -79,8 +79,8 @@ interface ConnectWalletProps extends BaseComponentProps {
 const WALLET_STYLES = {
 	button: {
 		base: {
-			backgroundColor: '#000000',
-			color: '#ffffff',
+			backgroundColor: '#F5F5F5',
+			color: '#171717',
 			border: 'none',
 			borderRadius: '0.375rem',
 			fontWeight: '500',
@@ -88,7 +88,7 @@ const WALLET_STYLES = {
 			cursor: 'pointer',
 		},
 		hover: {
-			backgroundColor: '#374151',
+			backgroundColor: '#E5E5E5',
 		},
 		fullWidth: {
 			height: '48px',

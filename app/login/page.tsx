@@ -19,16 +19,26 @@ const TimeLockerSplitPage = () => {
 	};
 
 	return (
-		<div className='flex items-center justify-center h-screen bg-withe text-white'>
-			<div className="flex flex-col w-[684px] h-[852px] p-10 rounded-xl border border-gray-800 mr-4 bg-[url('/logo-bg.png')] bg-cover bg-center bg-no-repeat">
-				<header className='mb-10'>
-					<h1 className="font-['Righteous'] font-normal text-[32px] leading-none tracking-normal text-center text-white">Timelocker</h1>
-				</header>
-				<main className='text-center px-8 mb-8'>
-					<p className='text-4xl font-bold leading-tight logo-font'>{t('motto')}</p>
-				</main>
-				<footer className='flex-grow flex flex-col justify-end'>
-					<div className='flex justify-between items-center mb-8'>
+		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
+			<div className='flex w-[1440px] h-[860px] items-center justify-between rounded-xl border border-gray-800 relative'>
+				<div className="flex flex-col w-[580px] h-full p-10  ml-4 justify-center items-center bg-[url('/bg-left-logo.svg')] bg-[size:50%_100%] bg-center bg-repeat-y">
+					<div className='w-[360px] flex flex-col '>
+						<h5 className='text-6xl font-medium text-center'>
+							安全无捷径，
+						</h5>
+						<h5 className='text-6xl font-medium mb-12 mt-4'>
+							时间即防线。
+						</h5>
+						<div className='w-[90%]'>
+							<LoginButton fullWidth={true} />
+						</div>
+					</div>
+				</div>
+				<div className="flex flex-col w-[860px] h-full p-10 bg-[url('/logo-bg.svg')] bg-cover bg-center bg-no-repeat">
+
+				</div>
+				<footer className='absolute bottom-0 w-full flex justify-center items-center'>
+					<div className='flex justify-around items-center mb-8 w-[80%] gap-16'>
 						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handlePrevSection}>
 							&larr;
 						</span>
@@ -36,56 +46,49 @@ const TimeLockerSplitPage = () => {
 							<h2 className='text-xl font-medium'>{t('whyTimelock')}</h2>
 							: <div className='text-center'>
 								<h2 className='text-xl font-medium'>{t('whyProtocol')}</h2>
-
 							</div>
 						}
+						<div className='grid grid-cols-2 gap-4'>
+							{currentSection === 0 ?
+								<>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
+										{t('features.preventUnauthorized')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('features.avoidRisks')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('features.earlyWarning')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('features.industryStandard')}
+									</div>
+								</>
+								: <>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
+										{t('protocolFeatures.importExisting')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('protocolFeatures.readableEncoding')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('protocolFeatures.eventManagement')}
+									</div>
+									<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
+										{t('protocolFeatures.comprehensiveMonitoring')}
+									</div>
+								</>
+							}
+						</div>
 						<span className='text-2xl cursor-pointer hover:text-gray-400 transition-colors' onClick={handleNextSection}>
 							&rarr;
 						</span>
 					</div>
-					<div className='grid grid-cols-2 gap-4'>
-						{currentSection === 0 ?
-							<>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
-									{t('features.preventUnauthorized')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('features.avoidRisks')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('features.earlyWarning')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('features.industryStandard')}
-								</div>
-							</>
-							: <>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs '>
-									{t('protocolFeatures.importExisting')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('protocolFeatures.readableEncoding')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('protocolFeatures.eventManagement')}
-								</div>
-								<div className='bg-neutral-900 hover:bg-neutral-800 transition-colors p-6 rounded-lg text-center flex items-center justify-center h-[36px] text-black-300 text-xs'>
-									{t('protocolFeatures.comprehensiveMonitoring')}
-								</div>
-							</>
-						}
-					</div>
+
 				</footer>
+
 			</div>
 
-			<div className='flex flex-col w-[684px] h-[852px] p-10 bg-white rounded-xl ml-4 justify-center items-center'>
-				<div className='bg-white rounded-lg w-[360px]'>
-					<Logo />
-					<h2 className='text-black text-2xl font-semibold leading-[72px]'>{t('getStarted')}</h2>
-					<p className='text-sm mb-8 text-black'>{t('connectWalletDescription')}</p>
-					<LoginButton fullWidth={true} />
-				</div>
-			</div>
 		</div>
 	);
 };
