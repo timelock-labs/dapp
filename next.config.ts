@@ -7,6 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig = {
+	optimizeFonts: false,
 	// 性能优化配置
 	compiler: {
 		// 移除console.log (生产环境)
