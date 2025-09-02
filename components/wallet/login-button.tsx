@@ -110,13 +110,23 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 实际执行签名的函数
 	const performSignature = useCallback(async () => {
-		const message = t('welcomeMessage');
-
 		console.log('isSafeWallet:', isSafeWallet);
 
 		try {
+			// Step 1: Get nonce from the backend
+			const nonceResponse = await walletConnect('/api/v1/auth/nonce', {
+				wallet_address: address,
+			});
+
+			if (!nonceResponse?.success || !nonceResponse.data?.message || !nonceResponse.data?.nonce) {
+				throw new Error('Failed to get nonce from server');
+			}
+
+			const { message, nonce } = nonceResponse.data;
+			debugger;
 			let signature: string;
 
+			// Step 2: Sign the message
 			if (isSafeWallet) {
 				try {
 					// 使用专门的 Safe 签名工具
@@ -159,11 +169,14 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				signature = await signMessage({ message });
 			}
 
-			// Send the signature to the backend
+			// Step 3: Send the signature to the backend with all required parameters
 			await walletConnect('/api/v1/auth/wallet-connect', {
 				wallet_address: address,
 				signature: signature,
 				message: message,
+				nonce: nonce,
+				wallet_type: isSafeWallet ? 'safe' : 'eoa',
+				...(isSafeWallet && { chain_id: activeChain?.id || 1 })
 			});
 
 		} catch (error) {
