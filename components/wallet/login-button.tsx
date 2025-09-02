@@ -110,13 +110,22 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 实际执行签名的函数
 	const performSignature = useCallback(async () => {
-		const message = t('welcomeMessage');
-
 		console.log('isSafeWallet:', isSafeWallet);
 
 		try {
+			// Step 1: Get nonce from the backend
+			const nonceResponse = await walletConnect('/api/v1/auth/nonce', {
+				wallet_address: address,
+			});
+
+			if (!nonceResponse?.success || !nonceResponse.data?.message || !nonceResponse.data?.nonce) {
+				throw new Error('Failed to get nonce from server');
+			}
+
+			const { message, nonce } = nonceResponse.data;
 			let signature: string;
 
+			// Step 2: Sign the message
 			if (isSafeWallet) {
 				try {
 					// 使用专门的 Safe 签名工具
@@ -159,13 +168,19 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				signature = await signMessage({ message });
 			}
 
-			// Send the signature to the backend
+			// Step 3: Send the signature to the backend with all required parameters
 			await walletConnect('/api/v1/auth/wallet-connect', {
 				wallet_address: address,
 				signature: signature,
 				message: message,
+				nonce: nonce,
+				wallet_type: isSafeWallet ? 'safe' : 'eoa',
+				...(isSafeWallet && { chain_id: activeChain?.id || 1 })
 			});
 
+			setTimeout(() => {
+				router.replace('/home');
+			}, 1000);
 		} catch (error) {
 			console.error('Signature error:', error);
 			setLoginState('connected');
@@ -195,25 +210,8 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 监听钱包连接状态，自动触发签名
 	useEffect(() => {
-		console.log('isConnected', isConnected);
-		console.log('address', address);
-		console.log('signatureAttempted', signatureAttempted);
-		console.log('apiLoading', apiLoading);
-		console.log('apiResponse', apiResponse);
-		console.log('isAuthenticated', isAuthenticated);
 		
-		// 如果用户已经认证，直接跳转到首页
-		if (isAuthenticated && isConnected && address) {
-			router.replace('/home');
-			return;
-		}
-
 		if (isConnected && address && !signatureAttempted && !apiLoading && !apiResponse?.success) {
-			console.log('isConnected', isConnected);
-			console.log('address', address);
-			console.log('signatureAttempted', signatureAttempted);
-			console.log('apiLoading', apiLoading);
-			console.log('apiResponse', apiResponse);
 			// 钱包已连接且未尝试过签名，自动开始签名
 			handleSignature();
 		}
@@ -229,11 +227,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				refreshToken: apiResponse.data.refresh_token,
 				expiresAt: apiResponse.data.expires_at,
 			});
-
-			// 短暂延迟后跳转，让用户看到成功状态
-			setTimeout(() => {
-				router.replace('/home');
-			}, 1000);
 		}
 	}, [apiResponse, login, router]);
 
