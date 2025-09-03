@@ -7,8 +7,11 @@ import HomeAnimation from '@/components/ui/HomeAnimation';
 import LoginFooter from '@/components/ui/LoginFooter';
 import './index.css'
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+
 
 const TimeLockerSplitPage = () => {
+	const t = useTranslations('walletLogin');
 
 	return (
 		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
@@ -26,8 +29,7 @@ const TimeLockerSplitPage = () => {
 
 				<div className="flex flex-col w-[580px] h-full p-10  ml-4 justify-center items-center bg-[url('/bg-left-logo.svg')] bg-[size:50%_100%] bg-center bg-repeat-y">
 					<div className='w-[360px] flex flex-col '>
-						<h5 className='text-6xl font-medium text-center'>安全无捷径，</h5>
-						<h5 className='text-6xl font-medium mb-12 mt-4'>时间即防线。</h5>
+						<div className='text-6xl font-medium text-center mb-12 leading-tight'>{t('motto')}</div>
 						<div className='w-[90%]'>{/* <LoginButton fullWidth={true} /> */}</div>
 					</div>
 				</div>
