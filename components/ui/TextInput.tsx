@@ -10,6 +10,7 @@ interface TextInputProps extends BaseComponentProps, Omit<InputHTMLAttributes, '
 	value: string;
 	onChange: OnChangeType;
 	error?: string | null;
+	labelClassName?: string;
 }
 
 /**
@@ -18,17 +19,17 @@ interface TextInputProps extends BaseComponentProps, Omit<InputHTMLAttributes, '
  * @param props - TextInput component props
  * @returns JSX.Element
  */
-const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, placeholder, type = 'text', disabled = false, error = null, className = '', ...rest }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, placeholder, type = 'text', disabled = false, error = null, className = '', labelClassName = '', ...rest }) => {
 	return (
 		<div className='mb-4'>
-			<label className='block text-sm font-medium   mb-1'>{label}</label>
+			<label className={`block text-sm font-medium mb-1 ${labelClassName}`}>{label}</label>
 			<input
 				type={type}
 				className={`mt-1 block w-full px-3 py-2 border ${
-					error ? 'border-red-500' : 'border-gray-300'
-				} rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm ${
-					disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-				} ${className}`}
+				error ? 'border-red-500' : 'border-gray-300'
+			} rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm ${
+				disabled ? 'cursor-not-allowed' : ''
+			} ${className || (disabled ? 'bg-gray-100' : 'bg-white')}`}
 				placeholder={placeholder || label}
 				value={value}
 				onChange={e => {

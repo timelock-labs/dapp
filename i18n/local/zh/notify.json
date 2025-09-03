@@ -128,7 +128,8 @@
 			"saveLoading": "保存中...",
 			"channelUpdatedSuccessfully": "渠道更新成功",
 			"channelName": "名称",
-			"channelNameRequired": "渠道名称为必填项"
+			"channelNameRequired": "渠道名称为必填项",
+			"optional": "（可选）"
 		}
 	}
 }
