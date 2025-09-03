@@ -4,7 +4,7 @@ import TableComponent from '@/components/ui/TableComponent';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { formatUnits } from 'ethers/lib/utils';
-import type { Transaction, BaseComponentProps, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
+import type { Transaction, TransactionStatus, ContractStandard, Hash, Address, Timestamp } from '@/types';
 import { useApi } from '@/hooks/useApi';
 import copyToClipboard from '@/utils/copy';
 import SectionCard from '@/components/layout/SectionCard';
@@ -41,10 +41,9 @@ interface HistoryTxRow {
 /**
  * Transaction history section component with filtering and export functionality
  *
- * @param props - TransactionHistorySection component props
  * @returns JSX.Element
  */
-const TransactionHistorySection: React.FC<BaseComponentProps> = () => {
+const TransactionHistorySection: React.FC = () => {
 	const t = useTranslations('Transactions_log');
 	const [historyTxs, setHistoryTxs] = useState<HistoryTxRow[]>([]);
 	const { request: getTransactionList } = useApi();

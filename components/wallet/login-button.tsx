@@ -106,6 +106,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				isSigningRef.current = false;
 			}
 		}, 300); // 300ms 防抖延迟
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected, address, signMessage, t]);
 
 	// 实际执行签名的函数
@@ -189,7 +190,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		} finally {
 			isSigningRef.current = false;
 		}
-	}, [isConnected, address, signMessage, walletConnect, t, isSafeWallet, wallet, activeChain]);
+	}, [address, signMessage, walletConnect, t, isSafeWallet, activeChain, router]);
 
 	// 处理钱包连接成功
 	const handleWalletConnect = useCallback(() => {
@@ -231,48 +232,59 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	}, [apiResponse, login, router]);
 
 	// 根据当前状态渲染不同的按钮
-	const renderButton = () => {
+	const renderButton = (currentState: LoginState) => {
 		switch (currentState) {
 			case 'disconnected':
 				return (
-					<ConnectWallet
-						icon={false}
-						fullWidth={fullWidth}
-						onConnect={handleWalletConnect}
-						onDisconnect={handleWalletDisconnect}
-					/>
+					<>
+						<div style={{ display: connectionStatus === 'unknown' ? 'flex' : 'none' }} className="w-full h-12 bg-white text-black font-medium rounded-md items-center justify-center">
+							<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+							<span>{t('initializing')}</span>
+						</div>
+						<div style={{ display: connectionStatus !== 'unknown' ? 'block' : 'none' }}>
+							<ConnectWallet
+								icon={false}
+								fullWidth={fullWidth}
+								onConnect={handleWalletConnect}
+								onDisconnect={handleWalletDisconnect}
+							/>
+						</div>
+					</>
 				);
-
 			case 'connected':
 				return (
-					<Button
-						onClick={handleSignature}
-						className="w-full h-12 bg-black text-white font-medium rounded-md transition-colors"
-						disabled={false}
-					>
-						{t('retrySignature')}
-					</Button>
+					<>
+						<Button
+							onClick={handleSignature}
+							className="w-full h-12 bg-white text-black font-medium rounded-md transition-colors"
+							disabled={false}
+						>
+							{t('retrySignature')}
+						</Button>
+						{currentState === 'connected' && signatureAttempted && (
+							<p className="text-xs text-gray-500 mt-2 text-center">
+								{t('signatureFailedRetry')}
+							</p>
+						)}</>
 				);
 
 			case 'signing':
 				return (
-					<Button
-						disabled
-						className="w-full h-12 bg-black text-white font-medium rounded-md opacity-80"
+					<div
+						className="w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed"
 					>
 						<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 						{t('signing')}
-					</Button>
+					</div>
 				);
 
 			case 'signed':
 				return (
-					<Button
-						disabled
-						className="w-full h-12 bg-black text-white font-medium rounded-md"
+					<div
+						className="w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed"
 					>
 						✓ {t('loginSuccess')}
-					</Button>
+					</div>
 				);
 
 			default:
@@ -282,14 +294,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	return (
 		<div className="w-full">
-			{renderButton()}
-
-			{/* 状态说明文本 */}
-			{currentState === 'connected' && signatureAttempted && (
-				<p className="text-xs text-gray-500 mt-2 text-center">
-					{t('signatureFailedRetry')}
-				</p>
-			)}
+			{renderButton(currentState)}
 		</div>
 	);
 }

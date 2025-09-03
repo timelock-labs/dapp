@@ -26,7 +26,7 @@
 		"zh": "中"
 	},
 	"walletLogin": {
-		"motto": "安全无捷径，时间即防线",
+		"motto": "安全无捷径，时间即防线。",
 		"whyTimelock": "为什么要使用 Timelock ?",
 		"features": {
 			"preventUnauthorized": "防止未经授权的即时执行交易",
@@ -37,7 +37,7 @@
 		"whyProtocol": "为什么要选择 Timelock Protocol？",
 		"protocolSubtitle": "既是安全策略，也是钱包",
 		"protocolFeatures": {
-			"importExisting": "支持导入现有符合标准的 Timelock合约，无需重新创建",
+			"importExisting": "支持导入符合标准的 Timelock合约，无需重新创建",
 			"readableEncoding": "更可读的编码策略，全面降低 Timelock 的使用难度",
 			"eventManagement": "完备的事件管理，历史事件一览无余",
 			"comprehensiveMonitoring": "全方位的监听，及时推送到您和安全部门的邮箱账号"
@@ -53,6 +53,9 @@
 		"pleaseConnectWallet": "请先连接您的钱包",
 		"clickToSign": "点击按钮进行签名以完成登录",
 		"signatureFailedRetry": "签名失败，请重新尝试",
-		"autoSigning": "自动登录中..."
+		"autoSigning": "自动登录中...",
+		"connectWallet": "连接钱包",
+		"initializing": "初始化中...",
+		"redirecting": "跳转中..."
 	}
 } 
