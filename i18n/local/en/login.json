@@ -53,7 +53,10 @@
 		"pleaseConnectWallet": "Please connect your wallet first",
 		"clickToSign": "Click the button to sign and complete the login",
 		"signatureFailedRetry": "Signature failed, please try again",
-		"autoSigning": "Automatically signing in..."
+		"autoSigning": "Automatically signing in...",
+		"connectWallet": "Connect Wallet",
+		"initing": "Initializing...",
+		"redirecting": "Redirecting..."
 
 	}
 } 

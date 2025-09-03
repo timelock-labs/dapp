@@ -53,6 +53,9 @@
 		"pleaseConnectWallet": "请先连接您的钱包",
 		"clickToSign": "点击按钮进行签名以完成登录",
 		"signatureFailedRetry": "签名失败，请重新尝试",
-		"autoSigning": "自动登录中..."
+		"autoSigning": "自动登录中...",
+		"connectWallet": "连接钱包",
+		"initing": "初始化中...",
+		"redirecting": "跳转中..."
 	}
 } 

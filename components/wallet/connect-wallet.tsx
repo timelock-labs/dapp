@@ -34,6 +34,7 @@ import {
 } from '@/utils/chainUtils';
 import { useActiveWalletConnectionStatus } from 'thirdweb/react';
 import { useWeb3React } from '@/hooks/useWeb3React';
+import { useTranslations } from 'next-intl';
 
 const wallets = [
 	createWallet('io.metamask'), 
@@ -79,18 +80,21 @@ interface ConnectWalletProps extends BaseComponentProps {
 const WALLET_STYLES = {
 	button: {
 		base: {
-			backgroundColor: '#F5F5F5',
-			color: '#171717',
+			backgroundColor: '#000000',
+			color: '#ffffff',
 			border: 'none',
 			borderRadius: '0.375rem',
 			fontWeight: '500',
 			transition: 'background-color 0.2s ease',
 			cursor: 'pointer',
+			width: '100%',
 		},
 		hover: {
-			backgroundColor: '#E5E5E5',
+			backgroundColor: '#374151',
 		},
 		fullWidth: {
+			backgroundColor: '#ffffff',
+			color: '#000000',
 			height: '48px',
 			width: '100%',
 		},
@@ -115,6 +119,7 @@ const WALLET_STYLES = {
 export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyle, onConnect, onDisconnect, className }: ConnectWalletProps) {
 	const logout = useAuthStore(state => state.logout);
 	const router = useRouter();
+	const t = useTranslations('walletLogin');
 
 	const wrapperClass = cn('connect-wallet-container', fullWidth ? 'w-full' : 'w-auto', className);
 	const { client } = useWeb3React();
@@ -132,9 +137,12 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 			<ConnectButton
 				client={client}
 				chains={supportedChains}
+				connectButton={{
+					label: t('connectWallet'),
+				}}
 				connectModal={{
 					size: 'compact',
-					...(headerStyle && { title: '连接钱包' }),
+					...(headerStyle && { title: t('connectWallet') }),
 				}}
 				wallets={wallets}
 				theme='dark'
@@ -148,28 +156,52 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 				}}
 			/>
 			<style jsx global>{`
-				/* 连接按钮基础样式 */
+				/* 连接按钮基础样式 - 覆盖所有可能的按钮元素，包括行内样式 */
 				.connect-wallet-container [data-testid='connect-button'],
-				.connect-wallet-container button[data-theme] {
-					background-color: ${WALLET_STYLES.button.base.backgroundColor} !important;
-					color: ${WALLET_STYLES.button.base.color} !important;
+				.connect-wallet-container button[data-theme],
+				.connect-wallet-container button,
+				.connect-wallet-container [data-testid='connect-button'][style],
+				.connect-wallet-container button[data-theme][style],
+				.connect-wallet-container button[style] {
 					border: ${WALLET_STYLES.button.base.border} !important;
 					border-radius: ${WALLET_STYLES.button.base.borderRadius} !important;
 					font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
-					${fullWidth
-						? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-						: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important;`}
+					width: 200px !important;
 				}
 
-				/* 悬停效果 */
+				/* 全宽模式样式 - 覆盖所有可能的按钮元素，包括行内样式 */
+				.connect-wallet-container.w-full [data-testid='connect-button'],
+				.connect-wallet-container.w-full button[data-theme],
+				.connect-wallet-container.w-full button,
+				.connect-wallet-container.w-full [data-testid='connect-button'][style],
+				.connect-wallet-container.w-full button[data-theme][style],
+				.connect-wallet-container.w-full button[style] {
+					height: ${WALLET_STYLES.button.fullWidth.height} !important;
+					width: ${WALLET_STYLES.button.fullWidth.width} !important;
+					min-width: 0 !important;
+					max-width: none !important;
+					background-color: ${WALLET_STYLES.button.fullWidth.backgroundColor} !important;
+					color: ${WALLET_STYLES.button.fullWidth.color} !important;
+				}
+
+				/* 头部模式样式 - 覆盖所有可能的按钮元素 */
+				.connect-wallet-container.w-auto [data-testid='connect-button'],
+				.connect-wallet-container.w-auto button[data-theme],
+				.connect-wallet-container.w-auto button {
+					height: ${WALLET_STYLES.button.header.height} !important;
+					width: ${WALLET_STYLES.button.header.width} !important;
+				}
+
+				/* 悬停效果 - 覆盖所有可能的按钮元素 */
 				.connect-wallet-container [data-testid='connect-button']:hover,
-				.connect-wallet-container button[data-theme]:hover {
+				.connect-wallet-container button[data-theme]:hover,
+				.connect-wallet-container button:hover {
 					background-color: ${WALLET_STYLES.button.hover.backgroundColor} !important;
 				}
 
-				/* 已连接按钮样式 - 根据实际DOM结构 */
+				/* 已连接按钮基础样式 */
 				.connect-wallet-container .tw-connected-wallet {
 					background-color: ${WALLET_STYLES.button.base.backgroundColor} !important;
 					color: ${WALLET_STYLES.button.base.color} !important;
@@ -178,10 +210,23 @@ export const ConnectWallet = memo(function ConnectWallet({ fullWidth, headerStyl
 					font-weight: ${WALLET_STYLES.button.base.fontWeight} !important;
 					transition: ${WALLET_STYLES.button.base.transition} !important;
 					cursor: ${WALLET_STYLES.button.base.cursor} !important;
-					${fullWidth
-						? `height: ${WALLET_STYLES.button.fullWidth.height} !important; width: ${WALLET_STYLES.button.fullWidth.width} !important;`
-						: `height: ${WALLET_STYLES.button.header.height} !important; width: ${WALLET_STYLES.button.header.width} !important; min-width: ${WALLET_STYLES.button.header.width} !important; max-width: ${WALLET_STYLES.button.header.width} !important;`}
 					box-sizing: border-box !important;
+				}
+
+				/* 已连接按钮全宽模式样式 */
+				.connect-wallet-container.w-full .tw-connected-wallet {
+					height: ${WALLET_STYLES.button.fullWidth.height} !important;
+					width: ${WALLET_STYLES.button.fullWidth.width} !important;
+					background-color: ${WALLET_STYLES.button.fullWidth.backgroundColor} !important;
+					color: ${WALLET_STYLES.button.fullWidth.color} !important;
+				}
+
+				/* 已连接按钮头部模式样式 */
+				.connect-wallet-container.w-auto .tw-connected-wallet {
+					height: ${WALLET_STYLES.button.header.height} !important;
+					width: ${WALLET_STYLES.button.header.width} !important;
+					min-width: ${WALLET_STYLES.button.header.width} !important;
+					max-width: ${WALLET_STYLES.button.header.width} !important;
 				}
 
 				/* 已连接按钮悬停效果 */

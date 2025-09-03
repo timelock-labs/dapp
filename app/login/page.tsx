@@ -30,7 +30,7 @@ const TimeLockerSplitPage = () => {
 				<div className="flex flex-col w-[580px] h-full p-10  ml-4 justify-center items-center bg-[url('/bg-left-logo.svg')] bg-[size:50%_100%] bg-center bg-repeat-y">
 					<div className='w-[360px] flex flex-col '>
 						<div className='text-6xl font-medium text-center mb-12 leading-tight'>{t('motto')}</div>
-						<div className='w-[90%]'>{/* <LoginButton fullWidth={true} /> */}</div>
+						<div className='w-[90%]'><LoginButton fullWidth={true} /></div>
 					</div>
 				</div>
 				<div className='flex flex-col w-[860px] h-full overflow-hidden rounded-tr-xl rounded-br-xl'>
