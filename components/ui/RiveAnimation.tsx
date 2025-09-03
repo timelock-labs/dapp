@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useRive, UseRiveParameters } from '@rive-app/react-canvas';
 import { cn } from '@/utils/utils';
 
@@ -12,12 +12,12 @@ interface RiveAnimationProps {
   animations?: string | string[];
   artboard?: string;
   onLoad?: () => void;
-  onLoadError?: (error: any) => void;
+  onLoadError?: () => void;
   onPlay?: () => void;
   onPause?: () => void;
   onStop?: () => void;
   onLoop?: () => void;
-  onStateChange?: (event: any) => void;
+  onStateChange?: (event: unknown) => void;
 }
 
 const RiveAnimation: React.FC<RiveAnimationProps> = ({
@@ -50,7 +50,7 @@ const RiveAnimation: React.FC<RiveAnimationProps> = ({
     onStateChange,
   };
 
-  const { rive, RiveComponent } = useRive(riveParams);
+  const { RiveComponent } = useRive(riveParams);
 
   return (
     <div className={cn('w-full h-full', className)}>

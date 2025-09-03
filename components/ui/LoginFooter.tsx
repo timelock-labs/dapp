@@ -50,7 +50,7 @@ export default function LoginFooter() {
 	// 使用 useMemo 优化特性卡片渲染
 	const featureCards = useMemo(() => {
 		const features = currentSection === 0 ? TIMELOCK_FEATURES : PROTOCOL_FEATURES;
-		return features.map((feature, index) => (
+		return features.map((feature) => (
 			<div key={feature} className={FEATURE_CARD_STYLES}>
 				{t(feature)}
 			</div>

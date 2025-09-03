@@ -106,6 +106,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				isSigningRef.current = false;
 			}
 		}, 300); // 300ms 防抖延迟
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected, address, signMessage, t]);
 
 	// 实际执行签名的函数
@@ -189,7 +190,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		} finally {
 			isSigningRef.current = false;
 		}
-	}, [isConnected, address, signMessage, walletConnect, t, isSafeWallet, wallet, activeChain]);
+	}, [address, signMessage, walletConnect, t, isSafeWallet, activeChain, router]);
 
 	// 处理钱包连接成功
 	const handleWalletConnect = useCallback(() => {

@@ -21,8 +21,8 @@ const HomeAnimation: React.FC<HomeAnimationProps> = ({
       className={cn('w-full h-full', className)}
       autoplay={autoplay}
       onLoad={onAnimationLoad}
-      onLoadError={(error) => {
-        console.error('Failed to load home animation:', error);
+      onLoadError={() => {
+        console.error('Failed to load home animation');
       }}
     />
   );
