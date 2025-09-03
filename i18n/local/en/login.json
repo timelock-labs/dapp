@@ -55,7 +55,7 @@
 		"signatureFailedRetry": "Signature failed, please try again",
 		"autoSigning": "Automatically signing in...",
 		"connectWallet": "Connect Wallet",
-		"initing": "Initializing...",
+		"initializing": "Initializing...",
 		"redirecting": "Redirecting..."
 
 	}
