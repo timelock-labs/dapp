@@ -4,7 +4,7 @@ import React from 'react';
 import Logo from '@/components/layout/Logo';
 import { LoginButton } from '@/components/wallet/login-button';
 import HomeAnimation from '@/components/ui/HomeAnimation';
-import LoginFooter from '@/components/ui/LoginFooter';
+// import LoginFooter from '@/components/ui/LoginFooter';
 import './index.css'
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
@@ -19,10 +19,10 @@ const TimeLockerSplitPage = () => {
 				<div className='w-full flex items-center justify-between absolute top-4 z-10 px-10'>
 					<Logo />
 					<div className='flex items-center gap-4'>
-						<Image src='/twitter.svg' alt='Icon' width={24} height={24} />
-						<Image src='/telegram.svg' alt='Icon' width={24} height={24} />
-						<Image src='/book.svg' alt='Icon' width={24} height={24} />
-						<Image src='/github.svg' alt='Icon' width={24} height={24} />
+						<Image src='/twitter.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
+						<Image src='/telegram.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
+						<Image src='/book.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
+						<Image src='/github.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@ const TimeLockerSplitPage = () => {
 				<div className='flex flex-col w-[860px] h-full overflow-hidden rounded-tr-xl rounded-br-xl'>
 					<HomeAnimation className='w-full h-full scale-120' />
 				</div>
-				<LoginFooter />
+				{/* <LoginFooter /> */}
 			</div>
 		</div>
 	);
