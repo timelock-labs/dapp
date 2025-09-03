@@ -13,7 +13,10 @@ import { useTranslations, useLocale } from 'next-intl';
 const TimeLockerSplitPage = () => {
 	const t = useTranslations('walletLogin');
 	const locale = useLocale();
-	const textSize = locale === 'zh' ? 'text-6xl' : 'text-[40px] -ml-[40px] mt-3';
+	const textStyle1 = locale === 'zh' ? 'text-6xl' : 'text-[40px] ';
+	const textStyle2 = locale === 'zh' ? 'text-6xl' : 'text-[40px] mt-3 -ml-[18px]';
+
+
 
 	return (
 		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
@@ -31,8 +34,8 @@ const TimeLockerSplitPage = () => {
 
 				<div className="flex flex-col w-[580px] h-full p-10  ml-4 justify-center items-center bg-[url('/bg-left-logo.svg')] bg-[size:50%_100%] bg-center bg-repeat-y">
 					<div className='w-[360px] flex flex-col '>
-						<div className={`${textSize} font-medium text-center leading-tight whitespace-nowrap`}>{t('motto1')}</div>
-						<div className={`${textSize} font-medium text-center mb-12 leading-tight whitespace-nowrap`}>{t('motto2')}</div>
+						<div className={`${textStyle1} font-medium text-center leading-tight whitespace-nowrap`}>{t('motto1')}</div>
+						<div className={`${textStyle2} font-medium text-center mb-12 leading-tight whitespace-nowrap`}>{t('motto2')}</div>
 						<div className='w-[90%]'><LoginButton fullWidth={true} /></div>
 					</div>
 				</div>
