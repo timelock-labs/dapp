@@ -93,7 +93,7 @@ const WALLET_STYLES = {
 			backgroundColor: '#374151',
 		},
 		fullWidth: {
-			backgroundColor: '#ffffff',
+			backgroundColor: '#F5F5F5',
 			color: '#000000',
 			height: '48px',
 			width: '100%',

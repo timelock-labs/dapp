@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 
 // 常量定义
@@ -25,19 +25,20 @@ function NavigationButton({ direction, onClick }: NavigationButtonProps) {
 	const ariaLabel = direction === 'prev' ? 'Previous section' : 'Next section';
 
 	return (
-			<button 
-				className='currentSection-item-button transition-all duration-200 hover:bg-gray-700 hover:cursor-pointer active:scale-95' 
-				onClick={onClick} 
-				type='button'
-			>
-				<Image src={symbol} alt={ariaLabel} width={18} height={18} className='transition-transform duration-200' />
-			</button>
-		);
+		<button
+			className='currentSection-item-button transition-all duration-200 hover:bg-gray-700 hover:cursor-pointer active:scale-95'
+			onClick={onClick}
+			type='button'
+		>
+			<Image src={symbol} alt={ariaLabel} width={18} height={18} className='transition-transform duration-200' />
+		</button>
+	);
 }
 
 export default function LoginFooter() {
 	const t = useTranslations('walletLogin');
 	const [currentSection, setCurrentSection] = useState(0);
+	const [isVisible, setIsVisible] = useState(false);
 
 	const handlePrevSection = () => {
 		setCurrentSection(prev => (prev === 0 ? 1 : 0));
@@ -46,6 +47,14 @@ export default function LoginFooter() {
 	const handleNextSection = () => {
 		setCurrentSection(prev => (prev === 0 ? 1 : 0));
 	};
+
+	// 组件挂载后慢慢出现
+		useEffect(() => {
+			const timer = setTimeout(() => {
+				setIsVisible(true);
+			}, 300); // 300ms延迟后开始淡入
+			return () => clearTimeout(timer);
+		}, []);
 
 	// 使用 useMemo 优化特性卡片渲染
 	const featureCards = useMemo(() => {
@@ -62,8 +71,8 @@ export default function LoginFooter() {
 	}, [currentSection, t]);
 
 	return (
-		<footer className='absolute bottom-0 w-full flex justify-center items-center '>
-			<div className='flex justify-around items-center w-[88%] gap-10 h-[200px]'>
+		<footer className={`text-[#D4D4D4] absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] flex justify-center items-center border border-gray-900 rounded-xl bg-[#1E1E1E69] backdrop-blur-sm transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+			<div className='flex justify-around items-center w-[96%] gap-10 h-[160px]'>
 				<NavigationButton direction='prev' onClick={handlePrevSection} />
 
 				<div className='w-[300px] transform translate-x-10 hover:cursor-pointer'>
