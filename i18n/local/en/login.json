@@ -26,8 +26,8 @@
 		"zh": "ZH"
 	},
 	"walletLogin": {
-		"motto1": "Security has no Shortcuts",
-		"motto2": "Time is the Defense",
+		"motto1": "SECURITY FIRST",
+		"motto2": "TIME PROTECTS",
 		"whyTimelock": "Why use Timelock?",
 		"features": {
 			"preventUnauthorized": "Prevent unauthorized instant transaction execution",
@@ -64,4 +64,4 @@
 		"safeWalletSDKError": "Safe wallet SDK error",
 		"safeWalletStrategyTimeout": "Safe wallet strategy timeout"
 	}
-} 
+}
