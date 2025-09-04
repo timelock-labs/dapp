@@ -9,7 +9,6 @@ import { useApi } from '@/hooks/useApi';
 import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { signWithSafe } from '@/utils/safeSignature';
 import { Loader2 } from 'lucide-react';
 
 /**
@@ -23,7 +22,8 @@ interface LoginButtonProps {
 
 export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const t = useTranslations('walletLogin');
-	const { address, signMessage } = useActiveAccount() || {};
+	const activeAccount = useActiveAccount();
+	const { address, signMessage } = activeAccount || {};
 	const connectionStatus = useActiveWalletConnectionStatus();
 	const { disconnect } = useDisconnect();
 	const wallet = useActiveWallet();
@@ -116,64 +116,47 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 实际执行签名的函数
 	const performSignature = useCallback(async () => {
-		console.log('isSafeWallet:', isSafeWallet);
-
 		try {
-			// Step 1: Get nonce from the backend
-			const nonceResponse = await getAuthNonce('/api/v1/auth/nonce', {
-				wallet_address: address,
-			});
-
-			if (!nonceResponse?.success || !nonceResponse.data?.message || !nonceResponse.data?.nonce) {
-				throw new Error('Failed to get nonce from server');
-			}
-
-			const { message, nonce } = nonceResponse.data;
-			let signature: string;
-
-			// Step 2: Sign the message
+			const currentChainId = activeChain?.id || 1;
+			
+			let requestPayload;
+			
 			if (isSafeWallet) {
-				try {
-					// 使用专门的 Safe 签名工具
-					const safeSignResult = await signWithSafe({
-						message,
-						address: address!,
-						chainId: activeChain?.id || 1,
-					});
-
-					if (safeSignResult.success && safeSignResult.signature) {
-						signature = safeSignResult.signature;
-					} else {
-						throw new Error(safeSignResult.error || 'Safe signature failed');
-					}
-				} catch (safeError) {
-					const errorMessage = (safeError as { message?: string }).message || 'Unknown error';
-					const errorMsg = getErrorMsg(errorMessage);
-					toast.error(t('errorSigningIn', { error: errorMsg }));
-
-					setLoginState('errorSigningIn');
-					setTimeout(() => {
-						if (wallet) {
-							disconnect(wallet);
-						}
-					}, 3000);
-					return;
-				}
+				// For Safe wallets, skip nonce and signature steps
+				requestPayload = {
+					chain_id: currentChainId,
+					wallet_address: address,
+					wallet_type: 'safe',
+				};
 			} else {
+				// Step 1: Get nonce from the backend (only for EOA wallets)
+				const nonceResponse = await getAuthNonce('/api/v1/auth/nonce', {
+					wallet_address: address,
+				});
+
+				if (!nonceResponse?.success || !nonceResponse.data?.message || !nonceResponse.data?.nonce) {
+					throw new Error('Failed to get nonce from server');
+				}
+
+				const { message, nonce } = nonceResponse.data;
+
+				// Step 2: Sign the message (only for EOA wallets)
 				if (!signMessage) {
 					throw new Error('signMessage is not available');
 				}
-				signature = await signMessage({ message });
+				const signature = await signMessage({ message });
+
+				// For EOA wallets, send full signature data
+				requestPayload = {
+					wallet_address: address,
+					signature,
+					message,
+					nonce,
+					wallet_type: 'eoa',
+				};
 			}
-			// Step 3: Send the signature to the backend with all required parameters
-			const connectResponse = await walletConnect('/api/v1/auth/wallet-connect', {
-				wallet_address: address,
-				signature: signature,
-				message: message,
-				nonce: nonce,
-				wallet_type: isSafeWallet ? 'safe' : 'eoa',
-				...(isSafeWallet && { chain_id: activeChain?.id || 1 }),
-			});
+			
+			const connectResponse = await walletConnect('/api/v1/auth/wallet-connect', requestPayload);
 
 			if (connectResponse?.success) {
 				setSignatureAttempted(true);
@@ -203,7 +186,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		} finally {
 			isSigningRef.current = false;
 		}
-	}, [address, signMessage, walletConnect, getAuthNonce, t, isSafeWallet, activeChain, router, disconnect, getErrorMsg, login, wallet]);
+	}, [address, signMessage, walletConnect, getAuthNonce, t, isSafeWallet, activeChain, router, disconnect, getErrorMsg, login, wallet, activeAccount]);
 
 	// 处理钱包断开连接
 	const handleWalletDisconnect = useCallback(() => {
@@ -281,8 +264,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				return null;
 		}
 	};
-
-	console.log('currentState:', currentState);
 
 	return <div className='w-full'>{renderButton(currentState)}</div>;
 }
