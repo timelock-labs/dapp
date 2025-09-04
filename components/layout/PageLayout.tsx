@@ -10,8 +10,7 @@ import { ConnectWallet } from '@/components/wallet/connect-wallet';
 import type { BaseComponentProps } from '@/types';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-
-
+import { useAuthStore } from '@/store/userStore';
 
 /**
  * Main page layout component with sidebar navigation and header
@@ -40,25 +39,21 @@ export default function PageLayout({ children, className }: BaseComponentProps) 
 	const autoTitleMap: Record<string, string> = {
 		'abi-lib': tAbiLib('title'),
 		'create-timelock': tCreateTimelock('createTimelock'),
-		'home': tHome('title'),
+		home: tHome('title'),
 		'import-timelock': tImportTimelock('title'),
-		'transactions': tTransactions('title'),
+		transactions: tTransactions('title'),
 		'transactions-log': tTransactionsLog('title'),
-		'ecosystem': tEcosystem('title'),
-		'timelocks': tTimelocks('title'),
-		'notify': tNotify('title'),
+		ecosystem: tEcosystem('title'),
+		timelocks: tTimelocks('title'),
+		notify: tNotify('title'),
 		'create-transaction': tCreateTx('title'),
 	};
 
 	if (['login'].includes(pathKey)) {
-		return (
-			<div className={className}>
-				{children}
-			</div>
-		);
+		return <div className={className}>{children}</div>;
 	}
 
-	const effectiveTitle = autoTitleMap[pathKey] || ""
+	const effectiveTitle = autoTitleMap[pathKey] || '';
 
 	return (
 		<div className={className}>
