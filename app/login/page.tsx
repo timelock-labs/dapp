@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Logo from '@/components/layout/Logo';
 import { LoginButton } from '@/components/wallet/login-button';
 import HomeAnimation from '@/components/ui/HomeAnimation';
@@ -8,6 +8,8 @@ import HomeAnimation from '@/components/ui/HomeAnimation';
 import './index.css'
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
+import { useAuthStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
 
 
 const TimeLockerSplitPage = () => {
@@ -15,6 +17,15 @@ const TimeLockerSplitPage = () => {
 	const locale = useLocale();
 	const textStyle1 = locale === 'zh' ? 'text-6xl' : 'text-[40px] ';
 	const textStyle2 = locale === 'zh' ? 'text-6xl' : 'text-[40px] mt-3 -ml-[18px]';
+	const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+	const router = useRouter();
+
+	// 路由保护：已登录用户访问/login时重定向到/home
+	useEffect(() => {
+		if (isAuthenticated) {
+			router.replace('/home');
+		}
+	}, [isAuthenticated, router]);
 
 
 

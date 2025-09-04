@@ -45,7 +45,7 @@
 		},
 		"getStarted": "Get started",
 		"connectWalletDescription": "Connect your wallet to create a new Timelock Account or import an existing one.",
-		"errorSigningIn": "Error signing in",
+		"errorSigningIn": "Error signing in:{error}",
 		"welcomeMessage": "welcome to Timelocker!",
 		"signToLogin": "Sign to Login",
 		"retrySignature": "Retry Signature",
@@ -57,7 +57,11 @@
 		"autoSigning": "Automatically signing in...",
 		"connectWallet": "Connect Wallet",
 		"initializing": "Initializing...",
-		"redirecting": "Redirecting..."
-
+		"redirecting": "Redirecting...",
+		"safeWalletSignatureError": "Safe wallet signature error",
+		"safeWalletSignatureRejected": "Safe wallet signature rejected",
+		"safeWalletSignatureTimeout": "Safe wallet signature timeout",
+		"safeWalletSDKError": "Safe wallet SDK error",
+		"safeWalletStrategyTimeout": "Safe wallet strategy timeout"
 	}
 } 
