@@ -10,7 +10,6 @@ import { ConnectWallet } from '@/components/wallet/connect-wallet';
 import type { BaseComponentProps } from '@/types';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-import { useAuthStore } from '@/store/userStore';
 
 /**
  * Main page layout component with sidebar navigation and header
