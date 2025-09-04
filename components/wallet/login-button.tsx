@@ -95,21 +95,24 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	}, [isConnected, address, signMessage, t]);
 
 	// 错误的方法
-	const getErrorMsg = useCallback((errorMessage: string) => {
-		let errorMsg = '';
-		if (errorMessage.includes('rejected') || errorMessage.includes('denied') || errorMessage.includes('user') || errorMessage.includes('cancel')) {
-			errorMsg = t('safeWalletSignatureRejected');
-		} else if (errorMessage.includes('timeout')) {
-			errorMsg = t('safeWalletSignatureTimeout');
-		} else if (errorMessage.includes('not available') || errorMessage.includes('SDK')) {
-			errorMsg = t('safeWalletSDKError');
-		} else if (errorMessage.includes('Strategy timeout')) {
-			errorMsg = t('safeWalletStrategyTimeout');
-		} else {
-			errorMsg = t('safeWalletSignatureError');
-		}
-		return errorMsg;
-	}, [t]);
+	const getErrorMsg = useCallback(
+		(errorMessage: string) => {
+			let errorMsg = '';
+			if (errorMessage.includes('rejected') || errorMessage.includes('denied') || errorMessage.includes('user') || errorMessage.includes('cancel')) {
+				errorMsg = t('safeWalletSignatureRejected');
+			} else if (errorMessage.includes('timeout')) {
+				errorMsg = t('safeWalletSignatureTimeout');
+			} else if (errorMessage.includes('not available') || errorMessage.includes('SDK')) {
+				errorMsg = t('safeWalletSDKError');
+			} else if (errorMessage.includes('Strategy timeout')) {
+				errorMsg = t('safeWalletStrategyTimeout');
+			} else {
+				errorMsg = t('safeWalletSignatureError');
+			}
+			return errorMsg;
+		},
+		[t]
+	);
 
 	// 实际执行签名的函数
 	const performSignature = useCallback(async () => {
@@ -150,10 +153,10 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 					setLoginState('errorSigningIn');
 					setTimeout(() => {
-					if (wallet) {
-						disconnect(wallet);
-					}
-				}, 3000);
+						if (wallet) {
+							disconnect(wallet);
+						}
+					}, 3000);
 					return;
 				}
 			} else {
@@ -228,7 +231,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	}, []); // 空依赖数组，确保只在组件挂载时执行一次
 
 	useEffect(() => {
-		if (isConnected && address) {
+		if (isConnected && address ) {
 			handleSignature();
 		}
 	}, [address, isConnected, handleSignature]);
