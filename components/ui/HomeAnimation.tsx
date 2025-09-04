@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRive } from '@rive-app/react-canvas';
 import { cn } from '@/utils/utils';
 
