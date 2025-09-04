@@ -35,20 +35,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const wallet = useActiveWallet();
 	const activeChain = useActiveWalletChain();
 	const isConnected = connectionStatus === 'connected';
-
-	// Detect Safe wallet using thirdweb's detection
-	const isSafeWallet = useMemo(() => {
-		if (!wallet) return false;
-
-		// Check thirdweb wallet ID
-		const walletId = wallet.id;
-		const isSafe = walletId === 'global.safe';
-		console.log('isSafeWallet:', isSafe);
-		console.log('================================');
-
-		return isSafe;
-	}, [wallet]);
-
 	const { data: apiResponse, request: walletConnect, isLoading: apiLoading } = useApi();
 	const login = useAuthStore(state => state.login);
 	const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -56,6 +42,14 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	const [loginState, setLoginState] = useState<LoginState>('disconnected');
 	const [signatureAttempted, setSignatureAttempted] = useState(false);
+
+	const isSafeWallet = useMemo(() => {
+		if (!wallet) return false;
+		// Check thirdweb wallet ID
+		const walletId = wallet.id;
+		const isSafe = walletId === 'global.safe';
+		return isSafe;
+	}, [wallet]);
 
 	// 根据钱包连接状态和其他条件确定当前状态
 	const currentState = useMemo((): LoginState => {
@@ -106,7 +100,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				isSigningRef.current = false;
 			}
 		}, 300); // 300ms 防抖延迟
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConnected, address, signMessage, t]);
 
 	// 实际执行签名的函数
@@ -133,7 +127,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					const safeSignResult = await signWithSafe({
 						message,
 						address: address!,
-						chainId: activeChain?.id || 1
+						chainId: activeChain?.id || 1,
 					});
 
 					if (safeSignResult.success && safeSignResult.signature) {
@@ -141,7 +135,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					} else {
 						throw new Error(safeSignResult.error || 'Safe signature failed');
 					}
-
 				} catch (safeError) {
 					console.error('Safe wallet authentication failed:', safeError);
 
@@ -152,7 +145,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					} else if (errorMessage.includes('timeout')) {
 						toast.error(t('safeWalletSignatureTimeout') || 'Safe wallet signature timed out. Please check your Safe interface.');
 					} else if (errorMessage.includes('not available') || errorMessage.includes('SDK')) {
-						toast.error(t('safeWalletSDKError') || 'Safe wallet SDK not available. Please ensure you\'re in a Safe App environment.');
+						toast.error(t('safeWalletSDKError') || "Safe wallet SDK not available. Please ensure you're in a Safe App environment.");
 					} else if (errorMessage.includes('Strategy timeout')) {
 						toast.error(t('safeWalletStrategyTimeout') || 'Safe wallet confirmation timed out. Please try again.');
 					} else {
@@ -176,7 +169,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 				message: message,
 				nonce: nonce,
 				wallet_type: isSafeWallet ? 'safe' : 'eoa',
-				...(isSafeWallet && { chain_id: activeChain?.id || 1 })
+				...(isSafeWallet && { chain_id: activeChain?.id || 1 }),
 			});
 
 			setTimeout(() => {
@@ -211,7 +204,6 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 监听钱包连接状态，自动触发签名
 	useEffect(() => {
-		
 		if (isConnected && address && !signatureAttempted && !apiLoading && !apiResponse?.success) {
 			// 钱包已连接且未尝试过签名，自动开始签名
 			handleSignature();
@@ -237,52 +229,38 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 			case 'disconnected':
 				return (
 					<>
-						<div style={{ display: connectionStatus === 'unknown' ? 'flex' : 'none' }} className="w-full h-12 bg-white text-black font-medium rounded-md items-center justify-center">
-							<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+						<div
+							style={{ display: connectionStatus === 'unknown' ? 'flex' : 'none' }}
+							className='w-full h-12 bg-white text-black font-medium rounded-md items-center justify-center'>
+							<Loader2 className='w-4 h-4 mr-2 animate-spin' />
 							<span>{t('initializing')}</span>
 						</div>
 						<div style={{ display: connectionStatus !== 'unknown' ? 'block' : 'none' }}>
-							<ConnectWallet
-								icon={false}
-								fullWidth={fullWidth}
-								onConnect={handleWalletConnect}
-								onDisconnect={handleWalletDisconnect}
-							/>
+							<ConnectWallet icon={false} fullWidth={fullWidth} onConnect={handleWalletConnect} onDisconnect={handleWalletDisconnect} />
 						</div>
 					</>
 				);
 			case 'connected':
 				return (
 					<>
-						<Button
-							onClick={handleSignature}
-							className="w-full h-12 bg-white text-black font-medium rounded-md transition-colors"
-							disabled={false}
-						>
+						<Button onClick={handleSignature} className='w-full h-12 bg-white text-black font-medium rounded-md transition-colors' disabled={false}>
 							{t('retrySignature')}
 						</Button>
-						{currentState === 'connected' && signatureAttempted && (
-							<p className="text-xs text-gray-500 mt-2 text-center">
-								{t('signatureFailedRetry')}
-							</p>
-						)}</>
+						{currentState === 'connected' && signatureAttempted && <p className='text-xs text-gray-500 mt-2 text-center'>{t('signatureFailedRetry')}</p>}
+					</>
 				);
 
 			case 'signing':
 				return (
-					<div
-						className="w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed"
-					>
-						<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+					<div className='w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
+						<Loader2 className='w-4 h-4 mr-2 animate-spin' />
 						{t('signing')}
 					</div>
 				);
 
 			case 'signed':
 				return (
-					<div
-						className="w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed"
-					>
+					<div className='w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
 						✓ {t('loginSuccess')}
 					</div>
 				);
@@ -292,9 +270,5 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		}
 	};
 
-	return (
-		<div className="w-full">
-			{renderButton(currentState)}
-		</div>
-	);
+	return <div className='w-full'>{renderButton(currentState)}</div>;
 }
