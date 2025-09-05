@@ -14,12 +14,6 @@ interface LogoProps extends BaseComponentProps {
  * @returns JSX.Element
  */
 const Logo: React.FC<LogoProps> = ({ size = 'md', className, color = 'white' }) => {
-	const sizeClasses = {
-		sm: 'text-[18px]',
-		md: 'text-[22px]',
-		lg: 'text-[26px]',
-	};
-
 	let width = 180;
 	let height = 36;
 	switch (size) {
