@@ -7,21 +7,7 @@ import HomeAnimation from '@/app/login/components/HomeAnimation';
 import './index.css';
 import Image from 'next/image';
 
-import { useAuthStore } from '@/store/userStore';
-import { useRouter } from 'next/navigation';
-import LoginFooter from '@/app/login/components/LoginFooter';
-
 const TimeLockerSplitPage = () => {
-	const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-	const router = useRouter();
-
-	// 路由保护：已登录用户访问/login时重定向到/home
-	useEffect(() => {
-		if (isAuthenticated) {
-			router.replace('/home');
-		}
-	}, [isAuthenticated, router]);
-
 	return (
 		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
 			<div className='flex w-[1440px] h-[860px] items-center justify-between rounded-xl border border-gray-800 relative'>
@@ -39,7 +25,7 @@ const TimeLockerSplitPage = () => {
 				<div className='flex flex-col w-[860px] h-full overflow-hidden rounded-tr-xl rounded-br-xl'>
 					<HomeAnimation className='w-full h-full scale-120' />
 				</div>
-				<LoginFooter />
+				{/* <LoginFooter /> */}
 			</div>
 		</div>
 	);

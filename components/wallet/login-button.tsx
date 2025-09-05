@@ -118,9 +118,9 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const performSignature = useCallback(async () => {
 		try {
 			const currentChainId = activeChain?.id || 1;
-			
+
 			let requestPayload;
-			
+
 			if (isSafeWallet) {
 				// For Safe wallets, skip nonce and signature steps
 				requestPayload = {
@@ -155,7 +155,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					wallet_type: 'eoa',
 				};
 			}
-			
+
 			const connectResponse = await walletConnect('/api/v1/auth/wallet-connect', requestPayload);
 
 			if (connectResponse?.success) {
@@ -201,22 +201,20 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 	// 页面初始化时如果发现钱包连接则断开连接（仅在组件首次挂载时执行）
 	useEffect(() => {
-		if (isConnected && wallet) {
-			console.log('检测到钱包已连接，正在断开连接...');
-			disconnect(wallet);
-			// 如果用户已经认证，也执行登出操作
-			if (isAuthenticated) {
-				const logout = useAuthStore.getState().logout;
-				logout();
-			}
+		// 如果用户已经认证，也执行登出操作
+		if (isAuthenticated) {
+			wallet && disconnect(wallet);
+			const logout = useAuthStore.getState().logout;
+			logout();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []); // 空依赖数组，确保只在组件挂载时执行一次
+	}, [wallet]); // 空依赖数组，确保只在组件挂载时执行一次
 
 	useEffect(() => {
-		if (isConnected && address ) {
+		if (isConnected && address && !isAuthenticated) {
 			handleSignature();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, isConnected, handleSignature]);
 
 	// 根据当前状态渲染不同的按钮
