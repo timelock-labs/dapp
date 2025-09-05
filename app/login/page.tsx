@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Logo from '@/components/layout/Logo';
 import LoginContent from './components/LoginContent';
 import HomeAnimation from '@/app/login/components/HomeAnimation';

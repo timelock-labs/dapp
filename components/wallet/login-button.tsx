@@ -186,7 +186,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		} finally {
 			isSigningRef.current = false;
 		}
-	}, [address, signMessage, walletConnect, getAuthNonce, t, isSafeWallet, activeChain, router, disconnect, getErrorMsg, login, wallet, activeAccount]);
+	}, [address, signMessage, walletConnect, getAuthNonce, t, isSafeWallet, activeChain, router, disconnect, getErrorMsg, login, wallet]);
 
 	// 处理钱包断开连接
 	const handleWalletDisconnect = useCallback(() => {
@@ -203,7 +203,9 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	useEffect(() => {
 		// 如果用户已经认证，也执行登出操作
 		if (isAuthenticated) {
-			wallet && disconnect(wallet);
+			if (wallet) {
+				disconnect(wallet);
+			}
 			const logout = useAuthStore.getState().logout;
 			logout();
 		}
