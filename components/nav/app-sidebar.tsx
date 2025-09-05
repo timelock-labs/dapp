@@ -94,8 +94,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 	return (
 		<Sidebar collapsible='icon' {...props}>
-			<SidebarHeader>
-				<Logo size='sm' />
+			<SidebarHeader className='py-6'>
+				<Logo size='sm' color='black' />
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={sidebarData.navMain} />
