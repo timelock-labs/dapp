@@ -1,8 +1,10 @@
 import React from 'react';
 import type { BaseComponentProps } from '@/types';
+import Image from "next/image"
 
 interface LogoProps extends BaseComponentProps {
 	size?: 'sm' | 'md' | 'lg';
+	color?: "white" | "black"
 }
 
 /**
@@ -11,16 +13,35 @@ interface LogoProps extends BaseComponentProps {
  * @param props - Logo component props
  * @returns JSX.Element
  */
-const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
+const Logo: React.FC<LogoProps> = ({ size = 'md', className, color = 'white' }) => {
 	const sizeClasses = {
 		sm: 'text-[18px]',
 		md: 'text-[22px]',
 		lg: 'text-[26px]',
 	};
 
+	let width = 180;
+	let height = 36;
+	switch (size) {
+		case 'sm':
+			width = 120;
+			height = 24;
+			break;
+		case 'md':
+			width = 180;
+			height = 36;
+			break;
+		case 'lg':
+			width = 240;
+			height = 60;
+			break;
+		default:
+			break;
+	}
+
 	return (
-		<div className={`flex items-center w-fit px-3 py-1 justify-center rounded-md bg-black ${sizeClasses[size]} ${className || ''}`}>
-			<span className='logo-font text-white'>Timelocker</span>
+		<div className={`${className || ''}`}>
+			{color === 'white' ? <Image src='/logo/logo-banner-white.png' alt='Logo' width={width} height={height} className={`w-[${width}px] h-[${height}px]`} /> : <Image src='/logo/logo-banner-black.png' alt='Logo' width={width} height={height} className={`w-[${width}px] h-[${height}px]`} />}
 		</div>
 	);
 };
