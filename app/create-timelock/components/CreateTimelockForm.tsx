@@ -19,6 +19,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	onOwnerChange,
 	onDeploy,
 	isLoading,
+	isSafeWallet = false,
 }) => {
 	const t = useTranslations('CreateTimelock');
 	const params = useParams();

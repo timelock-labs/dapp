@@ -7,11 +7,12 @@ import { useApi } from '@/hooks/useApi';
 import { useDeployTimelock } from '@/hooks/useDeployTimelock';
 import { useAuthStore } from '@/store/userStore';
 import { toast } from 'sonner';
-import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain } from 'thirdweb/react';
+import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain, useActiveWallet } from 'thirdweb/react';
 import { useRouter } from 'next/navigation';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
 import { getChainObject } from '@/utils/chainUtils';
+import { isSafeWallet } from '@/utils/walletUtils';
 import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from '@/types';
 
 const CreateTimelockPage: React.FC = () => {
@@ -43,8 +44,11 @@ const CreateTimelockPage: React.FC = () => {
 	const { address: walletAddress } = useActiveAccount() || {};
 	const { deployCompoundTimelock, isLoading } = useDeployTimelock();
 	const router = useRouter();
+	const wallet = useActiveWallet();
 
 	const selectedChainData = useMemo(() => chains.find(chain => chain.chain_id === formState.selectedChain), [chains, formState.selectedChain]);
+
+	const isWalletSafe = useMemo(() => isSafeWallet(wallet), [wallet]);
 
 	useEffect(() => {
 		if (chainId && chainId !== formState.selectedChain) {
@@ -144,6 +148,7 @@ const CreateTimelockPage: React.FC = () => {
 						onOwnerChange={handleOwnerChange}
 						onDeploy={handleCreate}
 						isLoading={isLoading}
+						isSafeWallet={isWalletSafe}
 					/>
 				</div>
 
