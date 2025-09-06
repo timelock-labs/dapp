@@ -7,6 +7,12 @@ import type { ContractInterface } from 'ethers';
 
 export type SupportedChainId = 1 | 5 | 11155111 | 137 | 56;
 
+// Safe CreateCall contract address and ABI for contract deployment
+const CREATE_CALL_ADDRESS = '0xB19D6FFc2182150F8Eb585b79D4ABcd7C5640A9d';
+const CREATE_CALL_ABI = [
+  "function performCreate(uint256 value, bytes deploymentData) returns (address newContract)"
+];
+
 // Safe Transaction Service URLs for different networks
 const SAFE_TX_SERVICE_URLS = {
   1: 'https://safe-transaction-mainnet.safe.global/',
@@ -226,9 +232,17 @@ export async function createSafeDeploymentProposal(
       throw new Error('Failed to generate deployment transaction data');
     }
 
-    const transactionData = typeof deployTransaction.data === 'string' 
+    // Get Timelock contract creation bytecode
+    const timelockCreationBytecode = typeof deployTransaction.data === 'string' 
       ? deployTransaction.data 
       : ethers.utils.hexlify(deployTransaction.data);
+
+    // Encode call to CreateCall contract's performCreate function
+    const createCallInterface = new ethers.utils.Interface(CREATE_CALL_ABI);
+    const calldataForCreateCall = createCallInterface.encodeFunctionData("performCreate", [
+      0, // value - don't send ETH with deployment
+      timelockCreationBytecode // Timelock contract creation bytecode
+    ]);
 
     // For now, use manual mode since SDK version compatibility issues
     // Safe SDK v6+ requires different initialization patterns
@@ -236,7 +250,7 @@ export async function createSafeDeploymentProposal(
     const fallbackSafeTxHash = ethers.utils.keccak256(
       ethers.utils.defaultAbiCoder.encode(
         ['address', 'uint256', 'bytes'],
-        [safeAddress, safeInfo.nonce, transactionData]
+        [safeAddress, safeInfo.nonce, calldataForCreateCall]
       )
     );
     
@@ -249,11 +263,11 @@ export async function createSafeDeploymentProposal(
       proposalSubmitted: false,
       safeAppUrl: safeAppUrl,
       transactionData: { // Include transaction data for JSON export if needed
-        to: ethers.constants.AddressZero,
+        to: CREATE_CALL_ADDRESS, // CreateCall contract address for deployment
         value: value || '0',
-        data: transactionData,
+        data: calldataForCreateCall, // Encoded call to performCreate function
       },
-      message: `📋 Safe deployment transaction prepared successfully!\n\n🔧 Transaction Details:\n- To: ${ethers.constants.AddressZero} (Contract Deployment)\n- Value: 0 ETH\n- Data Length: ${transactionData.length} bytes\n\n📥 Next Steps:\n1. Click "Download JSON" below to get the transaction file\n2. Click "Open Safe App" to access Transaction Builder\n3. Import the downloaded JSON file in Safe App\n4. Review and execute the transaction\n\n📝 Required signatures: ${safeInfo.threshold}/${safeInfo.owners.length}`,
+      message: `📋 Safe deployment transaction prepared successfully!\n\n🔧 Transaction Details:\n- To: ${CREATE_CALL_ADDRESS} (CreateCall Contract)\n- Value: 0 ETH\n- Data: performCreate function call\n- Data Length: ${calldataForCreateCall.length} bytes\n\n📥 Next Steps:\n1. Click "Download JSON" below to get the transaction file\n2. Click "Open Safe App" to access Transaction Builder\n3. Import the downloaded JSON file in Safe App\n4. Review and execute the transaction\n\n📝 Required signatures: ${safeInfo.threshold}/${safeInfo.owners.length}`,
     };
     
     return result;
@@ -345,7 +359,7 @@ export async function estimateSafeTransactionGas(
 
     // Estimate gas for the deployment transaction
     const gasEstimate = await signer.provider.estimateGas({
-      to: transactionData.to === ethers.constants.AddressZero ? undefined : transactionData.to,
+      to: transactionData.to,
       data: transactionData.data,
       value: transactionData.value || '0',
     });
