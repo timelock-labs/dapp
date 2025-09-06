@@ -11,6 +11,7 @@ import { useActiveAccount, useActiveWalletChain, useSwitchActiveWalletChain, use
 import { useRouter } from 'next/navigation';
 import CreateTimelockForm from './components/CreateTimelockForm';
 import ConfirmCreationDialog from './components/ConfirmCreationDialog';
+import SafeDeploymentSuccessDialog from './components/SafeDeploymentSuccessDialog';
 import { getChainObject } from '@/utils/chainUtils';
 import { isSafeWallet } from '@/utils/walletUtils';
 import type { CreateTimelockFormState, CreationDetails, CompoundTimelockParams } from '@/types';
@@ -19,6 +20,16 @@ const CreateTimelockPage: React.FC = () => {
 	const t = useTranslations('CreateTimelock');
 
 	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+	const [isSafeDialogOpen, setIsSafeDialogOpen] = useState(false);
+	const [safeDialogData, setSafeDialogData] = useState<{
+		safeAddress: string;
+		safeTxHash: string;
+		safeAppUrl: string;
+		chainId: number;
+		message: string;
+		proposalSubmitted: boolean;
+		transactionData?: any;
+	} | null>(null);
 
 	const [formState, setFormState] = useState<CreateTimelockFormState>({
 		selectedChain: 0,
@@ -100,26 +111,65 @@ const CreateTimelockPage: React.FC = () => {
 	}, []);
 
 	const handleCreate = async () => {
-		const params: CompoundTimelockParams = {
-			minDelay: parseInt(formState.minDelay),
-			admin: (formState.owner || walletAddress) as `0x${string}`,
-		};
-		const { contractAddress, transactionHash } = await deployCompoundTimelock(params);
+		try {
+			const params: CompoundTimelockParams = {
+				minDelay: parseInt(formState.minDelay),
+				admin: (formState.owner || walletAddress) as `0x${string}`,
+			};
+			
+			const result = await deployCompoundTimelock(params);
 
-		if (contractAddress && transactionHash) {
-			setDialogDetails({
-				chain_id: formState.selectedChain,
-				chainName: selectedChainData?.display_name || 'Unsupport Chain',
-				chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
-				timelockAddress: contractAddress,
-				initiatingAddress: formState.owner as string,
-				transactionHash,
-				explorerUrl: selectedChainData?.block_explorer_urls as string,
-			});
-			setIsConfirmDialogOpen(true);
+			if (result.walletType === 'safe') {
+				// Handle Safe wallet deployment
+				if (result.success !== false) {
+					// Show Safe-specific success message
+					const message = result.safeProposal?.proposalSubmitted 
+						? 'Safe deployment proposal created successfully!' 
+						: 'Safe deployment transaction prepared! Please complete in Safe App.';
+					toast.success(message);
+					
+					// Use the Safe App URL for Transaction Builder access
+					const safeAppUrl = result.safeProposal?.safeAppUrl || '';
+
+					// Show Safe deployment success dialog
+					setSafeDialogData({
+						safeAddress: result.safeProposal?.safeAddress || '',
+						safeTxHash: result.transactionHash || '',
+						safeAppUrl: safeAppUrl,
+						chainId: formState.selectedChain,
+						message: result.safeProposal?.message || '',
+						proposalSubmitted: result.safeProposal?.proposalSubmitted || false,
+						transactionData: result.safeProposal?.transactionData,
+					});
+					setIsSafeDialogOpen(true);
+				} else {
+					toast.error(result.error || 'Failed to create Safe deployment proposal');
+				}
+			} else {
+				// Handle regular EOA wallet deployment
+				const { contractAddress, transactionHash } = result;
+
+				if (contractAddress && transactionHash) {
+					setDialogDetails({
+						chain_id: formState.selectedChain,
+						chainName: selectedChainData?.display_name || 'Unsupported Chain',
+						chainIcon: <Image src={selectedChainData?.logo_url || ''} alt='Chain Logo' width={16} height={16} className='mr-1' />,
+						timelockAddress: contractAddress,
+						initiatingAddress: formState.owner as string,
+						transactionHash,
+						explorerUrl: selectedChainData?.block_explorer_urls as string,
+					});
+					setIsConfirmDialogOpen(true);
+				} else {
+					toast.error('Deployment failed: No contract address returned');
+				}
+			}
+		} catch (error) {
+			console.error('Deployment error:', error);
+			toast.error(error instanceof Error ? error.message : 'Deployment failed with unknown error');
 		}
-
 	};
+
 
 	const handleConfirmDialogConfirm = async (remarkFromDialog: string) => {
 		await createTimelockReq('/api/v1/timelock/create-or-import', {
@@ -153,6 +203,21 @@ const CreateTimelockPage: React.FC = () => {
 				</div>
 
 				<ConfirmCreationDialog isOpen={isConfirmDialogOpen} onClose={() => setIsConfirmDialogOpen(false)} onConfirm={handleConfirmDialogConfirm} creationDetails={dialogDetails} />
+				
+				{/* Safe Deployment Success Dialog */}
+				{safeDialogData && (
+					<SafeDeploymentSuccessDialog
+						isOpen={isSafeDialogOpen}
+						onClose={() => setIsSafeDialogOpen(false)}
+						safeAddress={safeDialogData.safeAddress}
+						safeTxHash={safeDialogData.safeTxHash}
+						safeAppUrl={safeDialogData.safeAppUrl}
+						chainId={safeDialogData.chainId}
+						message={safeDialogData.message}
+						proposalSubmitted={safeDialogData.proposalSubmitted}
+						transactionData={safeDialogData.transactionData}
+					/>
+				)}
 			</div>
 		</>
 	);

@@ -3,6 +3,7 @@
  */
 
 import type { BaseComponentProps, ContractStandard, VoidCallback } from '../common';
+import type { DeploymentResult, CompoundTimelockParams } from '../blockchain';
 
 /**
  * Chain option for select input
@@ -118,18 +119,4 @@ export interface ParameterDisplayRowProps extends BaseComponentProps {
 	copyable?: boolean;
 }
 
-/**
- * Deployment result
- */
-export interface DeploymentResult {
-	contractAddress: string;
-	transactionHash: string;
-}
 
-/**
- * Compound timelock deployment parameters
- */
-export interface CompoundTimelockParams {
-	minDelay: number;
-	admin: `0x${string}`;
-}

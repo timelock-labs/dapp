@@ -6,11 +6,36 @@ import type { ContractInterface } from 'ethers';
 import type { Address, Hash, ContractStandard } from './common';
 
 /**
+ * Safe transaction proposal result
+ */
+export interface SafeTransactionProposal {
+	safeTxHash: string;
+	safeAddress: Address;
+	proposalSubmitted: boolean;
+	message?: string;
+	safeAppUrl?: string;
+	transactionData?: {
+		to: string;
+		value: string;
+		data: string;
+	};
+}
+
+/**
  * Deployment result from contract deployment
  */
 export interface DeploymentResult {
 	contractAddress: Address | null;
 	transactionHash: Hash;
+	walletType?: 'safe' | 'eoa';
+	standard?: ContractStandard;
+	parameters?: any;
+	// Safe-specific fields
+	safeProposal?: SafeTransactionProposal;
+	requiresMultiSig?: boolean;
+	// Error handling
+	success?: boolean;
+	error?: string;
 }
 
 /**
@@ -220,6 +245,41 @@ export interface MultiSigWallet {
 	owners: Address[];
 	threshold: number;
 	nonce: number;
+}
+
+/**
+ * Safe wallet information
+ */
+export interface SafeWalletInfo {
+	address: Address;
+	owners: Address[];
+	threshold: number;
+	nonce: number;
+	chainId: number;
+	isMultiSig: true;
+}
+
+/**
+ * Wallet type detection result
+ */
+export interface WalletTypeInfo {
+	address: Address;
+	type: 'safe' | 'eoa';
+	isMultiSig: boolean;
+	safeInfo?: SafeWalletInfo;
+}
+
+/**
+ * Safe deployment configuration
+ */
+export interface SafeDeploymentConfig {
+	chainId: number;
+	validateParams?: boolean;
+	gasLimit?: number;
+	gasPrice?: string;
+	// Safe-specific options
+	waitForExecution?: boolean;
+	notifyOnProposal?: boolean;
 }
 
 /**

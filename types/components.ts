@@ -18,6 +18,7 @@ export type {
 	CreationDetails,
 	ConfirmCreationDialogProps,
 	ParameterDisplayRowProps,
-	DeploymentResult,
-	CompoundTimelockParams,
 } from './components/timelock';
+
+// Re-export blockchain types used by components
+export type { DeploymentResult, CompoundTimelockParams } from './blockchain';

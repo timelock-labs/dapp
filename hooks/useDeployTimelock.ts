@@ -5,6 +5,7 @@ import { useCallback, useMemo } from 'react';
 
 // External libraries
 import type { ContractInterface } from 'ethers';
+import { useActiveAccount } from 'thirdweb/react';
 
 // Internal contracts
 import { compoundTimelockAbi } from '@/contracts/abis/CompoundTimelock';
@@ -12,23 +13,41 @@ import { compoundTimelockBytecode } from '@/contracts/bytecodes/CompoundTimelock
 
 // Internal hooks
 import { useAsyncOperation } from './useCommonHooks';
-import { useContractDeployment } from './useBlockchainHooks';
+import { useContractDeployment, useWalletConnection } from './useBlockchainHooks';
 import { validateRequiredFields } from './useHookUtils';
+import { useWeb3React } from './useWeb3React';
 import { useTranslations } from 'next-intl';
 
+// Internal utilities
+import { 
+	createSafeDeploymentProposal, 
+	isSafeWallet, 
+	getSafeInfo,
+	type SupportedChainId 
+} from '@/utils/safeService';
+
 // Type imports
-import type { CompoundTimelockParams, ContractStandard, DeploymentResult, OpenZeppelinTimelockParams } from '@/types';
+import type { 
+	CompoundTimelockParams, 
+	ContractStandard, 
+	DeploymentResult, 
+	OpenZeppelinTimelockParams,
+	SafeDeploymentConfig,
+	WalletTypeInfo 
+} from '@/types';
 
 /**
  * Configuration for timelock deployment
  */
-interface TimelockDeploymentConfig {
+interface TimelockDeploymentConfig extends SafeDeploymentConfig {
 	/** Whether to validate parameters before deployment */
 	validateParams?: boolean;
 	/** Custom gas limit for deployment */
 	gasLimit?: number;
 	/** Custom gas price for deployment */
 	gasPrice?: string;
+	/** Whether to force Safe mode even if EOA is detected */
+	forceSafeMode?: boolean;
 }
 
 /**
@@ -38,15 +57,30 @@ interface TimelockDeploymentConfig {
  * @param config Optional configuration for deployment behavior
  * @returns Object containing deployment methods and state
  */
-export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
-	const { validateParams = true, gasLimit, gasPrice } = config;
+export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 1 }) => {
+	const { 
+		validateParams = true, 
+		gasLimit, 
+		gasPrice, 
+		chainId
+	} = config;
 	const { deployContract, isLoading, error, reset } = useContractDeployment();
+	const { chainId: connectedChainId } = useWalletConnection();
+	const { signer } = useWeb3React();
+	const activeAccount = useActiveAccount();
 	const t = useTranslations('common');
 
 	// Separate async operation for parameter validation
 	const { execute: executeWithValidation, isLoading: isValidating } = useAsyncOperation({
 		loadingMessage: t('validatingDeploymentParameters'),
 		errorMessage: t('parameterValidationFailed'),
+		showToasts: false,
+	});
+
+	// Separate async operation for wallet type detection
+	const { execute: executeWalletDetection, isLoading: isDetectingWallet } = useAsyncOperation({
+		loadingMessage: t('detectingWalletType'),
+		errorMessage: t('walletTypeDetectionFailed'),
 		showToasts: false,
 	});
 
@@ -58,6 +92,54 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 		}),
 		[gasLimit, gasPrice]
 	);
+
+	/**
+	 * Detect wallet type and return wallet information
+	 */
+	const detectWalletType = useCallback(async (): Promise<WalletTypeInfo | null> => {
+		if (!activeAccount?.address || !signer) {
+			return null;
+		}
+
+		return executeWalletDetection(async () => {
+			try {
+				const currentChainId = (connectedChainId || 1) as SupportedChainId;
+				// Check if it's a Safe wallet
+				const isSafe = await isSafeWallet(activeAccount.address, signer, currentChainId);
+				
+				if (isSafe) {
+					const safeInfo = await getSafeInfo(activeAccount.address, signer, currentChainId);
+					return {
+						address: activeAccount.address,
+						type: 'safe',
+						isMultiSig: true,
+						safeInfo: {
+							address: activeAccount.address,
+							owners: safeInfo.owners,
+							threshold: safeInfo.threshold,
+							nonce: safeInfo.nonce,
+							chainId: currentChainId,
+							isMultiSig: true,
+						},
+					};
+				} else {
+					return {
+						address: activeAccount.address,
+						type: 'eoa',
+						isMultiSig: false,
+					};
+				}
+			} catch (error) {
+				console.error('Wallet type detection failed:', error);
+				// Default to EOA if detection fails
+				return {
+					address: activeAccount.address,
+					type: 'eoa',
+					isMultiSig: false,
+				};
+			}
+		});
+	}, [activeAccount, signer, chainId, connectedChainId, executeWalletDetection]);
 
 	/**
 	 * Validate Compound timelock parameters
@@ -75,10 +157,10 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 		}
 
 		return errors;
-	}, []);
+	}, [t]);
 
 	/**
-	 * Deploy Compound timelock contract with validation and error handling
+	 * Deploy Compound timelock contract with Safe support and validation
 	 */
 	const deployCompoundTimelock = useCallback(
 		async (params: CompoundTimelockParams): Promise<DeploymentResult> => {
@@ -91,17 +173,83 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 					}
 				}
 
-				// Deploy the contract
-				const result = await deployContract(compoundTimelockAbi as ContractInterface, compoundTimelockBytecode, [params.admin, BigInt(params.minDelay)], deploymentOptions);
+				// Detect wallet type
+				const walletInfo = await detectWalletType();
+
+				if (!walletInfo) {
+					throw new Error(t('walletNotConnectedOrDetected'));
+				}
+
+				// Handle Safe wallet deployment
+				if (walletInfo.type === 'safe') {
+
+					if (!signer) {
+						throw new Error(t('signerNotAvailable'));
+					}
+
+					try {
+						const currentChainId = (connectedChainId || 1) as SupportedChainId;
+						
+						const safeResult = await createSafeDeploymentProposal(
+							compoundTimelockAbi as ContractInterface,
+							compoundTimelockBytecode,
+							[params.admin, BigInt(params.minDelay)],
+							signer,
+							walletInfo.address,
+							currentChainId,
+							'0' // No ETH value for deployment
+						);
+						
+						
+						if (!safeResult.success) {
+							throw new Error(safeResult.error || t('safeProposalCreationFailed'));
+						}
+
+						// Return Safe deployment result
+						return {
+							contractAddress: null, // Will be known after execution
+							transactionHash: safeResult.safeTxHash || '',
+							walletType: 'safe',
+							standard: 'compound' as ContractStandard,
+							parameters: params,
+							requiresMultiSig: true,
+							success: safeResult.success,
+							error: safeResult.error,
+							safeProposal: {
+								safeTxHash: safeResult.safeTxHash || '',
+								safeAddress: walletInfo.address,
+								proposalSubmitted: safeResult.proposalSubmitted || false,
+								message: safeResult.message,
+								safeAppUrl: safeResult.safeAppUrl,
+								transactionData: safeResult.transactionData,
+							},
+						};
+					} catch (error) {
+						throw new Error(t('safeDeploymentFailed', { 
+							message: error instanceof Error ? error.message : 'Unknown error' 
+						}));
+					}
+				}
+
+				// Handle regular EOA deployment
+				const result = await deployContract(
+					compoundTimelockAbi as ContractInterface, 
+					compoundTimelockBytecode, 
+					[params.admin, BigInt(params.minDelay)], 
+					deploymentOptions
+				);
 
 				return {
 					...result,
+					walletType: 'eoa',
 					standard: 'compound' as ContractStandard,
 					parameters: params,
+					requiresMultiSig: false,
+					success: true,
 				};
 			});
 		},
-		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions]
+		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions, detectWalletType, signer, chainId, connectedChainId, t]
 	);
 
 	/**
@@ -156,10 +304,12 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = {}) => {
 		estimateDeploymentCost,
 		isDeploymentSupported,
 		validateCompoundParams,
+		detectWalletType,
 
 		// State
-		isLoading: isLoading || isValidating,
+		isLoading: isLoading || isValidating || isDetectingWallet,
 		isValidating,
+		isDetectingWallet,
 		error,
 
 		// Actions

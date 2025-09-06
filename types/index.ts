@@ -94,6 +94,11 @@ export type {
 	MultiSigWallet,
 	TokenInfo,
 	TokenBalance,
+	// Safe-related types
+	SafeTransactionProposal,
+	SafeWalletInfo,
+	WalletTypeInfo,
+	SafeDeploymentConfig,
 } from './blockchain';
 
 // Component prop types
