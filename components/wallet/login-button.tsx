@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { isSafeWallet } from '@/utils/walletUtils';
 
 /**
  * 登录按钮状态枚举
@@ -38,13 +39,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	const [loginState, setLoginState] = useState<LoginState>('disconnected');
 	const [signatureAttempted, setSignatureAttempted] = useState(false);
 
-	const isSafeWallet = useMemo(() => {
-		if (!wallet) return false;
-		// Check thirdweb wallet ID
-		const walletId = wallet?.id;
-		const isSafe = walletId === 'global.safe';
-		return isSafe;
-	}, [wallet]);
+	const isWalletSafe = useMemo(() => isSafeWallet(wallet), [wallet]);
 
 	// 根据钱包连接状态和其他条件确定当前状态
 	const currentState = useMemo((): LoginState => {
@@ -121,10 +116,10 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 			let requestPayload;
 
-			if (isSafeWallet) {
+			if (isWalletSafe) {
 				// For Safe wallets, skip nonce and signature steps
 				requestPayload = {
-					chain_id: currentChainId,
+					chain_id: 11155111,
 					wallet_address: address,
 					wallet_type: 'safe',
 				};
@@ -186,7 +181,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 		} finally {
 			isSigningRef.current = false;
 		}
-	}, [address, signMessage, walletConnect, getAuthNonce, t, isSafeWallet, activeChain, router, disconnect, getErrorMsg, login, wallet]);
+	}, [address, signMessage, walletConnect, getAuthNonce, t, isWalletSafe, activeChain, router, disconnect, getErrorMsg, login, wallet]);
 
 	// 处理钱包断开连接
 	const handleWalletDisconnect = useCallback(() => {
