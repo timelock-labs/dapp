@@ -56,6 +56,7 @@ export interface CreateTimelockFormProps extends BaseComponentProps {
 	onOwnerChange?: (owner: string) => void;
 	onDeploy: VoidCallback;
 	isLoading?: boolean;
+	isSafeWallet?: boolean;
 }
 
 /**
