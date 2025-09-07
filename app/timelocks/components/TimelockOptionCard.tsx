@@ -27,6 +27,7 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 			className={`
         ${bgColor} ${textColor}
         rounded-lg
+		border
         p-8  /* Card styling */
         flex flex-col justify-end /* Aligns content to the bottom as in the image */
         min-h-[300px] /* Ensures consistent height for both cards */
@@ -40,7 +41,7 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 			}} // Background image styling
 		>
 			<h3 className='text-xl font-semibold mb-2'>{title}</h3>
-			<p className='text-sm opacity-80'>{description}</p> {/* Description with lower opacity */}
+			<p className='text-sm opacity-80 w-[460px]'>{description}</p> {/* Description with lower opacity */}
 		</div>
 	);
 };
