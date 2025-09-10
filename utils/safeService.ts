@@ -13,6 +13,24 @@ const CREATE_CALL_ABI = [
   "function performCreate(uint256 value, bytes deploymentData) returns (address newContract)"
 ];
 
+// Safe ProxyFactory addresses for different chains (for address prediction)
+const SAFE_PROXY_FACTORY_ADDRESSES = {
+  1: '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67', // Ethereum Mainnet (v1.4.1)
+  5: '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67', // Goerli (v1.4.1)
+  11155111: '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67', // Sepolia (v1.4.1)
+  137: '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67', // Polygon (v1.4.1)
+  56: '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67', // BSC (v1.4.1)
+} as const;
+
+// Safe Singleton (implementation) addresses for different chains
+const SAFE_SINGLETON_ADDRESSES = {
+  1: '0x41675C099F32341bf84BFc5382aF534df5C7461a', // Ethereum Mainnet (v1.4.1)
+  5: '0x41675C099F32341bf84BFc5382aF534df5C7461a', // Goerli (v1.4.1)
+  11155111: '0x41675C099F32341bf84BFc5382aF534df5C7461a', // Sepolia (v1.4.1)
+  137: '0x41675C099F32341bf84BFc5382aF534df5C7461a', // Polygon (v1.4.1)
+  56: '0x41675C099F32341bf84BFc5382aF534df5C7461a', // BSC (v1.4.1)
+} as const;
+
 // Safe Transaction Service URLs for different networks
 const SAFE_TX_SERVICE_URLS = {
   1: 'https://safe-transaction-mainnet.safe.global/',
@@ -41,6 +59,7 @@ export interface SafeDeploymentResult {
   safeTxHash?: string;
   transactionHash?: string;
   contractAddress?: string;
+  predictedAddress?: string;
   error?: string;
   proposalSubmitted?: boolean;
   message?: string;
@@ -168,6 +187,71 @@ export async function getSafeInfo(
 }
 
 /**
+ * Predict the contract address that will be deployed using CREATE opcode
+ * @param deployerAddress The address that will deploy the contract (Safe wallet address)
+ * @param nonce The nonce of the deployer at the time of deployment
+ * @returns The predicted contract address
+ */
+export function predictContractAddress(deployerAddress: string, nonce: number): string {
+  try {
+    // Use ethers.js utils to predict the contract address
+    // For CREATE opcode: address = keccak256(rlp([sender, nonce]))
+    return ethers.utils.getContractAddress({
+      from: deployerAddress,
+      nonce: nonce
+    });
+  } catch (error) {
+    console.error('Failed to predict contract address:', error);
+    throw new Error(`Address prediction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
+ * Predict the address of a contract deployed via Safe's CREATE_CALL using CREATE2
+ * This function predicts the address where a timelock contract will be deployed
+ * when using Safe's createCall functionality
+ */
+export function predictSafeDeployedContractAddress(
+  safeAddress: string,
+  constructorArgs: unknown[],
+  abi: ContractInterface,
+  bytecode: string,
+  saltNonce: number = 0
+): string {
+  try {
+    // Create contract factory to get deployment data
+    const contractFactory = new ethers.ContractFactory(abi, bytecode);
+    const deployTransaction = contractFactory.getDeployTransaction(...constructorArgs);
+    
+    if (!deployTransaction.data) {
+      throw new Error('Failed to generate deployment transaction data');
+    }
+
+    const creationBytecode = typeof deployTransaction.data === 'string' 
+      ? deployTransaction.data 
+      : ethers.utils.hexlify(deployTransaction.data);
+
+    // For Safe CREATE2 deployment, the salt is constructed from:
+    // salt = keccak256(abi.encodePacked(keccak256(creationBytecode), saltNonce))
+    const bytecodeHash = ethers.utils.keccak256(creationBytecode);
+    const salt = ethers.utils.keccak256(
+      ethers.utils.solidityPack(['bytes32', 'uint256'], [bytecodeHash, saltNonce])
+    );
+
+    // Use CREATE2 formula to predict address
+    // For Safe CREATE calls, the deployer is the Safe wallet itself
+    return ethers.utils.getCreate2Address(
+      safeAddress, // deployer (the Safe wallet)
+      salt,        // computed salt
+      ethers.utils.keccak256(creationBytecode) // init code hash
+    );
+  } catch (error) {
+    console.error('Failed to predict Safe deployed contract address:', error);
+    throw new Error(`Address prediction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
  * Fallback method to get Safe info using contract calls when API is unavailable
  */
 async function fallbackGetSafeInfo(safeAddress: string, signer: Signer) {
@@ -223,6 +307,23 @@ export async function createSafeDeploymentProposal(
     // Get Safe info for better user experience
     const safeInfo = await getSafeInfo(safeAddress, signer, chainId);
     
+    // Predict the contract address that will be deployed
+    // When using Safe's CreateCall library, the actual deployer is the CREATE_CALL_ADDRESS contract
+    // and it uses the CREATE opcode, so we predict based on the CREATE_CALL_ADDRESS nonce
+    let predictedAddress: string;
+    try {
+      if (!signer.provider) {
+        throw new Error('Provider not available');
+      }
+      
+      // Get the current nonce of CREATE_CALL_ADDRESS contract (the actual deployer)
+      const createCallNonce = await signer.provider.getTransactionCount(CREATE_CALL_ADDRESS);
+      predictedAddress = predictContractAddress(CREATE_CALL_ADDRESS, createCallNonce);
+    } catch (error) {
+      console.warn('Failed to predict contract address:', error);
+      predictedAddress = 'Unable to predict (will be available after deployment)';
+    }
+    
     // Create contract factory to get deployment data
     const contractFactory = new ethers.ContractFactory(abi, bytecode, signer);
     
@@ -260,6 +361,7 @@ export async function createSafeDeploymentProposal(
     const result = {
       success: true,
       safeTxHash: fallbackSafeTxHash,
+      predictedAddress: predictedAddress,
       proposalSubmitted: false,
       safeAppUrl: safeAppUrl,
       transactionData: { // Include transaction data for JSON export if needed
@@ -267,7 +369,7 @@ export async function createSafeDeploymentProposal(
         value: value || '0',
         data: calldataForCreateCall, // Encoded call to performCreate function
       },
-      message: `📋 Safe deployment transaction prepared successfully!\n\n🔧 Transaction Details:\n- To: ${CREATE_CALL_ADDRESS} (CreateCall Contract)\n- Value: 0 ETH\n- Data: performCreate function call\n- Data Length: ${calldataForCreateCall.length} bytes\n\n📥 Next Steps:\n1. Click "Download JSON" below to get the transaction file\n2. Click "Open Safe App" to access Transaction Builder\n3. Import the downloaded JSON file in Safe App\n4. Review and execute the transaction\n\n📝 Required signatures: ${safeInfo.threshold}/${safeInfo.owners.length}`,
+      message: `📋 Safe deployment transaction prepared successfully!\n\n🔧 Transaction Details:\n- To: ${CREATE_CALL_ADDRESS} (CreateCall Contract)\n- Value: 0 ETH\n- Data: performCreate function call\n- Data Length: ${calldataForCreateCall.length} bytes\n- Predicted Contract Address: ${predictedAddress}\n\n📥 Next Steps:\n1. Click "Download JSON" below to get the transaction file\n2. Click "Open Safe App" to access Transaction Builder\n3. Import the downloaded JSON file in Safe App\n4. Review and execute the transaction\n\n📝 Required signatures: ${safeInfo.threshold}/${safeInfo.owners.length}`,
     };
     
     return result;
@@ -349,8 +451,7 @@ export function createSafeAppDeepLink(
 export async function estimateSafeTransactionGas(
   _safeAddress: string,
   transactionData: SafeDeploymentTransactionData,
-  signer: Signer,
-  _chainId: SupportedChainId
+  signer: Signer
 ) {
   try {
     if (!signer.provider) {

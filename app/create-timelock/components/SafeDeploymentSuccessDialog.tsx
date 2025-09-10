@@ -16,6 +16,7 @@ interface SafeDeploymentSuccessDialogProps {
 	chainId: number;
 	message: string;
 	proposalSubmitted: boolean;
+	predictedAddress?: string;
 	transactionData?: SafeDeploymentTransactionData;
 }
 
@@ -28,6 +29,7 @@ const SafeDeploymentSuccessDialog: React.FC<SafeDeploymentSuccessDialogProps> = 
 	chainId,
 	message,
 	proposalSubmitted,
+	predictedAddress,
 	transactionData,
 }) => {
 	const dialogRef = useRef<HTMLDivElement>(null);
@@ -224,6 +226,21 @@ const SafeDeploymentSuccessDialog: React.FC<SafeDeploymentSuccessDialogProps> = 
 						</div>
 					</ParameterDisplayRow>
 
+					{predictedAddress && (
+						<ParameterDisplayRow label="Predicted Contract Address">
+							<div className="flex items-center gap-2">
+								<AddressWarp address={predictedAddress} />
+								<span className="text-sm text-gray-500">(After deployment)</span>
+								<button
+									onClick={() => copyToClipboard(predictedAddress, 'predictedAddress')}
+									className="text-blue-600 hover:text-blue-800 text-sm"
+								>
+									{copied.predictedAddress ? '✅' : '📋'}
+								</button>
+							</div>
+						</ParameterDisplayRow>
+					)}
+
 					<ParameterDisplayRow label="Transaction Hash">
 						<div className="flex items-center gap-2">
 							<code className="text-sm bg-gray-100 px-2 py-1 rounded">
@@ -301,47 +318,9 @@ const SafeDeploymentSuccessDialog: React.FC<SafeDeploymentSuccessDialogProps> = 
 					</div>
 				)}
 
-				{/* JSON Import Workflow Notice for manual mode */}
-				{!proposalSubmitted && (
-					<div className="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-						<div className="flex items-center mb-2">
-							<span className="text-lg">📋</span>
-							<h3 className="font-medium ml-2">JSON Import Workflow</h3>
-						</div>
-						<p className="text-sm text-yellow-800">
-							Safe Transaction Builder doesn't support URL pre-filling. You'll need to download the JSON file and manually import it in Safe App.
-						</p>
-					</div>
-				)}
-
-				{/* Instructions */}
-				<div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-					<h3 className="font-medium mb-3">Next Steps</h3>
-					<ol className="space-y-2 text-sm">
-						{proposalSubmitted ? (
-							<>
-								<li>1. Click "Open Safe App" below to view the transaction</li>
-								<li>2. Review the transaction details in Safe App</li>
-								<li>3. Sign the transaction with your wallet</li>
-								<li>4. Collect additional signatures from other Safe owners</li>
-								<li>5. Execute the transaction once threshold is reached</li>
-							</>
-						) : (
-							<>
-								<li>1. <strong>Click "Download JSON" below</strong> to save the transaction file</li>
-								<li>2. <strong>Click "Open Safe App"</strong> to access Transaction Builder</li>
-								<li>3. In Safe App: <strong>Import the JSON file</strong> you just downloaded</li>
-								<li>4. Review the timelock deployment transaction details</li>
-								<li>5. Sign and collect required signatures from Safe owners</li>
-								<li>6. Execute the transaction once threshold is reached</li>
-							</>
-						)}
-					</ol>
-				</div>
-
 				{/* Message */}
-				{message && (
-					<div className="mb-6 p-3 bg-gray-50 rounded border text-sm">
+				      {message && (
+					<div className="mb-6 p-3 bg-gray-50 rounded border text-sm whitespace-pre-wrap">
 						{message}
 					</div>
 				)}

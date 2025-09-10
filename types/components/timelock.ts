@@ -3,7 +3,6 @@
  */
 
 import type { BaseComponentProps, ContractStandard, VoidCallback } from '../common';
-import type { DeploymentResult, CompoundTimelockParams } from '../blockchain';
 
 /**
  * Chain option for select input
@@ -90,6 +89,7 @@ export interface CreationDetails {
 	chainName: string;
 	chainIcon: React.ReactNode;
 	timelockAddress: string;
+	predictedAddress?: string;
 	initiatingAddress: string;
 	transactionHash: string;
 	explorerUrl: string;
@@ -98,7 +98,9 @@ export interface CreationDetails {
 /**
  * Dialog details state
  */
-export interface DialogDetailsState extends CreationDetails {}
+export interface DialogDetailsState extends CreationDetails {
+	// Additional properties can be added here in the future
+}
 
 /**
  * Confirm creation dialog props

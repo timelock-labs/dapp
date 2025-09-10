@@ -62,6 +62,11 @@
 		"minimumDelayCannotExceed30Days": "Minimum delay cannot exceed 30 days",
 		"failedToDeployCompoundTimelock": "Failed to deploy Compound timelock",
 		"openZeppelinTimelockDeploymentNotImplemented": "OpenZeppelin timelock deployment not yet implemented. Please use Compound timelock for now.",
-		"costEstimationNotAvailableForTimelock": "Cost estimation not available for {standard} timelock"
+		"costEstimationNotAvailableForTimelock": "Cost estimation not available for {standard} timelock",
+		"detectingWalletType": "Detecting wallet type...",
+		"walletTypeDetectionFailed": "Wallet type detection failed",
+		"walletNotConnectedOrDetected": "Wallet not connected or detected",
+		"safeProposalCreationFailed": "Safe proposal creation failed",
+		"safeDeploymentFailed": "Safe deployment failed: {message}"
 	}
 }

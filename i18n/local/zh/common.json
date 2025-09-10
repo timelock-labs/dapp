@@ -62,6 +62,11 @@
 		"minimumDelayCannotExceed30Days": "最小延迟不能超过30天",
 		"failedToDeployCompoundTimelock": "部署Compound时间锁失败",
 		"openZeppelinTimelockDeploymentNotImplemented": "OpenZeppelin时间锁部署尚未实现。请暂时使用Compound时间锁。",
-		"costEstimationNotAvailableForTimelock": "{standard}时间锁的成本估算不可用"
+		"costEstimationNotAvailableForTimelock": "{standard}时间锁的成本估算不可用",
+		"detectingWalletType": "检测钱包类型中...",
+		"walletTypeDetectionFailed": "钱包类型检测失败",
+		"walletNotConnectedOrDetected": "钱包未连接或检测到",
+		"safeProposalCreationFailed": "Safe提案创建失败",
+		"safeDeploymentFailed": "Safe部署失败: {message}"
 	}
 }

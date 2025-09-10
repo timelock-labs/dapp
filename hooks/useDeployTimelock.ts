@@ -23,6 +23,7 @@ import {
 	createSafeDeploymentProposal, 
 	isSafeWallet, 
 	getSafeInfo,
+	predictContractAddress,
 	type SupportedChainId 
 } from '@/utils/safeService';
 
@@ -61,8 +62,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 	const { 
 		validateParams = true, 
 		gasLimit, 
-		gasPrice, 
-		chainId
+		gasPrice
 	} = config;
 	const { deployContract, isLoading, error, reset } = useContractDeployment();
 	const { chainId: connectedChainId } = useWalletConnection();
@@ -139,7 +139,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 				};
 			}
 		});
-	}, [activeAccount, signer, chainId, connectedChainId, executeWalletDetection]);
+	}, [activeAccount, signer, connectedChainId, executeWalletDetection]);
 
 	/**
 	 * Validate Compound timelock parameters
@@ -208,6 +208,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 						// Return Safe deployment result
 						return {
 							contractAddress: null, // Will be known after execution
+							predictedAddress: safeResult.predictedAddress,
 							transactionHash: safeResult.safeTxHash || '',
 							walletType: 'safe',
 							standard: 'compound' as ContractStandard,
@@ -249,7 +250,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 				};
 			});
 		},
-		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions, detectWalletType, signer, chainId, connectedChainId, t]
+		[deployContract, executeWithValidation, validateParams, validateCompoundParams, deploymentOptions, detectWalletType, signer, connectedChainId, t]
 	);
 
 	/**
@@ -264,7 +265,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 				throw new Error(t('openZeppelinTimelockDeploymentNotImplemented'));
 			});
 		},
-		[executeWithValidation]
+		[executeWithValidation, t]
 	);
 
 	/**
@@ -285,7 +286,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 
 			throw new Error(t('costEstimationNotAvailableForTimelock', { standard }));
 		},
-		[gasLimit, gasPrice]
+		[gasLimit, gasPrice, t]
 	);
 
 	/**
@@ -294,6 +295,47 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 	const isDeploymentSupported = useCallback((standard: ContractStandard): boolean => {
 		return standard === 'compound';
 	}, []);
+
+	/**
+	 * Predict contract deployment address
+	 */
+	const predictDeploymentAddress = useCallback(
+		async (): Promise<string | null> => {
+			if (!activeAccount?.address || !signer) {
+				return null;
+			}
+
+			try {
+				const walletInfo = await detectWalletType();
+				if (!walletInfo) {
+					return null;
+				}
+
+				if (walletInfo.type === 'safe') {
+					// For Safe deployments, predict using CREATE_CALL_ADDRESS
+					if (!signer.provider) {
+						return null;
+					}
+					
+					const CREATE_CALL_ADDRESS = '0xB19D6FFc2182150F8Eb585b79D4ABcd7C5640A9d';
+					const createCallNonce = await signer.provider.getTransactionCount(CREATE_CALL_ADDRESS);
+					return predictContractAddress(CREATE_CALL_ADDRESS, createCallNonce);
+				} else {
+					// For EOA deployments, predict using the user's address and nonce
+					if (!signer.provider) {
+						return null;
+					}
+					
+					const userNonce = await signer.provider.getTransactionCount(walletInfo.address);
+					return predictContractAddress(walletInfo.address, userNonce);
+				}
+			} catch (error) {
+				console.error('Failed to predict deployment address:', error);
+				return null;
+			}
+		},
+		[activeAccount, signer, detectWalletType]
+	);
 
 	return {
 		// Deployment methods
@@ -305,6 +347,7 @@ export const useDeployTimelock = (config: TimelockDeploymentConfig = { chainId: 
 		isDeploymentSupported,
 		validateCompoundParams,
 		detectWalletType,
+		predictDeploymentAddress,
 
 		// State
 		isLoading: isLoading || isValidating || isDetectingWallet,

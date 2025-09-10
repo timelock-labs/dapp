@@ -28,6 +28,7 @@ const CreateTimelockPage: React.FC = () => {
 		chainId: number;
 		message: string;
 		proposalSubmitted: boolean;
+		predictedAddress?: string;
 		transactionData?: any;
 	} | null>(null);
 
@@ -139,6 +140,7 @@ const CreateTimelockPage: React.FC = () => {
 						chainId: formState.selectedChain,
 						message: result.safeProposal?.message || '',
 						proposalSubmitted: result.safeProposal?.proposalSubmitted || false,
+						predictedAddress: result.predictedAddress,
 						transactionData: result.safeProposal?.transactionData,
 					});
 					setIsSafeDialogOpen(true);
@@ -215,6 +217,7 @@ const CreateTimelockPage: React.FC = () => {
 						chainId={safeDialogData.chainId}
 						message={safeDialogData.message}
 						proposalSubmitted={safeDialogData.proposalSubmitted}
+						predictedAddress={safeDialogData.predictedAddress}
 						transactionData={safeDialogData.transactionData}
 					/>
 				)}

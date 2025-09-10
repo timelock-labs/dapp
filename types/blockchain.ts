@@ -26,6 +26,7 @@ export interface SafeTransactionProposal {
  */
 export interface DeploymentResult {
 	contractAddress: Address | null;
+	predictedAddress?: string;
 	transactionHash: Hash;
 	walletType?: 'safe' | 'eoa';
 	standard?: ContractStandard;
