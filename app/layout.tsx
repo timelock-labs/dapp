@@ -42,7 +42,7 @@ export default async function RootLayout(props: Props) {
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<head>
-				<title>Timelocker</title>
+				<title>Timelock</title>
 				{/* 预加载关键字体以提升性能 */}
 				<link
 					rel="preload"

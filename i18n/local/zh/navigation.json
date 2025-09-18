@@ -1,6 +1,6 @@
 {
 	"sidebar": {
-		"logo": "Timelocker",
+		"logo": "Timelock",
 		"nav": {
 			"timelock_contracts": "时间锁合约",
 			"abi_library": "ABI 库",

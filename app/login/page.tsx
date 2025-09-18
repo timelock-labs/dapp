@@ -7,7 +7,7 @@ import HomeAnimation from '@/app/login/components/HomeAnimation';
 import './index.css';
 import Image from 'next/image';
 
-const TimeLockerSplitPage = () => {
+const TimeLockSplitPage = () => {
 	return (
 		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
 			<div className='flex w-[1440px] h-[860px] items-center justify-between rounded-xl border border-gray-800 relative'>
@@ -34,4 +34,4 @@ const TimeLockerSplitPage = () => {
 	);
 };
 
-export default TimeLockerSplitPage;
+export default TimeLockSplitPage;
