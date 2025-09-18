@@ -17,7 +17,7 @@ const TimeLockerSplitPage = () => {
 					</div>
 
 					<div className='flex items-center gap-4'>
-						<Image onClick={() => window.open('https://twitter.com/timelocklabs', '_blank')} src='/twitter.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
+						<Image onClick={() => window.open('https://x.com/TimelockApp', '_blank')} src='/twitter.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
 						{/* <Image src='/telegram.svg' alt='Icon' width={24} height={24} className='cursor-pointer' /> */}
 						<Image src='/book.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
 						<Image onClick={() => window.open('https://github.com/orgs/timelock-labs', '_blank')} src='/github.svg' alt='Icon' width={24} height={24} className='cursor-pointer' />
