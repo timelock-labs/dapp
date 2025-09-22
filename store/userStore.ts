@@ -4,6 +4,7 @@ import { AppStateSchema, type AppState, type User, type TimelockContractItem } f
 import { zodMiddleware } from './zodMiddleware';
 import { cookieUtil } from '../utils/cookieUtil';
 import axios from 'axios';
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // 定义 Store 的 actions (方法)
 type AppActions = {
@@ -61,7 +62,7 @@ export const useAuthStore = create<AppState & AppActions>()(
 			},
 			fetchChains: async () => {
 				try {
-					const response = await axios.post('/api/v1/chain/list');
+					const response = await axios.post(`${baseURL}/api/v1/chain/list`);
 					if (response.data.success) {
 						if (response.data.data && Array.isArray(response.data.data.chains)) {
 							set({ chains: response.data.data.chains });
