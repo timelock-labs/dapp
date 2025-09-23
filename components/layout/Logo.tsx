@@ -19,15 +19,15 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className, color = 'white' }) 
 	switch (size) {
 		case 'sm':
 			width = 120;
-			height = 24;
+			height = 120/4.08;
 			break;
 		case 'md':
 			width = 180;
-			height = 36;
+			height = 180/4.08;
 			break;
 		case 'lg':
 			width = 240;
-			height = 60;
+			height = 240/4.08;
 			break;
 		default:
 			break;
