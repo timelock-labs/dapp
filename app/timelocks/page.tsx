@@ -28,15 +28,15 @@ const Timelocks: React.FC = () => {
 					standard: 'compound' as const,
 				})
 			);
-			const openzeppelinTimelocks: TimelockContractItem[] = timelockListResponse.data.openzeppelin_timelocks.map(
-				(timelock: TimelockContractItem): TimelockContractItem => ({
-					...timelock,
-					standard: 'openzeppelin' as const,
-				})
-			);
-			const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
+			// const openzeppelinTimelocks: TimelockContractItem[] = timelockListResponse.data.openzeppelin_timelocks.map(
+			// 	(timelock: TimelockContractItem): TimelockContractItem => ({
+			// 		...timelock,
+			// 		standard: 'openzeppelin' as const,
+			// 	})
+			// );
+			// const combinedTimelocks = [...compoundTimelocks, ...openzeppelinTimelocks];
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			setAllTimelocks(combinedTimelocks as any);
+			setAllTimelocks(compoundTimelocks as any);
 		}
 	}, [timelockListResponse, setAllTimelocks]);
 
