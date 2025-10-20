@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronDown, Network } from 'lucide-react';
 import { useAuthStore } from '@/store/userStore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { getChainObject } from '@/utils/chainUtils';
 
@@ -20,20 +20,25 @@ export function ChainSwitcher() {
 	const { data: switchChainResponse, isLoading: isSwitchingChain } = useApi();
 	const hasFetchedChains = useRef(false);
 
+
+	// Only allow specific chain IDs
+	const allowedChainIds = [1, 56, 177, 11155111, 97];
+	const allowedChains = useMemo(() => (Array.isArray(chains) ? chains.filter(c => allowedChainIds.includes(c.chain_id)) : []), [chains]);
+
 	const [currentChain, setCurrentChain] = useState(() => {
-		if (Array.isArray(chains)) {
-			return chains.find(chain => chain.chain_id === chainId) || undefined;
+		if (Array.isArray(allowedChains)) {
+			return allowedChains.find(chain => chain.chain_id === chainId) || undefined;
 		}
 		return undefined;
 	});
 
 	// 使用单独的 useEffect 来重置 fetch 状态当 chains 变为非空时
 	useEffect(() => {
-		if (chainId && chains && chains.length > 0) {
-			setCurrentChain(chains.find(chain => chain.chain_id === chainId) || undefined);
+		if (chainId && allowedChains && allowedChains.length > 0) {
+			setCurrentChain(allowedChains.find(chain => chain.chain_id === chainId) || undefined);
 			hasFetchedChains.current = false; // 允许下次重新获取
 		}
-	}, [chains, chainId]);
+	}, [allowedChains, chainId]);
 
 	useEffect(() => {
 		if (_hasHydrated && !hasFetchedChains.current && (!chains || chains.length === 0)) {
@@ -147,21 +152,22 @@ export function ChainSwitcher() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end' className='w-48'>
-				{Array.isArray(chains) &&
-					chains.map(chain => (
+				{Array.isArray(allowedChains) &&
+					allowedChains.map(chain => (
 						<DropdownMenuItem
-							key={chain.id}
+							key={chain.chain_id}
 							onClick={() => handleChainSwitch(chain.chain_id)}
-							className={`${chainId === chain.id ? 'bg-accent' : ''} cursor-pointer`}
+							className={`${chainId === chain.chain_id ? 'bg-accent' : ''} cursor-pointer`}
 							disabled={isSwitchingChain}>
 							<span className='mr-1 rounded-full overflow-hidden'>
 								<Image src={chain.logo_url} alt={chain.chain_name} width={20} height={20} />
 							</span>
 							<div className='flex flex-col'>
 								<span className='font-medium'>{chain.display_name}</span>
-								{chainId === chain.id && <span className='text-xs text-muted-foreground'>Connected</span>}
+								{chainId === chain.chain_id && <span className='text-xs text-muted-foreground'>Connected</span>}
 							</div>
 						</DropdownMenuItem>
+						
 					))}
 			</DropdownMenuContent>
 		</DropdownMenu>

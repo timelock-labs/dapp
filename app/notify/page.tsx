@@ -8,7 +8,7 @@ const EmailNotificationPage: React.FC = () => {
 	return (
 		<div className='flex flex-col space-y-8'>
 			<EmailRulesHeader />
-			<Channel />
+			{/* <Channel /> */}
 			<Email />
 		</div>
 	);
