@@ -33,7 +33,6 @@ export default function Home() {
 
 	useEffect(() => {
 		if (timelockListResponse && timelockListResponse.success && timelockListResponse.data) {
-			debugger
 			console.log('Timelock List Response:', timelockListResponse);
 			const compoundTimelocks: TimelockContractItem[] = timelockListResponse.data.compound_timelocks.map(
 				(timelock: TimelockContractItem): TimelockContractItem => ({
