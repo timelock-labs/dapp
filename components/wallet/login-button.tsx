@@ -112,7 +112,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 	// 实际执行签名的函数
 	const performSignature = useCallback(async () => {
 		try {
-			const currentChainId = activeChain?.id || 1;
+			// const currentChainId = activeChain?.id || 1;
 
 			let requestPayload;
 
