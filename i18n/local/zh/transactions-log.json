@@ -15,6 +15,7 @@
         "value": "值",
         "function_signature": "函数签名",
         "functionSignature":"函数签名",
-        "callDataHex":"调用数据"
+        "callDataHex":"调用数据",
+        "targetAddress":"目标地址"
     }
 }

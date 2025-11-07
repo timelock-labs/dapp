@@ -22,7 +22,7 @@
 		},
 		"addMailboxCard": {
 			"addMailbox": "Add Mailbox",
-			"sendCode": "Send Verification Code",
+			"sendCode": "Send",
 			"addMailboxDescription": "Add your email address to receive timelock notifications.",
 			"addMailboxButton": "Add Mailbox",
 			"addMailboxButtonDescription": "Add mailbox address and send verification code.",
@@ -69,7 +69,7 @@
 			"verificationSuccess": "Verification successful",
 			"verificationCodeIncorrect": "Verification code incorrect",
 			"fetchTimelockListError": "Failed to fetch timelock list",
-			"sendCode": "Send Verification Code",
+			"sendCode": "Send",
 			"hasSend": "Verification code has been sent, please check your email",
 			"resendCode": "Resend",
 			"resending": "Resending...",

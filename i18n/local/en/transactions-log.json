@@ -15,6 +15,7 @@
         "value": "Value",
         "function_signature": "Function Signature",
         "functionSignature":"Function Signature",
-        "callDataHex":"Call Data Hex"
+        "callDataHex":"Call Data Hex",
+        "targetAddress":"Target Address"
     }
 }

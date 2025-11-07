@@ -99,19 +99,24 @@ const TransactionHistorySection: React.FC = () => {
 		{
 			key: 'remark',
 			header: t('remark'),
-			render: (row: HistoryTxRow) => <span className="text-sm cursor-pointer" onClick={() => copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
+			render: (row: HistoryTxRow) => <span className="text-xs cursor-pointer" onClick={() => copyToClipboard(row.contract_address)}>{row.contract_remark}</span>,
 		},
 		{
 			key: 'tx_hash',
 			header: t('txHash'),
-			render: (row: HistoryTxRow) => <HashLink hash={row.queue_tx_hash} chainId={row.chain_id} />,
+			render: (row: HistoryTxRow) => <HashLink className='text-xs' hash={row.queue_tx_hash} chainId={row.chain_id} />,
+		},
+		{
+			key:'target_address',
+			header: t('targetAddress'),
+			render: (row: HistoryTxRow) => <span className="text-xs cursor-pointer" onClick={() => copyToClipboard(row.target_address)}>{row.target_address}</span>,
 		},
 		{
 			key: 'function_signature',
 			header: t('functionSignature'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
+					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.function_signature)}>
 						{row.function_signature}
 					</span>
 				</div>
@@ -132,7 +137,7 @@ const TransactionHistorySection: React.FC = () => {
 								const scientificNotation = `${wholePart}×10`;
 								
 								return (
-									<div key={item.index} className='flex text-sm'>
+									<div key={item.index} className='flex text-xs'>
 										<div className='font-medium'>{item.type}:</div>
 										<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(value)}>
 											{scientificNotation}
@@ -143,7 +148,7 @@ const TransactionHistorySection: React.FC = () => {
 							}
 
 							return (
-								<div key={item.index} className='flex text-sm'>
+								<div key={item.index} className='flex text-xs'>
 									<div className='font-medium'>{item.type}:</div>
 									<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(value)}>
 										{value}
@@ -153,7 +158,7 @@ const TransactionHistorySection: React.FC = () => {
 						}
 
 
-						return <div key={item.index} className='flex text-sm'>
+						return <div key={item.index} className='flex text-xs'>
 							<div className='font-medium'>{item.type}:</div>
 							<div className='ml-1 cursor-pointer' onClick={() => copyToClipboard(String(item.value))}>{String(item.value)}</div>
 						</div>
@@ -168,7 +173,7 @@ const TransactionHistorySection: React.FC = () => {
 			header: t('value'),
 			render: (row: HistoryTxRow) => (
 				<div className='flex items-center space-x-2'>
-					<span className='text-sm cursor-pointer' onClick={() => copyToClipboard(row.value)}>
+					<span className='text-xs cursor-pointer' onClick={() => copyToClipboard(row.value)}>
 						{row.value}  <NativeToken chainId={row.chain_id} />
 					</span>
 				</div>
@@ -178,7 +183,7 @@ const TransactionHistorySection: React.FC = () => {
 			key: 'eta',
 			header: t('eta'),
 			render: (row: HistoryTxRow) => (
-				<span className='text-sm'>
+				<span className='text-xs'>
 					{formatDate(row.eta)}
 				</span>
 			),

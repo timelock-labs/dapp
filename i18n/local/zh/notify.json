@@ -69,7 +69,7 @@
 			"verificationSuccess": "验证成功",
 			"verificationCodeIncorrect": "验证码错误",
 			"fetchTimelockListError": "获取时间锁列表失败",
-			"sendCode": "发送验证码",
+			"sendCode": "发送",
 			"hasSend": "验证码已发送，请检查您的邮箱",
 			"resendCode": "重新发送",
 			"resending": "重新发送中...",
