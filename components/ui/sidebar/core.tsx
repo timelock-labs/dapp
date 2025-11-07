@@ -58,7 +58,7 @@ export function Sidebar({
 
 	return (
 		<div
-			className='group peer text-sidebar-foreground hidden md:block'
+			className='group peer text-sidebar-foreground hidden md:block w-[200px]'
 			data-state={state}
 			data-collapsible={state === 'collapsed' ? collapsible : ''}
 			data-variant={variant}
@@ -79,7 +79,7 @@ export function Sidebar({
 			<div
 				data-slot='sidebar-container'
 				className={cn(
-					'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+					'fixed inset-y-0 z-10 hidden h-svh w-[200px] transition-[left,right,width] duration-200 ease-linear md:flex',
 					side === 'left' ?
 						'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
 					:	'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -93,7 +93,7 @@ export function Sidebar({
 				<div
 					data-sidebar='sidebar'
 					data-slot='sidebar-inner'
-					className='bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded group-data-[variant=floating]:border'>
+					className='bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-[200px] flex-col group-data-[variant=floating]:rounded group-data-[variant=floating]:border'>
 					{children}
 				</div>
 			</div>
