@@ -71,7 +71,7 @@ const AssetList: React.FC<AssetListProps> = ({ assets }) => {
 	];
 
 	return (
-		<div className='bg-white p-6  rounded-lg border border-gray-200 flex flex-col h-full'>
+		<div className='bg-white   rounded-lg border border-gray-200 flex flex-col h-full'>
 
 			<TableComponent<Asset> columns={columns} data={assets} showPagination={true} itemsPerPage={5} />
 
