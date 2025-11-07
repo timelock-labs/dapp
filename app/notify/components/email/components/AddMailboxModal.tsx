@@ -109,7 +109,7 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 '>
 			<div
-				className='bg-white  rounded-lg border border-gray-200 flex flex-col'
+				className='bg-white  rounded border border-gray-200 flex flex-col'
 				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }} // Added maxHeight and overflowY
 			>
 				<div className='p-6'>
@@ -131,10 +131,10 @@ const AddMailboxModal: React.FC<AddMailboxModalProps> = ({ isOpen, onClose, onSu
 					<button
 						type='button'
 						onClick={handleCancel}
-						className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+						className='bg-white px-6 py-2 rounded border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
-					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded font-medium hover:bg-gray-800 transition-colors'>
 						{t('save')}
 					</button>
 				</div>

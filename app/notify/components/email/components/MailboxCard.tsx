@@ -40,7 +40,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 	};
 
 	return (
-		<div className='bg-white rounded-lg  border border-gray-200 flex flex-col justify-between h-auto'>
+		<div className='bg-white rounded  border border-gray-200 flex flex-col justify-between h-auto'>
 			<div className='p-6'>
 				<div className='text-lg flex items-center gap-2 font-semibold mb-1 cursor-pointer' onClick={() => copyToClipboard(email)}>
 					<div>
@@ -59,7 +59,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 				<button
 					type="button"
 					onClick={handleEditClick}
-					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md  text-sm font-medium   bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
+					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded  text-sm font-medium   bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
 					<span className='flex items-center gap-2 text-[#0A0A0A]'>
 						<PencilIcon className='w-4 h-4' />
 						{t('edit')}
@@ -68,7 +68,7 @@ const MailboxCard: React.FC<MailboxCardProps> = ({ id, email, remark, created_at
 				<button
 					type="button"
 					onClick={handleDeleteClick}
-					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded-md  text-sm font-medium   bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
+					className='w-[85px] h-[32px] text-center inline-flex items-center py-2 px-2 gap-py-2 border border-gray-300 rounded  text-sm font-medium   bg-white hover:bg-gray-50 transition-colors cursor-pointer'>
 					<span className='flex items-center gap-2 text-[#0A0A0A]'>
 						<TrashIcon className='w-4 h-4' />
 						{t('delete')}

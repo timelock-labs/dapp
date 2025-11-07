@@ -71,7 +71,7 @@ export default function LoginFooter() {
 	}, [currentSection, t]);
 
 	return (
-		<footer className={`text-[#D4D4D4] absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] flex justify-center items-center border border-gray-900 rounded-xl bg-[#1E1E1E69] backdrop-blur-sm transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+		<footer className={`text-[#D4D4D4] absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] flex justify-center items-center border border-gray-900 rounded bg-[#1E1E1E69] backdrop-blur-sm transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
 			<div className='flex justify-around items-center w-[96%] gap-10 h-[160px]'>
 				<NavigationButton direction='prev' onClick={handlePrevSection} />
 

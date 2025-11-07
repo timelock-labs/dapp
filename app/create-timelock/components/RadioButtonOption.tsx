@@ -3,7 +3,7 @@ import type { RadioButtonOptionProps } from '@/types';
 
 const RadioButtonOption: React.FC<RadioButtonOptionProps> = ({ id, name, value, label, description, checked, onChange, className = '', disabled = false }) => {
 	const baseClasses = `
-    flex items-start rounded-lg border cursor-pointer transition-all duration-200 px-3 py-2  border border-gray-300
+    flex items-start rounded border cursor-pointer transition-all duration-200 px-3 py-2  border border-gray-300
     ${className}
   `;
 

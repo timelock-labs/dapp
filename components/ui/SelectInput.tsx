@@ -38,7 +38,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ logo, label, value, onChange,
 						id={`select-${label}`}
 						className={`block w-full pl-3 pr-8 py-2 border ${
 							error ? 'border-red-500' : 'border-gray-300'
-						} rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm appearance-none ${
+						} rounded focus:outline-none focus:ring-black focus:border-black sm:text-sm appearance-none ${
 							disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
 						} ${className || ''}`}
 						value={value}

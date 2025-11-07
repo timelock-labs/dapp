@@ -222,7 +222,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 					<>
 						<div
 							style={{ display: connectionStatus === 'unknown' ? 'flex' : 'none' }}
-							className='w-full h-12 bg-white text-black font-medium rounded-md items-center justify-center'>
+							className='w-full h-12 bg-white text-black font-medium rounded items-center justify-center'>
 							<Loader2 className='w-4 h-4 mr-2 animate-spin' />
 							<span>{t('initializing')}</span>
 						</div>
@@ -234,7 +234,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 			case 'errorSigningIn':
 				return (
 					<>
-						<Button onClick={handleSignature} className='w-full h-12 bg-white text-black font-medium rounded-md transition-colors' disabled={false}>
+						<Button onClick={handleSignature} className='w-full h-12 bg-white text-black font-medium rounded transition-colors' disabled={false}>
 							{t('retrySignature')}
 						</Button>
 					</>
@@ -242,7 +242,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 			case 'signing':
 				return (
-					<div className='w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
+					<div className='w-full h-12 bg-white text-black font-medium rounded opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
 						<Loader2 className='w-4 h-4 mr-2 animate-spin' />
 						{t('signing')}
 					</div>
@@ -250,7 +250,7 @@ export function LoginButton({ fullWidth = true }: LoginButtonProps) {
 
 			case 'signed':
 				return (
-					<div className='w-full h-12 bg-white text-black font-medium rounded-md opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
+					<div className='w-full h-12 bg-white text-black font-medium rounded opacity-90 flex items-center justify-center pointer-events-none select-none hover:cursor-not-allowed'>
 						✓ {t('loginSuccess')}
 					</div>
 				);

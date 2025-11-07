@@ -64,7 +64,7 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 
 	return (
 		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-			<div className='bg-white rounded-lg border border-gray-200 flex flex-col' style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
+			<div className='bg-white rounded border border-gray-200 flex flex-col' style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}>
 				<div className='p-6'>
 					<SectionHeader title={t('title')} description={t('description')} />
 
@@ -83,10 +83,10 @@ const EditMailboxModal: React.FC<EditMailboxModalProps> = ({ isOpen, onClose, on
 					<button
 						type='button'
 						onClick={handleCancel}
-						className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+						className='bg-white px-6 py-2 rounded border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						Cancel
 					</button>
-					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors'>
+					<button type='button' onClick={handleSave} className='bg-black text-white px-6 py-2 rounded font-medium hover:bg-gray-800 transition-colors'>
 						Save
 					</button>
 				</div>

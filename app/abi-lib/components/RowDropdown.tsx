@@ -29,7 +29,7 @@ const ABIRowDropdown: React.FC<ABIRowDropdownProps> = ({ isOpen, dropdownRef, on
 	if (!isOpen) return null;
 
 	const dropdown = (
-		<div ref={dropdownRef} className='fixed w-32 bg-white rounded-md z-50 border border-gray-200' style={{ top: position.top, left: position.left }}>
+		<div ref={dropdownRef} className='fixed w-32 bg-white rounded z-50 border border-gray-200' style={{ top: position.top, left: position.left }}>
 			{!isShared && (
 				<button type='button' onClick={onDelete} className='w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-gray-100 hover:text-red-700 flex items-center space-x-2'>
 					<DeleteSVG />

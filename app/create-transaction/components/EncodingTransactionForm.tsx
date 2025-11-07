@@ -226,7 +226,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 			// icon={<Image src={QuestionIcon} alt='Question Icon' width={15} height={15} />}
 			/>
 			<div className='flex flex-col space-y-4 w-full'>
-				<div className='flex flex-col gap-4 border border-gray-300 rounded-lg p-4' id='timelock-selection'>
+				<div className='flex flex-col gap-4 border border-gray-300 rounded p-4' id='timelock-selection'>
 					<div className='flex-1 z-50'>
 						<div className='block text-sm font-medium mb-1'>{t('encodingTransaction.selectTimelock')}</div>
 						<DropdownMenu>
@@ -250,7 +250,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 									<ChevronDown className='ml-2 h-3 w-3' />
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent style={{ width: `${dropdownWidth}px` }} className='bg-white border border-gray-200 p-2 flex flex-col rounded-md' align='end' side='bottom' >
+							<DropdownMenuContent style={{ width: `${dropdownWidth}px` }} className='bg-white border border-gray-200 p-2 flex flex-col rounded' align='end' side='bottom' >
 								{(!Array.isArray(timelockOptions) || timelockOptions.length === 0) ? (
 									<div className={`flex pr-8 py-1 px-1 hover:bg-gray-50 items-center cursor-pointer border-none`}>
 										<span className='text-gray-800 text-xs'> {t('encodingTransaction.noTimelocksAvailable')}</span>
@@ -285,7 +285,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 					</div>
 				</div>
 
-				<div id='transaction-details' className='border border-gray-300 rounded-lg p-4 mt-2'>
+				<div id='transaction-details' className='border border-gray-300 rounded p-4 mt-2'>
 					<TextInput label={t('encodingTransaction.target')} value={target} onChange={handleTargetChange} placeholder='Target' error={validationErrors.target} />
 					<TextInput label={t('encodingTransaction.value')} value={value} onChange={handleValueChange} placeholder='Value' />
 					<TextAreaInput
@@ -307,7 +307,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 									type='datetime-local'
 									aria-label={`Transaction execution time ${timeZone()}`}
 									value={toLocalDateTimeString(new Date(timeValue * 1000))}
-									className='mb-3 max-w-[200px] border border-gray-300 rounded-md px-3 h-[38px] focus:outline-none focus:ring-2 focus:ring-blue-200'
+									className='mb-3 max-w-[200px] border border-gray-300 rounded px-3 h-[38px] focus:outline-none focus:ring-2 focus:ring-blue-200'
 									onChange={e => {
 										const date = new Date(e.target.value);
 										if (!isNaN(date.getTime())) {
@@ -326,7 +326,7 @@ const EncodingTransactionForm: React.FC<EncodingTransactionFormProps> = ({
 					</div>
 				</div>
 
-				<div id='target-abi-section' className='border border-gray-300 rounded-lg p-4 mt-2'>
+				<div id='target-abi-section' className='border border-gray-300 rounded p-4 mt-2'>
 					<TargetABISection
 						abiValue={abiValue}
 						onAbiChange={onAbiChange}

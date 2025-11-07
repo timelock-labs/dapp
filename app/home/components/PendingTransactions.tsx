@@ -81,7 +81,7 @@ const PendingTransactions: React.FC = () => {
 	];
 
 	return (
-		<div className='bg-white rounded-xl p-6 border border-gray-200 flex flex-col h-full'>
+		<div className='bg-white rounded p-6 border border-gray-200 flex flex-col h-full'>
 			<div className='mb-4'>
 				<SectionHeader title={t('pendingTransactions')} description={t('transactionHistory')} />
 			</div>

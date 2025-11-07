@@ -18,7 +18,7 @@ const NewButton: React.FC<NewButtonProps> = ({ onClick, label = 'New', className
 	return (
 		<button
 			onClick={onClick}
-			className={`inline-flex cursor-pointer items-center space-x-2 px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500 ${className || ''}`}>
+			className={`inline-flex cursor-pointer items-center space-x-2 px-4 py-2 border border-transparent rounded text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500 ${className || ''}`}>
 			<AddSVG />
 			{/* Optional label, can be omitted if not needed */}
 			<span>{label}</span>

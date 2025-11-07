@@ -72,7 +72,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 	const ParameterDisplayRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
 		<div className='mb-6'>
 			<label className='block text-sm font-bold'>{label}</label>
-			<div className='rounded-md inline-flex items-center text-sm'>{children}</div>
+			<div className='rounded inline-flex items-center text-sm'>{children}</div>
 		</div>
 	);
 
@@ -86,7 +86,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 				aria-modal='true'
 				aria-labelledby={dialogTitleId}
 				tabIndex={-1}
-				className='bg-white p-6 rounded-lg max-w-[800px] mx-4 relative outline-none'
+				className='bg-white p-6 rounded max-w-[800px] mx-4 relative outline-none'
 			>
 				<h2 id={dialogTitleId} className='text-xl font-semibold mb-6'>
 					{t('title')}
@@ -127,7 +127,7 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 						aria-label='ABI Content'
 						value={abiContent}
 						className='
-              mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md
+              mt-1 block w-full px-3 py-2 border border-gray-300 rounded
               focus:outline-none focus:ring-black focus:border-black
               sm:text-sm bg-gray-100
             '
@@ -139,10 +139,10 @@ const CheckParametersDialog: React.FC<CheckParametersDialogProps> = ({ isOpen, o
 					<button
 						type='button'
 						onClick={handleCancel}
-						className='bg-white px-6 py-2 rounded-md border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
+						className='bg-white px-6 py-2 rounded border border-gray-300 font-medium hover:bg-gray-50 transition-colors'>
 						{t('cancel')}
 					</button>
-					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors cursor-pointer'>
+					<button type='button' onClick={handleConfirm} className='bg-black text-white px-6 py-2 rounded font-medium hover:bg-gray-800 transition-colors cursor-pointer'>
 						{t('confirm')}
 					</button>
 				</div>

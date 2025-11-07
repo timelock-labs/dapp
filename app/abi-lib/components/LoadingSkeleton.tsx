@@ -2,7 +2,7 @@ export default function LoadingSkeleton() {
 	return (
 		<>
 			<div className='min-h-screen'>
-				<div className='mx-auto border border-gray-200 rounded-lg p-6'>
+				<div className='mx-auto border border-gray-200 rounded p-6'>
 					{/* Header skeleton */}
 					<div className='flex items-center justify-between mb-6'>
 						<div className='space-y-2'>
@@ -13,7 +13,7 @@ export default function LoadingSkeleton() {
 					</div>
 
 					{/* Table skeleton */}
-					<div className='border border-gray-200 rounded-lg overflow-hidden'>
+					<div className='border border-gray-200 rounded overflow-hidden'>
 						{/* Table header */}
 						<div className='bg-gray-50 border-b border-gray-200 px-6 py-3'>
 							<div className='flex space-x-4'>

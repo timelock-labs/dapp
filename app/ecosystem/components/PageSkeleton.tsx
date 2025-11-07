@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
 const PageSkeleton = () => (
-	<div className='bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-start'>
+	<div className='bg-white p-6 rounded border border-gray-200 flex flex-col items-start'>
 		<div className='flex justify-between items-center w-full mb-4'>
 			<Skeleton className='w-10 h-10 rounded-full' />
 			<Skeleton className='w-5 h-5' />

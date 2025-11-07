@@ -19,7 +19,7 @@ export default function TableButton({ label, onClick, colorType }: { label: stri
         }
     };
     return (
-        <div className={`px-3 py-1.5 inline-flex items-center text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r  border  cursor-pointer ${getColor()}`} onClick={onClick}>
+        <div className={`px-3 py-1.5 inline-flex items-center text-xs font-medium rounded transition-all duration-200 hover:scale-105 bg-gradient-to-r  border  cursor-pointer ${getColor()}`} onClick={onClick}>
             {label}
         </div>
 

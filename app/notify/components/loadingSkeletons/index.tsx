@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // Mailbox Card Skeleton Component
 export const CardSkeleton = () => (
-	<div className='bg-white rounded-lg border border-gray-200 p-6'>
+	<div className='bg-white rounded border border-gray-200 p-6'>
 		<div className='flex items-center justify-between mb-4'>
 			<Skeleton className='h-5 w-24' />
 			<div className='flex space-x-2'>
@@ -30,7 +30,7 @@ export const CardSkeleton = () => (
 
 // Add Email Card Skeleton
 export const AddCardSkeleton = () => (
-	<div className='bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-6 flex flex-col items-center justify-center min-h-[200px]'>
+	<div className='bg-gray-50 rounded border-2 border-dashed border-gray-300 p-6 flex flex-col items-center justify-center min-h-[200px]'>
 		<Skeleton className='h-12 w-12 rounded-full mb-4' />
 		<Skeleton className='h-5 w-24 mb-2' />
 		<Skeleton className='h-4 w-32' />
@@ -40,7 +40,7 @@ export const AddCardSkeleton = () => (
 // Combined Email Loading Skeleton
 export const LoadingSkeleton = () => (
 	<div className='flex flex-col space-y-8'>
-		<div className='bg-blue-50 border border-blue-200 rounded-lg p-6'>
+		<div className='bg-blue-50 border border-blue-200 rounded p-6'>
 			<div className='space-y-4'>
 				<Skeleton className='h-6 w-48' />
 				<div className='space-y-2'>

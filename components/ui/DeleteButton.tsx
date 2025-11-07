@@ -73,7 +73,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 				<button
 					type='button'
 					disabled={disabled}
-					className={`${getSizeClasses()} cursor-pointer flex justify-center items-center rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+					className={`${getSizeClasses()} cursor-pointer flex justify-center items-center rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
 					aria-label='Delete'
 					title='Delete'>
 					<TrashIcon className={getIconSize()} />

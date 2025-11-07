@@ -10,7 +10,7 @@ import Image from 'next/image';
 const TimeLockSplitPage = () => {
 	return (
 		<div className='flex items-center justify-center h-screen min-h-[860px] min-w-[1440px] bg-black text-white'>
-			<div className='flex w-[1440px] h-[860px] items-center justify-between rounded-xl border border-gray-800 relative'>
+			<div className='flex w-[1440px] h-[860px] items-center justify-between rounded border border-gray-800 relative'>
 				<div className='w-full bg-black flex items-center justify-between absolute top-4 z-10 px-10'>
 					<div className='py-4'>
 						<Logo size='md' color='white' />

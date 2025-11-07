@@ -26,7 +26,7 @@ const TimelockOptionCard: React.FC<TimelockOptionCardProps> = ({
 		<div
 			className={`
         ${bgColor} ${textColor}
-        rounded-lg
+        rounded
 		border
         p-8  /* Card styling */
         flex flex-col justify-end /* Aligns content to the bottom as in the image */

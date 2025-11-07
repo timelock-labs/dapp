@@ -52,7 +52,7 @@ function TableComponent<T extends { id: string | number } = any>({ title, column
 		<div className='bg-white flex flex-col h-full'>
 			{/* Title and Header Actions */}
 			{(title || headerActions) && (
-				<div className='flex justify-between items-center mb-4 custom-title-bg rounded-lg  '>
+				<div className='flex justify-between items-center mb-4 custom-title-bg rounded  '>
 					{title && <h2 className='text-lg font-semibold'>{title}</h2>}
 					{headerActions && <div>{headerActions}</div>}
 				</div>
@@ -96,7 +96,7 @@ function TableComponent<T extends { id: string | number } = any>({ title, column
 
 			{/* Pagination Controls */}
 			{showPagination&& (
-				<div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-200'>
+				<div className='flex justify-between items-center py-4 px-2 border-t border-gray-200'>
 					<button
 						onClick={handlePreviousPage}
 						disabled={currentPage === 1}

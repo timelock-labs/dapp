@@ -110,7 +110,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 
 
 	return (
-		<div className='rounded-md'>
+		<div className='rounded'>
 			<div className='flex items-end space-x-4 mb-4'>
 				<div className='flex-grow'>
 					<SelectInput
@@ -129,7 +129,7 @@ const TargetABISection: React.FC<TargetABISectionProps> = ({ abiValue, onAbiChan
 				<button
 					type='button'
 					onClick={() => setIsAddABIOpen(true)}
-					className='bg-neutral-100 text-neutral-900 rounded-md hover:bg-neutral-200 transition-colors text-xl font-bold w-[88px] h-9 pt-2 pr-4 pb-2 pl-4 flex items-center justify-center transform -translate-y-4'>
+					className='bg-neutral-100 text-neutral-900 rounded hover:bg-neutral-200 transition-colors text-xl font-bold w-[88px] h-9 pt-2 pr-4 pb-2 pl-4 flex items-center justify-center transform -translate-y-4'>
 					+
 				</button>
 			</div>

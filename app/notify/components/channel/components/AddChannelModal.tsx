@@ -196,7 +196,7 @@ const AddChannelModal: React.FC<AddChannelModalProps> = ({ isOpen, onClose, onSu
 			aria-modal='true'
 			aria-labelledby='modal-title'>
 			<div
-				className='bg-white rounded-lg border border-gray-200 flex flex-col shadow-xl'
+				className='bg-white rounded border border-gray-200 flex flex-col shadow-xl'
 				style={{ width: 558, maxHeight: '90vh', overflowY: 'auto' }}
 				onClick={e => e.stopPropagation()}>
 				<div className='p-6'>
@@ -214,7 +214,7 @@ const AddChannelModal: React.FC<AddChannelModalProps> = ({ isOpen, onClose, onSu
 										<ChevronDown className='ml-2 h-3 w-3' />
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className='w-38 bg-white border border-gray-200 p-2 flex flex-col gap-2 rounded-md' align='end'>
+								<DropdownMenuContent className='w-38 bg-white border border-gray-200 p-2 flex flex-col gap-2 rounded' align='end'>
 									{Array.isArray(channelList) &&
 										channelList.map(channel => (
 											<DropdownMenuItem

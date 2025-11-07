@@ -40,7 +40,7 @@ const MailboxSelection: React.FC<MailboxSelectionProps> = () => {
 			<div className='flex flex-wrap gap-2'>
 				{mailboxOptions.length > 0 ? (
 					mailboxOptions.map(option => (
-						<div key={option.id} className='flex items-center border borer-gray-300 space-x-2 py-2 px-4 rounded-md hover:bg-gray-50 transition-colors bg-gray-100'>
+						<div key={option.id} className='flex items-center border borer-gray-300 space-x-2 py-2 px-4 rounded hover:bg-gray-50 transition-colors bg-gray-100'>
 							<div className='text-sm cursor-pointer flex justify-center items-center'>
 								<div><Mail className='mr-1' height={16} width={16} /></div>
 								<div className='leading-5'>{option.email_remark || option.email}</div>

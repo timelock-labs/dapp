@@ -148,7 +148,7 @@ const ABILibPage: React.FC = () => {
 						ref={(el) => { buttonRefs.current[row.id] = el; }}
 						type='button'
 						onClick={() => handleEllipsisMenu(row.id)}
-						className='  hover:text-black p-1 rounded-md hover:bg-gray-100 transition-colors'
+						className='  hover:text-black p-1 rounded hover:bg-gray-100 transition-colors'
 						aria-label='More options'
 						title='More options'>
 						<EllipsesSVG />

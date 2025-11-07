@@ -223,7 +223,7 @@ const TransactionEncoderPage: React.FC = () => {
 								type='button'
 								onClick={handleSendTransaction}
 								disabled={isSubmitting}
-								className='cursor-pointer text-sm bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
+								className='cursor-pointer text-sm bg-black text-white rounded font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center h-[36px] text-sm disabled:opacity-50 disabled:cursor-not-allowed px-4'>
 								<Send className='w-4 h-4 mr-2' />
 								{isSubmitting ? t('submitting') : t('sendTransactionButton')}
 							</button>

@@ -113,7 +113,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 							}}
 							aria-label={`${t('label')} digit ${i + 1} of ${codeLength}`}
 							placeholder='0'
-							className={`w-12 h-12 text-center border-2 border-gray-300 rounded-lg focus:border-black focus:ring-2 focus:ring-black text-xl font-mono transition-all duration-150
+							className={`w-12 h-12 text-center border-2 border-gray-300 rounded focus:border-black focus:ring-2 focus:ring-black text-xl font-mono transition-all duration-150
           ${code[i] ? 'border-black bg-gray-50' : ''}
               `}
 							autoComplete='off'
@@ -125,7 +125,7 @@ const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({ email, on
 					type='button'
 					onClick={handleResendCode}
 					disabled={isSendingCode || countdown > 0}
-					className={`ml-4 text-sm px-4 py-2 rounded-lg font-semibold transition-colors duration-150
+					className={`ml-4 text-sm px-4 py-2 rounded font-semibold transition-colors duration-150
             ${
 							isSendingCode || countdown > 0 ?
 								'bg-gray-100   cursor-not-allowed'

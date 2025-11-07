@@ -76,8 +76,8 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 					<TotalAssetValue totalUsdValue={totalUSD} />
 				</div>
 				<div className='md:col-span-2 flex flex-col'>
-					<div className='flex justify-around gap-6 border border-gray-200 rounded-lg h-full'>
-						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+					<div className='flex justify-around gap-6 border border-gray-200 rounded h-full'>
+						<div className='flex flex-col space-y-4 bg-white rounded'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>
 									<Hourglass width={60} height={60} color='rgba(0,0,0,.05)' />
@@ -87,7 +87,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 							</div>
 						</div>
 
-						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col space-y-4 bg-white rounded'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>
 									<Podcast width={60} height={60} color='rgba(0,0,0,.05)' />
@@ -96,7 +96,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 								<div className='text-5xl font-bold'>{flow_count.ready}</div>
 							</div>
 						</div>
-						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col space-y-4 bg-white rounded'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>
 									<ClipboardCheck width={60} height={60} color='rgba(0,0,0,.05)' />
@@ -106,7 +106,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 							</div>
 						</div>
 
-						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col space-y-4 bg-white rounded'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>
 									<RefreshCwOff width={60} height={60} color='rgba(0,0,0,.05)' />
@@ -116,7 +116,7 @@ const Assert: React.FC<AssertProps> = ({ timelocks }) => {
 							</div>
 						</div>
 
-						<div className='flex flex-col space-y-4 bg-white rounded-lg'>
+						<div className='flex flex-col space-y-4 bg-white rounded'>
 							<div className='flex flex-col items-left gap-1 relative overflow-hidden p-6'>
 								<div className='absolute right-[-20px] bottom-[-20px]  '>
 									<CalendarOff width={60} height={60} color='rgba(0,0,0,.05)' />

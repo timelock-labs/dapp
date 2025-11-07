@@ -40,7 +40,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 	}, [minDelay, locale]);
 
 	return (
-		<div className='bg-white p-6 rounded-lg border-b border-gray-200'>
+		<div className='bg-white p-6 rounded border-b border-gray-200'>
 			<SectionHeader title={t('createTimelock')} description={t('createTimelockDescription')} />
 
 			<div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-6'>
@@ -66,7 +66,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 						<div className='flex items-center gap-3'>
 							<input
 								type='number'
-								className='mt-1 block flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white'
+								className='mt-1 block flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-black focus:border-black sm:text-sm bg-white'
 								placeholder={t('minDelayPlaceholder')}
 								value={minDelay}
 								onChange={e => onMinDelayChange(e.target.value)}
@@ -88,7 +88,7 @@ export const CreateTimelockForm: React.FC<CreateTimelockFormProps> = ({
 				<Button
 					onClick={onDeploy}
 					disabled={isLoading}
-					className='w-full sm:w-auto bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+					className='w-full sm:w-auto bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
 					aria-label={isLoading ? t('deploying') : t('deployContract')}>
 					{isLoading ?
 						<span className='flex items-center'>

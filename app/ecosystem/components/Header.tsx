@@ -8,7 +8,7 @@ const EcosystemSearchHeader: React.FC = () => {
 	const t = useTranslations('Ecosystem');
 	return (
 		<div
-			className='bg-black text-white p-6 min-h-[60px] rounded-lg flex items-center space-x-4'
+			className='bg-black text-white p-6 min-h-[60px] rounded flex items-center space-x-4'
 			style={{
 				backgroundImage: `url(${bg_png.src})`,
 				backgroundSize: 'cover',

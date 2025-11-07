@@ -25,7 +25,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({ rows = 5, columns = 6, sh
 			)}
 
 			{/* Table skeleton */}
-			<div className='border border-gray-200 rounded-lg overflow-hidden'>
+			<div className='border border-gray-200 rounded overflow-hidden'>
 				{/* Table header */}
 				<div className='bg-gray-50 border-b border-gray-200 px-6 py-3'>
 					<div className='flex space-x-4'>
