@@ -103,13 +103,15 @@ const TimelockContractTable: React.FC<TimelockContractTableProps> = ({ data, onD
 			header: t('userPermissions'),
 			render: (row: TimelockContractItem) => {
 				const permissions = (row as TimelockContractItem & { user_permissions?: string[] }).user_permissions;
+
 				if (!permissions || permissions.length === 0) {
-					return <div>{t('none')}</div>;
+					return <TableTag label="none" colorType='gray' />;
 				}
 
 				return (
 					<div className='flex flex-wrap gap-2'>
 						{permissions.map((permission, index) => permission !== 'creator' && <TableTag key={index} label={permission} colorType='green' />)}
+						{permissions.includes('creator') && <TableTag label="creator" colorType='gray' />}
 					</div>
 				);
 			},
